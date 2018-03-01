@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "lib": [ "dom", "es6" ],
+        "target": "es6",
+        "module": "es6",
+        "checkJs": true,
+        "noEmit": true,
+        "jsx": "react"
+    },
+    "exclude": [
+        "node_modules",
+        "**/node_modules"
+    ],
+    "include": [
+        "src/**/*.js"
+    ]
+}

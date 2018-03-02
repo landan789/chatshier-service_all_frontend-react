@@ -1,19 +1,12 @@
 import React, { Component } from 'react';
 
-import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Redirect } from 'react-router-dom';
-import { routerReducer } from 'react-router-redux';
 
+import ChatShierStore from '../../redux/ChatshierStore';
 import Signin from '../Signin/Signin';
 
 import './Routes.css';
-
-const routerStore = createStore(
-    combineReducers({
-        router: routerReducer
-    })
-);
 
 class Routes extends Component {
     constructor(props) {
@@ -48,7 +41,7 @@ class Routes extends Component {
 
     render() {
         return (
-            <Provider store={routerStore}>
+            <Provider store={ChatShierStore}>
                 <BrowserRouter>
                     <div className="route-wrapper">
                         <Route path="/*" render={() => !this.shouldRedirect() && (<Redirect to="/" />)} />

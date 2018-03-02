@@ -4,7 +4,7 @@ const CHSR_COOKIE = {
 };
 const INIT_TIME = 'Thu, 01 Jan 1970 00:00:00 UTC';
 
-class ChatshierCookie {
+class CookieHelper {
     constructor() {
         this.domain = window.location.host.replace(/:\d+$/i, '');
         this.DEFAULT_DOMAIN = this.domain.replace(/^[\w-]+\./i, '.');
@@ -80,5 +80,5 @@ class ChatshierCookie {
     }
 }
 
-export default new ChatshierCookie();
+export default new CookieHelper();
 export { CHSR_COOKIE };

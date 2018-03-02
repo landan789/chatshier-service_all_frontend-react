@@ -1,6 +1,6 @@
 const urlConfig = {
-    wwwUrl: '',
-    port: '',
+    wwwUrl: 'https://www.chatshier.com',
+    port: 80,
     index: '/index.html',
     terms: '/terms.html',
     privacy: '/privacy.html',

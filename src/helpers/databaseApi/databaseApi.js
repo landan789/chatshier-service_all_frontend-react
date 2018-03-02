@@ -15,13 +15,11 @@ const setJWT = (value) => {
     reqHeaders.set('Authorization', jwt);
 };
 
-class API {
-    constructor() {
-        this.apps = new Apps();
-        this.appsMessagers = new AppsMessagers();
-        this.calendarsEvents = new CalendarsEvents();
-    }
-}
+const databaseApi = {
+    apps: new Apps(),
+    appsMessagers: new AppsMessagers(),
+    calendarsEvents: new CalendarsEvents()
+};
 
-export default new API();
-export { setJWT, reqHeaders };
+export default databaseApi;
+export { setJWT, jwt, reqHeaders };

@@ -27,7 +27,10 @@ class Notify extends React.Component {
         this.state.visible && window.setTimeout(this.onDismiss, this.props.duration);
 
         return (
-            <Alert color={this.props.color} isOpen={this.state.visible} toggle={this.onDismiss}>
+            <Alert
+                color={this.props.color}
+                isOpen={this.state.visible}
+                toggle={this.onDismiss}>
                 {this.props.text}
             </Alert>
         );
@@ -46,7 +49,7 @@ const notify = (text, options) => {
     options.type = options.type || 'success';
     options.duration = options.duration || DURATION;
 
-    /** @type {React.DOMElement} */
+    /** @type {React.ReactElement} */
     let notifyElem;
     let dismissPromise = new Promise((resolve) => {
         notifyElem = (
@@ -59,24 +62,48 @@ const notify = (text, options) => {
         );
     });
 
-    let notifyWapper = document.createElement('div');
-    let notifyContainer = document.createElement('div');
-    notifyWapper.className = 'notify-wapper';
-    notifyContainer.className = 'notify-container';
-    notifyWapper.appendChild(notifyContainer);
-    document.body.appendChild(notifyWapper);
+    let notifyWapper = document.getElementById('notify_wapper');
+    let isOnDom = !!notifyWapper;
+    let notifyContainer;
 
-    return new Promise((resolve) => {
-        ReactDOM.render(notifyElem, notifyContainer, () => {
-            document.body.appendChild(notifyWapper);
+    let notifyItem = document.createElement('div');
+    notifyItem.className = 'notify-item';
+
+    if (!isOnDom) {
+        notifyWapper = document.createElement('div');
+        notifyWapper.id = 'notify_wapper';
+        notifyWapper.className = 'notify-wapper';
+
+        notifyContainer = document.createElement('div');
+        notifyContainer.className = 'notify-container';
+
+        notifyContainer.appendChild(notifyItem);
+        notifyWapper.appendChild(notifyContainer);
+        document.body.appendChild(notifyWapper);
+    } else {
+        notifyContainer = document.querySelector('.notify-container');
+        notifyContainer.appendChild(notifyItem);
+    }
+
+    let shownPromise = new Promise((resolve) => {
+        ReactDOM.render(notifyElem, notifyItem, () => {
             resolve();
         });
-    }).then(() => {
+    });
+
+    shownPromise.then(() => {
         return dismissPromise;
     }).then(() => {
-        document.body.removeChild(notifyWapper);
-        notifyWapper = notifyContainer = notifyElem = dismissPromise = void 0;
+        ReactDOM.unmountComponentAtNode(notifyItem);
+        notifyContainer.removeChild(notifyItem);
+        if (!notifyContainer.childElementCount) {
+            notifyWapper.removeChild(notifyContainer);
+            document.body.removeChild(notifyWapper);
+        }
+        notifyWapper = notifyContainer = notifyElem = void 0;
     });
+
+    return shownPromise;
 };
 
 export default Notify;

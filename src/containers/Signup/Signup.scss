@@ -1,44 +1,44 @@
 @import '../../styles/mixins/_mixins';
 @import '../../styles/themes/_colors';
 
-$_signin-bg-color: $primary-color;
-$_signin-logo-width: 4rem;
-$_signin-logo-height: 4rem;
+$_signup-bg-color: $primary-color;
+$_signup-logo-width: 4rem;
+$_signup-logo-height: 4rem;
 
-.signin-container {
+.signup-container {
     height: 100%;
     padding-top: 4%;
-    background: linear-gradient($_signin-bg-color 40%, #fff 60%);
+    background: linear-gradient($_signup-bg-color 40%, #fff 60%);
 
     .chsr.input-group-prepend {
         width: 3rem;
     }
 
     .padding-left-right {
-        padding: 0 5rem;
+        padding: 0 3rem;
     }
 
-    .signin-logo {
+    .signup-logo {
         margin-bottom: 2.5rem;
     
         img {
-            width: $_signin-logo-width;
-            height: $_signin-logo-height;
+            width: $_signup-logo-width;
+            height: $_signup-logo-height;
         }
     }
-    
+
     .form-content {
         border: 1px solid #e5e5e5;
         background-color: #fff;
         border-radius: 1rem;
         box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     }
-    
-    .signin-title {
+
+    .signup-title {
         margin: 3rem 0;
     }
 
-    .signin-trouble {
+    .signup-option {
         margin: 2rem 0;
 
         .link-text {
@@ -57,7 +57,7 @@ $_signin-logo-height: 4rem;
             padding: 0 1.5rem;
         }
 
-        .signin-logo {
+        .signup-logo {
             margin-bottom: 1.5rem;
         }
     }
@@ -71,7 +71,7 @@ $_signin-logo-height: 4rem;
             padding: 0 2.5rem;
         }
 
-        .signin-logo {
+        .signup-logo {
             margin-bottom: 2.5rem;
         }
     }

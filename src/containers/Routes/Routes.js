@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Redirect } from 'react-router-dom';
 
 import ChatShierStore from '../../redux/ChatshierStore';
 import Signin from '../Signin/Signin';
+import Signup from '../Signup/Signup';
 
 import './Routes.css';
 
-class Routes extends Component {
+class Routes extends React.Component {
     constructor(props) {
         super(props);
 
@@ -20,10 +21,10 @@ class Routes extends Component {
             path: '/signin',
             exact: true,
             component: Signin
-        // }, {
-        //     path: '/signup',
-        //     exact: true,
-        //     component: Signup
+        }, {
+            path: '/signup',
+            exact: true,
+            component: Signup
         }];
     }
 
@@ -32,11 +33,16 @@ class Routes extends Component {
         return (() => {
             for (let i in this.routes) {
                 if (this.routes[i].path === routePath) {
-                    return true;
+                    return false;
                 }
             }
-            return false;
+            return true;
         })();
+    }
+
+    setBrowserTitle(title) {
+        document.title = title;
+        return null;
     }
 
     render() {
@@ -44,13 +50,14 @@ class Routes extends Component {
             <Provider store={ChatShierStore}>
                 <BrowserRouter>
                     <div className="route-wrapper">
-                        <Route path="/*" render={() => !this.shouldRedirect() && (<Redirect to="/" />)} />
+                        <Route path="/*" render={() => this.shouldRedirect() && (<Redirect to="/signin" />)}></Route>
                         {this.routes.map((route) => {
                             return <Route
                                 key={route.path}
                                 path={route.path}
                                 exact={route.exact}
-                                component={route.component} />;
+                                component={route.component}>
+                            </Route>;
                         })}
                     </div>
                 </BrowserRouter>

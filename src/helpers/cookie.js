@@ -1,3 +1,6 @@
+import regex from '../utils/regex';
+import { YEAR } from '../utils/unitTime';
+
 const CHSR_COOKIE = {
     USER_EMAIL: '_chsr_email',
     USER_NAME: '_chsr_username'
@@ -6,13 +9,8 @@ const INIT_TIME = 'Thu, 01 Jan 1970 00:00:00 UTC';
 
 class CookieHelper {
     constructor() {
-        this.domain = window.location.host.replace(/:\d+$/i, '');
-        this.DEFAULT_DOMAIN = this.domain.replace(/^[\w-]+\./i, '.');
-
-        this.minTimeGap = 60 * 1000;
-        this.hourTimeGap = 60 * this.minTimeGap;
-        this.dayTimeGap = 24 * this.hourTimeGap;
-        this.yearTimeGap = 365 * this.dayTimeGap;
+        this.domain = window.location.host.replace(regex.domainPort, '');
+        this.DEFAULT_DOMAIN = this.domain.replace(regex.domainPrefix, '.');
 
         // 刪除之前使用的 cookie 數值
         this.getCookie('name') && this.deleteCookie('name');
@@ -21,8 +19,8 @@ class CookieHelper {
 
     /**
      * @param {string} name
-     * @param {string} val
-     * @param {string} expires
+     * @param {string} [val]
+     * @param {string} [expires]
      * @param {string} [domain]
      * @returns {boolean}
      */
@@ -32,7 +30,7 @@ class CookieHelper {
         }
 
         val = val || '';
-        expires = expires || new Date(Date.now() + this.yearTimeGap).toUTCString();
+        expires = expires || new Date(Date.now() + YEAR).toUTCString();
         domain = domain || this.DEFAULT_DOMAIN;
 
         document.cookie = name + '=' + val + ';expires=' + expires + ';domain=' + domain;

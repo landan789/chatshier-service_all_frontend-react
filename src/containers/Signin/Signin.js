@@ -1,7 +1,10 @@
-import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Route, withRouter } from 'react-router-dom';
+import { Fade } from 'reactstrap';
 import firebase from 'firebase';
 
+import browser from '../../helpers/browser';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
 import regex from '../../utils/regex';
 
@@ -9,7 +12,7 @@ import { notify } from '../../components/Notify/Notify';
 
 import './Signin.css';
 
-class Signin extends Component {
+class Signin extends React.Component {
     constructor(props, context) {
         super(props, context);
 
@@ -20,7 +23,12 @@ class Signin extends Component {
 
         this.emailChanged = this.emailChanged.bind(this);
         this.passwordChanged = this.passwordChanged.bind(this);
+        this.keyinSubmit = this.keyinSubmit.bind(this);
         this.checkInputs = this.checkInputs.bind(this);
+    }
+
+    componentWillMount() {
+        browser.setTitle('登入');
     }
 
     emailChanged(ev) {
@@ -29,6 +37,14 @@ class Signin extends Component {
 
     passwordChanged(ev) {
         this.setState({ password: ev.target.value });
+    }
+
+    keyinSubmit(ev) {
+        if (13 !== ev.keyCode) {
+            return;
+        }
+
+        return this.checkInputs();
     }
 
     checkInputs() {
@@ -54,39 +70,49 @@ class Signin extends Component {
 
             cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, userName);
             cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, email);
+            this.props.history.replace('/chat');
         }).catch((error) => {
-            if ('auth/wrong-password' !== error.code) {
-                return notify('找不到使用者', { type: 'danger' });
+            switch (error.code) {
+                case 'auth/user-not-found':
+                    return notify('找不到使用者', { type: 'danger' });
+                case 'auth/wrong-password':
+                default:
+                    return notify('密碼錯誤！', { type: 'danger' });
             }
-
-            return notify('密碼錯誤！', { type: 'danger' });
         });
     }
 
     render() {
         return (
-            <div className="signin-container">
+            <Fade in className="signin-container">
                 <div className="chsr col-md-12 text-center signin-logo">
-                    <a id="index" href="index.html">
+                    <div>
                         <img alt="Chatshier-logo" src="image/png/logo.png" />
-                    </a>
+                    </div>
                 </div>
 
-                <div className="col-md-12 column wh-reg-step-login">
+                <div className="col-md-12">
                     <div className="row justify-content-center">
-                        <div className="col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3 form-content">
-                            <h2 className="text-center login-title">登入</h2>
+                        <div className="form-content col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3">
+                            <h2 className="text-center signin-title">登入</h2>
                             <div className="form-container">
                                 <form className="form-horizontal">
                                     <fieldset>
                                         <div className="form-group padding-left-right">
-                                            <div className="input-group ">
+                                            <div className="input-group">
                                                 <div className="chsr input-group-prepend">
                                                     <span className="input-group-text w-100 justify-content-center">
                                                         <i className="fa fa-envelope"></i>
                                                     </span>
                                                 </div>
-                                                <input type="text" className="form-control" placeholder="電子郵件" value={this.state.email} onChange={this.emailChanged} required />
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    placeholder="電子郵件"
+                                                    value={this.state.email}
+                                                    onChange={this.emailChanged}
+                                                    onKeyDown={this.keyinSubmit}
+                                                    required />
                                             </div>
                                         </div>
                                         <div className="form-group padding-left-right">
@@ -96,7 +122,14 @@ class Signin extends Component {
                                                         <i className="fa fa-lock"></i>
                                                     </span>
                                                 </div>
-                                                <input type="password" className="form-control" placeholder="密碼" value={this.state.password} onChange={this.passwordChanged} required />
+                                                <input
+                                                    type="password"
+                                                    className="form-control"
+                                                    placeholder="密碼"
+                                                    value={this.state.password}
+                                                    onChange={this.passwordChanged}
+                                                    onKeyDown={this.keyinSubmit}
+                                                    required />
                                             </div>
                                         </div>
                                         <div className="form-group padding-left-right">
@@ -107,20 +140,20 @@ class Signin extends Component {
                                             </div>
                                         </div>
                                     </fieldset>
-                                    <div className="text-center forget-password">
+                                    <div className="text-center signin-trouble">
                                         <Route render={(router) => (
                                             <p>
                                                 忘記密碼？請按
-                                                <a onClick={() => {}}>這裡</a>
+                                                <span className="link-text" onClick={() => {}}>這裡</span>
                                                 重設密碼。
                                             </p>
                                         )}></Route>
                                         <Route render={(router) => (
                                             <p>
                                                 還沒有帳號嗎請按
-                                                <a onClick={() => {
+                                                <span className="link-text" onClick={() => {
                                                     router.history.push('/signup');
-                                                }}>這裡</a>
+                                                }}>這裡</span>
                                                 註冊。
                                             </p>
                                         )}></Route>
@@ -130,9 +163,13 @@ class Signin extends Component {
                         </div>
                     </div>
                 </div>
-            </div>
+            </Fade>
         );
     }
 }
 
-export default Signin;
+Signin.propTypes = {
+    history: PropTypes.object
+};
+
+export default withRouter(Signin);

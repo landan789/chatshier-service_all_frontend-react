@@ -1,81 +1,77 @@
+@import '../../styles/mixins/_mixins';
 @import '../../styles/themes/_colors';
 
 $_signin-bg-color: $primary-color;
-$_signin-logo-width: 64px;
-$_signin-logo-height: 64px;
+$_signin-logo-width: 4rem;
+$_signin-logo-height: 4rem;
 
 .signin-container {
     height: 100%;
+    padding-top: 5rem;
     background: linear-gradient($_signin-bg-color 40%, #fff 60%);
 
     .chsr.input-group-prepend {
         width: 12.5%;
     }
 
-    @media (min-width: 1px) and (max-width: 414px) {
-        & {
-            padding-top: 30px;
-        }
-
-        .padding-left-right {
-            padding: 0 25px;
-        }
-
-        .signin-logo {
-            margin-bottom: 20px;
-        }
+    .padding-left-right {
+        padding: 0 5rem;
     }
 
-    @media (min-width: 415px) and (max-width: 767px) {
-        & {
-            padding-top: 80px;
-        }
-
-        .padding-left-right {
-            padding: 0 50px;
-        }
-
-        .signin-logo {
-            margin-bottom: 40px;
-        }
-    }
+    .signin-logo {
+        margin-bottom: 2.5rem;
     
-    @media (min-width: 768px) {
-        & {
-            padding-top: 80px;
+        img {
+            width: $_signin-logo-width;
+            height: $_signin-logo-height;
         }
-
-        .padding-left-right {
-            padding: 0 50px;
-        }
-
-        .signin-logo {
-            margin-bottom: 40px;
-        }
-    }
-    
-    .signin-logo img {
-        width: $_signin-logo-width;
-        height: $_signin-logo-height;
     }
     
     .form-content {
         border: 1px solid #e5e5e5;
         background-color: #fff;
-        border-radius: 15px;
+        border-radius: 1rem;
         box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     }
     
     .login-title,
     .signup-title {
-        margin: 50px 0px;
+        margin: 3rem 0;
     }
 
     .forget-password {
-        margin: 30px 0px;
+        margin: 2rem 0;
+
+        a {
+            color: $primary-color;
+        }
     }
 
-    .forget-password a {
-        color: $primary-color;
+    @include RWD-phone() {
+        & {
+            padding: 2rem 3rem 0;
+        }
+
+        .padding-left-right {
+            padding: 0 1.5rem;
+        }
+
+        .signin-logo {
+            margin-bottom: 1.5rem;
+        }
+    }
+
+    @include RWD-pad() {
+        & {
+            padding: 5rem 3rem 0;
+        }
+
+        .padding-left-right {
+            padding: 0 2.5rem;
+        }
+
+        .signin-logo {
+            margin-bottom: 2.5rem;
+        }
     }
 }

@@ -1,0 +1,17 @@
+$_pc-break-point: 1024px;
+$_mobile-break-point: 768px;
+
+$_phone-portrait-bp-min: 320px;
+$_phone-portrait-bp-max: 480px;
+
+@mixin RWD-pad() {
+    @media only screen and (min-width: $_phone-portrait-bp-max) and (max-width: $_mobile-break-point) {
+        @content;
+    }
+}
+
+@mixin RWD-phone() {
+    @media only screen and (max-width: $_phone-portrait-bp-max) {
+        @content;
+    }
+}

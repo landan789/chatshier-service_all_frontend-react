@@ -44,6 +44,12 @@ class Signup extends React.Component {
 
     componentWillMount() {
         browser.setTitle('註冊');
+
+        if (cookieHelper.getCookie(CHSR_COOKIE.USER_NAME) &&
+            cookieHelper.getCookie(CHSR_COOKIE.USER_EMAIL) &&
+            window.localStorage.getItem('jwt')) {
+            window.location.replace('/chat');
+        }
     }
 
     nameChanged(ev) {

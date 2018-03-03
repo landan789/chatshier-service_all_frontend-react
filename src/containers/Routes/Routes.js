@@ -15,16 +15,16 @@ class Routes extends React.Component {
 
         this.routes = [{
             path: '/',
-            exact: true,
             component: Signin
         }, {
             path: '/signin',
-            exact: true,
             component: Signin
         }, {
             path: '/signup',
-            exact: true,
             component: Signup
+        }, {
+            path: '/chat',
+            component: null
         }];
     }
 
@@ -52,10 +52,9 @@ class Routes extends React.Component {
                     <div className="route-wrapper">
                         <Route path="/*" render={() => this.shouldRedirect() && (<Redirect to="/signin" />)}></Route>
                         {this.routes.map((route) => {
-                            return <Route
+                            return <Route exact
                                 key={route.path}
                                 path={route.path}
-                                exact={route.exact}
                                 component={route.component}>
                             </Route>;
                         })}

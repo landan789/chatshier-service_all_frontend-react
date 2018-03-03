@@ -17,13 +17,14 @@ class Signin extends React.Component {
         super(props, context);
 
         this.state = {
+            isSignining: false,
+            signinBtnHtml: '登入',
             email: '',
             password: ''
         };
 
         this.emailChanged = this.emailChanged.bind(this);
-        this.passwordChanged = this.passwordChanged.bind(this);
-        this.keyinSubmit = this.keyinSubmit.bind(this);
+        this.pwChanged = this.pwChanged.bind(this);
         this.checkInputs = this.checkInputs.bind(this);
     }
 
@@ -35,49 +36,65 @@ class Signin extends React.Component {
         this.setState({ email: ev.target.value });
     }
 
-    passwordChanged(ev) {
+    pwChanged(ev) {
         this.setState({ password: ev.target.value });
     }
 
-    keyinSubmit(ev) {
-        if (13 !== ev.keyCode) {
+    checkInputs(ev) {
+        ev && ev.preventDefault();
+        if (this.state.isSignining) {
             return;
         }
 
-        return this.checkInputs();
-    }
-
-    checkInputs() {
         let email = this.state.email;
-        let password = this.state.password;
+        let pw = this.state.password;
 
-        if (!regex.emailPattern.test(email)) {
-            return notify('電子郵件格式不正確', { type: 'warning' });
-        } else if (!password) {
+        if (!regex.emailStrict.test(email)) {
+            return notify('無效電子郵件', { type: 'warning' });
+        } else if (!pw) {
             return notify('請輸入密碼', { type: 'warning' });
         }
 
-        return this.signin(email, password);
+        return this.signin(email, pw);
     }
 
-    signin(email, password) {
+    signin(email, pw) {
         let auth = firebase.auth();
 
-        return auth.signInWithEmailAndPassword(email, password).then(() => {
-            let currentUser = auth.currentUser;
-            let userName = currentUser.displayName;
-            let email = currentUser.email;
+        this.setState({
+            isSignining: true,
+            signinBtnHtml: '<i class="fa fa-circle-o-notch fa-spin"></i> 登入中...'
+        });
 
-            cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, userName);
+        return auth.signInWithEmailAndPassword(email, pw).then(() => {
+            return auth.currentUser.getIdToken();
+        }).then((jwt) => {
+            this.setState({
+                isSignining: false,
+                signinBtnHtml: '登入'
+            });
+
+            let name = auth.currentUser.displayName;
+            cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, name);
             cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, email);
-            this.props.history.replace('/chat');
+            window.localStorage.setItem('jwt', jwt);
+
+            // this.props.history.replace('/chat');
+            window.location.replace('/chat');
         }).catch((error) => {
-            switch (error.code) {
+            this.setState({
+                isSignining: false,
+                signinBtnHtml: '登入'
+            });
+
+            let errCode = error ? error.code : null;
+            switch (errCode) {
                 case 'auth/user-not-found':
                     return notify('找不到使用者', { type: 'danger' });
                 case 'auth/wrong-password':
-                default:
                     return notify('密碼錯誤！', { type: 'danger' });
+                default:
+                    break;
             }
         });
     }
@@ -96,7 +113,7 @@ class Signin extends React.Component {
                         <div className="form-content col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3">
                             <h2 className="text-center signin-title">登入</h2>
                             <div className="form-container">
-                                <form className="form-horizontal">
+                                <form className="form-horizontal" onSubmit={this.checkInputs}>
                                     <fieldset>
                                         <div className="form-group padding-left-right">
                                             <div className="input-group">
@@ -106,12 +123,12 @@ class Signin extends React.Component {
                                                     </span>
                                                 </div>
                                                 <input
-                                                    type="text"
+                                                    type="email"
                                                     className="form-control"
+                                                    pattern={regex.emailWeak.source}
                                                     placeholder="電子郵件"
                                                     value={this.state.email}
                                                     onChange={this.emailChanged}
-                                                    onKeyDown={this.keyinSubmit}
                                                     required />
                                             </div>
                                         </div>
@@ -127,16 +144,19 @@ class Signin extends React.Component {
                                                     className="form-control"
                                                     placeholder="密碼"
                                                     value={this.state.password}
-                                                    onChange={this.passwordChanged}
-                                                    onKeyDown={this.keyinSubmit}
+                                                    onChange={this.pwChanged}
                                                     required />
                                             </div>
                                         </div>
                                         <div className="form-group padding-left-right">
                                             <label className="control-label"></label>
                                             <div className="controls">
-                                                {/* <button className="btn btn-info" data-loading-text="<i className='fa fa-circle-o-notch fa-spin'></i>登入中...">登入</button> */}
-                                                <button type="button" className="btn btn-info" onClick={this.checkInputs}>登入</button>
+                                                <button
+                                                    type="submit"
+                                                    className="btn btn-info"
+                                                    disabled={this.state.isSignining}
+                                                    dangerouslySetInnerHTML={{__html: this.state.signinBtnHtml}}>
+                                                </button>
                                             </div>
                                         </div>
                                     </fieldset>

@@ -10,4 +10,4 @@ import './index.css';
 
 ReactDOM.render(<Routes />, document.getElementById('charshier_root'));
 registerServiceWorker();
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(window.config || firebaseConfig);

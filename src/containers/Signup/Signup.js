@@ -163,7 +163,7 @@ class Signup extends React.Component {
             <Fade in className="signup-container">
                 <div className="chsr col-md-12 text-center signup-logo">
                     <div>
-                        <img alt="Chatshier-logo" src="image/png/logo.png" />
+                        <img alt="Chatshier-logo" src="image/logo.png" />
                     </div>
                 </div>
 

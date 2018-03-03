@@ -104,7 +104,7 @@ class Signin extends React.Component {
             <Fade in className="signin-container">
                 <div className="chsr col-md-12 text-center signin-logo">
                     <div>
-                        <img alt="Chatshier-logo" src="image/png/logo.png" />
+                        <img alt="Chatshier-logo" src="image/logo.png" />
                     </div>
                 </div>
 

@@ -69,7 +69,7 @@ class Signin extends React.Component {
 
         this.setState({
             isSignining: true,
-            signinBtnHtml: '<i class="fa fa-circle-o-notch fa-spin"></i> 登入中...'
+            signinBtnHtml: '<i class="fas fa-circle-notch fa-spin"></i> 登入中...'
         });
 
         return auth.signInWithEmailAndPassword(email, pw).then(() => {
@@ -125,7 +125,7 @@ class Signin extends React.Component {
                                             <div className="input-group">
                                                 <div className="chsr input-group-prepend">
                                                     <span className="input-group-text w-100 justify-content-center">
-                                                        <i className="fa fa-envelope"></i>
+                                                        <i className="fas fa-envelope"></i>
                                                     </span>
                                                 </div>
                                                 <input
@@ -142,7 +142,7 @@ class Signin extends React.Component {
                                             <div className="input-group">
                                                 <div className="chsr input-group-prepend">
                                                     <span className="input-group-text w-100 justify-content-center">
-                                                        <i className="fa fa-lock"></i>
+                                                        <i className="fas fa-lock"></i>
                                                     </span>
                                                 </div>
                                                 <input

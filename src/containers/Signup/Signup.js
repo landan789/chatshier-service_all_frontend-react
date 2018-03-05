@@ -100,7 +100,7 @@ class Signup extends React.Component {
 
         this.setState({
             isSignuping: true,
-            signupBtnHtml: '<i class="fa fa-circle-o-notch fa-spin"></i> 註冊中...'
+            signupBtnHtml: '<i class="fas fa-circle-notch fa-spin"></i> 註冊中...'
         });
 
         return auth.createUserWithEmailAndPassword(email, pw).then(() => {
@@ -185,7 +185,7 @@ class Signup extends React.Component {
                                             <div className="input-group padding-left-right">
                                                 <div className="chsr input-group-prepend">
                                                     <span className="input-group-text w-100 justify-content-center">
-                                                        <i className="fa fa-user"></i>
+                                                        <i className="fas fa-user"></i>
                                                     </span>
                                                 </div>
 
@@ -202,7 +202,7 @@ class Signup extends React.Component {
                                             <div className="input-group padding-left-right">
                                                 <div className="chsr input-group-prepend">
                                                     <span className="input-group-text w-100 justify-content-center">
-                                                        <i className="fa fa-envelope"></i>
+                                                        <i className="fas fa-envelope"></i>
                                                     </span>
                                                 </div>
 
@@ -220,7 +220,7 @@ class Signup extends React.Component {
                                             <div className="input-group">
                                                 <div className="chsr input-group-prepend">
                                                     <span className="input-group-text w-100 justify-content-center">
-                                                        <i className="fa fa-lock"></i>
+                                                        <i className="fas fa-lock"></i>
                                                     </span>
                                                 </div>
 
@@ -237,7 +237,7 @@ class Signup extends React.Component {
                                             <div className="input-group">
                                                 <div className="chsr input-group-prepend">
                                                     <span className="input-group-text w-100 justify-content-center">
-                                                        <i className="fa fa-lock"></i>
+                                                        <i className="fas fa-lock"></i>
                                                     </span>
                                                 </div>
 

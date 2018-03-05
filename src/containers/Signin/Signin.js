@@ -31,9 +31,7 @@ class Signin extends React.Component {
     componentWillMount() {
         browser.setTitle('登入');
 
-        if (cookieHelper.getCookie(CHSR_COOKIE.USER_NAME) &&
-            cookieHelper.getCookie(CHSR_COOKIE.USER_EMAIL) &&
-            window.localStorage.getItem('jwt')) {
+        if (cookieHelper.hasSignedin()) {
             window.location.replace('/chat');
         }
     }

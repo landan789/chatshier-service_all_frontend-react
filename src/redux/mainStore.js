@@ -3,11 +3,11 @@ import { routerReducer } from 'react-router-redux';
 
 import { appsReducer } from './reducers/apps';
 
-const ChatShierStore = createStore(
+const mainStore = createStore(
     combineReducers({
         router: routerReducer,
         apps: appsReducer
     })
 );
 
-export default ChatShierStore;
+export default mainStore;

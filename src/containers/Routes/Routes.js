@@ -3,7 +3,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Redirect } from 'react-router-dom';
 
-import ChatShierStore from '../../redux/ChatshierStore';
+import mainStore from '../../redux/mainStore';
 import Signin from '../Signin/Signin';
 import Signup from '../Signup/Signup';
 
@@ -47,7 +47,7 @@ class Routes extends React.Component {
 
     render() {
         return (
-            <Provider store={ChatShierStore}>
+            <Provider store={mainStore}>
                 <BrowserRouter>
                     <div className="route-wrapper">
                         <Route path="/*" render={() => this.shouldRedirect() && (<Redirect to="/signin" />)}></Route>

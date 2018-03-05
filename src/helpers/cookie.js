@@ -76,6 +76,15 @@ class CookieHelper {
         }
         return true;
     }
+
+    /**
+     * @returns {boolean}
+     */
+    hasSignedin() {
+        return !!(this.getCookie(CHSR_COOKIE.USER_NAME) &&
+            this.getCookie(CHSR_COOKIE.USER_EMAIL) &&
+            window.localStorage.getItem('jwt'));
+    }
 }
 
 export default new CookieHelper();

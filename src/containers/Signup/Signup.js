@@ -168,119 +168,117 @@ class Signup extends React.Component {
         return (
             <Fade in className="signup-container">
                 <div className="chsr col-md-12 text-center signup-logo">
-                    <div>
+                    <div className="logo-container">
                         <img alt="Chatshier-logo" src="image/logo.png" />
                     </div>
                 </div>
 
                 <div className="col-md-12">
                     <div className="row justify-content-center">
-                        <div className="form-content col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3">
+                        <div className="form-container col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3">
                             <h2 className="text-center signup-title">開始體驗您的Chatshier</h2>
                             <p className="text-center lead">不需付費。馬上體驗聊天功能。</p>
-                            <div className="form-container">
-                                <form className="form-horizontal" onSubmit={this.checkInputs}>
-                                    <fieldset>
-                                        <div className="form-group">
-                                            <div className="input-group padding-left-right">
-                                                <div className="chsr input-group-prepend">
-                                                    <span className="input-group-text w-100 justify-content-center">
-                                                        <i className="fas fa-user"></i>
-                                                    </span>
-                                                </div>
+                            <form className="signup-form" onSubmit={this.checkInputs}>
+                                <fieldset>
+                                    <div className="form-group">
+                                        <div className="input-group padding-left-right">
+                                            <div className="chsr input-group-prepend">
+                                                <span className="input-group-text w-100 justify-content-center">
+                                                    <i className="fas fa-user"></i>
+                                                </span>
+                                            </div>
 
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    placeholder="姓名"
-                                                    value={this.state.name}
-                                                    onChange={this.nameChanged}
-                                                    required />
-                                            </div>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="姓名"
+                                                value={this.state.name}
+                                                onChange={this.nameChanged}
+                                                required />
                                         </div>
-                                        <div className="form-group">
-                                            <div className="input-group padding-left-right">
-                                                <div className="chsr input-group-prepend">
-                                                    <span className="input-group-text w-100 justify-content-center">
-                                                        <i className="fas fa-envelope"></i>
-                                                    </span>
-                                                </div>
-
-                                                <input
-                                                    type="email"
-                                                    className="form-control"
-                                                    pattern={regex.emailWeak.source}
-                                                    placeholder="電子郵件"
-                                                    value={this.state.email}
-                                                    onChange={this.emailChanged}
-                                                    required />
-                                            </div>
-                                        </div>
-                                        <div className="form-group padding-left-right">
-                                            <div className="input-group">
-                                                <div className="chsr input-group-prepend">
-                                                    <span className="input-group-text w-100 justify-content-center">
-                                                        <i className="fas fa-lock"></i>
-                                                    </span>
-                                                </div>
-
-                                                <input
-                                                    type="password"
-                                                    className="form-control"
-                                                    placeholder="密碼"
-                                                    value={this.state.password}
-                                                    onChange={this.pwChanged}
-                                                    required />
-                                            </div>
-                                        </div>
-                                        <div className="form-group padding-left-right">
-                                            <div className="input-group">
-                                                <div className="chsr input-group-prepend">
-                                                    <span className="input-group-text w-100 justify-content-center">
-                                                        <i className="fas fa-lock"></i>
-                                                    </span>
-                                                </div>
-
-                                                <input
-                                                    type="password"
-                                                    className="form-control"
-                                                    placeholder="確認密碼"
-                                                    value={this.state.passwordConfirm}
-                                                    onChange={this.pwConfirmChanged}
-                                                    required />
-                                            </div>
-                                        </div>
-                                        <div className="error-notify"></div>
-                                        <div className="form-group padding-left-right">
-                                            <div className="controls">
-                                                <button
-                                                    type="submit"
-                                                    className="btn btn-info"
-                                                    disabled={this.state.isSignuping}
-                                                    dangerouslySetInnerHTML={{__html: this.state.signupBtnHtml}}>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                    <div className="text-center signup-option">
-                                        <p>
-                                            我同意 Chatshier
-                                            <a className="link-text" href="https://www.chatshier.com/terms.html" target="_blank" rel="noopener noreferrer">服務條款</a>
-                                                &amp;
-                                            <a className="link-text" href="https://www.chatshier.com/privacy.html" target="_blank" rel="noopener noreferrer">隱私權條款</a>
-                                        </p>
-                                        <Route render={(router) => (
-                                            <p>
-                                                已經有帳號了嗎？請按
-                                                <span className="link-text" onClick={() => {
-                                                    router.history.push('/signin');
-                                                }}>這裡</span>
-                                                登入。
-                                            </p>
-                                        )}></Route>
                                     </div>
-                                </form>
-                            </div>
+                                    <div className="form-group">
+                                        <div className="input-group padding-left-right">
+                                            <div className="chsr input-group-prepend">
+                                                <span className="input-group-text w-100 justify-content-center">
+                                                    <i className="fas fa-envelope"></i>
+                                                </span>
+                                            </div>
+
+                                            <input
+                                                type="email"
+                                                className="form-control"
+                                                pattern={regex.emailWeak.source}
+                                                placeholder="電子郵件"
+                                                value={this.state.email}
+                                                onChange={this.emailChanged}
+                                                required />
+                                        </div>
+                                    </div>
+                                    <div className="form-group padding-left-right">
+                                        <div className="input-group">
+                                            <div className="chsr input-group-prepend">
+                                                <span className="input-group-text w-100 justify-content-center">
+                                                    <i className="fas fa-lock"></i>
+                                                </span>
+                                            </div>
+
+                                            <input
+                                                type="password"
+                                                className="form-control"
+                                                placeholder="密碼"
+                                                value={this.state.password}
+                                                onChange={this.pwChanged}
+                                                required />
+                                        </div>
+                                    </div>
+                                    <div className="form-group padding-left-right">
+                                        <div className="input-group">
+                                            <div className="chsr input-group-prepend">
+                                                <span className="input-group-text w-100 justify-content-center">
+                                                    <i className="fas fa-lock"></i>
+                                                </span>
+                                            </div>
+
+                                            <input
+                                                type="password"
+                                                className="form-control"
+                                                placeholder="確認密碼"
+                                                value={this.state.passwordConfirm}
+                                                onChange={this.pwConfirmChanged}
+                                                required />
+                                        </div>
+                                    </div>
+                                    <div className="error-notify"></div>
+                                    <div className="form-group padding-left-right">
+                                        <div className="controls">
+                                            <button
+                                                type="submit"
+                                                className="btn btn-info"
+                                                disabled={this.state.isSignuping}
+                                                dangerouslySetInnerHTML={{__html: this.state.signupBtnHtml}}>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div className="text-center signup-option">
+                                    <p>
+                                        我同意 Chatshier
+                                        <a className="link-text" href="https://www.chatshier.com/terms.html" target="_blank" rel="noopener noreferrer">服務條款</a>
+                                            &amp;
+                                        <a className="link-text" href="https://www.chatshier.com/privacy.html" target="_blank" rel="noopener noreferrer">隱私權條款</a>
+                                    </p>
+                                    <Route render={(router) => (
+                                        <p>
+                                            已經有帳號了嗎？請按
+                                            <span className="link-text" onClick={() => {
+                                                router.history.push('/signin');
+                                            }}>這裡</span>
+                                            登入。
+                                        </p>
+                                    )}></Route>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

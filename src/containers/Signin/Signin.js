@@ -109,83 +109,81 @@ class Signin extends React.Component {
         return (
             <Fade in className="signin-container">
                 <div className="chsr col-md-12 text-center signin-logo">
-                    <div>
+                    <div className="logo-container">
                         <img alt="Chatshier-logo" src="image/logo.png" />
                     </div>
                 </div>
 
                 <div className="col-md-12">
                     <div className="row justify-content-center">
-                        <div className="form-content col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3">
+                        <div className="form-container col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3">
                             <h2 className="text-center signin-title">登入</h2>
-                            <div className="form-container">
-                                <form className="form-horizontal" onSubmit={this.checkInputs}>
-                                    <fieldset>
-                                        <div className="form-group padding-left-right">
-                                            <div className="input-group">
-                                                <div className="chsr input-group-prepend">
-                                                    <span className="input-group-text w-100 justify-content-center">
-                                                        <i className="fas fa-envelope"></i>
-                                                    </span>
-                                                </div>
-                                                <input
-                                                    type="email"
-                                                    className="form-control"
-                                                    pattern={regex.emailWeak.source}
-                                                    placeholder="電子郵件"
-                                                    value={this.state.email}
-                                                    onChange={this.emailChanged}
-                                                    required />
+                            <form className="signin-form" onSubmit={this.checkInputs}>
+                                <fieldset>
+                                    <div className="form-group padding-left-right">
+                                        <div className="input-group">
+                                            <div className="chsr input-group-prepend">
+                                                <span className="input-group-text w-100 justify-content-center">
+                                                    <i className="fas fa-envelope"></i>
+                                                </span>
                                             </div>
+                                            <input
+                                                type="email"
+                                                className="form-control"
+                                                pattern={regex.emailWeak.source}
+                                                placeholder="電子郵件"
+                                                value={this.state.email}
+                                                onChange={this.emailChanged}
+                                                required />
                                         </div>
-                                        <div className="form-group padding-left-right">
-                                            <div className="input-group">
-                                                <div className="chsr input-group-prepend">
-                                                    <span className="input-group-text w-100 justify-content-center">
-                                                        <i className="fas fa-lock"></i>
-                                                    </span>
-                                                </div>
-                                                <input
-                                                    type="password"
-                                                    className="form-control"
-                                                    placeholder="密碼"
-                                                    value={this.state.password}
-                                                    onChange={this.pwChanged}
-                                                    required />
-                                            </div>
-                                        </div>
-                                        <div className="form-group padding-left-right">
-                                            <label className="control-label"></label>
-                                            <div className="controls">
-                                                <button
-                                                    type="submit"
-                                                    className="btn btn-info"
-                                                    disabled={this.state.isSignining}
-                                                    dangerouslySetInnerHTML={{__html: this.state.signinBtnHtml}}>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                    <div className="text-center signin-trouble">
-                                        <Route render={(router) => (
-                                            <p>
-                                                忘記密碼？請按
-                                                <span className="link-text" onClick={() => {}}>這裡</span>
-                                                重設密碼。
-                                            </p>
-                                        )}></Route>
-                                        <Route render={(router) => (
-                                            <p>
-                                                還沒有帳號嗎請按
-                                                <span className="link-text" onClick={() => {
-                                                    router.history.push('/signup');
-                                                }}>這裡</span>
-                                                註冊。
-                                            </p>
-                                        )}></Route>
                                     </div>
-                                </form>
-                            </div>
+                                    <div className="form-group padding-left-right">
+                                        <div className="input-group">
+                                            <div className="chsr input-group-prepend">
+                                                <span className="input-group-text w-100 justify-content-center">
+                                                    <i className="fas fa-lock"></i>
+                                                </span>
+                                            </div>
+                                            <input
+                                                type="password"
+                                                className="form-control"
+                                                placeholder="密碼"
+                                                value={this.state.password}
+                                                onChange={this.pwChanged}
+                                                required />
+                                        </div>
+                                    </div>
+                                    <div className="form-group padding-left-right">
+                                        <label className="control-label"></label>
+                                        <div className="controls">
+                                            <button
+                                                type="submit"
+                                                className="btn btn-info"
+                                                disabled={this.state.isSignining}
+                                                dangerouslySetInnerHTML={{__html: this.state.signinBtnHtml}}>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div className="text-center signin-trouble">
+                                    <Route render={(router) => (
+                                        <p>
+                                            忘記密碼？請按
+                                            <span className="link-text" onClick={() => {}}>這裡</span>
+                                            重設密碼。
+                                        </p>
+                                    )}></Route>
+                                    <Route render={(router) => (
+                                        <p>
+                                            還沒有帳號嗎請按
+                                            <span className="link-text" onClick={() => {
+                                                router.history.push('/signup');
+                                            }}>這裡</span>
+                                            註冊。
+                                        </p>
+                                    )}></Route>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

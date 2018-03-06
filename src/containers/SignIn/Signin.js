@@ -10,15 +10,15 @@ import regex from '../../utils/regex';
 
 import { notify } from '../../components/Notify/Notify';
 
-import './Signin.css';
+import './SignIn.css';
 
-class Signin extends React.Component {
+class SignIn extends React.Component {
     constructor(props, context) {
         super(props, context);
 
         this.state = {
-            isSignining: false,
-            signinBtnHtml: '登入',
+            isSignIning: false,
+            signInBtnHtml: '登入',
             email: '',
             password: ''
         };
@@ -46,7 +46,7 @@ class Signin extends React.Component {
 
     checkInputs(ev) {
         ev && ev.preventDefault();
-        if (this.state.isSignining) {
+        if (this.state.isSignIning) {
             return;
         }
 
@@ -59,23 +59,23 @@ class Signin extends React.Component {
             return notify('請輸入密碼', { type: 'warning' });
         }
 
-        return this.signin(email, pw);
+        return this.signIn(email, pw);
     }
 
-    signin(email, pw) {
+    signIn(email, pw) {
         let auth = firebase.auth();
 
         this.setState({
-            isSignining: true,
-            signinBtnHtml: '<i class="fas fa-circle-notch fa-spin"></i> 登入中...'
+            isSignIning: true,
+            signInBtnHtml: '<i class="fa fa-circle-o-notch fa-spin"></i> 登入中...'
         });
 
         return auth.signInWithEmailAndPassword(email, pw).then(() => {
             return auth.currentUser.getIdToken();
         }).then((jwt) => {
             this.setState({
-                isSignining: false,
-                signinBtnHtml: '登入'
+                isSignIning: false,
+                signInBtnHtml: '登入'
             });
 
             let name = auth.currentUser.displayName;
@@ -87,8 +87,8 @@ class Signin extends React.Component {
             window.location.replace('/chat');
         }).catch((error) => {
             this.setState({
-                isSignining: false,
-                signinBtnHtml: '登入'
+                isSignIning: false,
+                signInBtnHtml: '登入'
             });
 
             let errCode = error ? error.code : null;
@@ -150,16 +150,16 @@ class Signin extends React.Component {
                                                 onChange={this.pwChanged}
                                                 required />
                                         </div>
-                                    </div>
-                                    <div className="form-group padding-left-right">
-                                        <label className="control-label"></label>
-                                        <div className="controls">
-                                            <button
-                                                type="submit"
-                                                className="btn btn-info"
-                                                disabled={this.state.isSignining}
-                                                dangerouslySetInnerHTML={{__html: this.state.signinBtnHtml}}>
-                                            </button>
+                                        <div className="form-group padding-left-right">
+                                            <label className="control-label"></label>
+                                            <div className="controls">
+                                                <button
+                                                    type="submit"
+                                                    className="btn btn-info"
+                                                    disabled={this.state.isSignIning}
+                                                    dangerouslySetInnerHTML={{__html: this.state.signInBtnHtml}}>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </fieldset>
@@ -190,8 +190,8 @@ class Signin extends React.Component {
     }
 }
 
-Signin.propTypes = {
+SignIn.propTypes = {
     history: PropTypes.object
 };
 
-export default withRouter(Signin);
+export default withRouter(SignIn);

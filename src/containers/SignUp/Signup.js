@@ -9,7 +9,7 @@ import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
 import regex from '../../utils/regex';
 import { notify } from '../../components/Notify/Notify';
 
-import './Signup.css';
+import './SignUp.css';
 
 const TOOLTIP = {
     'SIGNUP_NAME': '請輸入姓名',
@@ -22,12 +22,12 @@ const TOOLTIP = {
     'WEAK_PASSWORD': '密碼強度低'
 };
 
-class Signup extends React.Component {
+class SignUp extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            isSignuping: false,
+            isSignUping: false,
             signupBtnHtml: '註冊',
             name: '',
             email: '',
@@ -68,7 +68,7 @@ class Signup extends React.Component {
 
     checkInputs(ev) {
         ev && ev.preventDefault();
-        if (this.state.isSignuping) {
+        if (this.state.isSignUping) {
             return;
         }
 
@@ -97,8 +97,8 @@ class Signup extends React.Component {
         let database = firebase.database();
 
         this.setState({
-            isSignuping: true,
-            signupBtnHtml: '<i class="fas fa-circle-notch fa-spin"></i> 註冊中...'
+            isSignUping: true,
+            signupBtnHtml: '<i class="fa fa-circle-o-notch fa-spin"></i> 註冊中...'
         });
 
         return auth.createUserWithEmailAndPassword(email, pw).then(() => {
@@ -130,19 +130,23 @@ class Signup extends React.Component {
             // 從 firebase 發送 email 驗證信
             return auth.currentUser.sendEmailVerification();
         }).then(() => {
+            // popup 提醒 email 驗證信已發出
+            return notify('已寄送 Email 驗證信', { type: 'success' });
+        }).then(() => {
+            // 訊息顯示 2s 後再進行跳轉
+            return new Promise((resolve) => window.setTimeout(resolve, 2000));
+        }).then(() => {
             this.setState({
-                isSignuping: false,
+                isSignUping: false,
                 signupBtnHtml: '註冊'
             });
 
             // 非同步工作寫入完成後才進行網址跳轉動作
-            this.props.history.replace('/chat');
-
-            // popup 提醒 email 驗證信已發出
-            return notify('已寄送 Email 驗證信', { type: 'success' });
+            // this.props.history.replace('/chat');
+            window.location.replace('/chat');
         }).catch((error) => {
             this.setState({
-                isSignuping: false,
+                isSignUping: false,
                 signupBtnHtml: '註冊'
             });
 
@@ -213,8 +217,8 @@ class Signup extends React.Component {
                                                 required />
                                         </div>
                                     </div>
-                                    <div className="form-group padding-left-right">
-                                        <div className="input-group">
+                                    <div className="form-group">
+                                        <div className="input-group padding-left-right">
                                             <div className="chsr input-group-prepend">
                                                 <span className="input-group-text w-100 justify-content-center">
                                                     <i className="fas fa-lock"></i>
@@ -230,8 +234,8 @@ class Signup extends React.Component {
                                                 required />
                                         </div>
                                     </div>
-                                    <div className="form-group padding-left-right">
-                                        <div className="input-group">
+                                    <div className="form-group">
+                                        <div className="input-group padding-left-right">
                                             <div className="chsr input-group-prepend">
                                                 <span className="input-group-text w-100 justify-content-center">
                                                     <i className="fas fa-lock"></i>
@@ -247,9 +251,9 @@ class Signup extends React.Component {
                                                 required />
                                         </div>
                                     </div>
-                                    <div className="error-notify"></div>
-                                    <div className="form-group padding-left-right">
-                                        <div className="controls">
+
+                                    <div className="form-group">
+                                        <div className="controls padding-left-right">
                                             <button
                                                 type="submit"
                                                 className="btn btn-info"
@@ -285,8 +289,8 @@ class Signup extends React.Component {
     }
 }
 
-Signup.propTypes = {
+SignUp.propTypes = {
     history: PropTypes.object
 };
 
-export default withRouter(Signup);
+export default withRouter(SignUp);

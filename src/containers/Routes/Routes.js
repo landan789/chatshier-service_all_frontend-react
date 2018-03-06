@@ -4,8 +4,8 @@ import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Redirect } from 'react-router-dom';
 
 import mainStore from '../../redux/mainStore';
-import Signin from '../Signin/Signin';
-import Signup from '../Signup/Signup';
+import SignIn from '../SignIn/SignIn';
+import SignUp from '../SignUp/SignUp';
 
 import './Routes.css';
 
@@ -15,13 +15,13 @@ class Routes extends React.Component {
 
         this.routes = [{
             path: '/',
-            component: Signin
+            component: SignIn
         }, {
             path: '/signin',
-            component: Signin
+            component: SignIn
         }, {
             path: '/signup',
-            component: Signup
+            component: SignUp
         }, {
             path: '/chat',
             component: null

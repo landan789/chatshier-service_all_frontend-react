@@ -17,7 +17,7 @@ class Users extends Base {
      * @param {string} userId - 使用者的 firebase ID
      */
     findOne(userId) {
-        let destUrl = this.urlPrefix + 'user/' + userId;
+        let destUrl = this.urlPrefix + userId;
         let reqInit = {
             methods: 'GET',
             headers: reqHeaders
@@ -32,7 +32,7 @@ class Users extends Base {
      * @param {any} postUserData - 新增的 Chatshier User 資料
      */
     insertOne(userId, postUserData) {
-        let destUrl = this.urlPrefix + 'user/' + userId;
+        let destUrl = this.urlPrefix + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -48,7 +48,7 @@ class Users extends Base {
      * @param {any} putUserData - 更新的 Chatshier User 資料
      */
     updateOne(userId, putUserData) {
-        let destUrl = this.prefixUrl + 'user/' + userId;
+        let destUrl = this.prefixUrl + userId;
         let reqInit = {
             medthod: 'PUT',
             headers: reqHeaders,

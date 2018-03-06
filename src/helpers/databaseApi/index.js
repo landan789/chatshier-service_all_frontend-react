@@ -1,6 +1,7 @@
 import Apps from './Apps';
 import AppsMessagers from './AppsMessagers';
 import CalendarsEvents from './CalendarsEvents';
+import Users from './Users';
 
 let jwt = '';
 let reqHeaders = new Headers();
@@ -18,7 +19,8 @@ const setJWT = (value) => {
 const databaseApi = {
     apps: new Apps(),
     appsMessagers: new AppsMessagers(),
-    calendarsEvents: new CalendarsEvents()
+    calendarsEvents: new CalendarsEvents(),
+    users: new Users()
 };
 
 export default databaseApi;

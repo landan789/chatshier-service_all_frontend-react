@@ -8,6 +8,7 @@ import browser from '../../helpers/browser';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
 import regex from '../../utils/regex';
 import { notify } from '../../components/Notify/Notify';
+import databaseApi from '../../helpers/databaseApi/index';
 
 import './SignUp.css';
 
@@ -94,7 +95,6 @@ class SignUp extends React.Component {
 
     signup(name, email, pw) {
         let auth = firebase.auth();
-        let database = firebase.database();
 
         this.setState({
             isSignUping: true,
@@ -109,23 +109,14 @@ class SignUp extends React.Component {
             cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, name);
             cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, email);
             window.localStorage.setItem('jwt', jwt);
-
+            let userId = auth.currentUser.uid;
             // 更新 firebase 上 Authentication 的使用者個人資料
-            let userProfile = {
-                displayName: name,
-                photoURL: ''
+            let user = {
+                phone: '',
+                company: '',
+                address: ''
             };
-            return auth.currentUser.updateProfile(userProfile);
-        }).then(() => {
-            // 更新 firebase 上 users 欄位的使用者資料
-            let dateNow = Date.now();
-            let userInfo = {
-                createdTime: dateNow,
-                updatedTime: dateNow,
-                name: name,
-                email: email
-            };
-            return database.ref('users/' + auth.currentUser.uid).set(userInfo);
+            return databaseApi.users.insertOne(userId, user);
         }).then(() => {
             // 從 firebase 發送 email 驗證信
             return auth.currentUser.sendEmailVerification();

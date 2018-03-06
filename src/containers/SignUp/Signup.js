@@ -8,7 +8,7 @@ import browser from '../../helpers/browser';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
 import regex from '../../utils/regex';
 import { notify } from '../../components/Notify/Notify';
-import databaseApi from '../../helpers/databaseApi/databaseApi';
+import databaseApi from '../../helpers/databaseApi/index';
 
 import './SignUp.css';
 
@@ -95,7 +95,6 @@ class SignUp extends React.Component {
 
     signup(name, email, pw) {
         let auth = firebase.auth();
-        let database = firebase.database();
 
         this.setState({
             isSignUping: true,
@@ -105,7 +104,6 @@ class SignUp extends React.Component {
         return auth.createUserWithEmailAndPassword(email, pw).then(() => {
             return auth.signInWithEmailAndPassword(email, pw);
         }).then(() => {
-            debugger;
             return auth.currentUser.getIdToken();
         }).then((jwt) => {
             cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, name);

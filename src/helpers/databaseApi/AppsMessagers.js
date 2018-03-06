@@ -1,5 +1,5 @@
 import Base from './Base';
-import { reqHeaders } from './api';
+import { reqHeaders } from './index';
 
 /**
  * 宣告專門處理 Messager 相關的 API 類別

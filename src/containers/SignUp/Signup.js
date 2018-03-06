@@ -96,7 +96,6 @@ class SignUp extends React.Component {
     signup(name, email, pw) {
         let auth = firebase.auth();
         let database = firebase.database();
-        let userId = database.users.uid;
 
         this.setState({
             isSignUping: true,
@@ -106,28 +105,20 @@ class SignUp extends React.Component {
         return auth.createUserWithEmailAndPassword(email, pw).then(() => {
             return auth.signInWithEmailAndPassword(email, pw);
         }).then(() => {
+            debugger;
             return auth.currentUser.getIdToken();
         }).then((jwt) => {
             cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, name);
             cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, email);
             window.localStorage.setItem('jwt', jwt);
-
+            let userId = auth.currentUser.uid;
             // 更新 firebase 上 Authentication 的使用者個人資料
-            let userProfile = {
-                displayName: name,
-                photoURL: ''
+            let user = {
+                phone: '',
+                company: '',
+                address: ''
             };
-            return databaseApi.users.insert(userId, userProfile);
-        }).then(() => {
-            // 更新 firebase 上 users 欄位的使用者資料
-            let dateNow = Date.now();
-            let userInfo = {
-                createdTime: dateNow,
-                updatedTime: dateNow,
-                name: name,
-                email: email
-            };
-            return database.ref('users/' + auth.currentUser.uid).set(userInfo);
+            return databaseApi.users.insertOne(userId, user);
         }).then(() => {
             // 從 firebase 發送 email 驗證信
             return auth.currentUser.sendEmailVerification();

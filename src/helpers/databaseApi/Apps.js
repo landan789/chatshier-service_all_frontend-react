@@ -1,5 +1,5 @@
 import Base from './Base';
-import { reqHeaders } from './api';
+import { reqHeaders } from './databaseApi';
 
 /**
  * 宣告專門處理 Chatshier App 相關的 API 類別

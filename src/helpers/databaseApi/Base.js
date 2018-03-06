@@ -1,4 +1,4 @@
-import urlConfig from '../../config/url';
+import urlConfig from '../../config/url-config';
 
 class Base {
     constructor() {

@@ -8,6 +8,7 @@ import browser from '../../helpers/browser';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
 import regex from '../../utils/regex';
 import { notify } from '../../components/Notify/Notify';
+import databaseApi from '../../helpers/databaseApi/databaseApi';
 
 import './SignUp.css';
 
@@ -95,6 +96,7 @@ class SignUp extends React.Component {
     signup(name, email, pw) {
         let auth = firebase.auth();
         let database = firebase.database();
+        let userId = database.users.uid;
 
         this.setState({
             isSignUping: true,
@@ -115,7 +117,7 @@ class SignUp extends React.Component {
                 displayName: name,
                 photoURL: ''
             };
-            return auth.currentUser.updateProfile(userProfile);
+            return databaseApi.users.insert(userId, userProfile);
         }).then(() => {
             // 更新 firebase 上 users 欄位的使用者資料
             let dateNow = Date.now();

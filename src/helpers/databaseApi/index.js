@@ -24,4 +24,4 @@ const databaseApi = {
 };
 
 export default databaseApi;
-export { setJWT, jwt, reqHeaders };
+export { setJWT, jwt, reqHeaders, databaseApi };

@@ -1,10 +1,10 @@
-import Base from './Base';
+import Core from './Core';
 import { reqHeaders } from './index';
 
 /**
  * 宣告專門處理 Chatshier User 相關的 API 類別
  */
-class Users extends Base {
+class Users extends Core {
     constructor() {
         super();
 
@@ -12,7 +12,7 @@ class Users extends Base {
     }
 
     /**
-     * 取得使用者所有在 Chatshier 內設定的 User
+     * 取得使用者的 User 資料
      *
      * @param {string} userId - 使用者的 firebase ID
      */
@@ -26,12 +26,12 @@ class Users extends Base {
     };
 
     /**
-     * 新增 Chatshier App
+     * 新增 Chatshier User
      *
      * @param {string} userId - 使用者的 firebase ID
      * @param {any} postUserData - 新增的 Chatshier User 資料
      */
-    insertOne(userId, postUserData) {
+    insert(userId, postUserData) {
         let destUrl = this.urlPrefix + 'users/' + userId;
         let reqInit = {
             method: 'POST',
@@ -42,12 +42,12 @@ class Users extends Base {
     };
 
     /**
-     * 更新 Chatshier App
+     * 更新 Chatshier User
      *
      * @param {string} userId - 使用者的 firebase ID
      * @param {any} putUserData - 更新的 Chatshier User 資料
      */
-    updateOne(userId, putUserData) {
+    update(userId, putUserData) {
         let destUrl = this.prefixUrl + 'users/' + userId;
         let reqInit = {
             medthod: 'PUT',

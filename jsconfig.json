@@ -13,6 +13,7 @@
         "**/node_modules"
     ],
     "include": [
-        "src/**/*.js"
+        "src/**/*.js",
+        "typings/**/*.d.ts"
     ]
 }

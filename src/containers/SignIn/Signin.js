@@ -6,6 +6,7 @@ import firebase from 'firebase';
 
 import browser from '../../helpers/browser';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
+import { setJWT } from '../../helpers/databaseApi/index';
 import regex from '../../utils/regex';
 
 import { notify } from '../../components/Notify/Notify';
@@ -82,6 +83,7 @@ class SignIn extends React.Component {
             cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, name);
             cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, email);
             window.localStorage.setItem('jwt', jwt);
+            setJWT(jwt);
 
             // this.props.history.replace('/chat');
             window.location.replace('/chat');
@@ -150,16 +152,16 @@ class SignIn extends React.Component {
                                                 onChange={this.pwChanged}
                                                 required />
                                         </div>
-                                        <div className="form-group padding-left-right">
-                                            <label className="control-label"></label>
-                                            <div className="controls">
-                                                <button
-                                                    type="submit"
-                                                    className="btn btn-info"
-                                                    disabled={this.state.isSignIning}
-                                                    dangerouslySetInnerHTML={{__html: this.state.signInBtnHtml}}>
-                                                </button>
-                                            </div>
+                                    </div>
+                                    <div className="form-group padding-left-right">
+                                        <label className="control-label"></label>
+                                        <div className="controls">
+                                            <button
+                                                type="submit"
+                                                className="btn btn-info"
+                                                disabled={this.state.isSignIning}
+                                                dangerouslySetInnerHTML={{__html: this.state.signInBtnHtml}}>
+                                            </button>
                                         </div>
                                     </div>
                                 </fieldset>
@@ -191,7 +193,7 @@ class SignIn extends React.Component {
 }
 
 SignIn.propTypes = {
-    history: PropTypes.object
+    history: PropTypes.object.isRequired
 };
 
 export default withRouter(SignIn);

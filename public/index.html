@@ -38,6 +38,30 @@
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div class="root" id="charshier_root"></div>
 
+        <script type="text/javascript">
+            (function() {
+                var configUrls = [
+                    'config/firebaseConfig.js',
+                    'config/url-config.js'
+                ];
+
+                var hasContainConfig = function(filename) {
+                    for (var i = 0; i < configUrls.length; i++) {
+                        if (filename.indexOf(configUrls[i]) >= 0) {
+                            return true;
+                        }
+                    }
+                    return false;
+                };
+
+                window.addEventListener('error', function(ev) {
+                    if (ev && 'Uncaught SyntaxError: Unexpected token <' === ev.message &&
+                        hasContainConfig(ev.filename.replace(window.location.origin, ''))) {
+                        ev.preventDefault();
+                    }
+                }, true);
+            })();
+        </script>
         <script src="config/firebaseConfig.js"></script>
         <script src="config/url-config.js"></script>
     </body>

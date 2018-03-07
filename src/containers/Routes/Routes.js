@@ -40,11 +40,6 @@ class Routes extends React.Component {
         })();
     }
 
-    setBrowserTitle(title) {
-        document.title = title;
-        return null;
-    }
-
     render() {
         return (
             <Provider store={mainStore}>

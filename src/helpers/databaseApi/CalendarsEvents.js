@@ -1,10 +1,10 @@
-import Base from './Base';
+import Core from './Core';
 import { reqHeaders } from './index';
 
 /**
  * 宣告專門處理 CalendarsEvents 相關的 API 類別
  */
-class CalendarsEvents extends Base {
+class CalendarsEvents extends Core {
     constructor() {
         super();
 
@@ -16,7 +16,7 @@ class CalendarsEvents extends Base {
      *
      * @param {string} userId - 使用者的 firebase id
      */
-    getAll(userId) {
+    findAll(userId) {
         let destUrl = this.urlPrefix + 'users/' + userId;
         let reqInit = {
             method: 'GET',

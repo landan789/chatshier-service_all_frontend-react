@@ -1,8 +1,9 @@
-import urlConfig from '../../config/url-config';
+import urlConfig from '../../config/url';
 
-class Base {
+class Core {
     constructor() {
-        this.prefixUrl = urlConfig.apiUrl + '/api/';
+        let config = window.urlConfig || urlConfig;
+        this.prefixUrl = config.apiUrl + '/api/';
     }
 
     /**
@@ -38,4 +39,4 @@ class Base {
     };
 }
 
-export default Base;
+export default Core;

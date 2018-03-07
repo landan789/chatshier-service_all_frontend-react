@@ -3,6 +3,8 @@ import AppsMessagers from './AppsMessagers';
 import CalendarsEvents from './CalendarsEvents';
 import Users from './Users';
 
+import cookieHelper from '../cookie';
+
 let jwt = '';
 let reqHeaders = new Headers();
 
@@ -15,6 +17,7 @@ const setJWT = (value) => {
     jwt = value;
     reqHeaders.set('Authorization', jwt);
 };
+cookieHelper.hasSignedin() && setJWT(window.localStorage.getItem('jwt'));
 
 const databaseApi = {
     apps: new Apps(),
@@ -24,4 +27,4 @@ const databaseApi = {
 };
 
 export default databaseApi;
-export { setJWT, jwt, reqHeaders, databaseApi };
+export { databaseApi, setJWT, jwt, reqHeaders };

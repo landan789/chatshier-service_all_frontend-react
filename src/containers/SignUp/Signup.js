@@ -6,9 +6,10 @@ import firebase from 'firebase';
 
 import browser from '../../helpers/browser';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
+import databaseApi, { setJWT } from '../../helpers/databaseApi/index';
+
 import regex from '../../utils/regex';
 import { notify } from '../../components/Notify/Notify';
-import databaseApi from '../../helpers/databaseApi/index';
 
 import './SignUp.css';
 
@@ -109,6 +110,8 @@ class SignUp extends React.Component {
             cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, name);
             cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, email);
             window.localStorage.setItem('jwt', jwt);
+            setJWT(jwt);
+
             let userId = auth.currentUser.uid;
             // 更新 firebase 上 Authentication 的使用者個人資料
             let user = {
@@ -116,7 +119,7 @@ class SignUp extends React.Component {
                 company: '',
                 address: ''
             };
-            return databaseApi.users.insertOne(userId, user);
+            return databaseApi.users.insert(userId, user);
         }).then(() => {
             // 從 firebase 發送 email 驗證信
             return auth.currentUser.sendEmailVerification();
@@ -281,7 +284,7 @@ class SignUp extends React.Component {
 }
 
 SignUp.propTypes = {
-    history: PropTypes.object
+    history: PropTypes.object.isRequired
 };
 
 export default withRouter(SignUp);

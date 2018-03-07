@@ -1,10 +1,10 @@
-import Base from './Base';
+import Core from './Core';
 import { reqHeaders } from './index';
 
 /**
  * 宣告專門處理 Messager 相關的 API 類別
  */
-class AppsMessagers extends Base {
+class AppsMessagers extends Core {
     constructor() {
         super();
 
@@ -16,7 +16,7 @@ class AppsMessagers extends Base {
      *
      * @param {string} userId - 使用者的 firebase ID
      */
-    getAll(userId) {
+    findAll(userId) {
         let destUrl = this.urlPrefix + 'users/' + userId;
         let reqInit = {
             method: 'GET',

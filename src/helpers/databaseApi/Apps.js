@@ -1,10 +1,10 @@
-import Base from './Base';
+import Core from './Core';
 import { reqHeaders } from './index';
 
 /**
  * 宣告專門處理 Chatshier App 相關的 API 類別
  */
-class App extends Base {
+class App extends Core {
     constructor() {
         super();
 
@@ -24,7 +24,7 @@ class App extends Base {
      *
      * @param {string} userId - 使用者的 firebase ID
      */
-    getAll(userId) {
+    findAll(userId) {
         let destUrl = this.urlPrefix + 'users/' + userId;
         let reqInit = {
             method: 'GET',

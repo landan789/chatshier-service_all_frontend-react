@@ -18,13 +18,13 @@ $_signin-logo-height: 4rem;
         padding: 0 5rem;
     }
 
-    .signin-logo {
+    .logo-container {
         margin-bottom: 2.5rem;
-    
-        img {
-            width: $_signin-logo-width;
-            height: $_signin-logo-height;
-        }
+    }
+
+    .chatshier-logo img {
+        width: $_signin-logo-width;
+        height: $_signin-logo-height;
     }
     
     .form-container {

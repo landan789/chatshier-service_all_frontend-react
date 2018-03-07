@@ -4,6 +4,7 @@ import { Route, withRouter } from 'react-router-dom';
 import { Fade } from 'reactstrap';
 import firebase from 'firebase';
 
+import urlConfig from '../../config/url';
 import browser from '../../helpers/browser';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
 import { setJWT } from '../../helpers/databaseApi/index';
@@ -23,6 +24,7 @@ class SignIn extends React.Component {
             email: '',
             password: ''
         };
+        this.urlConfig = window.urlConfig || urlConfig;
 
         this.emailChanged = this.emailChanged.bind(this);
         this.pwChanged = this.pwChanged.bind(this);
@@ -108,10 +110,10 @@ class SignIn extends React.Component {
     render() {
         return (
             <Fade in className="signin-container">
-                <div className="chsr col-md-12 text-center signin-logo">
-                    <div className="logo-container">
+                <div className="col-md-12 text-center logo-container">
+                    <a className="chatshier-logo" href={this.urlConfig.wwwUrl + (80 !== this.urlConfig.port ? ':' + this.urlConfig.port : '')}>
                         <img alt="Chatshier-logo" src="image/logo.png" />
-                    </div>
+                    </a>
                 </div>
 
                 <div className="col-md-12">

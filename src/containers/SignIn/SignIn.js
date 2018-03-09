@@ -4,9 +4,8 @@ import { Route, withRouter } from 'react-router-dom';
 import { Fade } from 'reactstrap';
 import firebase from 'firebase';
 
-import ROUTES from '../../config/route';
 import urlConfig from '../../config/url';
-import browserHelper from '../../helpers/browser';
+import browser from '../../helpers/browser';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
 import { setJWT } from '../../helpers/databaseApi/index';
 import regex from '../../utils/regex';
@@ -33,10 +32,10 @@ class SignIn extends React.Component {
     }
 
     componentWillMount() {
-        browserHelper.setTitle('登入');
+        browser.setTitle('登入');
 
         if (cookieHelper.hasSignedin()) {
-            window.location.replace(ROUTES.CHAT);
+            window.location.replace('/chat');
         }
     }
 
@@ -88,8 +87,8 @@ class SignIn extends React.Component {
             window.localStorage.setItem('jwt', jwt);
             setJWT(jwt);
 
-            // this.props.history.replace(ROUTES.CHAT);
-            window.location.replace(ROUTES.CHAT);
+            // this.props.history.replace('/chat');
+            window.location.replace('/chat');
         }).catch((error) => {
             this.setState({
                 isSignIning: false,
@@ -180,7 +179,7 @@ class SignIn extends React.Component {
                                         <p>
                                             還沒有帳號嗎請按
                                             <span className="link-text" onClick={() => {
-                                                router.history.push(ROUTES.SIGNUP);
+                                                router.history.push('/signup');
                                             }}>這裡</span>
                                             註冊。
                                         </p>

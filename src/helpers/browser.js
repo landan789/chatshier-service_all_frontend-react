@@ -1,6 +1,6 @@
 const TITLE_POSTFIX = ' | Chatshier';
 
-const browser = {
+const browserHelper = {
     /**
      * 設定瀏覽器分頁的標題
      */
@@ -9,4 +9,4 @@ const browser = {
     }
 };
 
-export default browser;
+export default browserHelper;

@@ -6,6 +6,9 @@ import { BrowserRouter, Route, Redirect } from 'react-router-dom';
 import mainStore from '../../redux/mainStore';
 import SignIn from '../SignIn/SignIn';
 import SignUp from '../SignUp/SignUp';
+import Setting from '../Setting/Setting';
+
+import ROUTES from '../../config/route';
 
 import './Routes.css';
 
@@ -13,19 +16,24 @@ class Routes extends React.Component {
     constructor(props) {
         super(props);
 
-        this.routes = [{
-            path: '/',
-            component: SignIn
-        }, {
-            path: '/signin',
-            component: SignIn
-        }, {
-            path: '/signup',
-            component: SignUp
-        }, {
-            path: '/chat',
-            component: null
-        }];
+        this.routes = [
+            {
+                path: '/',
+                component: SignIn
+            }, {
+                path: ROUTES.SIGNIN,
+                component: SignIn
+            }, {
+                path: ROUTES.SIGNUP,
+                component: SignUp
+            }, {
+                path: ROUTES.CHAT,
+                component: null
+            }, {
+                path: ROUTES.SETTING,
+                component: Setting
+            }
+        ];
     }
 
     shouldRedirect() {

@@ -1,13 +1,8 @@
-export const INSERT_APP = 'INSERT_APP';
-export const UPDATE_APP = 'UPDATE_APP';
+export const UPDATE_APPS = 'UPDATE_APP';
 export const REMOVE_APP = 'REMOVE_APP';
 
-export function insertApp(appId, app) {
-    return { type: INSERT_APP, appId, app };
-}
-
-export function updateApp(appId, app) {
-    return { type: UPDATE_APP, appId, app };
+export function updateApps(apps) {
+    return { type: UPDATE_APPS, apps };
 }
 
 export function removeApp(appId) {

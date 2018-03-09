@@ -10,10 +10,6 @@ import cookieHelper from '../../helpers/cookie';
 import { LINE, FACEBOOK, CHATSHIER } from '../../utils/appType';
 
 class Setting extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     componentWillMount() {
         browserHelper.setTitle('設定');
 
@@ -26,7 +22,7 @@ class Setting extends React.Component {
 
     render() {
         return (
-            <div>Setting</div>
+            <div></div>
         );
     }
 }

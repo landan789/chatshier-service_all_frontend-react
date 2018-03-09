@@ -4,7 +4,7 @@ import { reqHeaders } from './index';
 /**
  * 宣告專門處理 Chatshier App 相關的 API 類別
  */
-class App extends Core {
+class Apps extends Core {
     constructor() {
         super();
 
@@ -96,4 +96,4 @@ class App extends Core {
     };
 }
 
-export default App;
+export default Apps;

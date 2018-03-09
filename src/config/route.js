@@ -1,8 +1,9 @@
 const ROUTES = {
+    CHAT: '/chat',
     SIGNIN: '/signin',
     SIGNUP: '/signup',
-    CHAT: '/chat',
-    SETTING: '/setting'
+    SETTING: '/setting',
+    TICKET: '/ticket'
 };
 
 export default ROUTES;

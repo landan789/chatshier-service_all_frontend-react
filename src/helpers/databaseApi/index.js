@@ -1,5 +1,6 @@
 import Apps from './Apps';
 import AppsMessagers from './AppsMessagers';
+import AppsTickets from './AppsTickets';
 import CalendarsEvents from './CalendarsEvents';
 import Users from './Users';
 
@@ -22,6 +23,7 @@ cookieHelper.hasSignedin() && setJWT(window.localStorage.getItem('jwt'));
 const databaseApi = {
     apps: new Apps(),
     appsMessagers: new AppsMessagers(),
+    appsTickets: new AppsTickets(),
     calendarsEvents: new CalendarsEvents(),
     users: new Users()
 };

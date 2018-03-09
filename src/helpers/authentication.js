@@ -1,7 +1,5 @@
 import firebase from 'firebase';
 
-import mainStore from '../redux/mainStore';
-
 import { setJWT } from './databaseApi/index';
 import firebaseConfig from '../config/firebase';
 import cookieHelper, { CHSR_COOKIE } from './cookie';
@@ -23,8 +21,14 @@ class AuthenticationHelper {
         this._refreshTimer = null;
     }
 
+    get userId() {
+        return this.auth && this.auth.currentUser ? this.auth.currentUser.uid : '';
+    }
+
+    /**
+     * 每 55 分鐘自動更新一次 firebase token
+     */
     _keepTokenRefresh() {
-        // 每 55 分鐘更新一次 firebase token
         return new Promise((resolve) => {
             this._refreshTimer && window.clearTimeout(this._refreshTimer);
             this._refreshTimer = window.setTimeout(resolve, 55 * 60 * 1000);
@@ -43,22 +47,37 @@ class AuthenticationHelper {
         });
     };
 
+    /**
+     * 初始化 firebase app 應用
+     */
     init() {
+        if (this.app) {
+            return this.app;
+        }
+
         this.app = firebase.initializeApp(window.config || firebaseConfig);
         this.auth = this.app.auth();
 
         this.unsubscribeAuth && this.unsubscribeAuth();
         this.unsubscribeAuth = this.auth.onAuthStateChanged((firebaseUser) => {
             if (firebaseUser) {
-                this._keepTokenRefresh();
-            } else {
-                this._refreshTimer && window.clearTimeout(this._refreshTimer);
+                return this.auth.currentUser.getIdToken(true).then((jwt) => {
+                    window.localStorage.setItem('jwt', jwt);
+                    setJWT(jwt);
+                    this._readyResolve();
+                    return this._keepTokenRefresh();
+                });
             }
+
+            this._refreshTimer && window.clearTimeout(this._refreshTimer);
+            this._readyResolve();
         });
-        this._readyResolve();
         return this.app;
     }
 
+    /**
+     * 清空登入使用的 cookie 及 localStorage 項目，執行 firebase auth 登出
+     */
     signOut() {
         return this.ready.then(() => {
             cookieHelper.deleteCookie(CHSR_COOKIE.USER_NAME);

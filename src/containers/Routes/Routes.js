@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Redirect } from 'react-router-dom';
 import mainStore from '../../redux/mainStore';
 import SignIn from '../SignIn/SignIn';
 import SignUp from '../SignUp/SignUp';
+import Greetings from '../Greetings/Greetings';
 
 import './Routes.css';
 
@@ -25,6 +26,9 @@ class Routes extends React.Component {
         }, {
             path: '/chat',
             component: null
+        }, {
+            path: '/greeting',
+            component: Greetings
         }];
     }
 

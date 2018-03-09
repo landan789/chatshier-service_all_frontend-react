@@ -1,0 +1,20 @@
+.Toolbar {
+    background-color: #33CCFF;
+}
+
+.Toolbar > .navbar {
+    justify-content: flex-start;
+    padding: 0 10px;
+}
+
+.Toolbar > nav > ul {
+    height: 60px;
+}
+
+.Toolbar > nav > .navbar-header > a {
+    color: white;
+
+    &:hover {
+        color: white;
+    }
+}

@@ -1,0 +1,22 @@
+.NavItems {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    position: relative;
+    transition: all .2s ease-in-out;
+}
+
+.right {
+    position: absolute;
+    right: 0;
+    float: right;
+    flex-direction: row-reverse;
+    float: right;
+}
+
+.right > ul {
+    transform: translateX(35px) translateY(65px);
+  }

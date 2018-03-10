@@ -11,8 +11,6 @@
 /src/**/*.css
 /src/config/firebase.js
 /src/config/url.js
-/public/config/firebaseConfig.js
-/public/config/url-config.js
 
 # misc
 .DS_Store

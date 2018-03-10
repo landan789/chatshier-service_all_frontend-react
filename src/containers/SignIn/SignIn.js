@@ -15,6 +15,9 @@ import { notify } from '../../components/Notify/Notify';
 
 import './SignIn.css';
 
+const URL = window.urlConfig || urlConfig;
+const wwwUrl = URL.wwwUrl + (80 !== URL.port ? ':' + URL.port : '');
+
 class SignIn extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -25,7 +28,6 @@ class SignIn extends React.Component {
             email: '',
             password: ''
         };
-        this.urlConfig = window.urlConfig || urlConfig;
 
         this.emailChanged = this.emailChanged.bind(this);
         this.pwChanged = this.pwChanged.bind(this);
@@ -112,7 +114,7 @@ class SignIn extends React.Component {
         return (
             <Fade in className="signin-container">
                 <div className="col-md-12 text-center logo-container">
-                    <a className="chatshier-logo" href={this.urlConfig.wwwUrl + (80 !== this.urlConfig.port ? ':' + this.urlConfig.port : '')}>
+                    <a className="chatshier-logo" href={wwwUrl}>
                         <img alt="Chatshier-logo" src="image/logo.png" />
                     </a>
                 </div>

@@ -15,6 +15,9 @@ import { notify } from '../../components/Notify/Notify';
 
 import './SignUp.css';
 
+const URL = window.urlConfig || urlConfig;
+const wwwUrl = URL.wwwUrl + (80 !== URL.port ? ':' + URL.port : '');
+
 const TOOLTIP = {
     'SIGNUP_NAME': '請輸入姓名',
     'SIGNUP_EMAIL': '請輸入電子郵件',
@@ -38,7 +41,6 @@ class SignUp extends React.Component {
             password: '',
             passwordConfirm: ''
         };
-        this.urlConfig = window.urlConfig || urlConfig;
 
         this.nameChanged = this.nameChanged.bind(this);
         this.emailChanged = this.emailChanged.bind(this);
@@ -167,7 +169,7 @@ class SignUp extends React.Component {
         return (
             <Fade in className="signup-container">
                 <div className="col-md-12 text-center logo-container">
-                    <a className="chatshier-logo" href={this.urlConfig.wwwUrl + (80 !== this.urlConfig.port ? ':' + this.urlConfig.port : '')}>
+                    <a className="chatshier-logo" href={wwwUrl}>
                         <img alt="Chatshier-logo" src="image/logo.png" />
                     </a>
                 </div>

@@ -1,17 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Route, withRouter } from 'react-router-dom';
-import { Fade } from 'reactstrap';
-import firebase from 'firebase';
 
-import browser from '../../helpers/browser';
-import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
-import { setJWT } from '../../helpers/databaseApi/index';
+import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 
-import Layout from '../../components/Layout/Layout';
-import { notify } from '../../components/Notify/Notify';
-
-import './Greetings.css';
+import './Greeting.css';
 
 class Greeting extends React.Component {
     constructor(props, context) {
@@ -38,9 +29,8 @@ class Greeting extends React.Component {
     render() {
         return (
             <div>
-                <Layout>
-                    <p>Hi</p>
-                </Layout>
+                <Toolbar />
+                <p>Hi</p>
             </div>
         );
     }

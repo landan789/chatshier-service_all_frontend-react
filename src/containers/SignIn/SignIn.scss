@@ -49,7 +49,7 @@ $_signin-logo-height: 4rem;
         }
     }
 
-    @include RWD-phone() {
+    @include media-phone() {
         & {
             padding: 2rem 3rem 0;
         }
@@ -63,7 +63,7 @@ $_signin-logo-height: 4rem;
         }
     }
 
-    @include RWD-pad() {
+    @include media-pad() {
         & {
             padding: 5rem 3rem 0;
         }

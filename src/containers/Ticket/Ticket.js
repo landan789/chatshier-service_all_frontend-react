@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Aux from 'react-aux';
 
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
@@ -12,6 +13,11 @@ import dbapi from '../../helpers/databaseApi/index';
 
 import { updateMessagers } from '../../redux/actions/appsMessagers';
 import { updateTickets } from '../../redux/actions/appsTickets';
+
+import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
+import TicketTable from './TicketTable';
+
+import './Ticket.css';
 
 class Ticket extends React.Component {
     constructor(props) {
@@ -52,68 +58,25 @@ class Ticket extends React.Component {
         });
     }
 
-    renderTickets() {
-        if (!this.state.appsTickets) {
-            return;
-        }
-
-        let appIds = Object.keys(this.state.appsTickets);
-        let ticketCmps = [];
-
-        appIds.forEach((appId) => {
-            let tickets = this.state.appsTickets[appId].tickets;
-            let ticketIds = Object.keys(tickets);
-
-            ticketIds.forEach((ticketId) => {
-                let ticket = tickets[ticketId];
-                let messagerId = ticket.messager_id;
-                let messager = this.state.appsMessagers[appId].messagers[messagerId];
-
-                ticketCmps.push(
-                    <tr key={ticketId} className="ticket-row">
-                        <td>{messager.name || ''}</td>
-                        <td>{ticket.description.substring(0, 10)}</td>
-                        <td className="status">{ticket.status}</td>
-                        <td className="priority">{ticket.priority}</td>
-                        <td>{ticket.dueTime}</td>
-                        <td>{ticket.dueTime}</td>
-                    </tr>
-                );
-            });
-        });
-        return ticketCmps;
-    }
-
     render() {
-        console.log(this.state);
         return (
-            <div className="main">
-                <div className="view-ticket top-toolbar">
-                    <a href="/ticket_form" className="btn btn-default ticket-add">
-                        <span className="fa fa-plus fa-fw"></span>
-                        <span>新增待辦</span>
-                    </a>
-                    <input type="text" className="ticket-search-bar" id="ticket_search_bar" value="" placeholder="搜尋" />
-                </div>
+            <Aux>
+                <Toolbar />
+                <div className="ticket-wrapper">
+                    <div className="view-ticket top-toolbar">
+                        <button type="button" className="btn btn-default ticket-add">
+                            <span className="fas fa-plus fa-fw"></span>
+                            <span>新增待辦</span>
+                        </button>
+                        <input type="text" className="ticket-search-bar" placeholder="搜尋" />
+                    </div>
 
-                <div className="ticket">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>客戶姓名</th>
-                                <th>內容</th>
-                                <th>狀態</th>
-                                <th>優先</th>
-                                <th>到期時間</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody className="ticket-body">
-                            {this.renderTickets()}
-                        </tbody>
-                    </table>
+                    <TicketTable
+                        appsTickets={this.state.appsTickets}
+                        appsMessagers={this.state.appsMessagers}>
+                    </TicketTable>
                 </div>
-            </div>
+            </Aux>
         );
     }
 }

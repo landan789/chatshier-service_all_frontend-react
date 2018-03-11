@@ -86,7 +86,7 @@ class Apps extends Core {
      * @param {string} appId - 指定的 AppId
      * @param {string} userId - 使用者的 firebase ID
      */
-    remove(appId, userId) {
+    delete(appId, userId) {
         let destUrl = this.urlPrefix + 'apps/' + appId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',

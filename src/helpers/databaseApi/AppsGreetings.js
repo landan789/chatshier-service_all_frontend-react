@@ -46,7 +46,7 @@ class AppsGreetings extends Core {
         return this.sendRequest(destUrl, reqInit);
     };
 
-    remove(appId, greetingId) {
+    delete(appId, greetingId) {
         let destUrl = this.urlPrefix + 'apps/' + appId + '/greetings/' + greetingId;
         let reqInit = {
             methods: 'DELETE',

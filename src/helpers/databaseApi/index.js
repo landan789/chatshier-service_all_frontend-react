@@ -9,6 +9,7 @@ import cookieHelper from '../cookie';
 
 let jwt = '';
 let reqHeaders = new Headers();
+reqHeaders.set('Content-Type', 'application/json');
 
 /**
  * 設定 API 驗證身份所需的 JSON Web Token

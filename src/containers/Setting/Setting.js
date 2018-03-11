@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Aux from 'react-aux';
 import { withRouter } from 'react-router-dom';
+import { Fade } from 'reactstrap';
 
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 
-import { LINE, FACEBOOK, CHATSHIER } from '../../utils/appType';
+import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 
 class Setting extends React.Component {
     componentWillMount() {
@@ -22,7 +24,12 @@ class Setting extends React.Component {
 
     render() {
         return (
-            <div></div>
+            <Aux>
+                <Toolbar />
+                <Fade className="has-toolbar">
+                    Setting
+                </Fade>
+            </Aux>
         );
     }
 }

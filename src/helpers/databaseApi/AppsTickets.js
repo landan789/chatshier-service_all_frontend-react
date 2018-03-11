@@ -76,7 +76,7 @@ class AppsTickets extends Core {
      * @param {string} ticketId - 目標待辦事項的 ID
      * @param {string} userId - 使用者的 firebase ID
      */
-    remove(appId, ticketId, userId) {
+    delete(appId, ticketId, userId) {
         let destUrl = this.urlPrefix + 'apps/' + appId + '/tickets/' + ticketId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',

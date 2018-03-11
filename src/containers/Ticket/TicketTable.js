@@ -1,65 +1,164 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import Aux from 'react-aux';
+
+import { updateMessagers } from '../../redux/actions/appsMessagers';
+import { updateTickets, deleteTicket } from '../../redux/actions/appsTickets';
+
+import { toDueDateSpan, toLocalTimeString, toPriorityBorder,
+    toPriorityText, toStatusText } from '../../utils/ticket';
+import TicketEditModal from '../../components/Modals/TicketEdit/TicketEdit';
 
 class TicketTable extends React.Component {
+    constructor(props, ctx) {
+        super(props, ctx);
+
+        this.state = {
+            editingTicket: null
+        };
+        this.openEditModal = this.openEditModal.bind(this);
+        this.closeEditModal = this.closeEditModal.bind(this);
+    }
+
+    openEditModal(appId, ticketId) {
+        let appsTickets = this.props.appsTickets;
+        let ticket = appsTickets[appId].tickets[ticketId];
+        let messager = this.props.appsMessagers[appId].messagers[ticket.messager_id];
+
+        this.setState({
+            editingTicket: {
+                appId: appId,
+                ticketId: ticketId,
+                ticket: ticket,
+                messager: messager
+            }
+        });
+    }
+
+    closeEditModal(ev, role, modalData) {
+        if (modalData) {
+            switch (role) {
+                case 'update':
+                    this.props.updateTickets(modalData.updatedAppsTickets);
+                    break;
+                case 'delete':
+                    this.props.deleteTicket(modalData.appId, modalData.ticketId);
+                    break;
+                default:
+                    break;
+            }
+        }
+        this.setState({ editingTicket: null });
+    }
+
     renderTickets() {
-        if (!this.props.appsTickets) {
+        let appsTickets = this.props.appsTickets;
+        if (!appsTickets) {
             return;
         }
 
-        let appIds = Object.keys(this.props.appsTickets);
+        let appsMessagers = this.props.appsMessagers;
         let ticketCmps = [];
 
-        appIds.forEach((appId) => {
-            let tickets = this.props.appsTickets[appId].tickets;
-            let ticketIds = Object.keys(tickets);
+        for (let appId in appsTickets) {
+            let tickets = appsTickets[appId].tickets;
 
-            ticketIds.forEach((ticketId) => {
+            for (let ticketId in tickets) {
                 let ticket = tickets[ticketId];
                 let messagerId = ticket.messager_id;
-                let messager = this.props.appsMessagers[appId].messagers[messagerId];
+                let messager = appsMessagers[appId].messagers[messagerId];
 
-                ticketCmps.push(
-                    <tr key={ticketId} className="ticket-row">
-                        <td>{messager.name || ''}</td>
-                        <td>{ticket.description.substring(0, 10)}</td>
-                        <td className="status">{ticket.status}</td>
-                        <td className="priority">{ticket.priority}</td>
-                        <td>{ticket.dueTime}</td>
-                        <td>{ticket.dueTime}</td>
-                    </tr>
+                let description = ticket.description.substring(0, 10);
+                let statusText = toStatusText(ticket.status);
+                let priorityText = toPriorityText(ticket.priority);
+                let localTimeStr = toLocalTimeString(ticket.dueTime);
+                let dueDateElem = toDueDateSpan(ticket.dueTime);
+
+                let shouldShow = true;
+                let searchKeyword = this.props.searchKeyword;
+                if (searchKeyword) {
+                    // 如果有輸入搜尋文字時，有包含在要顯示的文字中時才顯示
+                    // 否則此欄位資料就不加入渲染的陣列中
+                    shouldShow &= (
+                        description.includes(searchKeyword) ||
+                        statusText.includes(searchKeyword) ||
+                        priorityText.includes(searchKeyword) ||
+                        localTimeStr.includes(searchKeyword) ||
+                        dueDateElem.props.children.includes(searchKeyword)
+                    );
+                }
+
+                shouldShow && ticketCmps.push(
+                    <div key={ticketId} className="ticket-row d-flex"
+                        style={toPriorityBorder(ticket.priority)}
+                        onClick={() => this.openEditModal(appId, ticketId)}>
+                        <div className="ticket-col">{messager.name || ''}</div>
+                        <div className="ticket-col">{description}</div>
+                        <div className="ticket-col">{statusText}</div>
+                        <div className="ticket-col">{priorityText}</div>
+                        <div className="ticket-col">{localTimeStr}</div>
+                        <div className="ticket-col">{dueDateElem}</div>
+                    </div>
                 );
-            });
-        });
-        return ticketCmps;
+            }
+        }
+
+        if (ticketCmps.length <= 0) {
+            return ticketCmps;
+        }
+        return <div className="ticket-body">{ticketCmps}</div>;
     };
 
     render() {
         return (
-            <div className="ticket">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>客戶姓名</th>
-                            <th>內容</th>
-                            <th>狀態</th>
-                            <th>優先</th>
-                            <th>到期時間</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody className="ticket-body">
-                        {this.renderTickets()}
-                    </tbody>
-                </table>
-            </div>
+            <Aux>
+                <div className="ticket-grid">
+                    <div className="ticket-head">
+                        <div className="ticket-row d-flex">
+                            <div className="ticket-col">客戶姓名</div>
+                            <div className="ticket-col">內容</div>
+                            <div className="ticket-col">狀態</div>
+                            <div className="ticket-col">優先</div>
+                            <div className="ticket-col">到期時間</div>
+                            <div className="ticket-col">&nbsp;</div>
+                        </div>
+                    </div>
+                    {this.renderTickets()}
+                </div>
+                <TicketEditModal
+                    editingTicket={this.state.editingTicket}
+                    isOpen={!!this.state.editingTicket}
+                    close={this.closeEditModal}>
+                </TicketEditModal>
+            </Aux>
         );
     }
 }
 
 TicketTable.propTypes = {
-    appsTickets: PropTypes.object,
-    appsMessagers: PropTypes.object
+    searchKeyword: PropTypes.string,
+    appsTickets: PropTypes.object.isRequired,
+    appsMessagers: PropTypes.object.isRequired,
+    updateMessagers: PropTypes.func.isRequired,
+    updateTickets: PropTypes.func.isRequired,
+    deleteTicket: PropTypes.func.isRequired
 };
 
-export default TicketTable;
+const mapStateToProps = (state, ownProps) => {
+    return {
+        appsMessagers: state.appsMessagers,
+        appsTickets: state.appsTickets
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        updateMessagers: bindActionCreators(updateMessagers, dispatch),
+        updateTickets: bindActionCreators(updateTickets, dispatch),
+        deleteTicket: bindActionCreators(deleteTicket, dispatch)
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TicketTable);

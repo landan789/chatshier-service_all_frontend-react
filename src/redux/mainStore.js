@@ -5,13 +5,13 @@ import { appsReducer } from './reducers/apps';
 import { appsMessagersReducer } from './reducers/appsMessagers';
 import { appsTicketsReducer } from './reducers/appsTickets';
 
-const mainStore = createStore(
-    combineReducers({
-        router: routerReducer,
-        apps: appsReducer,
-        appsMessagers: appsMessagersReducer,
-        appsTickets: appsTicketsReducer
-    })
-);
+const rootReducer = combineReducers({
+    router: routerReducer,
+    apps: appsReducer,
+    appsMessagers: appsMessagersReducer,
+    appsTickets: appsTicketsReducer
+});
+
+const mainStore = createStore(rootReducer);
 
 export default mainStore;

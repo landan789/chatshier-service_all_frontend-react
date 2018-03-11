@@ -1,0 +1,31 @@
+@import '../../../styles/_variables';
+
+.ticket-edit-modal {
+    .ticket-content {
+        padding-right: 15px;
+        padding-left: 15px;
+    
+        .row {
+            align-items: center;
+            padding: .5rem;
+    
+            &:not(:first-child) {
+                margin-top: .5rem;
+            }
+    
+            &:not(:last-child) {
+                margin-bottom: .5rem;
+            }
+    
+            &:nth-child(even) {
+                background-color: $primary-color;
+                color: #fff;
+            }
+        }
+    
+        .ticket-col {
+            padding-right: 0;
+            padding-left: 0;
+        }
+    }
+}

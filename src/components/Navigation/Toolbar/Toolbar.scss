@@ -1,12 +1,16 @@
+@import '../../../styles/_variables';
 @import '../../../styles/mixins/_rwd';
-@import '../../../styles/themes/_colors';
 
 $_toolbar-bg-color: $primary-color;
-$_toolbar-height: 64px;
 
 .toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     background-color: $_toolbar-bg-color;
-    height: $_toolbar-height;
+    height: $toolbar-height;
+    z-index: 1;
 
     > .navbar {
         display: flex;

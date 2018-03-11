@@ -1,4 +1,6 @@
-@import 'node_modules/bootstrap/scss/bootstrap-grid.scss';
+@import 'node_modules/bootstrap/scss/_functions';
+@import 'node_modules/bootstrap/scss/_variables';
+@import 'node_modules/bootstrap/scss/mixins/_breakpoints';
 // https://getbootstrap.com/docs/4.0/layout/overview/
 
 $_pc-break-point: 1024px;

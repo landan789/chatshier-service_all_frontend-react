@@ -96,7 +96,7 @@ class Ticket extends React.Component {
     }
 
     closeInsertModal(ev, role, modalData) {
-        if (!(modalData && modalData.insertedAppsTickets)) {
+        if ('insert' === role && modalData && modalData.insertedAppsTickets) {
             // 如果新增視窗關閉時帶有資料時，將新增的 ticket 更新至 redux store
             this.props.updateTickets(modalData.insertedAppsTickets);
         }

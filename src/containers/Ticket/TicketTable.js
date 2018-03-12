@@ -147,6 +147,7 @@ TicketTable.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
+    // 將此頁面需要使用的 store state 抓出，綁定至 props 中
     return {
         appsMessagers: state.appsMessagers,
         appsTickets: state.appsTickets
@@ -154,6 +155,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
+    // 將此頁面有需要用到的 store dispatch 方法綁定至 props 中
     return {
         updateMessagers: bindActionCreators(updateMessagers, dispatch),
         updateTickets: bindActionCreators(updateTickets, dispatch),

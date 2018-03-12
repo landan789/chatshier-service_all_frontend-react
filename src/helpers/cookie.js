@@ -18,11 +18,13 @@ class CookieHelper {
     }
 
     /**
-     * @param {string} name
-     * @param {string} [val]
-     * @param {string} [expires]
-     * @param {string} [domain]
-     * @returns {boolean}
+     * 設定 cookie 數值
+     *
+     * @param {string} name - cookie 欄位名稱
+     * @param {string} [val] - cookie 欄位數值
+     * @param {string} [expires] - cookie 過期時間，預設為 1 年
+     * @param {string} [domain] - cookie 可動作的網域，預設為 origin 的子網域
+     * @returns {boolean} - cookie 是否設定成功
      */
     setCookie(name, val, expires, domain) {
         if (!name) {
@@ -38,7 +40,10 @@ class CookieHelper {
     }
 
     /**
-     * @param {string} name
+     * 取得 cookie 數值
+     *
+     * @param {string} name - cookie 欄位名稱
+     * @returns {string} - cookie 欄位數值
      */
     getCookie(name) {
         let cookieValues = '; ' + document.cookie;
@@ -51,27 +56,33 @@ class CookieHelper {
     }
 
     /**
-     * @param {string} name
-     * @returns {boolean}
+     * 刪除 cookie 欄位
+     *
+     * @param {string} name - cookie 欄位名稱
+     * @returns {boolean} - cookie 是否刪除成功
      */
     deleteCookie(name) {
         let hasCookie = !!this.getCookie(name);
         if (hasCookie) {
-            this.setCookie(name, '', INIT_TIME);
-            hasCookie = !!this.getCookie(name);
+            try {
+                this.setCookie(name, '', INIT_TIME);
+                hasCookie = !!this.getCookie(name);
 
-            // 確保 cookie 有被清除
-            if (hasCookie) {
-                // 如果沒有被清除試著將 domain 的層級往上提升一層
-                let domainSplits = this.DEFAULT_DOMAIN.split('.');
-                domainSplits.shift();
-
-                while (hasCookie && domainSplits.length >= 2) {
+                // 確保 cookie 有被清除
+                if (hasCookie) {
+                    // 如果沒有被清除試著將 domain 的層級往上提升一層
+                    let domainSplits = this.DEFAULT_DOMAIN.split('.');
                     domainSplits.shift();
-                    let domain = '.' + domainSplits.join('.');
-                    this.setCookie(name, '', INIT_TIME, domain);
-                    hasCookie = !!this.getCookie(name);
+
+                    while (hasCookie && domainSplits.length >= 2) {
+                        domainSplits.shift();
+                        let domain = '.' + domainSplits.join('.');
+                        this.setCookie(name, '', INIT_TIME, domain);
+                        hasCookie = !!this.getCookie(name);
+                    }
                 }
+            } catch (ex) {
+                return false;
             }
         }
         return true;

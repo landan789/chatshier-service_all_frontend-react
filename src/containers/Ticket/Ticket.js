@@ -96,23 +96,11 @@ class Ticket extends React.Component {
     }
 
     closeInsertModal(ev, role, modalData) {
-        if (!modalData) {
-            this.setState({ isInsertModalOpen: false });
-            return;
+        if (!(modalData && modalData.insertedAppsTickets)) {
+            // 如果新增視窗關閉時帶有資料時，將新增的 ticket 更新至 redux store
+            this.props.updateTickets(modalData.insertedAppsTickets);
         }
-
-        let appId = modalData.appId;
-        let ticketId = modalData.ticketId;
-        let insertedTicket = modalData.insertedAppsTickets;
-        this.props.updateTickets(insertedTicket);
-
-        let _appsTickets = this.props.appsTickets;
-        _appsTickets[appId].tickets[ticketId] = insertedTicket;
-
-        this.setState({
-            appsTickets: _appsTickets,
-            isInsertModalOpen: !this.state.isInsertModalOpen
-        });
+        this.setState({ isInsertModalOpen: false });
     }
 
     render() {
@@ -160,6 +148,7 @@ Ticket.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
+    // 將此頁面需要使用的 store state 抓出，綁定至 props 中
     return {
         apps: state.apps,
         appsMessagers: state.appsMessagers,
@@ -168,6 +157,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
+    // 將此頁面有需要用到的 store 更新方法綁定至 props 中
     return {
         updateApps: bindActionCreators(updateApps, dispatch),
         updateMessagers: bindActionCreators(updateMessagers, dispatch),

@@ -1,6 +1,9 @@
 import Core from './Core';
 import { reqHeaders } from './index';
 
+import mainStore from '../../redux/mainStore';
+import { updateTickets, deleteTicket } from '../../redux/actions/appsTickets';
+
 /**
  * 宣告專門處理待辦事項相關的 API 類別
  */
@@ -24,14 +27,27 @@ class AppsTickets extends Core {
      *
      * @param {string|null} appId - 目標待辦事項的 App ID
      * @param {string} userId - 使用者的 firebase ID
+     * @returns {AppsTicketsResponse}
      */
     findAll(appId, userId) {
+        let appsTickets = mainStore.getState().appsTickets;
+        if (Object.keys(appsTickets).length > 0) {
+            return Promise.resolve({
+                status: 1,
+                msg: '',
+                data: appsTickets
+            });
+        }
+
         let destUrl = this.urlPrefix + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
         };
-        return this.sendRequest(destUrl, reqInit);
+        return this.sendRequest(destUrl, reqInit).then((resJson) => {
+            mainStore.dispatch(updateTickets(resJson.data));
+            return resJson;
+        });
     };
 
     /**
@@ -39,7 +55,8 @@ class AppsTickets extends Core {
      *
      * @param {string} appId - 目標待辦事項的 App ID
      * @param {string} userId - 使用者的 firebase ID
-     * @param {any} ticket - 欲新增的待辦事項資料
+     * @param {Chatshier.Ticket} ticket - 欲新增的待辦事項資料
+     * @returns {AppsTicketsResponse}
      */
     insert(appId, userId, ticket) {
         let destUrl = this.urlPrefix + 'apps/' + appId + '/users/' + userId;
@@ -48,7 +65,10 @@ class AppsTickets extends Core {
             headers: reqHeaders,
             body: JSON.stringify(ticket)
         };
-        return this.sendRequest(destUrl, reqInit);
+        return this.sendRequest(destUrl, reqInit).then((resJson) => {
+            mainStore.dispatch(updateTickets(resJson.data));
+            return resJson;
+        });
     };
 
     /**
@@ -57,7 +77,8 @@ class AppsTickets extends Core {
      * @param {string} appId - 目標待辦事項的 App ID
      * @param {string} ticketId - 目標待辦事項的 ID
      * @param {string} userId - 使用者的 firebase ID
-     * @param {any} ticket - 已編輯後欲更新的待辦事項資料
+     * @param {Chatshier.Ticket} ticket - 已編輯後欲更新的待辦事項資料
+     * @returns {AppsTicketsResponse}
      */
     update(appId, ticketId, userId, ticket) {
         let destUrl = this.urlPrefix + 'apps/' + appId + '/tickets/' + ticketId + '/users/' + userId;
@@ -66,7 +87,10 @@ class AppsTickets extends Core {
             headers: reqHeaders,
             body: JSON.stringify(ticket)
         };
-        return this.sendRequest(destUrl, reqInit);
+        return this.sendRequest(destUrl, reqInit).then((resJson) => {
+            mainStore.dispatch(updateTickets(resJson.data));
+            return resJson;
+        });
     };
 
     /**
@@ -82,7 +106,10 @@ class AppsTickets extends Core {
             method: 'DELETE',
             headers: reqHeaders
         };
-        return this.sendRequest(destUrl, reqInit);
+        return this.sendRequest(destUrl, reqInit).then((resJson) => {
+            mainStore.dispatch(deleteTicket(appId, ticketId));
+            return resJson;
+        });
     };
 }
 

@@ -18,6 +18,7 @@ class TicketViewModal extends React.Component {
         super(props, ctx);
 
         this.state = {
+            isAsyncWorking: false,
             dueTime: new Date(),
             status: 0,
             priority: 0,
@@ -33,6 +34,7 @@ class TicketViewModal extends React.Component {
     }
 
     componentWillReceiveProps(props) {
+        /** @type {Chatshier.Ticket} */
         let ticket = props.editingTicket ? props.editingTicket.ticket : {};
         this.setState({
             dueTime: ticket.dueTime,
@@ -64,6 +66,8 @@ class TicketViewModal extends React.Component {
         let appId = this.props.editingTicket.appId;
         let ticketId = this.props.editingTicket.ticketId;
         let userId = authHelper.userId;
+
+        /** @type {Chatshier.Ticket} */
         let ticket = {
             dueTime: this.state.dueTime,
             status: this.state.status,
@@ -82,19 +86,17 @@ class TicketViewModal extends React.Component {
         })(this.props.editingTicket.ticket, ticket);
 
         if (!shouldUpdate) {
-            return this.props.close(ev, 'update');
+            return this.props.close(ev);
         }
-        return dbapi.appsTickets.update(appId, ticketId, userId, ticket).then((res) => {
-            let appsTickets = res.data;
-            let modalData = {
-                appId: appId,
-                ticketId: ticketId,
-                updatedAppsTickets: appsTickets
-            };
-            this.props.close(ev, 'update', modalData);
+
+        this.setState({ isAsyncWorking: true });
+        return dbapi.appsTickets.update(appId, ticketId, userId, ticket).then(() => {
+            this.props.close(ev);
             return notify('更新成功', { type: 'success' });
         }).catch(() => {
             return notify('更新失敗', { type: 'danger' });
+        }).then(() => {
+            this.setState({ isAsyncWorking: false });
         });
     }
 
@@ -103,15 +105,14 @@ class TicketViewModal extends React.Component {
         let ticketId = this.props.editingTicket.ticketId;
         let userId = authHelper.userId;
 
+        this.setState({ isAsyncWorking: true });
         return dbapi.appsTickets.delete(appId, ticketId, userId).then(() => {
-            let modalData = {
-                appId: appId,
-                ticketId: ticketId
-            };
-            this.props.close(ev, 'delete', modalData);
+            this.props.close(ev);
             return notify('刪除成功', { type: 'success' });
         }).catch(() => {
             return notify('刪除失敗', { type: 'danger' });
+        }).then(() => {
+            this.setState({ isAsyncWorking: false });
         });
     }
 
@@ -193,8 +194,8 @@ class TicketViewModal extends React.Component {
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button color="primary" onClick={this.updateTicket}>更新</Button>
-                    <Button color="danger" onClick={this.deleteTicket}>刪除</Button>
+                    <Button color="primary" onClick={this.updateTicket} disabled={this.state.isAsyncWorking}>更新</Button>
+                    <Button color="danger" onClick={this.deleteTicket} disabled={this.state.isAsyncWorking}>刪除</Button>
                     <Button color="secondary" onClick={this.props.close}>取消</Button>
                 </ModalFooter>
             </Modal>

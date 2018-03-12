@@ -17,7 +17,7 @@ class AppsGreetings extends Core {
         return this.sendRequest(destUrl, reqInit);
     };
 
-    getOne(appId, greetingId) {
+    findOne(appId, greetingId) {
         let destUrl = this.urlPrefix + 'apps/' + appId + '/greetings/' + greetingId;
         let reqInit = {
             methods: 'GET',

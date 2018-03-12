@@ -15,3 +15,9 @@ interface AppsTicketsResponse {
     msg: string,
     data: Chatshier.AppsTickets
 }
+
+interface GroupsResponse {
+    status: number,
+    msg: string,
+    data: Chatshier.Groups
+}

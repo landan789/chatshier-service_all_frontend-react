@@ -7,6 +7,12 @@ interface AppsResponse {
 interface AppsMessagersResponse {
     status: number,
     msg: string,
+    data: Chatshier.AppsAutoreplies
+}
+
+interface AppsMessagersResponse {
+    status: number,
+    msg: string,
     data: Chatshier.AppsMessagers
 }
 

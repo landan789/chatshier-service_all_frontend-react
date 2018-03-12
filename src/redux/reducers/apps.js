@@ -12,7 +12,9 @@ export const appsReducer = (state = {}, action) => {
             }
             return Object.assign({}, state);
         case DELETE_APP:
-            delete state[action.appId];
+            let appId = action.appId;
+
+            delete state[appId];
             return Object.assign({}, state);
         default:
             return state;

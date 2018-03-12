@@ -1,11 +1,11 @@
-export const UPDATE_GROUPS_MEMBERS = 'UPDATE_GROUPS_MEMBERS';
-export const DELETE_GROUP_MEMBER = 'DELETE_GROUP_MEMBER';
+export const UPDATE_MEMBERS = 'UPDATE_GROUPS_MEMBERS';
+export const DELETE_MEMBER = 'DELETE_GROUP_MEMBER';
 
 /**
  * @param {GroupsMembers} groupsMembers
  */
 export const updateGroupsMembers = (groupsMembers) => {
-    return { type: UPDATE_GROUPS_MEMBERS, groupsMembers };
+    return { type: UPDATE_MEMBERS, groupsMembers };
 };
 
 /**
@@ -13,5 +13,5 @@ export const updateGroupsMembers = (groupsMembers) => {
  * @param {string} memberId
  */
 export const deleteGroupMember = (groupId, memberId) => {
-    return { type: DELETE_GROUP_MEMBER, groupId, memberId };
+    return { type: DELETE_MEMBER, groupId, memberId };
 };

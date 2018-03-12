@@ -12,7 +12,9 @@ export const groupsReducer = (state = {}, action) => {
             }
             return Object.assign({}, state);
         case DELETE_GROUP:
-            delete state[action.groupId];
+            let groupId = action.groupId;
+
+            delete state[groupId];
             return Object.assign({}, state);
         default:
             return state;

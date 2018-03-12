@@ -21,10 +21,13 @@ export const appsTicketsReducer = (state = {}, action) => {
             }
             return Object.assign({}, state);
         case DELETE_TICKET:
-            delete state[action.appId].tickets[action.ticketId];
-            if (0 === Object.keys(state[action.appId].tickets).length) {
-                delete state[action.appId].tickets;
-                delete state[action.appId];
+            let appId = action.appId;
+            let ticketId = action.ticketId;
+
+            delete state[appId].tickets[ticketId];
+            if (0 === Object.keys(state[appId].tickets).length) {
+                delete state[appId].tickets;
+                delete state[appId];
             }
             return Object.assign({}, state);
         default:

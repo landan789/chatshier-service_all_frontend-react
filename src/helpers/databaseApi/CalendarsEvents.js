@@ -1,6 +1,9 @@
 import Core from './Core';
 import { reqHeaders } from './index';
 
+import mainStore from '../../redux/mainStore';
+import { updateCalendarsEvents, deleteCalendarEvent } from '../../redux/actions/calendarsEvents';
+
 class CalendarsEvents extends Core {
     constructor() {
         super();
@@ -16,37 +19,46 @@ class CalendarsEvents extends Core {
             method: 'GET',
             headers: reqHeaders
         };
-        return this.sendRequest(destUrl, reqInit);
+        return this.sendRequest(destUrl, reqInit).then((resJson) => {
+            mainStore.dispatch(updateCalendarsEvents(resJson.data));
+            return resJson;
+        });
     };
 
     /**
      * @param {string} userId
-     * @param {*} calendar
+     * @param {Chatshier.CalendarEvent} calendarEvent
      */
-    insert(userId, calendar) {
+    insert(userId, calendarEvent) {
         let destUrl = this.urlPrefix + 'users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
-            body: JSON.stringify(calendar)
+            body: JSON.stringify(calendarEvent)
         };
-        return this.sendRequest(destUrl, reqInit);
+        return this.sendRequest(destUrl, reqInit).then((resJson) => {
+            mainStore.dispatch(updateCalendarsEvents(resJson.data));
+            return resJson;
+        });
     };
 
     /**
      * @param {string} calendarId
      * @param {string} eventId
      * @param {string} userId
-     * @param {*} calendar
+     * @param {Chatshier.CalendarEvent} calendarEvent
      */
-    update(calendarId, eventId, userId, calendarData) {
+    update(calendarId, eventId, userId, calendarEvent) {
         let destUrl = this.urlPrefix + 'calendars/' + calendarId + '/events/' + eventId + '/users/' + userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
-            body: JSON.stringify(calendarData)
+            body: JSON.stringify(calendarEvent)
         };
-        return this.sendRequest(destUrl, reqInit);
+        return this.sendRequest(destUrl, reqInit).then((resJson) => {
+            mainStore.dispatch(updateCalendarsEvents(resJson.data));
+            return resJson;
+        });
     };
 
     /**
@@ -60,7 +72,10 @@ class CalendarsEvents extends Core {
             method: 'DELETE',
             headers: reqHeaders
         };
-        return this.sendRequest(destUrl, reqInit);
+        return this.sendRequest(destUrl, reqInit).then((resJson) => {
+            mainStore.dispatch(deleteCalendarEvent(calendarId, eventId));
+            return resJson;
+        });
     };
 }
 

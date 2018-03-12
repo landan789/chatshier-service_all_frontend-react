@@ -18,6 +18,26 @@ namespace Chatshier {
         [appId: string]: App;
     }
 
+    interface Autoreply {
+        isDeleted: 0 | 1;
+        createdTime: number;
+        startedTime: number;
+        endedTime: number;
+        title: string;
+        text: string;
+        type: 'text';
+        updatedTime: number;
+    }
+
+    interface AppsAutoreplies {
+        [appId: string]: {
+            autoreplies: {
+                [autoreplyId: string]: Autoreply
+            }
+        };
+    }
+
+
     interface Messager {
         name: string;
         photo: string;
@@ -64,6 +84,25 @@ namespace Chatshier {
                 [ticketId: string]: Ticket
             }
         };
+    }
+
+    interface CalendarEvent {
+        isAllDay: 0 | 1;
+        isDeleted: 0 | 1;
+        description: string;
+        createdTime: number;
+        updatedTime: number;
+        endedTime: number;
+        startedTime: number;
+        title: string;
+    }
+
+    interface CalendarsEvents {
+        [calendarId: string]: {
+            events: {
+                [eventId: string]: CalendarEvent
+            }
+        }
     }
 
     interface Group {

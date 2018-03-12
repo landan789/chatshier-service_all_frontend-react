@@ -1,8 +1,8 @@
-import { UPDATE_GROUPS_MEMBERS, DELETE_GROUP_MEMBER } from '../actions/groupsMembers';
+import { UPDATE_MEMBERS, DELETE_MEMBER } from '../actions/groupsMembers';
 
 export const groupsMembersReducer = (state = {}, action) => {
     switch (action.type) {
-        case UPDATE_GROUPS_MEMBERS:
+        case UPDATE_MEMBERS:
             for (let groupId in action.groups) {
                 let group = action.groups[groupId];
                 if (group.isDeleted) {
@@ -20,11 +20,14 @@ export const groupsMembersReducer = (state = {}, action) => {
                 }
             }
             return Object.assign({}, state);
-        case DELETE_GROUP_MEMBER:
-            delete state[action.groupId].members[action.memberId];
-            if (0 === Object.keys(state[action.groupId].members).length) {
-                delete state[action.groupId].members;
-                delete state[action.groupId];
+        case DELETE_MEMBER:
+            let groupId = action.groupId;
+            let memberId = action.memberId;
+
+            delete state[groupId].members[memberId];
+            if (0 === Object.keys(state[groupId].members).length) {
+                delete state[groupId].members;
+                delete state[groupId];
             }
             return Object.assign({}, state);
         default:

@@ -4,8 +4,9 @@ import { Route, withRouter } from 'react-router-dom';
 import { Fade } from 'reactstrap';
 import firebase from 'firebase';
 
+import ROUTES from '../../config/route';
 import urlConfig from '../../config/url';
-import browser from '../../helpers/browser';
+import browserHelper from '../../helpers/browser';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
 import databaseApi, { setJWT } from '../../helpers/databaseApi/index';
 
@@ -13,6 +14,9 @@ import regex from '../../utils/regex';
 import { notify } from '../../components/Notify/Notify';
 
 import './SignUp.css';
+
+const URL = window.urlConfig || urlConfig;
+const wwwUrl = URL.wwwUrl + (80 !== URL.port ? ':' + URL.port : '');
 
 const TOOLTIP = {
     'SIGNUP_NAME': '請輸入姓名',
@@ -37,7 +41,6 @@ class SignUp extends React.Component {
             password: '',
             passwordConfirm: ''
         };
-        this.urlConfig = window.urlConfig || urlConfig;
 
         this.nameChanged = this.nameChanged.bind(this);
         this.emailChanged = this.emailChanged.bind(this);
@@ -47,10 +50,10 @@ class SignUp extends React.Component {
     }
 
     componentWillMount() {
-        browser.setTitle('註冊');
+        browserHelper.setTitle('註冊');
 
         if (cookieHelper.hasSignedin()) {
-            window.location.replace('/chat');
+            window.location.replace(ROUTES.CHAT);
         }
     }
 
@@ -138,8 +141,8 @@ class SignUp extends React.Component {
             });
 
             // 非同步工作寫入完成後才進行網址跳轉動作
-            // this.props.history.replace('/chat');
-            window.location.replace('/chat');
+            // this.props.history.replace(ROUTES.CHAT);
+            window.location.replace(ROUTES.CHAT);
         }).catch((error) => {
             this.setState({
                 isSignUping: false,
@@ -166,7 +169,7 @@ class SignUp extends React.Component {
         return (
             <Fade in className="signup-container">
                 <div className="col-md-12 text-center logo-container">
-                    <a className="chatshier-logo" href={this.urlConfig.wwwUrl + (80 !== this.urlConfig.port ? ':' + this.urlConfig.port : '')}>
+                    <a className="chatshier-logo" href={wwwUrl}>
                         <img alt="Chatshier-logo" src="image/logo.png" />
                     </a>
                 </div>

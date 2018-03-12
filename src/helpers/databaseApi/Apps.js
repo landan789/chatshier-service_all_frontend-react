@@ -4,7 +4,7 @@ import { reqHeaders } from './index';
 /**
  * 宣告專門處理 Chatshier App 相關的 API 類別
  */
-class App extends Core {
+class Apps extends Core {
     constructor() {
         super();
 
@@ -86,7 +86,7 @@ class App extends Core {
      * @param {string} appId - 指定的 AppId
      * @param {string} userId - 使用者的 firebase ID
      */
-    remove(appId, userId) {
+    delete(appId, userId) {
         let destUrl = this.urlPrefix + 'apps/' + appId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',
@@ -96,4 +96,4 @@ class App extends Core {
     };
 }
 
-export default App;
+export default Apps;

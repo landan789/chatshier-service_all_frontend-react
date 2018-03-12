@@ -66,7 +66,7 @@ class CalendarsEvents extends Core {
      * @param {string} eventId - calendar 的事件ID
      * @param {string} userId - 要進行更新的 calendar 事件資料
      */
-    remove(calendarId, eventId, userId) {
+    delete(calendarId, eventId, userId) {
         let destUrl = this.urlPrefix + 'calendars/' + calendarId + '/events/' + eventId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',

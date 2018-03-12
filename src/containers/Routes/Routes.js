@@ -4,9 +4,13 @@ import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Redirect } from 'react-router-dom';
 
 import mainStore from '../../redux/mainStore';
+import Setting from '../Setting/Setting';
 import SignIn from '../SignIn/SignIn';
 import SignUp from '../SignUp/SignUp';
-import Greetings from '../Greetings/Greetings';
+import Ticket from '../Ticket/Ticket';
+
+import ROUTES from '../../config/route';
+import Greeting from '../Greeting/Greeting';
 
 import './Routes.css';
 
@@ -14,22 +18,30 @@ class Routes extends React.Component {
     constructor(props) {
         super(props);
 
-        this.routes = [{
-            path: '/',
-            component: SignIn
-        }, {
-            path: '/signin',
-            component: SignIn
-        }, {
-            path: '/signup',
-            component: SignUp
-        }, {
-            path: '/chat',
-            component: null
-        }, {
-            path: '/greeting',
-            component: Greetings
-        }];
+        this.routes = [
+            {
+                path: '/',
+                component: SignIn
+            }, {
+                path: ROUTES.CHAT,
+                component: null
+            }, {
+                path: ROUTES.SETTING,
+                component: Setting
+            }, {
+                path: ROUTES.SIGNIN,
+                component: SignIn
+            }, {
+                path: ROUTES.SIGNUP,
+                component: SignUp
+            }, {
+                path: ROUTES.GREETING,
+                component: Greeting
+            }, {
+                path: ROUTES.TICKET,
+                component: Ticket
+            }
+        ];
     }
 
     shouldRedirect() {

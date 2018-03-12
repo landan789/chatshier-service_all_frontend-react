@@ -1,18 +1,19 @@
-import { INSERT_APP, UPDATE_APP, REMOVE_APP } from '../actions/apps';
+import { UPDATE_APPS, DELETE_APP } from '../actions/apps';
 
 export const appsReducer = (state = {}, action) => {
     switch (action.type) {
-        case INSERT_APP:
-            if (!state[action.appId]) {
-                state[action.appId] = action.app;
+        case UPDATE_APPS:
+            for (let appId in action.apps) {
+                let app = action.apps[appId];
+                if (app.isDeleted) {
+                    continue;
+                }
+                state[appId] = action.apps[appId];
             }
-            return state;
-        case UPDATE_APP:
-            state[action.appId] = action.app;
-            return state;
-        case REMOVE_APP:
+            return Object.assign({}, state);
+        case DELETE_APP:
             delete state[action.appId];
-            return state;
+            return Object.assign({}, state);
         default:
             return state;
     }

@@ -1,20 +1,54 @@
-.Toolbar {
-    background-color: #33CCFF;
+@import '../../../styles/_variables';
+@import '../../../styles/mixins/_rwd';
+
+$_toolbar-bg-color: $primary-color;
+
+.toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: $_toolbar-bg-color;
+    height: $toolbar-height;
+    font-size: .9rem;
+    z-index: 1;
+
+    .navbar-header {
+        display: flex;
+        align-items: center;
+        flex: 1;
+    }
+
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+
+    > .navbar {
+        display: flex;
+        justify-content: flex-start;
+        padding: 0 1rem;
+        height: 100%;
+
+        &.mobile {
+            display: none;
+        }
+    }
+
+    > nav > .navbar-header > a {
+        &, &:hover {
+            color: white;
+        }
+    }
 }
 
-.Toolbar > .navbar {
-    justify-content: flex-start;
-    padding: 0 10px;
-}
+@include media-breakpoint-down(sm) {
+    .toolbar > .navbar {
+        &.normal {
+            display: none;
+        }
 
-.Toolbar > nav > ul {
-    height: 60px;
-}
-
-.Toolbar > nav > .navbar-header > a {
-    color: white;
-
-    &:hover {
-        color: white;
+        &.mobile {
+            display: flex;
+        }
     }
 }

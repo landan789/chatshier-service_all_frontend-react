@@ -1,0 +1,85 @@
+.ticket-wrapper {
+    padding: 0 10% 3rem;
+}
+
+.ticket-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin: 1rem 0;
+
+    .ticket-insert {
+        margin-right: 2.5%;
+        border: 1px solid #ccc;
+
+        &:hover {
+            color: #333;
+            background-color: #e6e6e6;
+            border-color: #adadad;
+        }
+    }
+
+    .ticket-search-bar {
+        width: 25%;
+    }
+}
+
+.ticket-grid {
+    border: 1px solid gray;
+    border-radius: .25rem;
+
+    > div {
+        border-color: inherit;
+        border-style: inherit;
+        border-width: inherit;
+    }
+
+    .ticket-head {
+        font-weight: bold;
+
+        border-top: none;
+        border-right: none;
+        border-left: none;
+    }
+
+    .ticket-body {
+        border-right: none;
+        border-left: none;
+
+        .ticket-row {
+            cursor: pointer;
+
+            &:hover {
+                opacity: .6;
+            }
+
+            &:nth-child(even) {
+                background-color: #ddd;
+                color: #333;
+            }
+        }
+    }
+
+    .ticket-row {
+        align-items: center;
+        padding: .5rem;
+        border-top: inherit;
+        border-bottom: inherit;
+
+        &:first-child {
+            border-top: none;
+        }
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        .ticket-col {
+            flex: 0 0 16.66667%;
+            max-width: 16.66667%;
+            padding-top: .5rem;
+            padding-bottom: .5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}

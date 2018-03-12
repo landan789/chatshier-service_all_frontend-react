@@ -1,5 +1,5 @@
 @import '../../styles/mixins/_mixins';
-@import '../../styles/themes/_colors';
+@import '../../styles/_variables';
 
 $_signup-bg-color: $primary-color;
 $_signup-logo-width: 4rem;
@@ -49,7 +49,7 @@ $_signup-logo-height: 4rem;
         }
     }
 
-    @include RWD-phone() {
+    @include media-phone() {
         & {
             padding: 2rem 3rem 0;
         }
@@ -63,7 +63,7 @@ $_signup-logo-height: 4rem;
         }
     }
 
-    @include RWD-pad() {
+    @include media-pad() {
         & {
             padding: 5rem 3rem 0;
         }

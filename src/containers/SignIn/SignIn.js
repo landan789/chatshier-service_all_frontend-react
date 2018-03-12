@@ -4,8 +4,9 @@ import { Route, withRouter } from 'react-router-dom';
 import { Fade } from 'reactstrap';
 import firebase from 'firebase';
 
+import ROUTES from '../../config/route';
 import urlConfig from '../../config/url';
-import browser from '../../helpers/browser';
+import browserHelper from '../../helpers/browser';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
 import { setJWT } from '../../helpers/databaseApi/index';
 import regex from '../../utils/regex';
@@ -13,6 +14,9 @@ import regex from '../../utils/regex';
 import { notify } from '../../components/Notify/Notify';
 
 import './SignIn.css';
+
+const URL = window.urlConfig || urlConfig;
+const wwwUrl = URL.wwwUrl + (80 !== URL.port ? ':' + URL.port : '');
 
 class SignIn extends React.Component {
     constructor(props, context) {
@@ -24,7 +28,6 @@ class SignIn extends React.Component {
             email: '',
             password: ''
         };
-        this.urlConfig = window.urlConfig || urlConfig;
 
         this.emailChanged = this.emailChanged.bind(this);
         this.pwChanged = this.pwChanged.bind(this);
@@ -32,10 +35,10 @@ class SignIn extends React.Component {
     }
 
     componentWillMount() {
-        browser.setTitle('登入');
+        browserHelper.setTitle('登入');
 
         if (cookieHelper.hasSignedin()) {
-            window.location.replace('/chat');
+            window.location.replace(ROUTES.CHAT);
         }
     }
 
@@ -87,8 +90,8 @@ class SignIn extends React.Component {
             window.localStorage.setItem('jwt', jwt);
             setJWT(jwt);
 
-            // this.props.history.replace('/chat');
-            window.location.replace('/chat');
+            // this.props.history.replace(ROUTES.CHAT);
+            window.location.replace(ROUTES.CHAT);
         }).catch((error) => {
             this.setState({
                 isSignIning: false,
@@ -111,7 +114,7 @@ class SignIn extends React.Component {
         return (
             <Fade in className="signin-container">
                 <div className="col-md-12 text-center logo-container">
-                    <a className="chatshier-logo" href={this.urlConfig.wwwUrl + (80 !== this.urlConfig.port ? ':' + this.urlConfig.port : '')}>
+                    <a className="chatshier-logo" href={wwwUrl}>
                         <img alt="Chatshier-logo" src="image/logo.png" />
                     </a>
                 </div>
@@ -179,7 +182,7 @@ class SignIn extends React.Component {
                                         <p>
                                             還沒有帳號嗎請按
                                             <span className="link-text" onClick={() => {
-                                                router.history.push('/signup');
+                                                router.history.push(ROUTES.SIGNUP);
                                             }}>這裡</span>
                                             註冊。
                                         </p>

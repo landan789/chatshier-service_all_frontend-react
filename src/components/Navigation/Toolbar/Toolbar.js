@@ -13,8 +13,8 @@ const toolbar = (props) => (
         <nav className="navbar normal">
             <div className="navbar-header">
                 <a className="navbar-brand" href={wwwUrl}>Chatshier</a>
+                <NavItems />
             </div>
-            <NavItems />
         </nav>
         <nav className="navbar mobile">
             <div className="navbar-header">

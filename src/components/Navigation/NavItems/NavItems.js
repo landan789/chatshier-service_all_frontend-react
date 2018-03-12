@@ -104,11 +104,11 @@ class NavItems extends React.Component {
             <Aux>
                 <ul className="chsr nav-items">
                     <li className="chsr nav-item" onClick={() => this.redirectTo('/chat')}>
-                        <i className="fa fa-comment fa-fw"></i>
+                        <i className="fas fa-comment-alt fa-fw"></i>
                         <span>聊天室</span>
                     </li>
                     <li className="chsr nav-item" onClick={() => this.redirectTo('/calendar')}>
-                        <i className="fa fa-calendar fa-fw"></i>
+                        <i className="far fa-calendar-alt fa-fw"></i>
                         <span>行事曆</span>
                     </li>
                     <li className="chsr nav-item" onClick={() => this.redirectTo('/ticket')}>

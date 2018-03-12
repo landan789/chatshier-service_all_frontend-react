@@ -10,7 +10,18 @@ $_toolbar-bg-color: $primary-color;
     width: 100%;
     background-color: $_toolbar-bg-color;
     height: $toolbar-height;
+    font-size: .9rem;
     z-index: 1;
+
+    .navbar-header {
+        display: flex;
+        align-items: center;
+        flex: 1;
+    }
+
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
 
     > .navbar {
         display: flex;

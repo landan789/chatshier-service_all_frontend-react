@@ -9,9 +9,12 @@
 
     .ticket-insert {
         margin-right: 2.5%;
+        border: 1px solid #ccc;
 
         &:hover {
-            background-color: #ddd;
+            color: #333;
+            background-color: #e6e6e6;
+            border-color: #adadad;
         }
     }
 

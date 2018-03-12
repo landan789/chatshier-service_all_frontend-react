@@ -6,7 +6,7 @@ namespace Chatshier {
         secret: string;
         token1: string;
         token2: string;
-        type: string;
+        type: 'SYSTEM' | 'CHATSHIER' | 'LINE' | 'FACEBOOK';
         group_id: string;
         webhook_id: string;
         isDeleted: 0 | 1;
@@ -34,7 +34,7 @@ namespace Chatshier {
         chatTimeCount: number;
         chatroom_id: string;
         custom_tags: {
-            [tagId: string]: any
+            [tagId: string]: string | number | any[]
         };
         isDeleted: 0 | 1;
     }
@@ -66,6 +66,18 @@ namespace Chatshier {
         };
     }
 
+    interface Group {
+        app_ids: string[];
+        name: string;
+        isDeleted: 0 | 1;
+        updatedTime: number;
+        createdTime: number;
+    }
+
+    interface Groups {
+        [groupId: string]: Group;
+    }
+
     interface GroupMember {
         user_id: string;
         /**
@@ -81,18 +93,24 @@ namespace Chatshier {
         createdTime: number;
     }
 
-    interface Group {
-        app_ids: string[];
-        name: string;
-        isDeleted: 0 | 1;
-        members: {
-            [groupMemberId]: GroupMember
+    interface GroupsMembers {
+        [groupId: string]: {
+            members: {
+                [memberId]: GroupMember
+            }
         };
-        updatedTime: number;
-        createdTime: number;
     }
 
-    interface Groups {
-        [groupId: string]: Group;
+    interface User {
+        company: string;
+        phone: string;
+        address: string;
+        group_ids: string[];
+        createdTime: number;
+        updatedTime: number;
+    }
+
+    interface Users {
+        [userId: string]: User;
     }
 }

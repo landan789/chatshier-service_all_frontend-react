@@ -4,21 +4,15 @@ import { reqHeaders } from './index';
 import mainStore from '../../redux/mainStore';
 import { updateGroups, deleteGroup } from '../../redux/actions/groups';
 
-/**
- * 宣告專門處理群組相關的 API 類別
- */
 class Groups extends Core {
     constructor() {
         super();
-
         this.urlPrefix = this.prefixUrl + 'groups/';
     }
 
     /**
-     * 取得使用者所屬的所有群組
-     *
-     * @param {string} userId - 使用者的 firebase ID
-     * @returns {GroupsResponse}
+     * @param {string} userId
+     * @returns {Promise<GroupsResponse>}
      */
     findAll(userId) {
         let groups = mainStore.getState().groups;
@@ -42,11 +36,9 @@ class Groups extends Core {
     };
 
     /**
-     * 創建一個新的群組
-     *
-     * @param {string} userId - 使用者的 firebase ID
-     * @param {Chatshier.Group} group - 新增的群組資料
-     * @returns {AppsTicketsResponse}
+     * @param {string} userId
+     * @param {Chatshier.Group} group
+     * @returns {Promise<GroupsResponse>}
      */
     insert(userId, group) {
         let destUrl = this.urlPrefix + 'users/' + userId;
@@ -62,12 +54,10 @@ class Groups extends Core {
     };
 
     /**
-     * 更新指定群組資料
-     *
-     * @param {string} groupId - 群組 ID
-     * @param {string} userId - 使用者的 firebase ID
-     * @param {Chatshier.Group} group - 欲更新的群組資料
-     * @returns {GroupsResponse}
+     * @param {string} groupId
+     * @param {string} userId
+     * @param {Chatshier.Group} group
+     * @returns {Promise<GroupsResponse>}
      */
     update(groupId, userId, group) {
         let destUrl = this.urlPrefix + 'groups/' + groupId + '/users/' + userId;
@@ -83,10 +73,8 @@ class Groups extends Core {
     };
 
     /**
-     * 刪除指定群組
-     *
-     * @param {string} groupId - 群組 ID
-     * @param {string} userId - 使用者的 firebase ID
+     * @param {string} groupId
+     * @param {string} userId
      */
     delete(groupId, userId) {
         let destUrl = this.urlPrefix + 'groups/' + groupId + '/users/' + userId;

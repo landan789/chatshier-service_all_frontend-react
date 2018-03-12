@@ -1,20 +1,14 @@
 import Core from './Core';
 import { reqHeaders } from './index';
 
-/**
- * 宣告專門處理 CalendarsEvents 相關的 API 類別
- */
 class CalendarsEvents extends Core {
     constructor() {
         super();
-
         this.urlPrefix = this.prefixUrl + 'calendars-events/';
     }
 
     /**
-     * 取得使用者所有的 calendar 事件
-     *
-     * @param {string} userId - 使用者的 firebase id
+     * @param {string} userId
      */
     findAll(userId) {
         let destUrl = this.urlPrefix + 'users/' + userId;
@@ -26,28 +20,24 @@ class CalendarsEvents extends Core {
     };
 
     /**
-     * 插入一筆 calendar 事件
-     *
-     * @param {string} userId - 使用者的 firebase ID
-     * @param {*} calendarData - 要進行插入的 calendar 事件資料
+     * @param {string} userId
+     * @param {*} calendar
      */
-    insert(userId, calendarData) {
+    insert(userId, calendar) {
         let destUrl = this.urlPrefix + 'users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
-            body: JSON.stringify(calendarData)
+            body: JSON.stringify(calendar)
         };
         return this.sendRequest(destUrl, reqInit);
     };
 
     /**
-     * 更新一筆指定的 calendar 事件
-     *
-     * @param {string} calendarId - 識別不同行事曆的 ID
-     * @param {string} eventId - calendar 的事件ID
-     * @param {string} userId - 使用者的 firebase ID
-     * @param {*} calendarData - 要進行更新的 calendar 事件資料
+     * @param {string} calendarId
+     * @param {string} eventId
+     * @param {string} userId
+     * @param {*} calendar
      */
     update(calendarId, eventId, userId, calendarData) {
         let destUrl = this.urlPrefix + 'calendars/' + calendarId + '/events/' + eventId + '/users/' + userId;
@@ -60,11 +50,9 @@ class CalendarsEvents extends Core {
     };
 
     /**
-     * 移除一筆指定的 calendar 事件
-     *
-     * @param {string} calendarId - 識別不同行事曆的 ID
-     * @param {string} eventId - calendar 的事件ID
-     * @param {string} userId - 要進行更新的 calendar 事件資料
+     * @param {string} calendarId
+     * @param {string} eventId
+     * @param {string} userId
      */
     delete(calendarId, eventId, userId) {
         let destUrl = this.urlPrefix + 'calendars/' + calendarId + '/events/' + eventId + '/users/' + userId;

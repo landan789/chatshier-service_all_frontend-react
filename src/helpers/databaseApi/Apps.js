@@ -4,13 +4,9 @@ import { reqHeaders } from './index';
 import mainStore from '../../redux/mainStore';
 import { updateApps, deleteApp } from '../../redux/actions/apps';
 
-/**
- * 宣告專門處理 Chatshier App 相關的 API 類別
- */
 class Apps extends Core {
     constructor() {
         super();
-
         this.urlPrefix = this.prefixUrl + 'apps/';
         this.enums = Object.freeze({
             type: {
@@ -23,10 +19,8 @@ class Apps extends Core {
     }
 
     /**
-     * 取得使用者所有在 Chatshier 內設定的 App
-     *
-     * @param {string} userId - 使用者的 firebase ID
-     * @returns {AppsResponse}
+     * @param {string} userId
+     * @returns {Promise<AppsResponse>}
      */
     findAll(userId) {
         let apps = mainStore.getState().apps;
@@ -50,10 +44,8 @@ class Apps extends Core {
     };
 
     /**
-     * 取得指定的使用者在 Chatshier 內設定的 App
-     *
-     * @param {string} userId - 使用者的 firebase ID
-     * @returns {AppsResponse}
+     * @param {string} userId
+     * @returns {Promise<AppsResponse>}
      */
     findOne(appId, userId) {
         let apps = mainStore.getState().apps;
@@ -77,11 +69,9 @@ class Apps extends Core {
     };
 
     /**
-     * 新增 Chatshier App
-     *
-     * @param {string} userId - 使用者的 firebase ID
-     * @param {Chatshier.App} app - 新增的 Chatshier App 資料
-     * @returns {AppsResponse}
+     * @param {string} userId
+     * @param {Chatshier.App} app
+     * @returns {Promise<AppsResponse>}
      */
     insert(userId, app) {
         let destUrl = this.urlPrefix + 'users/' + userId;
@@ -97,12 +87,10 @@ class Apps extends Core {
     };
 
     /**
-     * 更新指定的 Chatshier App
-     *
-     * @param {string} appId - 指定的 AppId
-     * @param {string} userId - 使用者的 firebase ID
-     * @param {Chatshier.App} app - 新增的 Chatshier App 資料
-     * @returns {AppsResponse}
+     * @param {string} appId
+     * @param {string} userId
+     * @param {Chatshier.App} app
+     * @returns {Promise<AppsResponse>}
      */
     update(appId, userId, app) {
         let destUrl = this.urlPrefix + 'apps/' + appId + '/users/' + userId;
@@ -118,10 +106,8 @@ class Apps extends Core {
     };
 
     /**
-     * 刪除指定的 Chatshier App
-     *
-     * @param {string} appId - 指定的 AppId
-     * @param {string} userId - 使用者的 firebase ID
+     * @param {string} appId
+     * @param {string} userId
      */
     delete(appId, userId) {
         let destUrl = this.urlPrefix + 'apps/' + appId + '/users/' + userId;

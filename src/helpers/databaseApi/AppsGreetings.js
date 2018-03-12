@@ -4,7 +4,6 @@ import { reqHeaders } from './index';
 class AppsGreetings extends Core {
     constructor() {
         super();
-
         this.urlPrefix = this.prefixUrl + 'apps-greetings/';
     }
 

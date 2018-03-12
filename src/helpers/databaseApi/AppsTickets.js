@@ -4,13 +4,9 @@ import { reqHeaders } from './index';
 import mainStore from '../../redux/mainStore';
 import { updateTickets, deleteTicket } from '../../redux/actions/appsTickets';
 
-/**
- * 宣告專門處理待辦事項相關的 API 類別
- */
 class AppsTickets extends Core {
     constructor() {
         super();
-
         this.urlPrefix = this.prefixUrl + 'apps-tickets/';
         this.enums = Object.freeze({
             type: {
@@ -23,11 +19,9 @@ class AppsTickets extends Core {
     }
 
     /**
-     * 取得使用者所有設定待辦事項
-     *
-     * @param {string|null} appId - 目標待辦事項的 App ID
-     * @param {string} userId - 使用者的 firebase ID
-     * @returns {AppsTicketsResponse}
+     * @param {string|null} appId
+     * @param {string} userId
+     * @returns {Promise<AppsTicketsResponse>}
      */
     findAll(appId, userId) {
         let appsTickets = mainStore.getState().appsTickets;
@@ -51,12 +45,10 @@ class AppsTickets extends Core {
     };
 
     /**
-     * 新增一筆待辦事項資料
-     *
-     * @param {string} appId - 目標待辦事項的 App ID
-     * @param {string} userId - 使用者的 firebase ID
-     * @param {Chatshier.Ticket} ticket - 欲新增的待辦事項資料
-     * @returns {AppsTicketsResponse}
+     * @param {string} appId
+     * @param {string} userId
+     * @param {Chatshier.Ticket} ticket
+     * @returns {Promise<AppsTicketsResponse>}
      */
     insert(appId, userId, ticket) {
         let destUrl = this.urlPrefix + 'apps/' + appId + '/users/' + userId;
@@ -72,13 +64,11 @@ class AppsTickets extends Core {
     };
 
     /**
-     * 更新目標待辦事項資料
-     *
-     * @param {string} appId - 目標待辦事項的 App ID
-     * @param {string} ticketId - 目標待辦事項的 ID
-     * @param {string} userId - 使用者的 firebase ID
-     * @param {Chatshier.Ticket} ticket - 已編輯後欲更新的待辦事項資料
-     * @returns {AppsTicketsResponse}
+     * @param {string} appId
+     * @param {string} ticketId
+     * @param {string} userId
+     * @param {Chatshier.Ticket} ticket
+     * @returns {Promise<AppsTicketsResponse>}
      */
     update(appId, ticketId, userId, ticket) {
         let destUrl = this.urlPrefix + 'apps/' + appId + '/tickets/' + ticketId + '/users/' + userId;
@@ -94,11 +84,9 @@ class AppsTickets extends Core {
     };
 
     /**
-     * 刪除一筆待辦事項資料
-     *
-     * @param {string} appId - 目標待辦事項的 App ID
-     * @param {string} ticketId - 目標待辦事項的 ID
-     * @param {string} userId - 使用者的 firebase ID
+     * @param {string} appId
+     * @param {string} ticketId
+     * @param {string} userId
      */
     delete(appId, ticketId, userId) {
         let destUrl = this.urlPrefix + 'apps/' + appId + '/tickets/' + ticketId + '/users/' + userId;

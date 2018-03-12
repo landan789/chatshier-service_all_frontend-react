@@ -7,7 +7,6 @@ import { reqHeaders } from './index';
 class Users extends Core {
     constructor() {
         super();
-
         this.urlPrefix = this.prefixUrl + 'users/';
     }
 

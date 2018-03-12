@@ -8,14 +8,6 @@ class AppsTickets extends Core {
     constructor() {
         super();
         this.urlPrefix = this.prefixUrl + 'apps-tickets/';
-        this.enums = Object.freeze({
-            type: {
-                SYSTEM: 'SYSTEM',
-                CHATSHIER: 'CHATSHIER',
-                LINE: 'LINE',
-                FACEBOOK: 'FACEBOOK'
-            }
-        });
     }
 
     /**

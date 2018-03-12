@@ -4,7 +4,7 @@ interface AppsResponse {
     data: Chatshier.Apps
 }
 
-interface AppsMessagersResponse {
+interface AppsAutorepliesResponse {
     status: number,
     msg: string,
     data: Chatshier.AppsAutoreplies
@@ -25,7 +25,7 @@ interface AppsTicketsResponse {
 interface AuthenticationsResponse {
     status: number,
     msg: string,
-    data: { [userId]: firebase.User }
+    data: { [userId: string]: firebase.User }
 }
 
 interface GroupsResponse {

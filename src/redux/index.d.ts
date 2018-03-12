@@ -37,7 +37,6 @@ namespace Chatshier {
         };
     }
 
-
     interface Messager {
         name: string;
         photo: string;

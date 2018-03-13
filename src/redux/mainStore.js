@@ -3,6 +3,8 @@ import { routerReducer } from 'react-router-redux';
 
 import { appsReducer } from './reducers/apps';
 import { appsAutorepliesReducer } from './reducers/appsAutoreplies';
+import { appsChatroomsMessagesReducer } from './reducers/appsChatroomsMessages';
+import { appsComposesReducer } from './reducers/appsComposes';
 import { appsMessagersReducer } from './reducers/appsMessagers';
 import { appsTicketsReducer } from './reducers/appsTickets';
 import { calendarsEventsReducer } from './reducers/calendarsEvents';
@@ -14,6 +16,8 @@ const rootReducer = combineReducers({
     router: routerReducer,
     apps: appsReducer,
     appsAutoreplies: appsAutorepliesReducer,
+    appsChatroomsMessages: appsChatroomsMessagesReducer,
+    appsComposes: appsComposesReducer,
     appsMessagers: appsMessagersReducer,
     appsTickets: appsTicketsReducer,
     calendarsEvents: calendarsEventsReducer,

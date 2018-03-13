@@ -4,14 +4,13 @@ export const calendarsEventsReducer = (state = {}, action) => {
     switch (action.type) {
         case UPDATE_CALENDARS_EVENTS:
             for (let calendarId in action.calendarsEvents) {
+                /** @type {Chatshier.CalendarsEvents} */
                 let calendar = action.calendarsEvents[calendarId];
-                if (calendar.isDeleted) {
-                    continue;
-                }
-
                 state[calendarId] = state[calendarId] || { events: {} };
+
                 let events = calendar.events;
                 for (let eventId in events) {
+                    /** @type {Chatshier.CalendarEvent} */
                     let event = events[eventId];
                     if (event.isDeleted) {
                         continue;

@@ -4,7 +4,7 @@ import { reqHeaders } from './index';
 import mainStore from '../../redux/mainStore';
 import { updateAutoreplies, deleteAutoreply } from '../../redux/actions/appsAutoreplies';
 
-class AppsTickets extends Core {
+class AppsAutoreplies extends Core {
     constructor() {
         super();
         this.urlPrefix = this.prefixUrl + 'apps-autoreplies/';
@@ -93,4 +93,4 @@ class AppsTickets extends Core {
     };
 }
 
-export default AppsTickets;
+export default AppsAutoreplies;

@@ -1,8 +1,14 @@
 import Apps from './Apps';
+import AppsAutoreplies from './AppsAutoreplies';
+import AppsChatroomsMessages from './AppsChatroomsMessages';
+import AppsComposes from './AppsComposes';
+import AppsGreetings from './AppsGreetings';
 import AppsMessagers from './AppsMessagers';
 import AppsTickets from './AppsTickets';
-import AppsGreetings from './AppsGreetings';
+import Authentications from './Authentications';
 import CalendarsEvents from './CalendarsEvents';
+import Groups from './Groups';
+import GroupsMembers from './GroupsMembers';
 import Users from './Users';
 
 import cookieHelper from '../cookie';
@@ -24,10 +30,16 @@ cookieHelper.hasSignedin() && setJWT(window.localStorage.getItem('jwt'));
 
 const databaseApi = {
     apps: new Apps(),
-    appsMessagers: new AppsMessagers(),
+    appsAutoreplies: new AppsAutoreplies(),
+    appsChatroomsMessages: new AppsChatroomsMessages(),
+    appsComposes: new AppsComposes(),
     appsGreetings: new AppsGreetings(),
+    appsMessagers: new AppsMessagers(),
     appsTickets: new AppsTickets(),
+    authentications: new Authentications(),
     calendarsEvents: new CalendarsEvents(),
+    groups: new Groups(),
+    groupsMembers: new GroupsMembers(),
     users: new Users()
 };
 

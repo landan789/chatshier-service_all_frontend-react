@@ -30,10 +30,40 @@ class Core {
 
     /**
      * @param {RequestInfo} reqInfo
-     * @param {RequestInit} reqInit
+     * @param {RequestInit} reqInits
      */
-    sendRequest(reqInfo, reqInit) {
-        return window.fetch(reqInfo, reqInit).then((res) => {
+    sendRequest(reqInfo, reqInits, usingRecursive) {
+        usingRecursive = !!usingRecursive;
+
+        if (reqInits instanceof Array) {
+            if (usingRecursive) {
+                let _reqInits = reqInits;
+                let resJsons = [];
+
+                let nextPromise = function(i) {
+                    if (i >= _reqInits.length) {
+                        return Promise.resolve(resJsons);
+                    }
+                    let _reqInit = _reqInits[i];
+
+                    return window.fetch(reqInfo, _reqInit).then(function(res) {
+                        return this.responseChecking(res);
+                    }).then(function(resJson) {
+                        resJsons.push(resJson);
+                        return nextPromise(i + 1);
+                    });
+                };
+                return nextPromise(0);
+            } else {
+                return Promise.all(reqInits.map((_reqInit) => {
+                    return window.fetch(reqInfo, _reqInit).then(function(res) {
+                        return this.responseChecking(res);
+                    });
+                }));
+            }
+        }
+
+        return window.fetch(reqInfo, reqInits).then((res) => {
             return this.responseChecking(res);
         });
     };

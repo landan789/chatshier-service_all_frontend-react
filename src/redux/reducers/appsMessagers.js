@@ -4,14 +4,13 @@ export const appsMessagersReducer = (state = {}, action) => {
     switch (action.type) {
         case UPDATE_MESSAGERS:
             for (let appId in action.appsMessagers) {
+                /** @type {Chatshier.AppsMessagers} */
                 let app = action.appsMessagers[appId];
-                if (app.isDeleted) {
-                    continue;
-                }
                 state[appId] = state[appId] || { messagers: {} };
 
-                let messagers = action.appsMessagers[appId].messagers;
+                let messagers = app.messagers;
                 for (let messagerId in messagers) {
+                    /** @type {Chatshier.Messager} */
                     let messager = messagers[messagerId];
                     if (messager.isDeleted) {
                         continue;

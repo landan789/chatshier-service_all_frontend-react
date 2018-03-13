@@ -4,6 +4,7 @@ export const groupsReducer = (state = {}, action) => {
     switch (action.type) {
         case UPDATE_GROUPS:
             for (let groupId in action.groups) {
+                /** @type {Chatshier.Group} */
                 let group = action.groups[groupId];
                 if (group.isDeleted) {
                     continue;

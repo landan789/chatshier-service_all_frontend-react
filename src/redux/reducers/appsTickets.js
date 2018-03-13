@@ -4,14 +4,13 @@ export const appsTicketsReducer = (state = {}, action) => {
     switch (action.type) {
         case UPDATE_TICKETS:
             for (let appId in action.appsTickets) {
+                /** @type {Chatshier.AppsTickets} */
                 let app = action.appsTickets[appId];
-                if (app.isDeleted) {
-                    continue;
-                }
-
                 state[appId] = state[appId] || { tickets: {} };
+
                 let tickets = app.tickets;
                 for (let ticketId in tickets) {
+                    /** @type {Chatshier.Ticket} */
                     let ticket = tickets[ticketId];
                     if (ticket.isDeleted) {
                         continue;

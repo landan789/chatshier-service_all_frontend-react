@@ -9,9 +9,9 @@ namespace Chatshier {
         type: 'SYSTEM' | 'CHATSHIER' | 'LINE' | 'FACEBOOK';
         group_id: string;
         webhook_id: string;
-        isDeleted: 0 | 1;
-        updatedTime: number;
-        createdTime: number;
+        isDeleted?: 0 | 1;
+        updatedTime?: number;
+        createdTime?: number;
     }
 
     interface Apps {
@@ -19,20 +19,81 @@ namespace Chatshier {
     }
 
     interface Autoreply {
-        isDeleted: 0 | 1;
-        createdTime: number;
+        isDeleted?: 0 | 1;
+        createdTime?: number;
         startedTime: number;
         endedTime: number;
         title: string;
         text: string;
         type: 'text';
-        updatedTime: number;
+        updatedTime?: number;
     }
 
     interface AppsAutoreplies {
         [appId: string]: {
             autoreplies: {
                 [autoreplyId: string]: Autoreply
+            }
+        };
+    }
+
+    interface Message {
+        text: string,
+        type: 'text';
+        messager_id: string;
+        from: 'SYSTEM' | 'CHATSHIER' | 'LINE' | 'FACEBOOK';
+        time: number;
+        isDeleted?: 0 | 1;
+    }
+
+    interface Chatroom {
+        createdTime?: number;
+        updatedTime?: number;
+        isDeleted?: 0 | 1;
+        messages: {
+            [messageId: string]: Message
+        }
+    }
+
+    interface AppsChatroomsMessages {
+        [appId: string]: {
+            chatrooms: {
+                [chatroomId: string]: Chatroom
+            }
+        };
+    }
+
+    interface Compose {
+        time: number;
+        status: 0 | 1;
+        type: 'text';
+        text: string;
+        isDeleted?: 0 | 1;
+        age: number;
+        gender: string;
+        tag_ids: string[];
+    }
+
+    interface AppsComposes {
+        [appId: string]: {
+            composes: {
+                [composeId: string]: Compose
+            }
+        };
+    }
+
+    interface Greeting {
+        createdTime?: number;
+        updatedTime?: number;
+        type: 'text';
+        text: string;
+        isDeleted?: 0 | 1;
+    }
+
+    interface AppsGreetings {
+        [appId: string]: {
+            greetings: {
+                [greetingId: string]: Greeting
             }
         };
     }
@@ -52,10 +113,10 @@ namespace Chatshier {
         totalChat: number;
         chatTimeCount: number;
         chatroom_id: string;
-        custom_tags: {
+        custom_tags?: {
             [tagId: string]: string | number | any[]
         };
-        isDeleted: 0 | 1;
+        isDeleted?: 0 | 1;
     }
 
     interface AppsMessagers {
@@ -67,14 +128,14 @@ namespace Chatshier {
     }
 
     interface Ticket {
-        createdTime: number;
+        createdTime?: number;
         description: string;
         dueTime: number;
         priority: number;
         messager_id: string;
         status: number;
-        updatedTime: number;
-        isDeleted: 0 | 1;
+        updatedTime?: number;
+        isDeleted?: 0 | 1;
     }
 
     interface AppsTickets {
@@ -87,10 +148,10 @@ namespace Chatshier {
 
     interface CalendarEvent {
         isAllDay: 0 | 1;
-        isDeleted: 0 | 1;
+        isDeleted?: 0 | 1;
         description: string;
-        createdTime: number;
-        updatedTime: number;
+        createdTime?: number;
+        updatedTime?: number;
         endedTime: number;
         startedTime: number;
         title: string;
@@ -107,9 +168,9 @@ namespace Chatshier {
     interface Group {
         app_ids: string[];
         name: string;
-        isDeleted: 0 | 1;
-        updatedTime: number;
-        createdTime: number;
+        isDeleted?: 0 | 1;
+        updatedTime?: number;
+        createdTime?: number;
     }
 
     interface Groups {
@@ -126,9 +187,9 @@ namespace Chatshier {
          * OWNER 群組擁有者 ; ADMIN 群組管理員 ; WRITE 群組可修改 ; READ 群組可查看
          */
         type: 'OWNER' | 'ADMIN' | 'WRITE' | 'READ';
-        isDeleted: 0 | 1;
-        updatedTime: number;
-        createdTime: number;
+        isDeleted?: 0 | 1;
+        updatedTime?: number;
+        createdTime?: number;
     }
 
     interface GroupsMembers {
@@ -143,9 +204,9 @@ namespace Chatshier {
         company: string;
         phone: string;
         address: string;
-        group_ids: string[];
-        createdTime: number;
-        updatedTime: number;
+        group_ids?: string[];
+        createdTime?: number;
+        updatedTime?: number;
     }
 
     interface Users {

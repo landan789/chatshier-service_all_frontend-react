@@ -7,6 +7,7 @@ import firebase from 'firebase';
 import ROUTES from '../../config/route';
 import urlConfig from '../../config/url';
 import browserHelper from '../../helpers/browser';
+import authHelper from '../../helpers/authentication';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
 import databaseApi, { setJWT } from '../../helpers/databaseApi/index';
 
@@ -55,6 +56,7 @@ class SignUp extends React.Component {
         if (cookieHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }
+        return authHelper.signOut();
     }
 
     nameChanged(ev) {

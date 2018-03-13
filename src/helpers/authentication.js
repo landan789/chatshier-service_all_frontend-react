@@ -64,13 +64,15 @@ class AuthenticationHelper {
                 return this.auth.currentUser.getIdToken(true).then((jwt) => {
                     window.localStorage.setItem('jwt', jwt);
                     setJWT(jwt);
-                    this._readyResolve();
+                    this._readyResolve && this._readyResolve();
+                    this._readyResolve = void 0;
                     return this._keepTokenRefresh();
                 });
             }
 
             this._refreshTimer && window.clearTimeout(this._refreshTimer);
-            this._readyResolve();
+            this._readyResolve && this._readyResolve();
+            this._refreshTimer = this._readyResolve = void 0;
         });
         return this.app;
     }

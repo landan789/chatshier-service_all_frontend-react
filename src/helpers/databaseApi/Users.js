@@ -1,20 +1,18 @@
 import Core from './Core';
 import { reqHeaders } from './index';
 
-/**
- * 宣告專門處理 Chatshier User 相關的 API 類別
- */
+import mainStore from '../../redux/mainStore';
+import { updateUsers } from '../../redux/actions/users';
+
 class Users extends Core {
     constructor() {
         super();
-
         this.urlPrefix = this.prefixUrl + 'users/';
     }
 
     /**
-     * 取得使用者的 User 資料
-     *
-     * @param {string} userId - 使用者的 firebase ID
+     * @param {string} userId
+     * @returns {Promise<UsersResponse>}
      */
     findOne(userId) {
         let destUrl = this.urlPrefix + 'users/' + userId;
@@ -22,39 +20,46 @@ class Users extends Core {
             methods: 'GET',
             headers: reqHeaders
         };
-        return this.sendRequest(destUrl, reqInit);
+        return this.sendRequest(destUrl, reqInit).then((resJson) => {
+            mainStore.dispatch(updateUsers(resJson.data));
+            return resJson;
+        });
     };
 
     /**
-     * 新增 Chatshier User
-     *
-     * @param {string} userId - 使用者的 firebase ID
-     * @param {any} postUserData - 新增的 Chatshier User 資料
+     * @param {string} userId
+     * @param {Chatshier.User} user
+     * @returns {Promise<UsersResponse>}
      */
-    insert(userId, postUserData) {
+    insert(userId, user) {
         let destUrl = this.urlPrefix + 'users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
-            body: JSON.stringify(postUserData)
+            body: JSON.stringify(user)
         };
-        return this.sendRequest(destUrl, reqInit);
+        return this.sendRequest(destUrl, reqInit).then((resJson) => {
+            mainStore.dispatch(updateUsers(resJson.data));
+            return resJson;
+        });
     };
 
     /**
-     * 更新 Chatshier User
-     *
-     * @param {string} userId - 使用者的 firebase ID
-     * @param {any} putUserData - 更新的 Chatshier User 資料
+     * @param {string} userId
+     * @param {Chatshier.User} user
+     * @returns {Promise<UsersResponse>}
      */
-    update(userId, putUserData) {
+    update(userId, user) {
         let destUrl = this.prefixUrl + 'users/' + userId;
         let reqInit = {
             medthod: 'PUT',
             headers: reqHeaders,
-            body: JSON.stringify(putUserData)
+            body: JSON.stringify(user)
         };
-        return this.sendRequest(destUrl, reqInit);
+        return this.sendRequest(destUrl, reqInit).then((resJson) => {
+            mainStore.dispatch(updateUsers(resJson.data));
+            return resJson;
+        });
     };
 }
 

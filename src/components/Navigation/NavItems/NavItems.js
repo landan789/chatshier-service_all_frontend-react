@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Aux from 'react-aux';
-import { Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import DropdownMenu from './DropdownMenu/DropdownMenu';
 
@@ -50,7 +51,7 @@ class NavItems extends React.Component {
         };
 
         this.dropdownToggleHandler = this.dropdownToggleHandler.bind(this);
-        this.redirectTo = this.redirectTo.bind(this);
+        this.linkTo = this.linkTo.bind(this);
 
         this.isBackdropShown = false;
         this.backdrop = document.createElement('div');
@@ -89,33 +90,30 @@ class NavItems extends React.Component {
         this.setState(newState);
     }
 
-    redirectTo(route) {
-        this.setState({ redirectRoute: route });
+    linkTo(route) {
+        if (route !== window.location.pathname) {
+            this.hideBackdrop();
+            this.props.history.push(route);
+        }
     }
 
     render() {
-        let route = this.state.redirectRoute;
-        if (route && route !== window.location.pathname) {
-            this.hideBackdrop();
-            return <Redirect push to={route} />;
-        }
-
         return (
             <Aux>
                 <ul className="chsr nav-items">
-                    <li className="chsr nav-item" onClick={() => this.redirectTo('/chat')}>
+                    <li className="chsr nav-item" onClick={() => this.linkTo('/chat')}>
                         <i className="fas fa-comment-alt fa-fw"></i>
                         <span>聊天室</span>
                     </li>
-                    <li className="chsr nav-item" onClick={() => this.redirectTo('/calendar')}>
+                    <li className="chsr nav-item" onClick={() => this.linkTo('/calendar')}>
                         <i className="far fa-calendar-alt fa-fw"></i>
                         <span>行事曆</span>
                     </li>
-                    <li className="chsr nav-item" onClick={() => this.redirectTo('/ticket')}>
+                    <li className="chsr nav-item" onClick={() => this.linkTo('/ticket')}>
                         <i className="fa fa-list-ul fa-fw"></i>
                         <span>待辦事項</span>
                     </li>
-                    <li className="chsr nav-item" onClick={() => this.redirectTo('/analyze')}>
+                    <li className="chsr nav-item" onClick={() => this.linkTo('/analyze')}>
                         <i className="fa fa-chart-bar fa-fw"></i>
                         <span>訊息分析</span>
                     </li>
@@ -128,7 +126,7 @@ class NavItems extends React.Component {
                         <DropdownMenu
                             dropdownItems={messageDropdown}
                             open={this.state.showDropdown.message}
-                            closed={this.redirectTo}>
+                            closed={this.linkTo}>
                         </DropdownMenu>
                     </div>
                 </ul>
@@ -141,7 +139,7 @@ class NavItems extends React.Component {
                         <DropdownMenu
                             dropdownItems={settingDropdown}
                             open={this.state.showDropdown.setting}
-                            closed={this.redirectTo}>
+                            closed={this.linkTo}>
                         </DropdownMenu>
                     </div>
                 </ul>
@@ -150,4 +148,8 @@ class NavItems extends React.Component {
     }
 };
 
-export default NavItems;
+NavItems.propTypes = {
+    history: PropTypes.object.isRequired
+};
+
+export default withRouter(NavItems);

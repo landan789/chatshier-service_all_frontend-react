@@ -2,81 +2,91 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateCalendarsEvents, deleteCalendarEvent } from '../../redux/actions/calendarsEvents';
+import { updateGroups, deleteGroup } from '../../redux/actions/groups';
 
-class CalendarsEvents extends Core {
+class Groups extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'calendars-events/';
+        this.urlPrefix = this.prefixUrl + 'groups/';
     }
 
     /**
      * @param {string} userId
+     * @returns {Promise<GroupsResponse>}
      */
     findAll(userId) {
+        let groups = mainStore.getState().groups;
+        if (Object.keys(groups).length > 0) {
+            return Promise.resolve({
+                status: 1,
+                msg: '',
+                data: groups
+            });
+        }
+
         let destUrl = this.urlPrefix + 'users/' + userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateCalendarsEvents(resJson.data));
+            mainStore.dispatch(updateGroups(resJson.data));
             return resJson;
         });
     };
 
     /**
      * @param {string} userId
-     * @param {Chatshier.CalendarEvent} calendarEvent
+     * @param {Chatshier.Group} group
+     * @returns {Promise<GroupsResponse>}
      */
-    insert(userId, calendarEvent) {
+    insert(userId, group) {
         let destUrl = this.urlPrefix + 'users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
-            body: JSON.stringify(calendarEvent)
+            body: JSON.stringify(group)
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateCalendarsEvents(resJson.data));
+            mainStore.dispatch(updateGroups(resJson.data));
             return resJson;
         });
     };
 
     /**
-     * @param {string} calendarId
-     * @param {string} eventId
+     * @param {string} groupId
      * @param {string} userId
-     * @param {Chatshier.CalendarEvent} calendarEvent
+     * @param {Chatshier.Group} group
+     * @returns {Promise<GroupsResponse>}
      */
-    update(calendarId, eventId, userId, calendarEvent) {
-        let destUrl = this.urlPrefix + 'calendars/' + calendarId + '/events/' + eventId + '/users/' + userId;
+    update(groupId, userId, group) {
+        let destUrl = this.urlPrefix + 'groups/' + groupId + '/users/' + userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
-            body: JSON.stringify(calendarEvent)
+            body: JSON.stringify(group)
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateCalendarsEvents(resJson.data));
+            mainStore.dispatch(updateGroups(resJson.data));
             return resJson;
         });
     };
 
     /**
-     * @param {string} calendarId
-     * @param {string} eventId
+     * @param {string} groupId
      * @param {string} userId
      */
-    delete(calendarId, eventId, userId) {
-        let destUrl = this.urlPrefix + 'calendars/' + calendarId + '/events/' + eventId + '/users/' + userId;
+    delete(groupId, userId) {
+        let destUrl = this.urlPrefix + 'groups/' + groupId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteCalendarEvent(calendarId, eventId));
+            mainStore.dispatch(deleteGroup(groupId));
             return resJson;
         });
     };
 }
 
-export default CalendarsEvents;
+export default Groups;

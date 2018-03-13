@@ -1,11 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import Aux from 'react-aux';
-
-import { updateMessagers } from '../../redux/actions/appsMessagers';
-import { updateTickets, deleteTicket } from '../../redux/actions/appsTickets';
 
 import { toDueDateSpan, toLocalTimeString, toPriorityBorder,
     toPriorityText, toStatusText } from '../../utils/ticket';
@@ -23,9 +19,12 @@ class TicketTable extends React.Component {
     }
 
     openEditModal(appId, ticketId) {
+        /** @type {Chatshier.AppsTickets} */
         let appsTickets = this.props.appsTickets;
         let ticket = appsTickets[appId].tickets[ticketId];
-        let messager = this.props.appsMessagers[appId].messagers[ticket.messager_id];
+        /** @type {Chatshier.AppsMessagers} */
+        let appsMessagers = this.props.appsMessagers;
+        let messager = appsMessagers[appId].messagers[ticket.messager_id];
 
         this.setState({
             editingTicket: {
@@ -38,33 +37,25 @@ class TicketTable extends React.Component {
     }
 
     closeEditModal(ev, role, modalData) {
-        if (modalData) {
-            switch (role) {
-                case 'update':
-                    this.props.updateTickets(modalData.updatedAppsTickets);
-                    break;
-                case 'delete':
-                    this.props.deleteTicket(modalData.appId, modalData.ticketId);
-                    break;
-                default:
-                    break;
-            }
-        }
         this.setState({ editingTicket: null });
     }
 
     renderTickets() {
+        /** @type {Chatshier.AppsTickets} */
         let appsTickets = this.props.appsTickets;
-        if (!appsTickets) {
+        /** @type {Chatshier.AppsMessagers} */
+        let appsMessagers = this.props.appsMessagers;
+        if (!(appsTickets && appsMessagers)) {
             return;
         }
 
-        let appsMessagers = this.props.appsMessagers;
         let ticketCmps = [];
-
         for (let appId in appsTickets) {
-            let tickets = appsTickets[appId].tickets;
+            if (!(appsTickets[appId] && appsMessagers[appId])) {
+                continue;
+            }
 
+            let tickets = appsTickets[appId].tickets;
             for (let ticketId in tickets) {
                 let ticket = tickets[ticketId];
                 let messagerId = ticket.messager_id;
@@ -139,11 +130,8 @@ class TicketTable extends React.Component {
 
 TicketTable.propTypes = {
     searchKeyword: PropTypes.string,
-    appsTickets: PropTypes.object.isRequired,
     appsMessagers: PropTypes.object.isRequired,
-    updateMessagers: PropTypes.func.isRequired,
-    updateTickets: PropTypes.func.isRequired,
-    deleteTicket: PropTypes.func.isRequired
+    appsTickets: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -154,13 +142,4 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch) => {
-    // 將此頁面有需要用到的 store dispatch 方法綁定至 props 中
-    return {
-        updateMessagers: bindActionCreators(updateMessagers, dispatch),
-        updateTickets: bindActionCreators(updateTickets, dispatch),
-        deleteTicket: bindActionCreators(deleteTicket, dispatch)
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(TicketTable);
+export default connect(mapStateToProps)(TicketTable);

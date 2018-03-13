@@ -7,6 +7,7 @@ import firebase from 'firebase';
 import ROUTES from '../../config/route';
 import urlConfig from '../../config/url';
 import browserHelper from '../../helpers/browser';
+import authHelper from '../../helpers/authentication';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
 import { setJWT } from '../../helpers/databaseApi/index';
 import regex from '../../utils/regex';
@@ -40,6 +41,7 @@ class SignIn extends React.Component {
         if (cookieHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }
+        return authHelper.signOut();
     }
 
     emailChanged(ev) {

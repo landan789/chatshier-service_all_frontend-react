@@ -1,7 +1,15 @@
+@import './styles/mixins/_rwd';
+
 html,
 body,
 .root {
     height: 100%;
     z-index: 0;
     overflow: auto;
+}
+
+@include media-breakpoint-down(sm) {
+    html {
+        font-size: 80%;
+    }
 }

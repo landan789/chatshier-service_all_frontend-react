@@ -4,7 +4,6 @@ import { reqHeaders } from './index';
 class AppsGreetings extends Core {
     constructor() {
         super();
-
         this.urlPrefix = this.prefixUrl + 'apps-greetings/';
     }
 
@@ -17,7 +16,7 @@ class AppsGreetings extends Core {
         return this.sendRequest(destUrl, reqInit);
     };
 
-    getOne(appId, greetingId) {
+    findOne(appId, greetingId) {
         let destUrl = this.urlPrefix + 'apps/' + appId + '/greetings/' + greetingId;
         let reqInit = {
             methods: 'GET',

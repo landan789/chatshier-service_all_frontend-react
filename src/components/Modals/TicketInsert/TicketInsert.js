@@ -20,6 +20,7 @@ class TicketInsertModal extends React.Component {
         this.appOptions = this.appsToOptions();
 
         this.state = {
+            isAsyncWorking: false,
             messagerOptions: this.appsMessagersToOptions(),
             messagerId: '',
             messagerEmail: '',
@@ -44,8 +45,10 @@ class TicketInsertModal extends React.Component {
 
     appsToOptions() {
         let options = [];
+
+        /** @type {Chatshier.Apps} */
         let apps = this.props.apps || {};
-        let firstAppId;
+        let firstAppId = '';
 
         for (let appId in apps) {
             let app = apps[appId];
@@ -65,6 +68,8 @@ class TicketInsertModal extends React.Component {
 
     appsMessagersToOptions() {
         let options = [];
+
+        /** @type {Chatshier.AppsMessagers} */
         let appsMessagers = this.props.appsMessagers || {};
 
         if (this.selectedAppId && appsMessagers[this.selectedAppId]) {
@@ -98,8 +103,9 @@ class TicketInsertModal extends React.Component {
             newState.messagerOptions = this.appsMessagersToOptions();
         }
 
-        let appId = this.selectedAppId;
+        /** @type {Chatshier.AppsMessagers} */
         let appsMessagers = this.props.appsMessagers || {};
+        let appId = this.selectedAppId;
 
         if (appId && appsMessagers[appId]) {
             let messagerId = this.selectedMessagerId;
@@ -133,6 +139,7 @@ class TicketInsertModal extends React.Component {
         } else if (!this.state.ticketDescription) {
             return notify('請輸入說明內容', { type: 'warning' });
         }
+        this.setState({ isAsyncWorking: true });
 
         let appId = this.selectedAppId;
         let userId = authHelper.userId;
@@ -144,19 +151,13 @@ class TicketInsertModal extends React.Component {
             description: this.state.ticketDescription
         };
 
-        return dbapi.appsTickets.insert(appId, userId, ticket).then((resJson) => {
-            let appsTickets = resJson.data;
-            let ticketId = Object.keys(appsTickets[appId].tickets).shift();
-
-            let modalData = {
-                appId: appId,
-                ticketId: ticketId,
-                insertedAppsTickets: appsTickets
-            };
-            this.props.close(ev, 'insert', modalData);
+        return dbapi.appsTickets.insert(appId, userId, ticket).then(() => {
+            this.props.close(ev);
             return notify('新增成功', { type: 'success' });
         }).catch(() => {
             return notify('新增失敗', { type: 'danger' });
+        }).then(() => {
+            this.setState({ isAsyncWorking: false });
         });
     }
 
@@ -230,7 +231,7 @@ class TicketInsertModal extends React.Component {
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button color="primary" onClick={this.insertTicket}>新增</Button>
+                    <Button color="primary" onClick={this.insertTicket} disabled={this.state.isAsyncWorking}>新增</Button>
                     <Button color="secondary" onClick={this.props.close}>取消</Button>
                 </ModalFooter>
             </Modal>

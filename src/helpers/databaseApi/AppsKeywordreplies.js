@@ -2,26 +2,26 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateTickets, deleteTicket } from '../../redux/actions/appsTickets';
+import { updateKeywordreplies, deleteKeywordreply } from '../../redux/actions/appsKeywordreplies';
 
-class AppsTickets extends Core {
+class AppsKeywordreplies extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'apps-tickets/';
+        this.urlPrefix = this.prefixUrl + 'apps-keywordreplies/';
     }
 
     /**
      * @param {string|null} appId
      * @param {string} userId
-     * @returns {Promise<AppsTicketsResponse>}
+     * @returns {Promise<AppsKeywordrepliesResponse>}
      */
     findAll(appId, userId) {
-        let appsTickets = mainStore.getState().appsTickets;
-        if (Object.keys(appsTickets).length > 0) {
+        let appsKeywordreplies = mainStore.getState().appsKeywordreplies;
+        if (Object.keys(appsKeywordreplies).length > 0) {
             return Promise.resolve({
                 status: 1,
                 msg: '',
-                data: appsTickets
+                data: appsKeywordreplies
             });
         }
 
@@ -31,7 +31,7 @@ class AppsTickets extends Core {
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateTickets(resJson.data));
+            mainStore.dispatch(updateKeywordreplies(resJson.data));
             return resJson;
         });
     };
@@ -39,58 +39,58 @@ class AppsTickets extends Core {
     /**
      * @param {string} appId
      * @param {string} userId
-     * @param {Chatshier.Ticket} ticket
-     * @returns {Promise<AppsTicketsResponse>}
+     * @param {Chatshier.Keywordreply} keywordreply
+     * @returns {Promise<AppsKeywordrepliesResponse>}
      */
-    insert(appId, userId, ticket) {
+    insert(appId, userId, keywordreply) {
         let destUrl = this.urlPrefix + 'apps/' + appId + '/users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
-            body: JSON.stringify(ticket)
+            body: JSON.stringify(keywordreply)
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateTickets(resJson.data));
+            mainStore.dispatch(updateKeywordreplies(resJson.data));
             return resJson;
         });
     };
 
     /**
      * @param {string} appId
-     * @param {string} ticketId
+     * @param {string} keywordreplyId
      * @param {string} userId
-     * @param {Chatshier.Ticket} ticket
-     * @returns {Promise<AppsTicketsResponse>}
+     * @param {Chatshier.Autoreply} keywordreply
+     * @returns {Promise<AppsKeywordrepliesResponse>}
      */
-    update(appId, ticketId, userId, ticket) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/tickets/' + ticketId + '/users/' + userId;
+    update(appId, keywordreplyId, userId, keywordreply) {
+        let destUrl = this.urlPrefix + 'apps/' + appId + '/keywordreplies/' + keywordreplyId + '/users/' + userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
-            body: JSON.stringify(ticket)
+            body: JSON.stringify(keywordreply)
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateTickets(resJson.data));
+            mainStore.dispatch(updateKeywordreplies(resJson.data));
             return resJson;
         });
     };
 
     /**
      * @param {string} appId
-     * @param {string} ticketId
+     * @param {string} keywordreplyId
      * @param {string} userId
      */
-    delete(appId, ticketId, userId) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/tickets/' + ticketId + '/users/' + userId;
+    delete(appId, keywordreplyId, userId) {
+        let destUrl = this.urlPrefix + 'apps/' + appId + '/keywordreplies/' + keywordreplyId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteTicket(appId, ticketId));
+            mainStore.dispatch(deleteKeywordreply(appId, keywordreplyId));
             return resJson;
         });
     };
 }
 
-export default AppsTickets;
+export default AppsKeywordreplies;

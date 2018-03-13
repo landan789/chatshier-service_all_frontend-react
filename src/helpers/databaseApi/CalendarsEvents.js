@@ -14,6 +14,15 @@ class CalendarsEvents extends Core {
      * @param {string} userId
      */
     findAll(userId) {
+        let calendarsEvents = mainStore.getState().calendarsEvents;
+        if (Object.keys(calendarsEvents).length > 0) {
+            return Promise.resolve({
+                status: 1,
+                msg: '',
+                data: calendarsEvents
+            });
+        }
+
         let destUrl = this.urlPrefix + 'users/' + userId;
         let reqInit = {
             method: 'GET',

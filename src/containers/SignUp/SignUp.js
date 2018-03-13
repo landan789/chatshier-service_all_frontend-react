@@ -106,16 +106,22 @@ class SignUp extends React.Component {
 
         this.setState({
             isSignUping: true,
-            signupBtnHtml: '<i class="fa fa-circle-o-notch fa-spin"></i> 註冊中...'
+            signupBtnHtml: '<i class="fas fa-circle-notch fa-spin"></i> 註冊中...'
         });
 
         return auth.createUserWithEmailAndPassword(email, pw).then(() => {
             return auth.signInWithEmailAndPassword(email, pw);
         }).then(() => {
+            // 更新 firebase auth user profile
+            return auth.currentUser.updateProfile({
+                displayName: name,
+                photoURL: ''
+            });
+        }).then(() => {
             return auth.currentUser.getIdToken();
         }).then((jwt) => {
-            cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, name);
-            cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, email);
+            cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, auth.currentUser.displayName);
+            cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, auth.currentUser.email);
             window.localStorage.setItem('jwt', jwt);
             setJWT(jwt);
 

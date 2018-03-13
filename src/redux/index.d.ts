@@ -98,6 +98,25 @@ namespace Chatshier {
         };
     }
 
+    interface Keywordreply {
+        keyword: string;
+        text: string;
+        type: 'text',
+        replyCount: number;
+        status: 0 | 1;
+        createdTime?: number;
+        updatedTime?: number;
+        isDeleted?: 0 | 1;
+    }
+
+    interface AppsKeywordreplies {
+        [appId: string]: {
+            keywordreplies: {
+                [keywordreplyId: string]: Keywordreply
+            }
+        }
+    }
+
     interface Messager {
         name: string;
         photo: string;
@@ -123,6 +142,26 @@ namespace Chatshier {
         [appId: string]: {
             messagers: {
                 [messagerId: string]: Messager
+            }
+        }
+    }
+
+    interface Tag {
+        text: string;
+        alias: string;
+        type: 'SYSTEM' | 'DEFAULT' | 'DEFAULT';
+        sets: string[] | number[];
+        setsType: 'TEXT' | 'NUMBER' | 'DATE' | 'SELECT' | 'MULTI_SELECT' | 'CHECKBOX';
+        order: number;
+        createdTime?: number;
+        updatedTime?: number;
+        isDeleted?: 0 | 1;
+    }
+
+    interface AppsTags {
+        [appId: string]: {
+            tags: {
+                [tagId: string]: Tag
             }
         }
     }

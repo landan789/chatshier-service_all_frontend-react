@@ -21,11 +21,11 @@ export const appsComposesReducer = (state = {}, action) => {
             return Object.assign({}, state);
         case DELETE_COMPOSE:
             let appId = action.appId;
-            let autoreplyId = action.autoreplyId;
+            let composeId = action.composeId;
 
-            delete state[appId].autoreplies[autoreplyId];
-            if (0 === Object.keys(state[appId].autoreplies).length) {
-                delete state[appId].autoreplies;
+            delete state[appId].composes[composeId];
+            if (0 === Object.keys(state[appId].composes).length) {
+                delete state[appId].composes;
                 delete state[appId];
             }
             return Object.assign({}, state);

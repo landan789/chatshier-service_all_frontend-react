@@ -28,10 +28,22 @@ interface AppsGreetingsResponse {
     data: Chatshier.AppsGreetings
 }
 
+interface AppsKeywordrepliesResponse {
+    status: number,
+    msg: string,
+    data: Chatshier.AppsKeywordreplies
+}
+
 interface AppsMessagersResponse {
     status: number,
     msg: string,
     data: Chatshier.AppsMessagers
+}
+
+interface AppsTagsResponse {
+    status: number,
+    msg: string,
+    data: Chatshier.AppsTags
 }
 
 interface AppsTicketsResponse {

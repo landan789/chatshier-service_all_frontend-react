@@ -75,7 +75,7 @@ class SignIn extends React.Component {
 
         this.setState({
             isSignIning: true,
-            signInBtnHtml: '<i class="fa fa-circle-o-notch fa-spin"></i> 登入中...'
+            signInBtnHtml: '<i class="fas fa-circle-notch fa-spin"></i> 登入中...'
         });
 
         return auth.signInWithEmailAndPassword(email, pw).then(() => {

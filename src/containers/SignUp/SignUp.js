@@ -106,7 +106,7 @@ class SignUp extends React.Component {
 
         this.setState({
             isSignUping: true,
-            signupBtnHtml: '<i class="fa fa-circle-o-notch fa-spin"></i> 註冊中...'
+            signupBtnHtml: '<i class="fas fa-circle-notch fa-spin"></i> 註冊中...'
         });
 
         return auth.createUserWithEmailAndPassword(email, pw).then(() => {

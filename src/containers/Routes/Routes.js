@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Redirect } from 'react-router-dom';
 
 import mainStore from '../../redux/mainStore';
+import Calendar from '../Calendar/Calendar';
 import Setting from '../Setting/Setting';
 import SignIn from '../SignIn/SignIn';
 import SignUp from '../SignUp/SignUp';
@@ -22,6 +23,9 @@ class Routes extends React.Component {
             {
                 path: '/',
                 component: SignIn
+            }, {
+                path: ROUTES.CALENDAR,
+                component: Calendar
             }, {
                 path: ROUTES.CHAT,
                 component: null

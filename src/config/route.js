@@ -1,4 +1,5 @@
 const ROUTES = {
+    CALENDAR: '/calendar',
     CHAT: '/chat',
     GREETING: '/greeting',
     SIGNIN: '/signin',

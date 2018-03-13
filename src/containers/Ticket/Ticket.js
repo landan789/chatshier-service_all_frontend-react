@@ -44,6 +44,9 @@ class Ticket extends React.Component {
     componentDidMount() {
         return authHelper.ready.then(() => {
             let userId = authHelper.userId;
+            if (!userId) {
+                return;
+            }
 
             return Promise.all([
                 dbapi.apps.findAll(userId),

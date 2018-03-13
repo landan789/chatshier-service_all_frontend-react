@@ -3,7 +3,9 @@ import AppsAutoreplies from './AppsAutoreplies';
 import AppsChatroomsMessages from './AppsChatroomsMessages';
 import AppsComposes from './AppsComposes';
 import AppsGreetings from './AppsGreetings';
+import AppsKeywordreplies from './AppsKeywordreplies';
 import AppsMessagers from './AppsMessagers';
+import AppsTags from './AppsTags';
 import AppsTickets from './AppsTickets';
 import Authentications from './Authentications';
 import CalendarsEvents from './CalendarsEvents';
@@ -34,7 +36,9 @@ const databaseApi = {
     appsChatroomsMessages: new AppsChatroomsMessages(),
     appsComposes: new AppsComposes(),
     appsGreetings: new AppsGreetings(),
+    appsKeywordreplies: new AppsKeywordreplies(),
     appsMessagers: new AppsMessagers(),
+    appsTags: new AppsTags(),
     appsTickets: new AppsTickets(),
     authentications: new Authentications(),
     calendarsEvents: new CalendarsEvents(),

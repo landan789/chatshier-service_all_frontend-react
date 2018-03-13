@@ -1,4 +1,4 @@
-import urlConfig from '../../config/url-config';
+import urlConfig from '../../config/url';
 
 class Core {
     constructor() {

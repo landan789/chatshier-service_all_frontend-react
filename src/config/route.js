@@ -4,7 +4,8 @@ const ROUTES = {
     SIGNIN: '/signin',
     SIGNUP: '/signup',
     SETTING: '/setting',
-    TICKET: '/ticket'
+    TICKET: '/ticket',
+    AUTO: '/auto'
 };
 
 export default ROUTES;

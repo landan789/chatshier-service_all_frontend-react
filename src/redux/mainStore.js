@@ -5,6 +5,7 @@ import { appsReducer } from './reducers/apps';
 import { appsAutorepliesReducer } from './reducers/appsAutoreplies';
 import { appsChatroomsMessagesReducer } from './reducers/appsChatroomsMessages';
 import { appsComposesReducer } from './reducers/appsComposes';
+import { appsGreetingsReducer } from './reducers/appsGreetings';
 import { appsKeywordrepliesReducer } from './reducers/appsKeywordreplies';
 import { appsMessagersReducer } from './reducers/appsMessagers';
 import { appsTagsReducer } from './reducers/appsTags';
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
     appsAutoreplies: appsAutorepliesReducer,
     appsChatroomsMessages: appsChatroomsMessagesReducer,
     appsComposes: appsComposesReducer,
+    appsGreetings: appsGreetingsReducer,
     appsKeywordreplies: appsKeywordrepliesReducer,
     appsMessagers: appsMessagersReducer,
     appsTags: appsTagsReducer,

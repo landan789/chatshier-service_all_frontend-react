@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Aux from 'react-aux';
 import { withRouter } from 'react-router-dom';
-import { Fade } from 'reactstrap';
+import { Fade, Jumbotron, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
@@ -10,10 +10,12 @@ import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
+import BotSelector from '../../components/BotSelector/BotSelector';
+import GreetingTable from './GreetingTable/GreetingTable';
 
-import './Greeting.css';
+import './Greetings.css';
 
-class Greeting extends React.Component {
+class Greetings extends React.Component {
     constructor(props, context) {
         super(props, context);
 
@@ -25,6 +27,7 @@ class Greeting extends React.Component {
         };
 
         this.textChanged = this.textChanged.bind(this);
+        this.botChanged = this.botChanged.bind(this);
     }
 
     componentWillMount() {
@@ -41,20 +44,36 @@ class Greeting extends React.Component {
         this.setState({ text: ev.target.value });
     }
 
+    botChanged(appId) {
+        this.setState({ selectedAppId: appId });
+    }
+
     render() {
         return (
             <Aux>
                 <Toolbar />
                 <Fade className="has-toolbar">
-                    Hi
+                    <div className="Greetings">
+                        <Jumbotron>
+                            <h1 className="display-3">加好友回覆</h1>
+                            <Breadcrumb>
+                                <BreadcrumbItem><a href="/">Home</a></BreadcrumbItem>
+                                <BreadcrumbItem><a href="#">Message</a></BreadcrumbItem>
+                                <BreadcrumbItem active>Greeting</BreadcrumbItem>
+                            </Breadcrumb>
+                            <p className="lead">一次可傳送五則訊息</p>
+                            <BotSelector onChange={this.botChanged} />
+                        </Jumbotron>
+                        <GreetingTable appId={this.state.selectedAppId} />
+                    </div>
                 </Fade>
             </Aux>
         );
     }
 }
 
-Greeting.propTypes = {
+Greetings.propTypes = {
     history: PropTypes.object.isRequired
 };
 
-export default withRouter(Greeting);
+export default withRouter(Greetings);

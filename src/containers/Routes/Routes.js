@@ -11,7 +11,7 @@ import SignUp from '../SignUp/SignUp';
 import Ticket from '../Ticket/Ticket';
 
 import ROUTES from '../../config/route';
-import Greeting from '../Greeting/Greeting';
+import Greetings from '../Greetings/Greetings';
 
 import './Routes.css';
 
@@ -40,7 +40,7 @@ class Routes extends React.Component {
                 component: SignUp
             }, {
                 path: ROUTES.GREETING,
-                component: Greeting
+                component: Greetings
             }, {
                 path: ROUTES.TICKET,
                 component: Ticket

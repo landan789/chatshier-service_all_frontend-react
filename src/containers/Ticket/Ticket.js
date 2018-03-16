@@ -60,7 +60,7 @@ class Ticket extends React.Component {
         this.setState({ isInsertModalOpen: true });
     }
 
-    closeInsertModal(ev, role, modalData) {
+    closeInsertModal(ev) {
         this.setState({ isInsertModalOpen: false });
     }
 

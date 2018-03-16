@@ -23,7 +23,7 @@ class Autoreply extends React.Component {
             dropdownOpen: false,
             isInsertModalOpen: false,
             searchKeyword: '',
-            dropdownSelectedApp: ''
+            dropdownSelectedApp: 'Apps'
         };
         this.toggle = this.toggle.bind(this);
         this.keywordChanged = this.keywordChanged.bind(this);
@@ -92,7 +92,7 @@ class Autoreply extends React.Component {
                             </div>
                             <Row className="padding-lr">
                                 <Col>
-                                    <Dropdown color="primary" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                                    <Dropdown color="info" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                                         <DropdownToggle caret>{this.state.dropdownSelectedApp}</DropdownToggle>
                                         <DropdownMenu>
                                             { appIds.map((id, index) => <DropdownItem key={index} id={id} onClick={() => { this.DropdownItemChanged(apps[id].name); }}>{apps[id].name}</DropdownItem>) }
@@ -129,9 +129,6 @@ class Autoreply extends React.Component {
                                     </thead>
                                     <tbody>
                                         {
-                                            appIds.map((id, index) => (
-                                                console.log(appsAutoreplies[id].autoreplies)
-                                            ))
                                         }
                                     </tbody>
                                 </Table>

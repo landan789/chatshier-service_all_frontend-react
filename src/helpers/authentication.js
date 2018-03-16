@@ -60,7 +60,6 @@ class AuthenticationHelper {
 
         this.unsubscribeAuth && this.unsubscribeAuth();
         this.unsubscribeAuth = this.auth.onAuthStateChanged((firebaseUser) => {
-            console.log(firebaseUser);
             if (firebaseUser) {
                 return this.auth.currentUser.getIdToken(true).then((jwt) => {
                     window.localStorage.setItem('jwt', jwt);

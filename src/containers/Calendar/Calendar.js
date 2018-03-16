@@ -44,11 +44,7 @@ class Calendar extends React.Component {
     componentDidMount() {
         return authHelper.ready.then(() => {
             let userId = authHelper.userId;
-            if (!userId) {
-                return;
-            }
-
-            return Promise.all([
+            return userId && Promise.all([
                 dbapi.calendarsEvents.findAll(userId),
                 dbapi.appsTickets.findAll(null, userId)
             ]);

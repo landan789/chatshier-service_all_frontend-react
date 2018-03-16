@@ -12,6 +12,7 @@ import cookieHelper from '../../helpers/cookie';
 import dbapi from '../../helpers/databaseApi/index';
 
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
+import AutoreplyInsertModal from '../../components/Modals/AutoreplyInsert/AutoreplyInsert';
 
 import './Autoreply.css';
 
@@ -20,20 +21,34 @@ class Autoreply extends React.Component {
         super(props);
         this.state = {
             dropdownOpen: false,
-            searchKeyword: ''
+            isInsertModalOpen: false,
+            searchKeyword: '',
+            dropdownSelectedApp: ''
         };
         this.toggle = this.toggle.bind(this);
         this.keywordChanged = this.keywordChanged.bind(this);
+        this.openInsertModal = this.openInsertModal.bind(this);
+        this.closeInsertModal = this.closeInsertModal.bind(this);
     }
 
     componentWillMount() {
         browserHelper.setTitle('待辦事項');
-
         if (!cookieHelper.hasSignedin()) {
             return authHelper.signOut().then(() => {
                 this.props.history.replace(ROUTES.SIGNIN);
             });
         }
+    }
+
+    componentDidMount() {
+        return authHelper.ready.then(() => {
+            let userId = authHelper.userId;
+
+            return Promise.all([
+                dbapi.apps.findAll(userId),
+                dbapi.appsAutoreplies.findAll(null, userId)
+            ]);
+        });
     }
 
     toggle() {
@@ -46,7 +61,23 @@ class Autoreply extends React.Component {
         this.setState({ searchKeyword: event.target.value });
     }
 
+    DropdownItemChanged(name) {
+        this.setState({ dropdownSelectedApp: name });
+        // 後續還要渲染table
+    }
+
+    openInsertModal(ev) {
+        this.setState({ isInsertModalOpen: true });
+    }
+
+    closeInsertModal(ev, role, modalData) {
+        this.setState({ isInsertModalOpen: false });
+    }
+
     render() {
+        let apps = 0 === Object.keys(this.props.apps).length ? {} : this.props.apps;
+        let appsAutoreplies = 0 === Object.keys(this.props.appsAutoreplies).length ? {} : this.props.appsAutoreplies;
+        let appIds = Object.keys(apps).filter((id) => ('' !== apps[id].id1.trim()));
         return (
             <Aux>
                 <Toolbar />
@@ -60,15 +91,15 @@ class Autoreply extends React.Component {
                                 <p className="address padding-lr">當用戶對LINE@傳送訊息，訊息將自動回覆</p>
                             </div>
                             <Row className="padding-lr">
-                                <Col xs="6">
+                                <Col>
                                     <Dropdown color="primary" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-                                        <DropdownToggle caret>Dropdown</DropdownToggle>
+                                        <DropdownToggle caret>{this.state.dropdownSelectedApp}</DropdownToggle>
                                         <DropdownMenu>
-                                            <DropdownItem>HEADER{''}</DropdownItem>
+                                            { appIds.map((id, index) => <DropdownItem key={index} id={id} onClick={() => { this.DropdownItemChanged(apps[id].name); }}>{apps[id].name}</DropdownItem>) }
                                         </DropdownMenu>
                                     </Dropdown>
                                 </Col>
-                                <Col xs="6">
+                                <Col>
                                     <span className="icon"><i className="fa fa-search"></i></span>{' '}
                                     <input
                                         type="text"
@@ -76,11 +107,17 @@ class Autoreply extends React.Component {
                                         placeholder="搜尋"
                                         value={this.state.searchKeyword}
                                         onChange={this.keywordChanged} />{' '}
-                                    <i className="pointer fas fa-plus"></i>
+                                    <i className="pointer fas fa-plus" onClick={this.openInsertModal}></i>
+                                    <AutoreplyInsertModal
+                                        apps={apps}
+                                        appsAutoreplies={appsAutoreplies}
+                                        isOpen={this.state.isInsertModalOpen}
+                                        close={this.closeInsertModal}>
+                                    </AutoreplyInsertModal>
                                 </Col>
                             </Row>
                             <div className="padding-lr">
-                                <Table>
+                                <Table striped>
                                     <thead>
                                         <tr>
                                             <th scope="col">標題</th>
@@ -90,7 +127,13 @@ class Autoreply extends React.Component {
                                             <th scope="col">編輯/刪除</th>
                                         </tr>
                                     </thead>
-                                    <tbody>{''}</tbody>
+                                    <tbody>
+                                        {
+                                            appIds.map((id, index) => (
+                                                console.log(appsAutoreplies[id].autoreplies)
+                                            ))
+                                        }
+                                    </tbody>
                                 </Table>
                             </div>
                         </div>
@@ -102,10 +145,16 @@ class Autoreply extends React.Component {
 }
 
 Autoreply.propTypes = {
+    apps: PropTypes.object,
+    appsAutoreplies: PropTypes.object,
     history: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => {
+    return {
+        apps: state.apps,
+        appsAutoreplies: state.appsAutoreplies
+    };
 };
 
 export default withRouter(connect(mapStateToProps)(Autoreply));

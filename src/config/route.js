@@ -5,7 +5,7 @@ const ROUTES = {
     SIGNUP: '/signup',
     SETTING: '/setting',
     TICKET: '/ticket',
-    AUTO: '/auto'
+    AUTOREPLY: '/autoreply'
 };
 
 export default ROUTES;

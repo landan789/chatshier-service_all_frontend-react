@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Provider } from 'react-redux';
-import { BrowserRouter, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 
 import mainStore from '../../redux/mainStore';
 import Calendar from '../Calendar/Calendar';
@@ -21,43 +21,35 @@ class Routes extends React.Component {
 
         this.routes = [
             {
-                path: '/',
-                component: SignIn
-            }, {
                 path: ROUTES.CALENDAR,
-                component: Calendar
+                component: Calendar,
+                exact: true
             }, {
                 path: ROUTES.CHAT,
-                component: null
+                component: null,
+                exact: true
             }, {
                 path: ROUTES.SETTING,
-                component: Setting
+                component: Setting,
+                exact: false
             }, {
                 path: ROUTES.SIGNIN,
-                component: SignIn
+                component: SignIn,
+                exact: true
             }, {
                 path: ROUTES.SIGNUP,
-                component: SignUp
+                component: SignUp,
+                exact: true
             }, {
                 path: ROUTES.GREETING,
-                component: Greetings
+                component: Greetings,
+                exact: true
             }, {
                 path: ROUTES.TICKET,
-                component: Ticket
+                component: Ticket,
+                exact: true
             }
         ];
-    }
-
-    shouldRedirect() {
-        let routePath = window.location.pathname;
-        return (() => {
-            for (let i in this.routes) {
-                if (this.routes[i].path === routePath) {
-                    return false;
-                }
-            }
-            return true;
-        })();
     }
 
     render() {
@@ -65,14 +57,15 @@ class Routes extends React.Component {
             <Provider store={mainStore}>
                 <BrowserRouter>
                     <div className="route-wrapper">
-                        <Route path="/*" render={() => this.shouldRedirect() && (<Redirect to="/signin" />)}></Route>
-                        {this.routes.map((route) => {
-                            return <Route exact
-                                key={route.path}
-                                path={route.path}
-                                component={route.component}>
-                            </Route>;
-                        })}
+                        <Switch>
+                            {this.routes.map((route) => (
+                                <Route key={route.path}
+                                    exact={route.exact}
+                                    path={route.path}
+                                    component={route.component} />
+                            ))}
+                            <Redirect to={ROUTES.SIGNIN} />
+                        </Switch>
                     </div>
                 </BrowserRouter>
             </Provider>

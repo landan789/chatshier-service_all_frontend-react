@@ -1,3 +1,32 @@
-.Greetings {
-    padding: 80px 60px;
+@import '../../styles/_variables';
+
+$_tab-active-color: $primary-color;
+$_tab-inactive-color: #eee;
+
+.setting-wrapper {
+    display: flex;
+
+    .chsr {
+        .nav-tabs {
+            border: none;
+        }
+
+        .nav-link {
+            color: $_tab-active-color;
+            cursor: pointer;
+
+            &:hover {
+                color: $_tab-active-color;
+                background-color: $_tab-inactive-color;
+            }
+
+            &.active {
+                background-color: $_tab-active-color;
+
+                &:hover {
+                    color: #fff;
+                }
+            }
+        }
+    }
 }

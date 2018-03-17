@@ -119,7 +119,7 @@ class TicketTable extends React.Component {
                     {this.renderTickets()}
                 </div>
                 <TicketEditModal
-                    editModalData={this.state.editModalData}
+                    modalData={this.state.editModalData}
                     isOpen={!!this.state.editModalData}
                     close={this.closeEditModal}>
                 </TicketEditModal>

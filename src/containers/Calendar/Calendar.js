@@ -14,18 +14,14 @@ import dbapi from '../../helpers/databaseApi/index';
 import { notify } from '../../components/Notify/Notify';
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 import CalendarInsertModal from '../../components/Modals/CalendarInsert/CalendarInsert';
+import CalendarEditModal, { CalendarEventTypes } from '../../components/Modals/CalendarEdit/CalendarEdit';
+import TicketEditModal from '../../components/Modals/TicketEdit/TicketEdit';
 
 import $ from 'jquery';
 import 'fullcalendar';
 import 'fullcalendar/dist/locale/zh-tw';
 import 'fullcalendar/dist/fullcalendar.min.css';
 import './Calendar.css';
-
-const CalendarEventTypes = Object.freeze({
-    CALENDAR: 'CALENDAR',
-    TICKET: 'TICKET',
-    GOOGLE: 'GOOGLE'
-});
 
 class CalendarEventItem {
     constructor(options) {
@@ -40,7 +36,7 @@ class CalendarEventItem {
         this.isAllDay = !!options.isAllDay;
         this.start = options.start || null;
         this.end = options.end || null;
-        this.backup = options.backup || {};
+        this.origin = options.origin || {};
 
         this.backgroundColor = '#90b5c7';
         this.borderColor = '#90b5c7';
@@ -75,7 +71,8 @@ class Calendar extends React.Component {
         super(props);
 
         this.state = {
-            modalData: null
+            insertModalData: null,
+            editModalData: null
         };
 
         /** @type {JQuery<HTMLElement>} */
@@ -85,6 +82,7 @@ class Calendar extends React.Component {
         this.onSelectDate = this.onSelectDate.bind(this);
         this.onEventClick = this.onEventClick.bind(this);
         this.onEventDrop = this.onEventDrop.bind(this);
+        this.updateCalendarEvent = this.updateCalendarEvent.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
         this.closeEditModal = this.closeEditModal.bind(this);
     }
@@ -104,22 +102,20 @@ class Calendar extends React.Component {
             let userId = authHelper.userId;
             return userId && Promise.all([
                 dbapi.calendarsEvents.findAll(userId),
-                dbapi.appsTickets.findAll(null, userId)
+                dbapi.appsTickets.findAll(null, userId),
+                dbapi.appsMessagers.findAll(userId)
             ]);
-        }).then(() => {
-            this.componentWillReceiveProps(this.props);
         });
     }
 
     componentWillReceiveProps(props) {
+        this.reload(props);
+    }
+
+    reload(props) {
         this.$calendar.fullCalendar('removeEvents');
         this.reloadCalendarEvents(props.calendarsEvents);
         this.reloadAppsTickets(props.appsTickets);
-    }
-
-    componentWillUnmount() {
-        this.$calendar.fullCalendar('destroy');
-        delete this.$calendar;
     }
 
     reloadCalendarEvents(calendars) {
@@ -141,7 +137,7 @@ class Calendar extends React.Component {
                     isAllDay: event.isAllDay,
                     start: new Date(event.startedTime),
                     end: new Date(event.endedTime),
-                    backup: event
+                    origin: event
                 });
                 calendarEventList.push(eventItem);
             }
@@ -172,9 +168,9 @@ class Calendar extends React.Component {
                     title: ticket.description.length > 10 ? ticket.description.substring(0, 10) : ticket.description,
                     description: ticket.description,
                     isAllDay: false,
-                    start: new Date(ticket.dueTime),
+                    start: new Date(ticket.createdTime),
                     end: new Date(ticket.dueTime),
-                    backup: ticket
+                    origin: ticket
                 });
                 calendarEventList.push(eventItem);
             }
@@ -195,49 +191,90 @@ class Calendar extends React.Component {
             startDateTime: startDateTime,
             endDateTime: endDateTime
         };
-        this.setState({ modalData: modalData });
+        this.setState({ insertModalData: modalData });
     }
 
-    onEventClick(event) {
+    onEventClick(calendarEvent) {
+        let origin = calendarEvent.origin;
 
+        if (CalendarEventTypes.TICKET === calendarEvent.eventType) {
+            let appId = calendarEvent.calendarId;
+            let ticketId = calendarEvent.id;
+            /** @type {Chatshier.Ticket} */
+            let ticket = origin;
+            /** @type {Chatshier.AppsMessagers} */
+            let appsMessagers = this.props.appsMessagers;
+            let messager = appsMessagers[appId].messagers[ticket.messager_id];
+
+            let modalData = {
+                appId: appId,
+                ticketId: ticketId,
+                ticket: origin,
+                messager: messager
+            };
+            this.setState({ editTicketData: modalData });
+        } else {
+            /** @type {Chatshier.CalendarEvent} */
+            let event = {
+                title: calendarEvent.title,
+                description: calendarEvent.description,
+                isAllDay: calendarEvent.isAllDay,
+                startedTime: origin.startedTime,
+                endedTime: origin.endedTime
+            };
+
+            let modalData = {
+                calendarId: calendarEvent.calendarId,
+                eventId: calendarEvent.id,
+                eventType: calendarEvent.eventType,
+                event: event
+            };
+            this.setState({ editModalData: modalData });
+        }
     }
 
-    onEventDrop(event, delta, revertFunc) {
-        let startDate = event.start.toDate();
-        let endDate = event.end ? event.end.toDate() : startDate;
+    onEventDrop(calendarEvent, delta, revertFunc) {
+        let startDate = calendarEvent.start.toDate();
+        let endDate = calendarEvent.end ? calendarEvent.end.toDate() : startDate;
 
         /** @type {Chatshier.CalendarEvent} */
-        let calendar = {
-            title: event.title,
-            description: event.description,
+        let event = {
+            title: calendarEvent.title,
+            description: calendarEvent.description,
             startedTime: startDate.getTime(),
             endedTime: endDate.getTime(),
-            isAllDay: event.isAllDay ? 1 : 0
+            isAllDay: calendarEvent.isAllDay ? 1 : 0
         };
-
-        return this.updateCalendarEvent(event, calendar).catch(() => {
+        if (event.startedTime > event.endedTime) {
             revertFunc();
-        });
-    }
-
-    updateCalendarEvent(event, calendar) {
-        if (calendar.startedTime > calendar.endedTime) {
             return notify('開始時間需早於結束時間', { type: 'warning' });
         }
 
         let calendarId = event.calendarId;
         let eventId = event.id;
-        let userId = authHelper.userId;
+        let eventType = event.eventType;
+        return this.updateCalendarEvent(calendarId, eventId, eventType, event).catch(() => {
+            revertFunc();
+        });
+    }
+
+    updateCalendarEvent(calendarId, eventId, eventType, event) {
+        if (event.startedTime > event.endedTime) {
+            return notify('開始時間需早於結束時間', { type: 'warning' }).then(() => {
+                return Promise.reject(new Error('INVALID_DATE'));
+            });
+        }
 
         // 根據事件型態來判斷發送不同 API 進行資料更新動作
-        switch (event.eventType) {
+        let userId = authHelper.userId;
+        switch (eventType) {
             case CalendarEventTypes.CALENDAR:
-                return dbapi.calendarsEvents.update(calendarId, eventId, userId, calendar);
+                return dbapi.calendarsEvents.update(calendarId, eventId, userId, event);
             case CalendarEventTypes.TICKET:
                 /** @type {Chatshier.Ticket} */
                 let ticket = {
-                    description: calendar.description,
-                    dueTime: calendar.endedTime
+                    description: event.description,
+                    dueTime: event.endedTime
                 };
                 return dbapi.appsTickets.update(calendarId, eventId, userId, ticket);
             // case CalendarEventTypes.GOOGLE:
@@ -274,7 +311,7 @@ class Calendar extends React.Component {
             //             description: googleEvent.description,
             //             start: startDate,
             //             end: endDate,
-            //             backup: googleEvent
+            //             origin: googleEvent
             //         });
             //         this.$calendar.fullCalendar('updateEvent', eventItem, true);
             //     });
@@ -284,15 +321,20 @@ class Calendar extends React.Component {
     }
 
     closeInsertModal(ev) {
-        this.setState({ modalData: null });
+        this.setState({ insertModalData: null });
     }
 
     closeEditModal(ev) {
-        this.setState({ editModalData: null });
+        this.setState({
+            editModalData: null,
+            editTicketData: null
+        });
     }
 
     initCalendar(refElem) {
-        if (this.$calendar) {
+        if (!refElem && this.$calendar) {
+            this.$calendar.fullCalendar('destroy');
+            delete this.$calendar;
             return;
         }
 
@@ -328,6 +370,7 @@ class Calendar extends React.Component {
             eventDrop: this.onEventDrop,
             eventDurationEditable: true
         });
+        this.reload(this.props);
     }
 
     render() {
@@ -336,18 +379,30 @@ class Calendar extends React.Component {
                 <Toolbar />
                 <Fade in className="has-toolbar calendar-wrapper">
                     <div className="chsr calendar" ref={this.initCalendar}></div>
-                    <CalendarInsertModal
-                        modalData={this.state.modalData}
-                        isOpen={!!this.state.modalData}
-                        close={this.closeInsertModal}>
-                    </CalendarInsertModal>
                 </Fade>
+                <CalendarInsertModal
+                    modalData={this.state.insertModalData}
+                    isOpen={!!this.state.insertModalData}
+                    close={this.closeInsertModal}>
+                </CalendarInsertModal>
+                <CalendarEditModal
+                    modalData={this.state.editModalData}
+                    isOpen={!!this.state.editModalData}
+                    updateHandle={this.updateCalendarEvent}
+                    close={this.closeEditModal}>
+                </CalendarEditModal>
+                <TicketEditModal
+                    modalData={this.state.editTicketData}
+                    isOpen={!!this.state.editTicketData}
+                    close={this.closeEditModal}>
+                </TicketEditModal>
             </Aux>
         );
     }
 }
 
 Calendar.propTypes = {
+    appsMessagers: PropTypes.object,
     appsTickets: PropTypes.object,
     calendarsEvents: PropTypes.object,
     history: PropTypes.object.isRequired
@@ -356,6 +411,7 @@ Calendar.propTypes = {
 const mapStateToProps = (state, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
     return {
+        appsMessagers: state.appsMessagers,
         appsTickets: state.appsTickets,
         calendarsEvents: state.calendarsEvents
     };

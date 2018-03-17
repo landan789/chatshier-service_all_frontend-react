@@ -35,7 +35,7 @@ class TicketEditModal extends React.Component {
 
     componentWillReceiveProps(props) {
         /** @type {Chatshier.Ticket} */
-        let ticket = props.editModalData ? props.editModalData.ticket : {};
+        let ticket = props.modalData ? props.modalData.ticket : {};
         this.setState({
             dueTime: ticket.dueTime,
             status: ticket.status,
@@ -63,8 +63,8 @@ class TicketEditModal extends React.Component {
     }
 
     updateTicket(ev) {
-        let appId = this.props.editModalData.appId;
-        let ticketId = this.props.editModalData.ticketId;
+        let appId = this.props.modalData.appId;
+        let ticketId = this.props.modalData.ticketId;
         let userId = authHelper.userId;
 
         /** @type {Chatshier.Ticket} */
@@ -83,7 +83,7 @@ class TicketEditModal extends React.Component {
                 return true;
             }
             return false;
-        })(this.props.editModalData.ticket, ticket);
+        })(this.props.modalData.ticket, ticket);
 
         if (!shouldUpdate) {
             return this.props.close(ev);
@@ -101,8 +101,8 @@ class TicketEditModal extends React.Component {
     }
 
     deleteTicket(ev) {
-        let appId = this.props.editModalData.appId;
-        let ticketId = this.props.editModalData.ticketId;
+        let appId = this.props.modalData.appId;
+        let ticketId = this.props.modalData.ticketId;
         let userId = authHelper.userId;
 
         this.setState({ isAsyncWorking: true });
@@ -117,8 +117,8 @@ class TicketEditModal extends React.Component {
     }
 
     render() {
-        let ticket = this.props.editModalData ? this.props.editModalData.ticket : {};
-        let messager = this.props.editModalData ? this.props.editModalData.messager : {};
+        let ticket = this.props.modalData ? this.props.modalData.ticket : {};
+        let messager = this.props.modalData ? this.props.modalData.messager : {};
 
         return (
             <Modal size="lg" className="ticket-edit-modal" isOpen={this.props.isOpen} toggle={this.props.close}>
@@ -204,7 +204,7 @@ class TicketEditModal extends React.Component {
 }
 
 TicketEditModal.propTypes = {
-    editModalData: PropTypes.object,
+    modalData: PropTypes.object,
     isOpen: PropTypes.bool.isRequired,
     close: PropTypes.func.isRequired
 };

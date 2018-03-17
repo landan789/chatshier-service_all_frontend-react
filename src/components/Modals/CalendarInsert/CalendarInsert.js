@@ -19,28 +19,36 @@ class CalendarInsertModal extends React.Component {
             isAllDay: false,
             title: '',
             description: '',
+            /** @type {Date} */
             startDateTime: null,
+            /** @type {Date} */
             endDateTime: null
         };
+
+        this.prevStartDateTime = this.state.startDateTime;
+        this.prevEndDateTime = this.state.endDateTime;
 
         this.titleChanged = this.titleChanged.bind(this);
         this.descriptionChanged = this.descriptionChanged.bind(this);
         this.startDateTimeChanged = this.startDateTimeChanged.bind(this);
         this.endDateTimeChanged = this.endDateTimeChanged.bind(this);
+        this.allDayChanged = this.allDayChanged.bind(this);
         this.insertEvent = this.insertEvent.bind(this);
     }
 
     componentWillReceiveProps(props) {
-        if (props.modalData) {
-            this.setState({
-                isAsyncWorking: false,
-                isAllDay: false,
-                title: '',
-                description: '',
-                startDateTime: props.modalData.startDateTime,
-                endDateTime: props.modalData.endDateTime
-            });
+        if (!props.modalData) {
+            return;
         }
+
+        this.setState({
+            isAsyncWorking: false,
+            isAllDay: false,
+            title: '',
+            description: '',
+            startDateTime: props.modalData.startDateTime,
+            endDateTime: props.modalData.endDateTime
+        });
     }
 
     titleChanged(ev) {
@@ -52,11 +60,40 @@ class CalendarInsertModal extends React.Component {
     }
 
     startDateTimeChanged(dateTime) {
+        this.prevStartDateTime = this.state.startDateTime;
         this.setState({ startDateTime: dateTime });
     }
 
     endDateTimeChanged(dateTime) {
+        this.prevEndDateTime = this.state.endDateTime;
         this.setState({ endDateTime: dateTime });
+    }
+
+    allDayChanged(ev) {
+        // 若使用者勾選全天項目，將時間調整成全天範圍
+        // 取消全天的話恢復成原先的時間
+        /** @type {Date} */
+        let dayStart;
+        /** @type {Date} */
+        let dayEnd;
+
+        if (ev.target.checked) {
+            this.prevStartDateTime = this.state.startDateTime;
+            this.prevEndDateTime = this.state.endDateTime;
+            dayStart = new Date(this.state.startDateTime);
+            dayStart.setHours(0, 0, 0, 0);
+            dayEnd = new Date(dayStart);
+            dayEnd.setDate(dayEnd.getDate() + 1);
+        } else {
+            dayStart = this.prevStartDateTime;
+            dayEnd = this.prevEndDateTime;
+        }
+
+        this.setState({
+            isAllDay: ev.target.checked,
+            startDateTime: dayStart,
+            endDateTime: dayEnd
+        });
     }
 
     insertEvent(ev) {
@@ -67,6 +104,12 @@ class CalendarInsertModal extends React.Component {
             description: this.state.description,
             isAllDay: this.state.isAllDay ? 1 : 0
         };
+
+        if (!event.title) {
+            return notify('請輸入事件標題名稱', { type: 'warning' });
+        } else if (event.startedTime > event.endedTime) {
+            return notify('開始時間需早於結束時間', { type: 'warning' });
+        }
 
         let userId = authHelper.userId;
         this.setState({ isAsyncWorking: true });
@@ -81,6 +124,10 @@ class CalendarInsertModal extends React.Component {
     }
 
     render() {
+        if (!this.props.modalData) {
+            return null;
+        }
+
         return (
             <Modal className="calendar-insert-modal" isOpen={this.props.isOpen} toggle={this.props.close}>
                 <ModalHeader toggle={this.props.close}>
@@ -103,6 +150,7 @@ class CalendarInsertModal extends React.Component {
                                 culture="zh-TW"
                                 format={(datetime) => formatDate(datetime) + ' ' + formatTime(datetime, false)}
                                 timeFormat={(time) => formatTime(time, false)}
+                                max={this.state.endDateTime}
                                 value={this.state.startDateTime}
                                 onChange={this.startDateTimeChanged}>
                             </DateTimePicker>
@@ -114,6 +162,7 @@ class CalendarInsertModal extends React.Component {
                                 culture="zh-TW"
                                 format={(datetime) => formatDate(datetime) + ' ' + formatTime(datetime, false)}
                                 timeFormat={(time) => formatTime(time, false)}
+                                min={this.state.startDateTime}
                                 value={this.state.endDateTime}
                                 onChange={this.endDateTimeChanged}>
                             </DateTimePicker>
@@ -122,7 +171,10 @@ class CalendarInsertModal extends React.Component {
                         <div className="form-group">
                             <div className="form-check">
                                 <label className="form-check-label">
-                                    <input className="form-check-input" type="checkbox" />
+                                    <input className="form-check-input"
+                                        type="checkbox"
+                                        checked={this.state.isAllDay}
+                                        onChange={this.allDayChanged} />
                                     是否為全天？
                                 </label>
                             </div>

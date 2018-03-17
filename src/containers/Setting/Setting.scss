@@ -2,11 +2,14 @@
 
 $_tab-active-color: $primary-color;
 $_tab-inactive-color: #eee;
+$_tabs-min-width: 10rem;;
 
 .setting-wrapper {
     display: flex;
 
-    .chsr {
+    .tabs-container {
+        min-width: $_tabs-min-width;
+
         .nav-tabs {
             border: none;
         }

@@ -55,16 +55,16 @@ class TicketEventItem extends CalendarEventItem {
     }
 }
 
-class GoogleEventItem extends CalendarEventItem {
-    constructor(options) {
-        options = options || {};
-        super(options);
-        this.eventType = CalendarEventTypes.GOOGLE;
-        this.backgroundColor = '#468af5';
-        this.borderColor = '#468af5';
-        this.textColor = '#efeff0';
-    }
-}
+// class GoogleEventItem extends CalendarEventItem {
+//     constructor(options) {
+//         options = options || {};
+//         super(options);
+//         this.eventType = CalendarEventTypes.GOOGLE;
+//         this.backgroundColor = '#468af5';
+//         this.borderColor = '#468af5';
+//         this.textColor = '#efeff0';
+//     }
+// }
 
 class Calendar extends React.Component {
     constructor(props) {

@@ -4,7 +4,7 @@ import { Fade, Nav, NavItem, NavLink } from 'reactstrap';
 import ROUTES from '../../config/route';
 
 const LinkTabs = (props) => (
-    <Fade in className="my-3 col-md-3 chsr">
+    <Fade in className="m-3 tabs-container">
         <Nav tabs vertical pills>
             <NavItem>
                 <NavLink

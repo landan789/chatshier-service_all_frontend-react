@@ -20,14 +20,10 @@ class Greetings extends React.Component {
         super(props, context);
 
         this.state = {
-            updatedTime: Date.now(),
-            type: 'text',
-            text: '',
-            isDeleted: 0
+            selectedAppId: ''
         };
 
-        this.textChanged = this.textChanged.bind(this);
-        this.botChanged = this.botChanged.bind(this);
+        this.appChanged = this.appChanged.bind(this);
     }
 
     componentWillMount() {
@@ -40,11 +36,7 @@ class Greetings extends React.Component {
         }
     }
 
-    textChanged(ev) {
-        this.setState({ text: ev.target.value });
-    }
-
-    botChanged(appId) {
+    appChanged(appId) {
         this.setState({ selectedAppId: appId });
     }
 
@@ -62,7 +54,7 @@ class Greetings extends React.Component {
                                 <BreadcrumbItem active>Greeting</BreadcrumbItem>
                             </Breadcrumb>
                             <p className="lead">一次可傳送五則訊息</p>
-                            <AppsSelector onChange={this.botChanged} />
+                            <AppsSelector onChange={this.appChanged} />
                         </Jumbotron>
                         <GreetingTable appId={this.state.selectedAppId} />
                     </div>

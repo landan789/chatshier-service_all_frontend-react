@@ -8,29 +8,29 @@ const LinkTabs = (props) => (
         <Nav tabs vertical pills>
             <NavItem>
                 <NavLink
-                    active={props.route.includes(ROUTES.SETTING_APPS)}
-                    onClick={() => { props.toggle(ROUTES.SETTING_APPS); }}>
+                    active={props.route.includes(ROUTES.SETTINGS_APPS)}
+                    onClick={() => { props.toggle(ROUTES.SETTINGS_APPS); }}>
                 聊天應用程式
                 </NavLink>
             </NavItem>
             <NavItem>
                 <NavLink
-                    active={props.route.includes(ROUTES.SETTING_USERS)}
-                    onClick={() => { props.toggle(ROUTES.SETTING_USERS); }}>
+                    active={props.route.includes(ROUTES.SETTINGS_USERS)}
+                    onClick={() => { props.toggle(ROUTES.SETTINGS_USERS); }}>
                 基本設定
                 </NavLink>
             </NavItem>
             <NavItem>
                 <NavLink
-                    active={props.route.includes(ROUTES.SETTING_TAGS)}
-                    onClick={() => { props.toggle(ROUTES.SETTING_TAGS); }}>
+                    active={props.route.includes(ROUTES.SETTINGS_TAGS)}
+                    onClick={() => { props.toggle(ROUTES.SETTINGS_TAGS); }}>
                 客戶分類條件
                 </NavLink>
             </NavItem>
             <NavItem>
                 <NavLink
-                    active={props.route.includes(ROUTES.SETTING_GROUPS)}
-                    onClick={() => { props.toggle(ROUTES.SETTING_GROUPS); }}>
+                    active={props.route.includes(ROUTES.SETTINGS_GROUPS)}
+                    onClick={() => { props.toggle(ROUTES.SETTINGS_GROUPS); }}>
                 內部群組
                 </NavLink>
             </NavItem>

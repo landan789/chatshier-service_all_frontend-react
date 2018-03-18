@@ -11,12 +11,17 @@ import ROUTES from './config/route';
 import authHelper from './helpers/authentication';
 import mainStore from './redux/mainStore';
 
+import Analyze from './containers/Analyze/Analyze';
 import Calendar from './containers/Calendar/Calendar';
-import Setting from './containers/Setting/Setting';
-import SignIn from './containers/SignIn/SignIn';
-import SignUp from './containers/SignUp/SignUp';
-import Ticket from './containers/Ticket/Ticket';
+import Chat from './containers/Chat/Chat';
+import Composes from './containers/Composes/Composes';
 import Greetings from './containers/Greetings/Greetings';
+import Keywordrepies from './containers/Keywordrepies/Keywordrepies';
+import Settings from './containers/Settings/Settings';
+import SignIn from './containers/SignIn/SignIn';
+import SignOut from './containers/SignOut/SignOut';
+import SignUp from './containers/SignUp/SignUp';
+import Tickets from './containers/Tickets/Tickets';
 
 // https://getbootstrap.com/docs/4.0/getting-started/introduction/
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -26,32 +31,48 @@ import './index.css';
 
 const routes = [
     {
+        path: ROUTES.ANALYZE,
+        component: Analyze,
+        exact: true
+    }, {
         path: ROUTES.CALENDAR,
         component: Calendar,
         exact: true
     }, {
         path: ROUTES.CHAT,
-        component: null,
+        component: Chat,
         exact: true
     }, {
-        path: ROUTES.SETTING,
-        component: Setting,
+        path: ROUTES.COMPOSES,
+        component: Composes,
+        exact: true
+    }, {
+        path: ROUTES.GREETINGS,
+        component: Greetings,
+        exact: true
+    }, {
+        path: ROUTES.KEYWORDREPLIES,
+        component: Keywordrepies,
+        exact: true
+    }, {
+        path: ROUTES.SETTINGS,
+        component: Settings,
         exact: false
     }, {
         path: ROUTES.SIGNIN,
         component: SignIn,
         exact: true
     }, {
+        path: ROUTES.SIGNOUT,
+        component: SignOut,
+        exact: true
+    }, {
         path: ROUTES.SIGNUP,
         component: SignUp,
         exact: true
     }, {
-        path: ROUTES.GREETING,
-        component: Greetings,
-        exact: true
-    }, {
-        path: ROUTES.TICKET,
-        component: Ticket,
+        path: ROUTES.TICKETS,
+        component: Tickets,
         exact: true
     }
 ];

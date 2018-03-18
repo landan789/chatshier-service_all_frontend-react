@@ -1,15 +1,20 @@
 const ROUTES = {
+    ANALYZE: '/analyze',
+    AUTOREPLIES: 'autoreplies',
     CALENDAR: '/calendar',
     CHAT: '/chat',
-    GREETING: '/greeting',
+    COMPOSES: '/composes',
+    GREETINGS: '/greetings',
+    KEYWORDREPLIES: '/keywordreplies',
     SIGNIN: '/signin',
     SIGNUP: '/signup',
-    SETTING: '/setting',
-    SETTING_APPS: '/setting/apps',
-    SETTING_USERS: '/setting/users',
-    SETTING_TAGS: '/setting/tags',
-    SETTING_GROUPS: '/setting/groups',
-    TICKET: '/ticket'
+    SIGNOUT: '/signout',
+    SETTINGS: '/settings',
+    SETTINGS_APPS: '/settings/apps',
+    SETTINGS_GROUPS: '/settings/groups',
+    SETTINGS_TAGS: '/settings/tags',
+    SETTINGS_USERS: '/settings/users',
+    TICKETS: '/tickets'
 };
 
 export default ROUTES;

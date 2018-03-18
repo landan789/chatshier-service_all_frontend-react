@@ -15,7 +15,14 @@ export const appsChatroomsMessagesReducer = (state = {}, action) => {
                     if (chatroom.isDeleted) {
                         continue;
                     }
-                    state[appId].chatrooms[chatroomId].messages = chatroom.messages;
+
+                    if (!state[appId].chatrooms[chatroomId]) {
+                        state[appId].chatrooms[chatroomId] = {
+                            messages: chatroom.messages
+                        };
+                    } else {
+                        state[appId].chatrooms[chatroomId].messages = chatroom.messages;
+                    }
                 }
             }
             return Object.assign({}, state);

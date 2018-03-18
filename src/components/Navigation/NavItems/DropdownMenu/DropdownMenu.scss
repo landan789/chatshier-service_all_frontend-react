@@ -34,6 +34,10 @@
     color: black;
     cursor: pointer;
 
+    i {
+        padding-right: .25rem;
+    }
+
     &:hover {
         background-color: rgb(207, 255, 253);
         text-decoration: none;

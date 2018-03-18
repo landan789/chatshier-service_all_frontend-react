@@ -1,6 +1,6 @@
 const ROUTES = {
     ANALYZE: '/analyze',
-    AUTOREPLIES: 'autoreplies',
+    AUTOREPLIES: '/autoreplies',
     CALENDAR: '/calendar',
     CHAT: '/chat',
     COMPOSES: '/composes',

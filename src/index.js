@@ -12,6 +12,7 @@ import authHelper from './helpers/authentication';
 import mainStore from './redux/mainStore';
 
 import Analyze from './containers/Analyze/Analyze';
+import Autoreply from './containers/Autoreply/Autoreply';
 import Calendar from './containers/Calendar/Calendar';
 import Chat from './containers/Chat/Chat';
 import Composes from './containers/Composes/Composes';
@@ -33,6 +34,10 @@ const routes = [
     {
         path: ROUTES.ANALYZE,
         component: Analyze,
+        exact: true
+    }, {
+        path: ROUTES.AUTOREPLIES,
+        component: Autoreply,
         exact: true
     }, {
         path: ROUTES.CALENDAR,

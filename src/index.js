@@ -63,17 +63,15 @@ authHelper.init();
 ReactDOM.render(
     <Provider store={mainStore}>
         <BrowserRouter>
-            <div className="route-wrapper">
-                <Switch>
-                    {routes.map((route) => (
-                        <Route key={route.path}
-                            exact={route.exact}
-                            path={route.path}
-                            component={route.component} />
-                    ))}
-                    <Redirect to={ROUTES.SIGNIN} />
-                </Switch>
-            </div>
+            <Switch>
+                {routes.map((route) => (
+                    <Route key={route.path}
+                        exact={route.exact}
+                        path={route.path}
+                        component={route.component} />
+                ))}
+                <Redirect to={ROUTES.SIGNIN} />
+            </Switch>
         </BrowserRouter>
     </Provider>,
     document.getElementById('charshier_root')

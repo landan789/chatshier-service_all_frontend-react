@@ -3,6 +3,11 @@
 
 $_toolbar-bg-color: $primary-color;
 
+
+.has-toolbar {
+    margin-top: $toolbar-height;
+}
+
 .toolbar {
     position: fixed;
     top: 0;

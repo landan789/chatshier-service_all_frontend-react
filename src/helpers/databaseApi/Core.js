@@ -14,10 +14,16 @@ class Core {
             return Promise.reject(new Error(res.status + ' ' + res.statusText));
         }
 
-        let hasJsonHeader =
-            res.headers.get('Content-Type').includes('application/json') ||
-            res.headers.get('content-type').includes('application/json');
-        if (!res.ok && res.status >= 500 && hasJsonHeader) {
+        if (!res.ok && res.status >= 500) {
+            let hasJsonHeader =
+                res.headers.get('Content-Type').includes('application/json') ||
+                res.headers.get('content-type').includes('application/json');
+            if (!hasJsonHeader) {
+                return res.body.getReader().read().then((body) => {
+                    return Promise.reject(body);
+                });
+            }
+
             return res.json().then((resJson) => {
                 return Promise.reject(resJson);
             });

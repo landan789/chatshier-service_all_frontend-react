@@ -243,7 +243,7 @@ TicketInsertModal.propTypes = {
     apps: PropTypes.object,
     appsMessagers: PropTypes.object,
     isOpen: PropTypes.bool,
-    close: PropTypes.func
+    close: PropTypes.func.isRequired
 };
 
 export default TicketInsertModal;

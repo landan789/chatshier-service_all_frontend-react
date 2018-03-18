@@ -56,12 +56,12 @@ export function toDueDateSpan(dueTime) {
         padding: '1px .75rem',
         margin: '1px',
         borderRadius: '1rem',
-        backgroundColor: hr < 0 ? 'rgb(91, 195, 92)' : 'rgb(227, 79, 79)',
+        backgroundColor: hr < 0 ? 'rgb(227, 79, 79)' : 'rgb(91, 195, 92)',
         color: '#fff',
         fontWeight: 'bold',
         whiteSpace: 'nowrap'
     };
 
-    let text = hr < 0 ? '即期' : '過期';
+    let text = hr < 0 ? '過期' : '即期';
     return <span style={style}>{text}</span>;
 }

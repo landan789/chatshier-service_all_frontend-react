@@ -3,6 +3,11 @@
 
 $_toolbar-bg-color: $primary-color;
 
+
+.has-toolbar {
+    margin-top: $toolbar-height;
+}
+
 .toolbar {
     position: fixed;
     top: 0;
@@ -11,7 +16,7 @@ $_toolbar-bg-color: $primary-color;
     background-color: $_toolbar-bg-color;
     height: $toolbar-height;
     font-size: .9rem;
-    z-index: 1;
+    z-index: 1050;
 
     .navbar-header {
         display: flex;

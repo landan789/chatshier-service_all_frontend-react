@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -8,32 +8,21 @@ import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reac
 import authHelper from '../../helpers/authentication';
 import { updateApps } from '../../redux/actions/apps';
 import dbapi from '../../helpers/databaseApi/index';
-class BotSelector extends React.Component {
-    constructor(props) {
-      super(props);
 
-        this.toggle = this.toggle.bind(this);
+class AppsSelector extends React.Component {
+    constructor(props, ctx) {
+        super(props, ctx);
+
         this.state = {
             dropdownOpen: false
         };
+        this.toggle = this.toggle.bind(this);
     }
 
     componentDidMount() {
         return authHelper.ready.then(() => {
             let userId = authHelper.userId;
-            console.log(userId);
-
-            return Promise.resolve().then(() => {
-                if (Object.keys(this.props.apps).length > 0) {
-                    return this.props.apps;
-                }
-                return dbapi.apps.findAll(userId);
-            });
-        }).then((resJson) => {
-            let apps = resJson.data;
-            console.log(apps);
-
-            this.props.updateApps(apps);
+            return userId && dbapi.apps.findAll(userId);
         });
     }
 
@@ -46,11 +35,17 @@ class BotSelector extends React.Component {
     renderApps() {
         let apps = this.props.apps || {};
         let appIds = Object.keys(apps);
+
         return appIds.map((appId) => {
             let app = apps[appId];
             if ('CHATSHIER' !== app.type) {
-                return <DropdownItem key={appId} onClick={() => this.props.onChange(appId)}>{apps[appId].name}</DropdownItem>;
+                return (
+                    <DropdownItem key={appId}
+                        onClick={() => this.props.onChange(appId)}>{apps[appId].name}
+                    </DropdownItem>
+                );
             }
+            return null;
         });
     }
 
@@ -68,6 +63,10 @@ class BotSelector extends React.Component {
     }
 }
 
+AppsSelector.propTypes = {
+    apps: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired
+};
 
 const mapStateToProps = (state, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
@@ -83,4 +82,4 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(BotSelector);
+export default connect(mapStateToProps, mapDispatchToProps)(AppsSelector);

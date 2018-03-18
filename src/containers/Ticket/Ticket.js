@@ -44,8 +44,7 @@ class Ticket extends React.Component {
     componentDidMount() {
         return authHelper.ready.then(() => {
             let userId = authHelper.userId;
-
-            return Promise.all([
+            return userId && Promise.all([
                 dbapi.apps.findAll(userId),
                 dbapi.appsMessagers.findAll(userId),
                 dbapi.appsTickets.findAll(null, userId)
@@ -61,7 +60,7 @@ class Ticket extends React.Component {
         this.setState({ isInsertModalOpen: true });
     }
 
-    closeInsertModal(ev, role, modalData) {
+    closeInsertModal(ev) {
         this.setState({ isInsertModalOpen: false });
     }
 

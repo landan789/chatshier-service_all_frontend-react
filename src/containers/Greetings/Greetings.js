@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Aux from 'react-aux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { Fade, Jumbotron, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 
 import ROUTES from '../../config/route';
@@ -10,7 +10,7 @@ import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
-import BotSelector from '../../components/BotSelector/BotSelector';
+import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import GreetingTable from './GreetingTable/GreetingTable';
 
 import './Greetings.css';
@@ -57,12 +57,12 @@ class Greetings extends React.Component {
                         <Jumbotron>
                             <h1 className="display-3">加好友回覆</h1>
                             <Breadcrumb>
-                                <BreadcrumbItem><a href="/">Home</a></BreadcrumbItem>
-                                <BreadcrumbItem><a href="#">Message</a></BreadcrumbItem>
+                                <BreadcrumbItem><Link to="/">Home</Link></BreadcrumbItem>
+                                <BreadcrumbItem><Link to="#">Message</Link></BreadcrumbItem>
                                 <BreadcrumbItem active>Greeting</BreadcrumbItem>
                             </Breadcrumb>
                             <p className="lead">一次可傳送五則訊息</p>
-                            <BotSelector onChange={this.botChanged} />
+                            <AppsSelector onChange={this.botChanged} />
                         </Jumbotron>
                         <GreetingTable appId={this.state.selectedAppId} />
                     </div>

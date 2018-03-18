@@ -12,7 +12,7 @@ class TicketTable extends React.Component {
         super(props, ctx);
 
         this.state = {
-            editingTicket: null
+            editModalData: null
         };
         this.openEditModal = this.openEditModal.bind(this);
         this.closeEditModal = this.closeEditModal.bind(this);
@@ -27,7 +27,7 @@ class TicketTable extends React.Component {
         let messager = appsMessagers[appId].messagers[ticket.messager_id];
 
         this.setState({
-            editingTicket: {
+            editModalData: {
                 appId: appId,
                 ticketId: ticketId,
                 ticket: ticket,
@@ -36,8 +36,8 @@ class TicketTable extends React.Component {
         });
     }
 
-    closeEditModal(ev, role, modalData) {
-        this.setState({ editingTicket: null });
+    closeEditModal(ev) {
+        this.setState({ editModalData: null });
     }
 
     renderTickets() {
@@ -119,8 +119,8 @@ class TicketTable extends React.Component {
                     {this.renderTickets()}
                 </div>
                 <TicketEditModal
-                    editingTicket={this.state.editingTicket}
-                    isOpen={!!this.state.editingTicket}
+                    modalData={this.state.editModalData}
+                    isOpen={!!this.state.editModalData}
                     close={this.closeEditModal}>
                 </TicketEditModal>
             </Aux>

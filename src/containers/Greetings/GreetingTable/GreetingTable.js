@@ -1,66 +1,69 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Route, withRouter } from 'react-router-dom';
 import { Button, Table } from 'reactstrap';
 import Aux from 'react-aux';
 import { connect } from 'react-redux';
+
 import authHelper from '../../../helpers/authentication';
 import dbapi from '../../../helpers/databaseApi/index';
-import classes from './GreetingTable.css';
 
 import Greeting from './Greeting/Greeting';
 import MessageInsert from './MessageInsert/MessageInsert';
+
+import './GreetingTable.css';
 
 class GreetingTable extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
         this.state = {
-            messageList: []
+            insertList: []
         };
 
-        this.openInsertMessage = this.openInsertMessage.bind(this);
-        this.closeInsertMessage = this.closeInsertMessage.bind(this);
+        this.addInsertMessage = this.addInsertMessage.bind(this);
+        this.deleteInsertMessage = this.deleteInsertMessage.bind(this);
     }
 
     componentDidMount() {
-        authHelper.ready.then(() => {
+        return authHelper.ready.then(() => {
             let userId = authHelper.userId;
-            return dbapi.appsGreetings.findAll('', userId).then((resJson) => {
-                console.log(resJson);
-            });
+            return userId && dbapi.appsGreetings.findAll('', userId);
         });
     }
 
-    openInsertMessage(ev) {
-        this.state.messageList.push(1);
-        this.setState({ messageList: this.state.messageList });
+    addInsertMessage(ev) {
+        this.state.insertList.push({
+            text: '',
+            time: Date.now()
+        });
+        this.setState({ insertList: this.state.insertList });
     }
 
-    closeInsertMessage(ev) {
-        this.state.messageList.pop(1);
-        this.setState({ messageList: this.state.messageList });
+    deleteInsertMessage(ev, i) {
+        this.state.insertList.splice(i, 1);
+        this.setState({ insertList: this.state.insertList });
     }
 
     render() {
         let appId = this.props.appId;
-        let greetingsList = [];
-        if (appId) {
-            let greetings = this.props.appsGreetings[appId].greetings;
-            let greetingIds = Object.keys(greetings);
-            greetingsList = greetingIds.map((greetingId) => {
-                let greeting = greetings[greetingId];
-                return <Greeting
-                    key={greetingId}
-                    appId={appId}
-                    greetingId={greetingId}
-                    text={greeting.text}
-                    time={greeting.updatedTime}/>;
-            });
+        if (!(appId && this.props.appsGreetings[appId])) {
+            return null;
         }
+
+        let greetings = this.props.appsGreetings[appId].greetings;
+        let greetingIds = Object.keys(greetings);
+        let greetingsList = greetingIds.map((greetingId) => {
+            let greeting = greetings[greetingId];
+            return <Greeting
+                key={greetingId}
+                appId={appId}
+                greetingId={greetingId}
+                text={greeting.text}
+                time={greeting.updatedTime}/>;
+        });
 
         return (
             <Aux>
-                {this.props.appId ? <Table className="Table">
+                <Table className="Table">
                     <thead>
                         <tr>
                             <th>文字</th>
@@ -70,12 +73,12 @@ class GreetingTable extends React.Component {
                     </thead>
                     <tbody>
                         {greetingsList}
-                        {this.state.messageList.map((message, i) => (
+                        {this.state.insertList.map((message, i) => (
                             <tr className="Greeting" key={i}>
                                 <MessageInsert
                                     appId={this.props.appId}
                                     message={message}
-                                    close={this.closeInsertMessage}>
+                                    delete={(ev) => this.deleteInsertMessage(ev, i)}>
                                 </MessageInsert>
                             </tr>
                         ))}
@@ -85,18 +88,23 @@ class GreetingTable extends React.Component {
                             <td>
                                 <Button
                                     color="primary"
-                                    onClick={this.openInsertMessage}>
+                                    onClick={this.addInsertMessage}>
                                     <span className="fas fa-plus fa-fw"></span>
                                     新增
                                 </Button>
                             </td>
                         </tr>
                     </tbody>
-                </Table> : null}
+                </Table>
             </Aux>
         );
     }
 }
+
+GreetingTable.propTypes = {
+    appId: PropTypes.string,
+    appsGreetings: PropTypes.object.isRequired
+};
 
 const mapStateToProps = (state, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中

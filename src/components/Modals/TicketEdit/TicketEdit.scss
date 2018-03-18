@@ -26,6 +26,8 @@
         .ticket-col {
             padding-right: 0;
             padding-left: 0;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
         }
     }
 }

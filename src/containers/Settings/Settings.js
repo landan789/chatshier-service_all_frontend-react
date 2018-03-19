@@ -15,9 +15,9 @@ import GroupsTabPane from './TabPanes/GroupsTabPane';
 import TagsTabPane from './TabPanes/TagsTabPane';
 import UsersTabPane from './TabPanes/UsersTabPane';
 
-import './Setting.css';
+import './Settings.css';
 
-class Setting extends React.Component {
+class Settings extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
 
@@ -47,11 +47,11 @@ class Setting extends React.Component {
                 <div className="has-toolbar setting-wrapper">
                     <LinkTabs route={route} toggle={this.toggle} />
                     <Switch>
-                        <Route path={ROUTES.SETTING_APPS} exact component={AppsTabPane} />
-                        <Route path={ROUTES.SETTING_USERS} exact component={UsersTabPane} />
-                        <Route path={ROUTES.SETTING_TAGS} exact component={TagsTabPane} />
-                        <Route path={ROUTES.SETTING_GROUPS} exact component={GroupsTabPane} />
-                        <Redirect to={ROUTES.SETTING_APPS} />
+                        <Route path={ROUTES.SETTINGS_APPS} exact component={AppsTabPane} />
+                        <Route path={ROUTES.SETTINGS_USERS} exact component={UsersTabPane} />
+                        <Route path={ROUTES.SETTINGS_TAGS} exact component={TagsTabPane} />
+                        <Route path={ROUTES.SETTINGS_GROUPS} exact component={GroupsTabPane} />
+                        <Redirect to={ROUTES.SETTINGS_APPS} />
                     </Switch>
                 </div>
             </Aux>
@@ -59,9 +59,9 @@ class Setting extends React.Component {
     }
 }
 
-Setting.propTypes = {
+Settings.propTypes = {
     history: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired
 };
 
-export default withRouter(Setting);
+export default withRouter(Settings);

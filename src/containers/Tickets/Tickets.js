@@ -15,9 +15,9 @@ import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 import TicketInsertModal from '../../components/Modals/TicketInsert/TicketInsert';
 import TicketTable from './TicketTable';
 
-import './Ticket.css';
+import './Tickets.css';
 
-class Ticket extends React.Component {
+class Tickets extends React.Component {
     constructor(props) {
         super(props);
 
@@ -98,7 +98,7 @@ class Ticket extends React.Component {
     }
 }
 
-Ticket.propTypes = {
+Tickets.propTypes = {
     apps: PropTypes.object,
     appsMessagers: PropTypes.object,
     appsTickets: PropTypes.object,
@@ -114,4 +114,4 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-export default withRouter(connect(mapStateToProps)(Ticket));
+export default withRouter(connect(mapStateToProps)(Tickets));

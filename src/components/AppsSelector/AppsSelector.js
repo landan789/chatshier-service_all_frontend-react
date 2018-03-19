@@ -14,9 +14,18 @@ class AppsSelector extends React.Component {
         super(props, ctx);
 
         this.state = {
+            selectedAppName: '',
             dropdownOpen: false
         };
         this.toggle = this.toggle.bind(this);
+        this.selectedApp = this.selectedApp.bind(this);
+
+        let apps = this.props.apps || {};
+        let appIds = Object.keys(apps);
+        if (appIds.length > 0) {
+            this.state.selectedAppName = apps[appIds[0]].name;
+            this.props.onChange(appIds[0]);
+        }
     }
 
     componentDidMount() {
@@ -26,10 +35,26 @@ class AppsSelector extends React.Component {
         });
     }
 
+    componentWillReceiveProps(props) {
+        let apps = this.props.apps || {};
+        let appIds = Object.keys(apps);
+
+        if (appIds.length > 0 && !this.state.selectedAppName) {
+            this.selectedApp(appIds[0], apps[appIds[0]].name);
+        }
+    }
+
     toggle() {
         this.setState({
             dropdownOpen: !this.state.dropdownOpen
         });
+    }
+
+    selectedApp(appId, appName) {
+        this.setState({
+            selectedAppName: appName
+        });
+        this.props.onChange(appId);
     }
 
     renderApps() {
@@ -38,14 +63,15 @@ class AppsSelector extends React.Component {
 
         return appIds.map((appId) => {
             let app = apps[appId];
-            if ('CHATSHIER' !== app.type) {
-                return (
-                    <DropdownItem key={appId}
-                        onClick={() => this.props.onChange(appId)}>{apps[appId].name}
-                    </DropdownItem>
-                );
+            if (!this.props.showAll && 'CHATSHIER' === app.type) {
+                return null;
             }
-            return null;
+
+            return (
+                <DropdownItem key={appId}
+                    onClick={() => this.selectedApp(appId, apps[appId].name)}>{apps[appId].name}
+                </DropdownItem>
+            );
         });
     }
 
@@ -53,7 +79,7 @@ class AppsSelector extends React.Component {
         return (
             <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                 <DropdownToggle caret color="primary">
-                    選擇機器人&nbsp;
+                    {this.state.selectedAppName || '選擇應用程序'}&nbsp;
                 </DropdownToggle>
                 <DropdownMenu>
                     {this.renderApps()}
@@ -64,6 +90,7 @@ class AppsSelector extends React.Component {
 }
 
 AppsSelector.propTypes = {
+    showAll: PropTypes.bool,
     apps: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired
 };

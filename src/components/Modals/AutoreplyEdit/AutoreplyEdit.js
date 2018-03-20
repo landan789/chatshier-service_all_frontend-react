@@ -1,19 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input, InputGroup } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, InputGroup, Input } from 'reactstrap';
 import { DateTimePicker } from 'react-widgets';
 
 import dbapi from '../../../helpers/databaseApi/index';
 import authHelper from '../../../helpers/authentication';
 import { notify } from '../../Notify/Notify';
 
-class AutoreplyInsert extends React.Component {
+class AutoreplyEditModal extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             appId: '',
+            autoreplyId: '',
             title: '',
             startedTime: '',
             endedTime: '',
@@ -21,7 +22,7 @@ class AutoreplyInsert extends React.Component {
             isAsyncWorking: false
         };
 
-        this.insertAutoreply = this.insertAutoreply.bind(this);
+        this.updateAutoreply = this.updateAutoreply.bind(this);
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
         this.handleStartDatetimeChange = this.handleStartDatetimeChange.bind(this);
@@ -29,8 +30,56 @@ class AutoreplyInsert extends React.Component {
         this.selectedApp = this.selectedApp.bind(this);
     }
     componentWillReceiveProps(nextProps) {
-        let firstApp = Object.keys(nextProps.apps)[0];
-        this.setState({appId: firstApp});
+        let autoreply = nextProps.modalData ? nextProps.modalData.autoreply : {};
+        let autoreplyLength = Object.keys(autoreply).length;
+        if (0 < autoreplyLength) {
+            this.setState({
+                appId: nextProps.modalData.appId,
+                autoreplyId: nextProps.modalData.autoreplyId,
+                title: autoreply.title,
+                startedTime: autoreply.startedTime,
+                endedTime: autoreply.endedTime,
+                text: autoreply.text
+            });
+        }
+    }
+    updateAutoreply(event) {
+        if (!this.state.title) {
+            return notify('請輸入事件名稱', { type: 'warning' });
+        } else if (!this.state.startedTime) {
+            return notify('請設定開始日期', { type: 'warning' });
+        } else if (!this.state.endedTime) {
+            return notify('請設定結束日期', { type: 'warning' });
+        } else if (!this.state.text) {
+            return notify('請輸入回覆訊息', { type: 'warning' });
+        } else if (this.state.endedTime <= this.state.startedTime) {
+            return notify('開始時間不能比結束時間晚', { type: 'warning' });
+        }
+
+        this.setState({ isAsyncWorking: true });
+
+        let appId = this.state.appId;
+        let autoreplyId = this.state.autoreplyId;
+        let userId = authHelper.userId;
+        let autoreply = {
+            endedTime: this.state.endedTime,
+            startedTime: this.state.startedTime,
+            text: this.state.text,
+            title: this.state.title,
+            updatedTime: Date.now()
+        };
+
+        return dbapi.appsAutoreplies.update(appId, autoreplyId, userId, autoreply).then(() => {
+            this.props.close(event);
+            return notify('修改成功', { type: 'success' });
+        }).catch(() => {
+            return notify('新增失敗', { type: 'danger' });
+        }).then(() => {
+            this.setState({ isAsyncWorking: false });
+        });
+    }
+    selectedApp(event) {
+        this.setState({appId: event.target.value});
     }
     handleTitleChange(event) {
         this.setState({title: event.target.value});
@@ -48,92 +97,31 @@ class AutoreplyInsert extends React.Component {
         let timeInMs = datetime.getTime();
         this.setState({endedTime: timeInMs});
     }
-    insertAutoreply(event) {
-        if (!this.state.title) {
-            return notify('請輸入事件名稱', { type: 'warning' });
-        } else if (!this.state.startedTime) {
-            return notify('請設定開始日期', { type: 'warning' });
-        } else if (!this.state.endedTime) {
-            return notify('請設定結束日期', { type: 'warning' });
-        } else if (!this.state.text) {
-            return notify('請輸入回覆訊息', { type: 'warning' });
-        } else if (this.state.endedTime <= this.state.startedTime) {
-            return notify('開始時間不能比結束時間晚', { type: 'warning' });
-        }
-        this.setState({ isAsyncWorking: true });
-
-        let appId = this.state.appId;
-        let userId = authHelper.userId;
-        let autoreply = {
-            createdTime: Date.now(),
-            endedTime: this.state.endedTime,
-            isDeleted: 0,
-            startedTime: this.state.startedTime,
-            text: this.state.text,
-            title: this.state.title,
-            type: 'text',
-            updatedTime: Date.now()
-        };
-
-        return dbapi.appsAutoreplies.insert(appId, userId, autoreply).then(() => {
-            this.props.close(event);
-            return notify('新增成功', { type: 'success' });
-        }).catch(() => {
-            return notify('新增失敗', { type: 'danger' });
-        }).then(() => {
-            this.setState({ isAsyncWorking: false });
-        });
-    }
-    selectedApp(event) {
-        this.setState({appId: event.target.value});
-    }
-    renderApps() {
-        let apps = this.props.apps || {};
-        let appIds = Object.keys(apps);
-
-        return appIds.map((appId) => {
-            let app = apps[appId];
-            if ('CHATSHIER' === app.type) {
-                return null;
-            }
-
-            return (
-                <option key={appId} value={appId}>{apps[appId].name}
-                </option>
-            );
-        });
-    }
     render() {
         return (
             <Modal size="lg" isOpen={this.props.isOpen} toggle={this.props.close}>
                 <ModalHeader toggle={this.props.close}>
-                    新增自動回覆訊息
+                    修改自動回覆訊息
                 </ModalHeader>
                 <ModalBody>
                     <FormGroup>
-                        <Label>Apps: </Label>
-                        <Input type="select" onChange={this.selectedApp}>
-                            { this.renderApps() }
-                        </Input>
-                    </FormGroup>
-                    <FormGroup>
                         <Label>事件名稱(不可重複): </Label>
-                        <Input type="text" onChange={this.handleTitleChange}/>
+                        <Input type="text" value={this.state.title} onChange={this.handleTitleChange}/>
                     </FormGroup>
                     <InputGroup>
                         <Label>開始時間 </Label>
-                        <DateTimePicker onChange={this.handleStartDatetimeChange}></DateTimePicker>
+                        <DateTimePicker defaultValue={new Date(this.state.startedTime)} onChange={this.handleStartDatetimeChange}></DateTimePicker>
                         <Label>結束時間 </Label>
-                        <DateTimePicker onChange={this.handleEndDatetimeChange}></DateTimePicker>
+                        <DateTimePicker defaultValue={new Date(this.state.endedTime)} onChange={this.handleEndDatetimeChange}></DateTimePicker>
                     </InputGroup>
                     <br/>
                     <FormGroup>
                         <Label>自動回覆訊息: </Label>
-                        <Input type="textarea" onChange={this.handleDescriptionChange}/>
+                        <Input type="textarea" value={this.state.text} onChange={this.handleDescriptionChange}/>
                     </FormGroup>
                 </ModalBody>
                 <ModalFooter>
-                    <Button outline color="success" onClick={this.insertAutoreply} disabled={this.state.isAsyncWorking}>新增</Button>{' '}
+                    <Button outline color="success" onClick={this.updateAutoreply} disabled={this.state.isAsyncWorking}>修改</Button>{' '}
                     <Button outline color="danger" onClick={this.props.close}>取消</Button>
                 </ModalFooter>
             </Modal>
@@ -141,10 +129,10 @@ class AutoreplyInsert extends React.Component {
     }
 }
 
-AutoreplyInsert.propTypes = {
-    apps: PropTypes.object.isRequired,
-    isOpen: PropTypes.bool,
+AutoreplyEditModal.propTypes = {
+    modalData: PropTypes.object,
+    isOpen: PropTypes.bool.isRequired,
     close: PropTypes.func.isRequired
 };
 
-export default AutoreplyInsert;
+export default AutoreplyEditModal;

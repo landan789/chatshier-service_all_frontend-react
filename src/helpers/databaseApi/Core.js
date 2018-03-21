@@ -38,10 +38,10 @@ class Core {
     };
 
     /**
-     * @param {RequestInfo} reqInfo
+     * @param {string} url
      * @param {RequestInit} reqInits
      */
-    sendRequest(reqInfo, reqInits, usingRecursive) {
+    sendRequest(url, reqInits, usingRecursive) {
         usingRecursive = !!usingRecursive;
 
         if (reqInits instanceof Array) {
@@ -55,7 +55,7 @@ class Core {
                     }
                     let _reqInit = _reqInits[i];
 
-                    return window.fetch(reqInfo, _reqInit).then(function(res) {
+                    return window.fetch(url, _reqInit).then(function(res) {
                         return this.responseChecking(res);
                     }).then(function(resJson) {
                         resJsons.push(resJson);
@@ -65,14 +65,14 @@ class Core {
                 return nextPromise(0);
             } else {
                 return Promise.all(reqInits.map((_reqInit) => {
-                    return window.fetch(reqInfo, _reqInit).then(function(res) {
+                    return window.fetch(url, _reqInit).then(function(res) {
                         return this.responseChecking(res);
                     });
                 }));
             }
         }
 
-        return window.fetch(reqInfo, reqInits).then((res) => {
+        return window.fetch(url, reqInits).then((res) => {
             return this.responseChecking(res);
         });
     };

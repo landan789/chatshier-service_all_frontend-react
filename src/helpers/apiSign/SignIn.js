@@ -9,7 +9,7 @@ class SignIn extends Core {
     do(user) {
         let destUrl = this.urlPrefix;
         let reqInit = {
-            method: 'GET',
+            method: 'POST',
             headers: reqHeaders,
             body: JSON.stringify(user)
         };

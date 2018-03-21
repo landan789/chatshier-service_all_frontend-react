@@ -5,8 +5,10 @@
             "name": "Chrome",
             "type": "chrome",
             "request": "launch",
+            "port": 9222,// Chrome port 後續會設
             "url": "http://localhost:8080",
-            "webRoot": "${workspaceRoot}/src"
+            "webRoot": "${workspaceRoot}/src",
+            "breakOnLoad": true
         }
     ]
 }

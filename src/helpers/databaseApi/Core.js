@@ -40,6 +40,7 @@ class Core {
     /**
      * @param {string} url
      * @param {RequestInit} reqInits
+     * @param {Boolean} usingRecursive If true, the processes will do step one by one
      */
     sendRequest(url, reqInits, usingRecursive) {
         usingRecursive = !!usingRecursive;

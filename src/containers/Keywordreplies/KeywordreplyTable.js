@@ -75,7 +75,7 @@ class KeywordreplyTable extends React.Component {
                     <td>{keywordreply.replyCount}</td>
                     <td>
                         <Button color="secondary" onClick={() => this.openEditModal(appId, keywordreplyId, keywordreplies[keywordreplyId])}><i className="fas fa-pencil-alt"></i></Button>{' '}
-                        <Button color="danger" onClick={() => this.removeAutoreply(appId, keywordreplyId)}><i className="fas fa-trash-alt"></i></Button>
+                        <Button color="danger" onClick={() => this.removekeywordreply(appId, keywordreplyId)}><i className="fas fa-trash-alt"></i></Button>
                     </td>
                 </tr>
             );

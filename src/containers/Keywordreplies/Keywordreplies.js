@@ -21,7 +21,7 @@ import './Keywordreplies.css';
 class Keywordreplies extends React.Component {
     constructor(props) {
         super(props);
-        console.log(props);
+
         this.state = {
             searchKeyword: '',
             appId: '',

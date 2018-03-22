@@ -18,6 +18,7 @@ class KeywordreplyInsert extends React.Component {
             isAsyncWorking: false
         };
 
+        this.handleAppChange = this.handleAppChange.bind(this);
         this.handleKeywordChange = this.handleKeywordChange.bind(this);
         this.handleTextChange = this.handleTextChange.bind(this);
         this.handleDraftChange = this.handleDraftChange.bind(this);
@@ -26,6 +27,9 @@ class KeywordreplyInsert extends React.Component {
     componentWillReceiveProps(nextProps) {
         let firstApp = Object.keys(nextProps.apps)[0];
         this.setState({appId: firstApp});
+    }
+    handleAppChange(event) {
+        this.setState({appId: event.target.value});
     }
     handleKeywordChange(event) {
         this.setState({ keyword: event.target.value });
@@ -92,7 +96,7 @@ class KeywordreplyInsert extends React.Component {
                 <ModalBody>
                     <FormGroup>
                         <Label>Apps: </Label>
-                        <Input type="select" onChange={this.selectedApp}>
+                        <Input type="select" onChange={this.handleAppChange}>
                             { this.renderApps() }
                         </Input>
                     </FormGroup>

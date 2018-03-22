@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, InputGroup, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input } from 'reactstrap';
 
 import dbapi from '../../../helpers/databaseApi/index';
 import authHelper from '../../../helpers/authentication';
@@ -13,7 +13,7 @@ class KeywordreplyEdit extends React.Component {
 
         this.state = {
             appId: '',
-            keywordId: '',
+            keywordreplyId: '',
             keyword: '',
             text: '',
             draft: false,
@@ -34,7 +34,7 @@ class KeywordreplyEdit extends React.Component {
                 keywordreplyId: nextProps.modalData.keywordreplyId,
                 keyword: keywordreply.keyword,
                 text: keywordreply.text,
-                draft: 1 === keywordreply.status
+                draft: 0 === keywordreply.status
             });
         }
     }
@@ -57,17 +57,16 @@ class KeywordreplyEdit extends React.Component {
         this.setState({ isAsyncWorking: true });
 
         let appId = this.state.appId;
-        let keywordId = this.state.keywordId;
+        let keywordreplyId = this.state.keywordreplyId;
         let userId = authHelper.userId;
         let keywordreply = {
             keyword: this.state.keyword,
-            status: this.state.draft ? 0 : 1,
-            subKeywords: '',
+            status: false === this.state.draft ? 1 : 0,
             text: this.state.text,
             updatedTime: Date.now()
         };
 
-        return dbapi.appsKeywordreplies.update(appId, keywordId, userId, keywordreply).then(() => {
+        return dbapi.appsKeywordreplies.update(appId, keywordreplyId, userId, keywordreply).then(() => {
             this.props.close(event);
             return notify('新增成功', { type: 'success' });
         }).catch(() => {
@@ -99,7 +98,7 @@ class KeywordreplyEdit extends React.Component {
                     </FormGroup>
                 </ModalBody>
                 <ModalFooter>
-                    <Button outline color="success" onClick={this.updateKeywordreply} disabled={this.state.isAsyncWorking}>新增</Button>{' '}
+                    <Button outline color="success" onClick={this.updateKeywordreply} disabled={this.state.isAsyncWorking}>修改</Button>{' '}
                     <Button outline color="danger" onClick={this.props.close}>取消</Button>
                 </ModalFooter>
             </Modal>

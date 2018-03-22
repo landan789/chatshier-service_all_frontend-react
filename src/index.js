@@ -17,7 +17,7 @@ import Calendar from './containers/Calendar/Calendar';
 import Chat from './containers/Chat/Chat';
 import Composes from './containers/Composes/Composes';
 import Greetings from './containers/Greetings/Greetings';
-import Keywordrepies from './containers/Keywordrepies/Keywordrepies';
+import Keywordreplies from './containers/Keywordreplies/Keywordreplies';
 import Settings from './containers/Settings/Settings';
 import SignIn from './containers/SignIn/SignIn';
 import SignOut from './containers/SignOut/SignOut';
@@ -57,7 +57,7 @@ const routes = [
         exact: true
     }, {
         path: ROUTES.KEYWORDREPLIES,
-        component: Keywordrepies,
+        component: Keywordreplies,
         exact: true
     }, {
         path: ROUTES.SETTINGS,

@@ -59,9 +59,12 @@ class KeywordreplyTable extends React.Component {
     renderKeywordreplies(status, appId, keyword) {
         let keywordreplies = this.props.appsKeywordreplies[appId] ? this.props.appsKeywordreplies[appId].keywordreplies : {};
         let keywordreplyIds = Object.keys(keywordreplies);
-        let newIdList = keywordreplyIds.filter((keywordreplyId) => status === keywordreplies[keywordreplyId].status);
-        if (0 < keyword.length) {
-            newIdList = keywordreplyIds.filter((keywordreplyId) => keywordreplies[keywordreplyId].keyword.includes(keyword) || keywordreplies[keywordreplyId].text.includes(keyword));
+        let statusList = keywordreplyIds.filter((keywordreplyId) => status === keywordreplies[keywordreplyId].status);
+        let newIdList;
+        if (keyword || 0 < keyword.length) {
+            newIdList = statusList.filter((keywordreplyId) => keywordreplies[keywordreplyId].keyword.includes(keyword) || keywordreplies[keywordreplyId].text.includes(keyword));
+        } else {
+            newIdList = statusList;
         }
         return newIdList.map((keywordreplyId, index) => {
             let keywordreply = keywordreplies[keywordreplyId];

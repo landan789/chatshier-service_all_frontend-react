@@ -11,14 +11,14 @@ import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 import dbapi from '../../helpers/databaseApi/index';
 
-import AutoreplyTable from '../Autoreply/AutoreplyTable.js';
+import AutoreplyTable from '../Autoreplies/AutoreplyTable.js';
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import AutoreplyInsertModal from '../../components/Modals/AutoreplyInsert/AutoreplyInsert';
 
-import './Autoreply.css';
+import './Autoreplies.css';
 
-class Autoreply extends React.Component {
+class Autoreplies extends React.Component {
     constructor(props) {
         super(props);
 
@@ -117,7 +117,7 @@ class Autoreply extends React.Component {
     }
 }
 
-Autoreply.propTypes = {
+Autoreplies.propTypes = {
     apps: PropTypes.object,
     appsAutoreplies: PropTypes.object,
     history: PropTypes.object.isRequired
@@ -130,4 +130,4 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-export default withRouter(connect(mapStateToProps)(Autoreply));
+export default withRouter(connect(mapStateToProps)(Autoreplies));

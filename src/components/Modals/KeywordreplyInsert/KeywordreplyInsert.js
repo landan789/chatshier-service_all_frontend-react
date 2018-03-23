@@ -14,7 +14,7 @@ class KeywordreplyInsert extends React.Component {
             appId: '',
             keyword: '',
             text: '',
-            draft: false,
+            status: false,
             isAsyncWorking: false
         };
 
@@ -38,7 +38,7 @@ class KeywordreplyInsert extends React.Component {
         this.setState({ text: event.target.value });
     }
     handleDraftChange(event) {
-        this.setState({ draft: event.target.checked });
+        this.setState({ status: event.target.checked });
     }
     insertKeywordreply(event) {
         if (!this.state.keyword) {
@@ -56,7 +56,7 @@ class KeywordreplyInsert extends React.Component {
             isDeleted: 0,
             keyword: this.state.keyword,
             replyCount: 0,
-            status: this.state.draft ? 0 : 1,
+            status: this.state.status ? 0 : 1,
             subKeywords: '',
             text: this.state.text,
             type: 'text',

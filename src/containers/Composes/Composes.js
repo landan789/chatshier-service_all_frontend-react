@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Aux from 'react-aux';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Fade } from 'reactstrap';
+import { Fade, Jumbotron, Row, Col, InputGroup, Input, Button } from 'reactstrap';
 
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
@@ -13,17 +13,25 @@ import dbapi from '../../helpers/databaseApi/index';
 
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
+import ComposeInsertModal from '../../components/Modals/ComposeInsert/ComposeInsert';
+import ComposeTable from '../Composes/ComposeTable';
 
 import './Composes.css';
 
 class Composes extends React.Component {
-    constructor(props, ctx) {
-        super(props, ctx);
+    constructor(props) {
+        super(props);
 
         this.state = {
+            appId: '',
+            searchKeyword: '',
             selectedAppId: ''
         };
+
         this.appChanged = this.appChanged.bind(this);
+        this.keywordChanged = this.keywordChanged.bind(this);
+        this.openInsertModal = this.openInsertModal.bind(this);
+        this.closeInsertModal = this.closeInsertModal.bind(this);
     }
 
     componentWillMount() {
@@ -43,12 +51,23 @@ class Composes extends React.Component {
         });
     }
 
-    componentWillReceiveProps(props) {
-
+    componentWillReceiveProps(nextProps) {
     }
 
     appChanged(appId) {
-        this.setState({ selectedAppId: appId });
+        this.setState({ appId });
+    }
+
+    keywordChanged(event) {
+        this.setState({ searchKeyword: event.target.value });
+    }
+
+    openInsertModal() {
+        this.setState({ isInsertModalOpen: true });
+    }
+
+    closeInsertModal() {
+        this.setState({ isInsertModalOpen: false });
     }
 
     render() {
@@ -56,8 +75,35 @@ class Composes extends React.Component {
             <Aux>
                 <Toolbar />
                 <Fade in className="has-toolbar composes-wrapper">
-                    群發
-                    <AppsSelector showAll onChange={this.appChanged} />
+                    <div className="Greetings">
+                        <Jumbotron>
+                            <h1 className="display-3">群發</h1><br/>
+                            <Row>
+                                <Col>
+                                    <AppsSelector onChange={this.appChanged} />
+                                </Col>
+                                <Col>
+                                    <InputGroup>
+                                        <Input
+                                            type="text"
+                                            className="ticket-search-bar lean-right"
+                                            placeholder="搜尋"
+                                            value={this.state.searchKeyword}
+                                            onChange={this.keywordChanged} />
+                                        <Button color="primary" className="pointer lean-right" onClick={this.openInsertModal}>
+                                            <i className="fas fa-plus"></i>
+                                        </Button>
+                                    </InputGroup>
+                                    <ComposeInsertModal
+                                        apps={this.props.apps}
+                                        isOpen={this.state.isInsertModalOpen}
+                                        close={this.closeInsertModal}>
+                                    </ComposeInsertModal>
+                                </Col>
+                            </Row>
+                        </Jumbotron>
+                        <ComposeTable appId={this.state.appId} appsComposes={this.props.appsComposes} keyword={this.state.searchKeyword} />
+                    </div>
                 </Fade>
             </Aux>
         );
@@ -65,7 +111,8 @@ class Composes extends React.Component {
 }
 
 Composes.propTypes = {
-    appsKeywordrepies: PropTypes.object,
+    apps: PropTypes.object,
+    appsComposes: PropTypes.object,
     history: PropTypes.object.isRequired
 };
 

@@ -17,7 +17,9 @@ import { notify } from '../../components/Notify/Notify';
 import './SignUp.css';
 
 const URL = window.urlConfig || urlConfig;
-const wwwUrl = URL.wwwUrl + (80 !== URL.port ? ':' + URL.port : '');
+const wwwUrl = URL.wwwUrl
+    ? URL.wwwUrl + (80 !== URL.port ? ':' + URL.port : '')
+    : window.location.protocol + '//' + document.domain.replace(regex.domainPrefix, 'www.');
 
 const TOOLTIP = {
     'SIGNUP_NAME': '請輸入姓名',

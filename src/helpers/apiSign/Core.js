@@ -3,7 +3,7 @@ import urlConfig from '../../config/url';
 class Core {
     constructor() {
         let config = window.urlConfig || urlConfig;
-        this.prefixUrl = config.apiUrl + '/api/';
+        this.prefixUrl = config.apiUrl + '/api/sign/';
     }
 
     /**
@@ -38,11 +38,10 @@ class Core {
     };
 
     /**
-     * @param {string} url
+     * @param {RequestInfo} reqInfo
      * @param {RequestInit} reqInits
-     * @param {Boolean} usingRecursive If true, the processes will do step one by one
      */
-    sendRequest(url, reqInits, usingRecursive) {
+    sendRequest(reqInfo, reqInits, usingRecursive) {
         usingRecursive = !!usingRecursive;
 
         if (reqInits instanceof Array) {
@@ -56,7 +55,7 @@ class Core {
                     }
                     let _reqInit = _reqInits[i];
 
-                    return window.fetch(url, _reqInit).then(function(res) {
+                    return window.fetch(reqInfo, _reqInit).then(function(res) {
                         return this.responseChecking(res);
                     }).then(function(resJson) {
                         resJsons.push(resJson);
@@ -66,14 +65,14 @@ class Core {
                 return nextPromise(0);
             } else {
                 return Promise.all(reqInits.map((_reqInit) => {
-                    return window.fetch(url, _reqInit).then(function(res) {
+                    return window.fetch(reqInfo, _reqInit).then(function(res) {
                         return this.responseChecking(res);
                     });
                 }));
             }
         }
 
-        return window.fetch(url, reqInits).then((res) => {
+        return window.fetch(reqInfo, reqInits).then((res) => {
             return this.responseChecking(res);
         });
     };

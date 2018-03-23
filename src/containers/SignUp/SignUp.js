@@ -10,6 +10,7 @@ import browserHelper from '../../helpers/browser';
 import authHelper from '../../helpers/authentication';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
 import databaseApi, { setJWT } from '../../helpers/databaseApi/index';
+import apiSign from '../../helpers/apiSign/index';
 
 import regex from '../../utils/regex';
 import { notify } from '../../components/Notify/Notify';
@@ -31,6 +32,11 @@ const TOOLTIP = {
     'OPERATION_NOT_ALLOWED': '操作不允許',
     'WEAK_PASSWORD': '密碼強度低'
 };
+
+const NAME_WAS_EMPTY = 'name was empty';
+const EMAIL_WAS_EMPTY = 'EMAIL was empty';
+const PASSWORD_WAS_EMPTY = 'password was empty';
+const USER_EMAIL_HAD_BEEN_SIGNED_UP = 'user email had been signed up';
 
 class SignUp extends React.Component {
     constructor(props) {
@@ -103,7 +109,7 @@ class SignUp extends React.Component {
         return this.signup(name, email, pw);
     }
 
-    signup(name, email, pw) {
+    signup(name, email, password) {
         let auth = firebase.auth();
 
         this.setState({
@@ -111,67 +117,54 @@ class SignUp extends React.Component {
             signupBtnHtml: '<i class="fas fa-circle-notch fa-spin"></i> 註冊中...'
         });
 
-        return auth.createUserWithEmailAndPassword(email, pw).then(() => {
-            return auth.signInWithEmailAndPassword(email, pw);
-        }).then(() => {
-            // 更新 firebase auth user profile
-            return auth.currentUser.updateProfile({
-                displayName: name,
-                photoURL: ''
-            });
-        }).then(() => {
-            return auth.currentUser.getIdToken();
-        }).then((jwt) => {
-            cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, auth.currentUser.displayName);
-            cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, auth.currentUser.email);
+        let user = {
+            email: email,
+            password: password,
+            name: name
+        };
+
+        return apiSign.signUp.do(user).then((response) => {
+            let jwt = response.jwt;
+            let users = response.data;
+            let userId = Object.keys(users).shift();
+            let _user = users[userId];
+            cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
+            cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
             window.localStorage.setItem('jwt', jwt);
             setJWT(jwt);
-
-            let userId = auth.currentUser.uid;
-            // 更新 firebase 上 Authentication 的使用者個人資料
-            let user = {
-                phone: '',
-                company: '',
-                address: ''
-            };
-            return databaseApi.users.insert(userId, user);
-        }).then(() => {
-            // 從 firebase 發送 email 驗證信
-            return auth.currentUser.sendEmailVerification();
-        }).then(() => {
-            // popup 提醒 email 驗證信已發出
-            return notify('已寄送 Email 驗證信', { type: 'success' });
-        }).then(() => {
-            // 訊息顯示 2s 後再進行跳轉
-            return new Promise((resolve) => window.setTimeout(resolve, 2000));
+            this.setState({
+                isSignUping: false,
+                signupBtnHtml: '註冊'
+            });
+            return Promise.resolve();
         }).then(() => {
             this.setState({
                 isSignUping: false,
                 signupBtnHtml: '註冊'
             });
 
-            // 非同步工作寫入完成後才進行網址跳轉動作
             // this.props.history.replace(ROUTES.CHAT);
             window.location.replace(ROUTES.CHAT);
-        }).catch((error) => {
+        }).catch((err) => {
             this.setState({
                 isSignUping: false,
                 signupBtnHtml: '註冊'
             });
-
-            let errCode = error ? error.code : null;
-            switch (errCode) {
-                case 'auth/email-already-in-use':
-                    return notify(TOOLTIP.EMAIL_ALREADY_IN_USE, { type: 'danger' });
-                case 'auth/invalid-email':
-                    return notify(TOOLTIP.INVALID_EMAIL, { type: 'danger' });
-                case 'auth/operation-not-allowed':
-                    return notify(TOOLTIP.OPERATION_NOT_ALLOWED, { type: 'danger' });
-                case 'auth/weak-password':
-                    return notify(TOOLTIP.WEAK_PASSWORD, { type: 'danger' });
+            switch (err.msg) {
+                case NAME_WAS_EMPTY:
+                    notify('姓名未填寫', { type: 'danger' });
+                    break;
+                case EMAIL_WAS_EMPTY:
+                    notify('email 未填寫！', { type: 'danger' });
+                    break;
+                case USER_EMAIL_HAD_BEEN_SIGNED_UP:
+                    notify('email 已被註冊！', { type: 'danger' });
+                    break;
                 default:
+                    notify('錯誤！', { type: 'danger' });
                     break;
             }
+            return;
         });
     }
 

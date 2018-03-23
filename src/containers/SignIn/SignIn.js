@@ -19,7 +19,6 @@ import './SignIn.css';
 
 const USER_FAILED_TO_FIND = 'user failed to find';
 const PASSWORD_WAS_INCORRECT = 'password was incorrect';
-
 const URL = window.urlConfig || urlConfig;
 const wwwUrl = URL.wwwUrl + (80 !== URL.port ? ':' + URL.port : '');
 

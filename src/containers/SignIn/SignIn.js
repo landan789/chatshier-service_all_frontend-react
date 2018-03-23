@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, withRouter } from 'react-router-dom';
 import { Fade } from 'reactstrap';
-import firebase from 'firebase';
 
 import ROUTES from '../../config/route';
 import urlConfig from '../../config/url';

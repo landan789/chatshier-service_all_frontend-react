@@ -2,16 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, withRouter } from 'react-router-dom';
 import { Fade } from 'reactstrap';
-import firebase from 'firebase';
 
 import ROUTES from '../../config/route';
 import urlConfig from '../../config/url';
 import browserHelper from '../../helpers/browser';
 import authHelper from '../../helpers/authentication';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
-import databaseApi, { setJWT } from '../../helpers/databaseApi/index';
 import apiSign from '../../helpers/apiSign/index';
-
+import { setJWT } from '../../helpers/databaseApi/index';
 import regex from '../../utils/regex';
 import { notify } from '../../components/Notify/Notify';
 
@@ -108,7 +106,6 @@ class SignUp extends React.Component {
     }
 
     signup(name, email, password) {
-        let auth = firebase.auth();
 
         this.setState({
             isSignUping: true,
@@ -140,7 +137,7 @@ class SignUp extends React.Component {
                 isSignUping: false,
                 signupBtnHtml: '註冊'
             });
-
+            
             // this.props.history.replace(ROUTES.CHAT);
             window.location.replace(ROUTES.CHAT);
         }).catch((err) => {
@@ -154,6 +151,9 @@ class SignUp extends React.Component {
                     break;
                 case EMAIL_WAS_EMPTY:
                     notify('email 未填寫！', { type: 'danger' });
+                    break;
+                case PASSWORD_WAS_EMPTY:
+                    notify('密碼未填寫！', { type: 'danger' });
                     break;
                 case USER_EMAIL_HAD_BEEN_SIGNED_UP:
                     notify('email 已被註冊！', { type: 'danger' });

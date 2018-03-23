@@ -4,7 +4,7 @@ import { reqHeaders } from './index';
 class SignIn extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'sign/signin';
+        this.urlPrefix = this.prefixUrl + 'signin';
     }
     do(user) {
         let destUrl = this.urlPrefix;

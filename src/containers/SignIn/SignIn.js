@@ -17,7 +17,9 @@ import { notify } from '../../components/Notify/Notify';
 import './SignIn.css';
 
 const URL = window.urlConfig || urlConfig;
-const wwwUrl = URL.wwwUrl + (80 !== URL.port ? ':' + URL.port : '');
+const wwwUrl = URL.wwwUrl
+    ? URL.wwwUrl + (80 !== URL.port ? ':' + URL.port : '')
+    : window.location.protocol + '//' + document.domain.replace(regex.domainPrefix, 'www.');
 
 class SignIn extends React.Component {
     constructor(props, context) {

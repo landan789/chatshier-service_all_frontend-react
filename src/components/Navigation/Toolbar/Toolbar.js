@@ -7,11 +7,14 @@ import ROUTES from '../../../config/route';
 import NavItems from '../NavItems/NavItems';
 import SideMenu from '../SideMenu/SideMenu';
 import urlConfig from '../../../config/url';
+import regex from '../../../utils/regex';
 
 import './Toolbar.css';
 
 const URL = window.urlConfig || urlConfig;
-const wwwUrl = URL.wwwUrl + (80 !== URL.port ? ':' + URL.port : '');
+const wwwUrl = URL.wwwUrl
+    ? URL.wwwUrl + (80 !== URL.port ? ':' + URL.port : '')
+    : window.location.protocol + '//' + document.domain.replace(regex.domainPrefix, 'www.');
 
 const navItems = [
     {

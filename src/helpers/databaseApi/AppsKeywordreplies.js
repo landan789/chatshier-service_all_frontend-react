@@ -15,7 +15,7 @@ class AppsKeywordreplies extends Core {
      * @param {string} userId
      * @returns {Promise<AppsKeywordrepliesResponse>}
      */
-    findAll(appId, userId) {
+    find(appId, userId) {
         let appsKeywordreplies = mainStore.getState().appsKeywordreplies;
         if (Object.keys(appsKeywordreplies).length > 0) {
             return Promise.resolve({

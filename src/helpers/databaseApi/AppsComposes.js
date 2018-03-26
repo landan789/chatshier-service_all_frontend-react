@@ -15,7 +15,7 @@ class AppsComposes extends Core {
      * @param {string} userId
      * @returns {Promise<AppsComposesResponse>}
      */
-    findAll(appId, userId) {
+    find(appId, userId) {
         let appsComposes = mainStore.getState().appsComposes;
         if (Object.keys(appsComposes).length > 0) {
             return Promise.resolve({

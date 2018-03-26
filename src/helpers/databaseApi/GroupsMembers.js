@@ -22,7 +22,7 @@ class GroupsMembers extends Core {
      * @param {string} userId
      * @returns {Promise<GroupsMembersResponse>}
      */
-    findAll(userId) {
+    find(userId) {
         let groupsMembers = mainStore.getState().groupsMembers;
         if (Object.keys(groupsMembers).length > 0) {
             return Promise.resolve({

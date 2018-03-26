@@ -28,9 +28,8 @@ class Settings extends React.Component {
         browserHelper.setTitle('設定');
 
         if (!cookieHelper.hasSignedin()) {
-            return authHelper.signOut().then(() => {
-                this.props.history.replace(ROUTES.SIGNIN);
-            });
+            authHelper.signOut();
+            this.props.history.replace(ROUTES.SIGNIN);
         }
     }
 

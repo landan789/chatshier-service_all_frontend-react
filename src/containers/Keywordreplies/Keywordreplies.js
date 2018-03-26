@@ -38,21 +38,18 @@ class Keywordreplies extends React.Component {
         browserHelper.setTitle('關鍵字回覆');
 
         if (!cookieHelper.hasSignedin()) {
-            return authHelper.signOut().then(() => {
-                this.props.history.replace(ROUTES.SIGNIN);
-            });
+            authHelper.signOut();
+            this.props.history.replace(ROUTES.SIGNIN);
         }
     }
 
     componentDidMount() {
-        return authHelper.ready.then(() => {
-            let userId = authHelper.userId;
+        let userId = authHelper.userId;
 
-            return Promise.all([
-                dbapi.apps.findAll(userId),
-                dbapi.appsKeywordreplies.findAll(null, userId)
-            ]);
-        });
+        return Promise.all([
+            dbapi.apps.find(userId),
+            dbapi.appsKeywordreplies.find(null, userId)
+        ]);
     }
 
     appChanged(appId) {

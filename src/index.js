@@ -8,7 +8,6 @@ import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 
 import ROUTES from './config/route';
-import authHelper from './helpers/authentication';
 import mainStore from './redux/mainStore';
 
 import Analyze from './containers/Analyze/Analyze';
@@ -84,7 +83,6 @@ const routes = [
 
 Moment.locale(window.navigator.language);
 momentLocalizer(Moment);
-authHelper.init();
 
 ReactDOM.render(
     <Provider store={mainStore}>

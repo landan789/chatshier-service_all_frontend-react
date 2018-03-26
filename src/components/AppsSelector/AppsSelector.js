@@ -29,10 +29,8 @@ class AppsSelector extends React.Component {
     }
 
     componentDidMount() {
-        return authHelper.ready.then(() => {
-            let userId = authHelper.userId;
-            return userId && dbapi.apps.findAll(userId);
-        });
+        let userId = authHelper.userId;
+        return userId && dbapi.apps.find(userId);
     }
 
     componentWillReceiveProps(props) {

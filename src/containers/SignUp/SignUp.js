@@ -62,7 +62,7 @@ class SignUp extends React.Component {
         if (cookieHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }
-        return authHelper.signOut();
+        authHelper.signOut();
     }
 
     nameChanged(ev) {
@@ -127,19 +127,13 @@ class SignUp extends React.Component {
             let _user = users[userId];
             cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
             cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
-            window.localStorage.setItem('jwt', jwt);
             setJWT(jwt);
+
             this.setState({
                 isSignUping: false,
                 signupBtnHtml: '註冊'
             });
-            return Promise.resolve();
-        }).then(() => {
-            this.setState({
-                isSignUping: false,
-                signupBtnHtml: '註冊'
-            });
-            
+
             // this.props.history.replace(ROUTES.CHAT);
             window.location.replace(ROUTES.CHAT);
         }).catch((err) => {

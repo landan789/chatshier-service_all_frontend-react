@@ -14,7 +14,7 @@ class AppsMessagers extends Core {
      * @param {string} userId
      * @returns {Promise<AppsMessagersResponse>}
      */
-    findAll(userId) {
+    find(userId) {
         let appsMessagers = mainStore.getState().appsMessagers;
         if (Object.keys(appsMessagers).length > 0) {
             return Promise.resolve({

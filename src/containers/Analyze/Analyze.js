@@ -30,17 +30,14 @@ class Analyze extends React.Component {
         browserHelper.setTitle('訊息分析');
 
         if (!cookieHelper.hasSignedin()) {
-            return authHelper.signOut().then(() => {
-                this.props.history.replace(ROUTES.SIGNIN);
-            });
+            authHelper.signOut();
+            this.props.history.replace(ROUTES.SIGNIN);
         }
     }
 
     componentDidMount() {
-        return authHelper.ready.then(() => {
-            let userId = authHelper.userId;
-            return userId && dbapi.appsChatroomsMessages.findAll(userId);
-        });
+        let userId = authHelper.userId;
+        return userId && dbapi.appsChatroomsMessages.find(userId);
     }
 
     componentWillReceiveProps(props) {

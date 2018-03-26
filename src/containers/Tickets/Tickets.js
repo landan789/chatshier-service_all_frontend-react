@@ -35,21 +35,18 @@ class Tickets extends React.Component {
         browserHelper.setTitle('待辦事項');
 
         if (!cookieHelper.hasSignedin()) {
-            return authHelper.signOut().then(() => {
-                this.props.history.replace(ROUTES.SIGNIN);
-            });
+            authHelper.signOut();
+            this.props.history.replace(ROUTES.SIGNIN);
         }
     }
 
     componentDidMount() {
-        return authHelper.ready.then(() => {
-            let userId = authHelper.userId;
-            return userId && Promise.all([
-                dbapi.apps.findAll(userId),
-                dbapi.appsMessagers.findAll(userId),
-                dbapi.appsTickets.findAll(null, userId)
-            ]);
-        });
+        let userId = authHelper.userId;
+        return userId && Promise.all([
+            dbapi.apps.find(userId),
+            dbapi.appsMessagers.find(userId),
+            dbapi.appsTickets.find(null, userId)
+        ]);
     }
 
     keywordChanged(ev) {

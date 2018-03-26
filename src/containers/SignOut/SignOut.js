@@ -12,9 +12,8 @@ class SignOut extends React.Component {
         browserHelper.setTitle('登出');
 
         if (cookieHelper.hasSignedin()) {
-            return authHelper.signOut().then(() => {
-                this.props.history.replace(ROUTES.SIGNIN);
-            });
+            authHelper.signOut();
+            this.props.history.replace(ROUTES.SIGNIN);
         };
         this.props.history.replace(ROUTES.SIGNIN);
     }

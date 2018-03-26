@@ -7,7 +7,6 @@ import AppsKeywordreplies from './AppsKeywordreplies';
 import AppsMessagers from './AppsMessagers';
 import AppsTags from './AppsTags';
 import AppsTickets from './AppsTickets';
-import Authentications from './Authentications';
 import CalendarsEvents from './CalendarsEvents';
 import Groups from './Groups';
 import GroupsMembers from './GroupsMembers';
@@ -26,6 +25,7 @@ reqHeaders.set('Content-Type', 'application/json');
  */
 const setJWT = (value) => {
     jwt = value;
+    window.localStorage.setItem('jwt', jwt);
     reqHeaders.set('Authorization', jwt);
 };
 cookieHelper.hasSignedin() && setJWT(window.localStorage.getItem('jwt'));
@@ -40,11 +40,10 @@ const databaseApi = {
     appsMessagers: new AppsMessagers(),
     appsTags: new AppsTags(),
     appsTickets: new AppsTickets(),
-    authentications: new Authentications(),
     calendarsEvents: new CalendarsEvents(),
     groups: new Groups(),
     groupsMembers: new GroupsMembers(),
-    users: new Users() 
+    users: new Users()
 };
 
 export default databaseApi;

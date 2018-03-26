@@ -38,21 +38,18 @@ class Autoreplies extends React.Component {
         browserHelper.setTitle('自動回覆');
 
         if (!cookieHelper.hasSignedin()) {
-            return authHelper.signOut().then(() => {
-                this.props.history.replace(ROUTES.SIGNIN);
-            });
+            authHelper.signOut();
+            this.props.history.replace(ROUTES.SIGNIN);
         }
     }
 
     componentDidMount() {
-        return authHelper.ready.then(() => {
-            let userId = authHelper.userId;
+        let userId = authHelper.userId;
 
-            return Promise.all([
-                dbapi.apps.findAll(userId),
-                dbapi.appsAutoreplies.findAll(null, userId)
-            ]);
-        });
+        return Promise.all([
+            dbapi.apps.find(userId),
+            dbapi.appsAutoreplies.find(null, userId)
+        ]);
     }
 
     keywordChanged(event) {

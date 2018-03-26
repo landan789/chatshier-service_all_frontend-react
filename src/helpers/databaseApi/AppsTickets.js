@@ -15,7 +15,7 @@ class AppsTickets extends Core {
      * @param {string} userId
      * @returns {Promise<AppsTicketsResponse>}
      */
-    findAll(appId, userId) {
+    find(appId, userId) {
         let appsTickets = mainStore.getState().appsTickets;
         if (Object.keys(appsTickets).length > 0) {
             return Promise.resolve({

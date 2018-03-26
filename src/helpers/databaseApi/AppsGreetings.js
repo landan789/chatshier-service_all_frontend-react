@@ -10,7 +10,7 @@ class AppsGreetings extends Core {
         this.urlPrefix = this.prefixUrl + 'apps-greetings/';
     }
 
-    findAll(appId, userId) {
+    find(appId, userId) {
         let appsGreetings = mainStore.getState().appsGreetings;
         if (Object.keys(appsGreetings).length > 0) {
             return Promise.resolve({

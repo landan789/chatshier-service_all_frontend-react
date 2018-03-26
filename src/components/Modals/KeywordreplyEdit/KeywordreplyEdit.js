@@ -16,7 +16,7 @@ class KeywordreplyEdit extends React.Component {
             keywordreplyId: '',
             keyword: '',
             text: '',
-            draft: false,
+            status: false,
             isAsyncWorking: false
         };
 
@@ -34,7 +34,7 @@ class KeywordreplyEdit extends React.Component {
                 keywordreplyId: nextProps.modalData.keywordreplyId,
                 keyword: keywordreply.keyword,
                 text: keywordreply.text,
-                draft: 0 === keywordreply.status
+                status: 0 === keywordreply.status
             });
         }
     }
@@ -45,7 +45,7 @@ class KeywordreplyEdit extends React.Component {
         this.setState({ text: event.target.value });
     }
     handleDraftChange(event) {
-        this.setState({ draft: event.target.checked });
+        this.setState({ status: event.target.checked });
     }
     updateKeywordreply(event) {
         if (!this.state.keyword) {
@@ -61,7 +61,7 @@ class KeywordreplyEdit extends React.Component {
         let userId = authHelper.userId;
         let keywordreply = {
             keyword: this.state.keyword,
-            status: false === this.state.draft ? 1 : 0,
+            status: false === this.state.status ? 1 : 0,
             text: this.state.text,
             updatedTime: Date.now()
         };
@@ -92,7 +92,7 @@ class KeywordreplyEdit extends React.Component {
                     </FormGroup>
                     <FormGroup check>
                         <Label check>
-                            <Input type="checkbox" checked={this.state.draft} onChange={this.handleDraftChange} />{' '}
+                            <Input type="checkbox" checked={this.state.status} onChange={this.handleDraftChange} />{' '}
                             是否儲存為草稿？
                         </Label>
                     </FormGroup>

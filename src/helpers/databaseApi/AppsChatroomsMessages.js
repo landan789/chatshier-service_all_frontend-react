@@ -14,7 +14,7 @@ class AppsChatroomsMessages extends Core {
      * @param {string} userId
      * @returns {Promise<AppsChatroomsMessagesResponse>}
      */
-    findAll(userId) {
+    find(userId) {
         let appsChatroomsMessages = mainStore.getState().appsChatroomsMessages;
         if (Object.keys(appsChatroomsMessages).length > 0) {
             return Promise.resolve({

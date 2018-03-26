@@ -13,7 +13,7 @@ class CalendarsEvents extends Core {
     /**
      * @param {string} userId
      */
-    findAll(userId) {
+    find(userId) {
         let calendarsEvents = mainStore.getState().calendarsEvents;
         if (Object.keys(calendarsEvents).length > 0) {
             return Promise.resolve({

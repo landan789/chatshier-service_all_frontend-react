@@ -44,7 +44,7 @@ const databaseApi = {
     calendarsEvents: new CalendarsEvents(),
     groups: new Groups(),
     groupsMembers: new GroupsMembers(),
-    users: new Users()
+    users: new Users() 
 };
 
 export default databaseApi;

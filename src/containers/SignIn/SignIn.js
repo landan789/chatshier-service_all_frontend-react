@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, withRouter } from 'react-router-dom';
 import { Fade } from 'reactstrap';
-import firebase from 'firebase';
 
 import ROUTES from '../../config/route';
 import urlConfig from '../../config/url';
 import browserHelper from '../../helpers/browser';
 import authHelper from '../../helpers/authentication';
+import apiSign from '../../helpers/apiSign/index';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
 import { setJWT } from '../../helpers/databaseApi/index';
 import regex from '../../utils/regex';
@@ -16,8 +16,12 @@ import { notify } from '../../components/Notify/Notify';
 
 import './SignIn.css';
 
+const USER_FAILED_TO_FIND = 'user failed to find';
+const PASSWORD_WAS_INCORRECT = 'password was incorrect';
 const URL = window.urlConfig || urlConfig;
-const wwwUrl = URL.wwwUrl + (80 !== URL.port ? ':' + URL.port : '');
+const wwwUrl = URL.wwwUrl
+    ? URL.wwwUrl + (80 !== URL.port ? ':' + URL.port : '')
+    : window.location.protocol + '//' + document.domain.replace(regex.domainPrefix, 'www.');
 
 class SignIn extends React.Component {
     constructor(props, context) {
@@ -70,45 +74,46 @@ class SignIn extends React.Component {
         return this.signIn(email, pw);
     }
 
-    signIn(email, pw) {
-        let auth = firebase.auth();
-
+    signIn(email, password) {
         this.setState({
             isSignIning: true,
             signInBtnHtml: '<i class="fas fa-circle-notch fa-spin"></i> 登入中...'
         });
 
-        return auth.signInWithEmailAndPassword(email, pw).then(() => {
-            return auth.currentUser.getIdToken();
-        }).then((jwt) => {
-            this.setState({
-                isSignIning: false,
-                signInBtnHtml: '登入'
-            });
+        let user = {
+            email: email,
+            password: password
+        };
 
-            let name = auth.currentUser.displayName;
-            cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, name);
-            cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, email);
+        return apiSign.signIn.do(user).then((response) => {
+            let jwt = response.jwt;
+            let users = response.data;
+            let userId = Object.keys(users).shift();
+            let _user = users[userId];
+
+            cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
+            cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
             window.localStorage.setItem('jwt', jwt);
             setJWT(jwt);
-
             // this.props.history.replace(ROUTES.CHAT);
             window.location.replace(ROUTES.CHAT);
-        }).catch((error) => {
+        }).catch((err) => {
             this.setState({
                 isSignIning: false,
                 signInBtnHtml: '登入'
             });
-
-            let errCode = error ? error.code : null;
-            switch (errCode) {
-                case 'auth/user-not-found':
-                    return notify('找不到使用者', { type: 'danger' });
-                case 'auth/wrong-password':
-                    return notify('密碼錯誤！', { type: 'danger' });
+            switch (err.msg) {
+                case USER_FAILED_TO_FIND:
+                    notify('找不到使用者', { type: 'danger' });
+                    break;
+                case PASSWORD_WAS_INCORRECT:
+                    notify('密碼錯誤！', { type: 'danger' });
+                    break;
                 default:
+                    notify('錯誤！', { type: 'danger' });
                     break;
             }
+            return;
         });
     }
 

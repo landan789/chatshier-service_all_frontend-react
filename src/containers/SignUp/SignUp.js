@@ -128,12 +128,6 @@ class SignUp extends React.Component {
             cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
             cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
             setJWT(jwt);
-
-            this.setState({
-                isSignUping: false,
-                signupBtnHtml: '註冊'
-            });
-
             // this.props.history.replace(ROUTES.CHAT);
             window.location.replace(ROUTES.CHAT);
         }).catch((err) => {

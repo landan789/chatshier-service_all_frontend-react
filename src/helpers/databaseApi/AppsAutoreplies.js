@@ -15,7 +15,7 @@ class AppsAutoreplies extends Core {
      * @param {string} userId
      * @returns {Promise<AppsAutorepliesResponse>}
      */
-    findAll(appId, userId) {
+    find(appId, userId) {
         let appsAutoreplies = mainStore.getState().appsAutoreplies;
         if (Object.keys(appsAutoreplies).length > 0) {
             return Promise.resolve({

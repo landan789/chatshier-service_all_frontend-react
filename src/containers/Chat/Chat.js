@@ -24,24 +24,21 @@ class Chat extends React.Component {
         browserHelper.setTitle('聊天室');
 
         if (!cookieHelper.hasSignedin()) {
-            return authHelper.signOut().then(() => {
-                this.props.history.replace(ROUTES.SIGNIN);
-            });
+            authHelper.signOut();
+            this.props.history.replace(ROUTES.SIGNIN);
         }
     }
 
     componentDidMount() {
-        return authHelper.ready.then(() => {
-            let userId = authHelper.userId;
-            return userId && Promise.all([
-                dbapi.apps.findAll(userId),
-                dbapi.appsChatroomsMessages.findAll(userId),
-                dbapi.appsMessagers.findAll(userId),
-                dbapi.appsTags.findAll(userId),
-                dbapi.groups.findAll(userId),
-                dbapi.authentications.findUsers(userId)
-            ]);
-        });
+        let userId = authHelper.userId;
+        return userId && Promise.all([
+            dbapi.apps.find(userId),
+            dbapi.appsChatroomsMessages.find(userId),
+            dbapi.appsMessagers.find(userId),
+            dbapi.appsTags.find(userId),
+            dbapi.groups.find(userId),
+            dbapi.users.find(userId)
+        ]);
     }
 
     componentWillReceiveProps(props) {

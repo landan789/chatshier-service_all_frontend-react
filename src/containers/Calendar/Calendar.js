@@ -91,21 +91,18 @@ class Calendar extends React.Component {
         browserHelper.setTitle('行事曆');
 
         if (!cookieHelper.hasSignedin()) {
-            return authHelper.signOut().then(() => {
-                this.props.history.replace(ROUTES.SIGNIN);
-            });
+            authHelper.signOut();
+            this.props.history.replace(ROUTES.SIGNIN);
         }
     }
 
     componentDidMount() {
-        return authHelper.ready.then(() => {
-            let userId = authHelper.userId;
-            return userId && Promise.all([
-                dbapi.calendarsEvents.findAll(userId),
-                dbapi.appsTickets.findAll(null, userId),
-                dbapi.appsMessagers.findAll(userId)
-            ]);
-        });
+        let userId = authHelper.userId;
+        return userId && Promise.all([
+            dbapi.calendarsEvents.find(userId),
+            dbapi.appsTickets.find(null, userId),
+            dbapi.appsMessagers.find(userId)
+        ]);
     }
 
     componentWillReceiveProps(props) {

@@ -14,7 +14,7 @@ class Groups extends Core {
      * @param {string} userId
      * @returns {Promise<GroupsResponse>}
      */
-    findAll(userId) {
+    find(userId) {
         let groups = mainStore.getState().groups;
         if (Object.keys(groups).length > 0) {
             return Promise.resolve({

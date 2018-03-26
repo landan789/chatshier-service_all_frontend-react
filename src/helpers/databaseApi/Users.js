@@ -11,11 +11,18 @@ class Users extends Core {
     }
 
     /**
-     * @param {string} userId
+     * @param {string} [userId]
+     * @param {string} [email]
+     * @param {boolean} [useFuzzy=false]
      * @returns {Promise<UsersResponse>}
      */
-    findOne(userId) {
-        let destUrl = this.urlPrefix + 'users/' + userId;
+    find(userId, email, useFuzzy) {
+        useFuzzy = !!useFuzzy;
+
+        let destUrl = this.urlPrefix + 'users/' + userId + '?';
+        destUrl += (email ? ('email=' + email + '&') : '');
+        destUrl += (useFuzzy ? ('fuzzy=1') : '');
+
         let reqInit = {
             methods: 'GET',
             headers: reqHeaders

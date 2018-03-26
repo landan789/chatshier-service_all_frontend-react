@@ -24,10 +24,8 @@ class GreetingTable extends React.Component {
     }
 
     componentDidMount() {
-        return authHelper.ready.then(() => {
-            let userId = authHelper.userId;
-            return userId && dbapi.appsGreetings.findAll('', userId);
-        });
+        let userId = authHelper.userId;
+        return userId && dbapi.appsGreetings.find('', userId);
     }
 
     addInsertMessage(ev) {

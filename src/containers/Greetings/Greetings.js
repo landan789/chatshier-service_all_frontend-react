@@ -30,9 +30,8 @@ class Greetings extends React.Component {
         browserHelper.setTitle('加好友回覆');
 
         if (!cookieHelper.hasSignedin()) {
-            return authHelper.signOut().then(() => {
-                this.props.history.replace(ROUTES.SIGNIN);
-            });
+            authHelper.signOut();
+            this.props.history.replace(ROUTES.SIGNIN);
         }
     }
 

@@ -14,7 +14,7 @@ class AppsTags extends Core {
      * @param {string} userId
      * @returns {Promise<AppsTagsResponse>}
      */
-    findAll(userId) {
+    find(userId) {
         let appsTags = mainStore.getState().appsTags;
         if (Object.keys(appsTags).length > 0) {
             return Promise.resolve({

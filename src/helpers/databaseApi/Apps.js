@@ -22,7 +22,7 @@ class Apps extends Core {
      * @param {string} userId
      * @returns {Promise<AppsResponse>}
      */
-    findAll(userId) {
+    find(userId) {
         let apps = mainStore.getState().apps;
         if (Object.keys(apps).length > 0) {
             return Promise.resolve({

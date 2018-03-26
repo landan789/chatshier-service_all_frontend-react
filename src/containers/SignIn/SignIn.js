@@ -45,7 +45,7 @@ class SignIn extends React.Component {
         if (cookieHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }
-        return authHelper.signOut();
+        authHelper.signOut();
     }
 
     emailChanged(ev) {
@@ -93,7 +93,6 @@ class SignIn extends React.Component {
 
             cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
             cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
-            window.localStorage.setItem('jwt', jwt);
             setJWT(jwt);
             // this.props.history.replace(ROUTES.CHAT);
             window.location.replace(ROUTES.CHAT);

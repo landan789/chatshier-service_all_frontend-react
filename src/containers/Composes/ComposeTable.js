@@ -71,11 +71,14 @@ class ComposeTable extends React.Component {
         let composeIds = Object.keys(composes);
         let statusList = composeIds.filter((composeId) => status === composes[composeId].status);
         let newIdList;
-        if (this.RESERVED === determineSentTime) {
-            statusList = statusList.filter((composeId) => Date.now() < composes[composeId].time);
-        }
-        if (this.SENT === determineSentTime) {
-            statusList = statusList.filter((composeId) => Date.now() >= composes[composeId].time);
+        switch (determineSentTime) {
+            case this.RESERVED:
+                statusList = statusList.filter((composeId) => Date.now() < composes[composeId].time);
+                break;
+            case this.SENT:
+                statusList = statusList.filter((composeId) => Date.now() >= composes[composeId].time);
+                break;
+            default:
         }
         if (keyword || 0 < keyword.length) {
             newIdList = statusList.filter((composeId) => composes[composeId].keyword.includes(keyword) || composes[composeId].text.includes(keyword));

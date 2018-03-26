@@ -9,6 +9,8 @@ import SignIn from '../SignIn/SignIn';
 import SignUp from '../SignUp/SignUp';
 import Ticket from '../Ticket/Ticket';
 import Autoreplies from '../Autoreplies/Autoreplies';
+import Keywordreplies from '../Keywordreplies/Keywordreplies';
+import Composes from '../Composes/Composes';
 
 import ROUTES from '../../config/route';
 import Greeting from '../Greeting/Greeting';
@@ -44,6 +46,12 @@ class Routes extends React.Component {
             }, {
                 path: ROUTES.AUTOREPLIES,
                 component: Autoreplies
+            }, {
+                path: ROUTES.KEYWORDREPLIES,
+                component: Keywordreplies
+            }, {
+                path: ROUTES.COMPOSES,
+                component: Composes
             }
         ];
     }

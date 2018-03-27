@@ -49,6 +49,7 @@ class Composes extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        // console.log(nextProps);
     }
 
     appChanged(appId) {
@@ -93,6 +94,7 @@ class Composes extends React.Component {
                                     </InputGroup>
                                     <ComposeInsertModal
                                         apps={this.props.apps}
+                                        appsTags={this.props.appsTags}
                                         isOpen={this.state.isInsertModalOpen}
                                         close={this.closeInsertModal}>
                                     </ComposeInsertModal>
@@ -109,6 +111,7 @@ class Composes extends React.Component {
 
 Composes.propTypes = {
     apps: PropTypes.object,
+    appsTags: PropTypes.object,
     appsComposes: PropTypes.object,
     history: PropTypes.object.isRequired
 };
@@ -117,6 +120,7 @@ const mapStateToProps = (state, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
     return {
         apps: state.apps,
+        appsTags: state.appsTags,
         appsComposes: state.appsComposes
     };
 };

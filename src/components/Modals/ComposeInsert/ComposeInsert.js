@@ -5,6 +5,7 @@ import { DateTimePicker } from 'react-widgets';
 
 import dbapi from '../../../helpers/databaseApi/index';
 import authHelper from '../../../helpers/authentication';
+import timeHelper from '../../../helpers/timer';
 import { notify } from '../../Notify/Notify';
 
 class ComposeInsert extends React.Component {
@@ -122,6 +123,8 @@ class ComposeInsert extends React.Component {
     insertCompose(event) {
         if (!this.state.messages) {
             return notify('請輸入要送出的訊息', { type: 'warning' });
+        } else if (Date.now() > timeHelper.toMilliseconds(this.state.time)) {
+            return notify('不能選擇過去的時間', { type: 'warning' });
         }
 
         this.setState({ isAsyncWorking: true });
@@ -132,10 +135,10 @@ class ComposeInsert extends React.Component {
             type: 'text',
             text: this.state.messages,
             time: Date.now(),
-            status: this.state.status ? 0 : 1,
-            age: this.state.ageInput || '',
+            status: this.state.status,
+            ageRange: this.state.ageInput || '',
             gender: this.state.genderInput || '',
-            tag_ids: {}
+            field_ids: {}
         };
         // console.log(appId, userId, postCompose);
         return dbapi.appsComposes.insert(appId, userId, postCompose).then(() => {
@@ -162,6 +165,23 @@ class ComposeInsert extends React.Component {
     }
     renderFilter() {
         // let appsTags = this.props.appsTags || {};
+        return (
+            <Row>
+                <Col>
+                    <Button color="secondary">自訂</Button>
+                    <FormGroup>
+                        <Row>
+                            <Col>
+                                <Input type="text" />
+                            </Col>
+                            <Col>
+                                <Button color="danger"><i className="fas fa-times"></i></Button>
+                            </Col>
+                        </Row>
+                    </FormGroup>
+                </Col>
+            </Row>
+        );
     }
     renderMessage() {
         let count = this.state.count;
@@ -212,7 +232,7 @@ class ComposeInsert extends React.Component {
                                     <FormGroup hidden={this.state.ageButton}>
                                         <Row>
                                             <Col>
-                                                <Input type="text" value={this.state.ageInput} onChange={this.handleAgeInputChange} />
+                                                <Input type="text" defaultValue={this.state.ageInput} onChange={this.handleAgeInputChange} />
                                             </Col>
                                             <Col>
                                                 <Button color="danger" onClick={this.handleAgeButtonChange}><i className="fas fa-times"></i></Button>
@@ -220,12 +240,14 @@ class ComposeInsert extends React.Component {
                                         </Row>
                                     </FormGroup>
                                 </Col>
+                            </Row>
+                            <Row>
                                 <Col>
                                     <Button color="secondary" onClick={this.handleGenderButtonChange} hidden={!this.state.genderButton}>性別</Button>
                                     <FormGroup hidden={this.state.genderButton}>
                                         <Row>
                                             <Col>
-                                                <Input type="text" value={this.state.genderInput} onChange={this.handleGenderInputChange} />
+                                                <Input type="text" defaultValue={this.state.genderInput} onChange={this.handleGenderInputChange} />
                                             </Col>
                                             <Col>
                                                 <Button color="danger" onClick={this.handleGenderButtonChange}><i className="fas fa-times"></i></Button>
@@ -233,8 +255,8 @@ class ComposeInsert extends React.Component {
                                         </Row>
                                     </FormGroup>
                                 </Col>
-                                { this.renderFilter() }
                             </Row>
+                            { this.renderFilter() }
                         </div>
                     </div>
                     <FormGroup>

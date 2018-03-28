@@ -16,9 +16,9 @@ class ComposeEdit extends React.Component {
             appId: '',
             composeId: '',
             time: '',
-            age: '',
+            ageRange: '',
             gender: '',
-            tag_ids: null,
+            field_ids: null,
             text: '',
             status: false,
             isAsyncWorking: false
@@ -39,12 +39,12 @@ class ComposeEdit extends React.Component {
             this.setState({
                 appId: nextProps.modalData.appId,
                 composeId: nextProps.modalData.composeId,
-                time: compose.startedTime,
-                age: compose.age || '',
+                time: compose.time,
+                ageRange: compose.ageRange || '',
                 gender: compose.gender || '',
-                tag_ids: compose.tag_ids || {},
+                field_ids: compose.field_ids || {},
                 text: compose.text,
-                status: 0 === compose.status
+                status: compose.status
             });
         }
     }
@@ -62,13 +62,13 @@ class ComposeEdit extends React.Component {
         this.setState({ status: event.target.checked });
     }
     handleAgeChange(event) {
-        this.setState({age: event.target.value});
+        this.setState({ageRange: event.target.value});
     }
     handleGenderChange(event) {
         this.setState({gender: event.target.value});
     }
     clearAgeText(event) {
-        this.setState({age: ''});
+        this.setState({ageRange: ''});
     }
     clearGenderText(event) {
         this.setState({gender: ''});
@@ -78,6 +78,8 @@ class ComposeEdit extends React.Component {
             return notify('請選擇時間', { type: 'warning' });
         } else if (!this.state.text) {
             return notify('請輸入要送出的訊息', { type: 'warning' });
+        } else if (Date.now() > timeHelper.toMilliseconds(this.state.time)) {
+            return notify('不能選擇過去的時間', { type: 'warning' });
         }
 
         this.setState({ isAsyncWorking: true });
@@ -90,9 +92,9 @@ class ComposeEdit extends React.Component {
             text: this.state.text,
             time: this.state.time,
             status: this.state.status,
-            age: this.state.age,
+            ageRange: this.state.ageRange,
             gender: this.state.gender,
-            tag_ids: this.state.tag_ids
+            field_ids: this.state.field_ids
         };
         return dbapi.appsComposes.update(appId, composeId, userId, compose).then(() => {
             this.props.close(event);
@@ -103,14 +105,34 @@ class ComposeEdit extends React.Component {
             this.setState({ isAsyncWorking: false });
         });
     }
+    renderFilter() {
+        // let appsTags = this.props.appsTags || {};
+        return (
+            <Row>
+                <Col>
+                    <Button color="secondary">自訂</Button>
+                    <FormGroup>
+                        <Row>
+                            <Col>
+                                <Input type="text" />
+                            </Col>
+                            <Col>
+                                <Button color="danger"><i className="fas fa-times"></i></Button>
+                            </Col>
+                        </Row>
+                    </FormGroup>
+                </Col>
+            </Row>
+        );
+    }
     render() {
         return (
             <Modal size="lg" isOpen={this.props.isOpen} toggle={this.props.close}>
                 <ModalHeader toggle={this.props.close}></ModalHeader>
                 <ModalBody>
                     時間：
-                    <DateTimePicker defaultValue={new Date(this.state.time)} onChange={this.handleDatetimeChange} disabled={!this.state.status && timeHelper.isHistory(this.state.time, Date.now())}></DateTimePicker>
-                    <div className="panel panel-default" hidden={!this.state.status && timeHelper.isHistory(this.state.time, Date.now())}>
+                    <DateTimePicker defaultValue={new Date(this.state.time)} onChange={this.handleDatetimeChange} disabled={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}></DateTimePicker>
+                    <div className="panel panel-default" hidden={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}>
                         <div className="panel-heading">條件</div>
                         <div className="panel-body">
                             <Row>
@@ -119,7 +141,7 @@ class ComposeEdit extends React.Component {
                                     <FormGroup>
                                         <Row>
                                             <Col>
-                                                <Input type="text" defaultValue={this.state.age || ''} onChange={this.handleAgeChange} />
+                                                <Input type="text" defaultValue={this.state.ageRange || ''} onChange={this.handleAgeChange} />
                                             </Col>
                                             <Col>
                                                 <Button color="danger" onClick={this.clearAgeText}><i className="fas fa-times"></i></Button>
@@ -141,21 +163,22 @@ class ComposeEdit extends React.Component {
                                     </FormGroup>
                                 </Col>
                             </Row>
+                            { this.renderFilter() }
                         </div>
                     </div>
                     <div>
                         內容：
-                        <Input type="textarea" defaultValue={this.state.text} disabled={!this.state.status && timeHelper.isHistory(this.state.time, Date.now())} />
+                        <Input type="textarea" defaultValue={this.state.text} disabled={this.state.status && timeHelper.isHistory(this.state.time, Date.now())} />
                     </div>
-                    <FormGroup check hidden={!this.state.status && timeHelper.isHistory(this.state.time, Date.now())}>
+                    <FormGroup check hidden={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}>
                         <Label check>
-                            <Input type="checkbox" checked={this.state.status} onChange={this.handleDraftChange} />{' '}
+                            <Input type="checkbox" checked={!this.state.status} onChange={this.handleDraftChange} />{' '}
                             是否儲存為草稿？
                         </Label>
                     </FormGroup>
                 </ModalBody>
                 <ModalFooter>
-                    <Button outline color="success" disabled={this.state.isAsyncWorking} hidden={!this.state.status && timeHelper.isHistory(this.state.time, Date.now())}>修改</Button>{' '}
+                    <Button outline color="success" disabled={this.state.isAsyncWorking} hidden={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}>修改</Button>{' '}
                     <Button outline color="danger" onClick={this.props.close}>取消</Button>
                 </ModalFooter>
             </Modal>

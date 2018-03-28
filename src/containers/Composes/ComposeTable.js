@@ -60,23 +60,23 @@ class ComposeTable extends React.Component {
             return notify('刪除失敗', { type: 'danger' });
         });
     }
-    renderComposes(status, appId, keyword, determineSentTime) { // status 0: draft, 1: history, reserved
+    renderComposes(status, appId, keyword, determineSentTime) { // status 0(false): draft, 1(true): history, reserved
         let composes = this.props.appsComposes[appId] ? this.props.appsComposes[appId].composes : {};
         let composeIds = Object.keys(composes);
         // console.log(composes[composeIds[0]]);
-        // composeIds.map((composeId) => { composes[composeId].startedTime = "2019-03-27T07:43:16.310Z"; }); // 塞假資料
-        composeIds.map((composeId) => { composes[composeId].status = 1; }); // 塞假資料
-        composeIds.map((composeId) => { composes[composeId].age = '30'; }); // 塞假資料
-        composeIds.map((composeId) => { composes[composeId].gender = 'MALE'; }); // 塞假資料
-        composeIds.map((composeId) => { composes[composeId].text = 'Hi'; }); // 塞假資料
+        // composeIds.map((composeId) => { composes[composeId].time = "2019-03-27T07:43:16.310Z"; }); // 塞假資料
+        // composeIds.map((composeId) => { composes[composeId].status = 1; }); // 塞假資料
+        // composeIds.map((composeId) => { composes[composeId].age = '30'; }); // 塞假資料
+        // composeIds.map((composeId) => { composes[composeId].gender = 'MALE'; }); // 塞假資料
+        // composeIds.map((composeId) => { composes[composeId].text = 'Hi'; }); // 塞假資料
         let statusList = composeIds.filter((composeId) => status === composes[composeId].status);
         let newIdList;
         switch (determineSentTime) {
             case this.RESERVED:
-                statusList = statusList.filter((composeId) => Date.now() < timeHelper.toMilliseconds(composes[composeId].startedTime));
+                statusList = statusList.filter((composeId) => Date.now() < timeHelper.toMilliseconds(composes[composeId].time));
                 break;
             case this.SENT:
-                statusList = statusList.filter((composeId) => Date.now() >= timeHelper.toMilliseconds(composes[composeId].startedTime));
+                statusList = statusList.filter((composeId) => Date.now() >= timeHelper.toMilliseconds(composes[composeId].time));
                 break;
             default:
         }
@@ -93,8 +93,8 @@ class ComposeTable extends React.Component {
             return (
                 <tr key={index}>
                     <td>{compose.text}</td>
-                    <td>{timeHelper.toLocalTimeString(compose.startedTime)}</td>
-                    <td>{compose.age && compose.gender ? `${compose.age} ${compose.gender}` : '無'}</td>
+                    <td>{timeHelper.toLocalTimeString(compose.time)}</td>
+                    <td>{compose.age || compose.gender ? `${compose.age} ${compose.gender}` : '無'}</td>
                     <td>
                         <Button color="secondary" onClick={() => this.openEditModal(appId, composeId, composes[composeId])}><i className="fas fa-pencil-alt"></i></Button>{' '}
                         <Button color="danger" onClick={() => this.removeCompose(appId, composeId)}><i className="fas fa-trash-alt"></i></Button>
@@ -117,7 +117,7 @@ class ComposeTable extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.renderComposes(1, this.state.appId, this.state.keyword, this.RESERVED)}
+                        {this.renderComposes(true, this.state.appId, this.state.keyword, this.RESERVED)}
                     </tbody>
                 </Table>
                 <h4>歷史</h4>
@@ -131,7 +131,7 @@ class ComposeTable extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.renderComposes(1, this.state.appId, this.state.keyword, this.SENT)}
+                        {this.renderComposes(true, this.state.appId, this.state.keyword, this.SENT)}
                     </tbody>
                 </Table>
                 <h4>草稿</h4>
@@ -145,7 +145,7 @@ class ComposeTable extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.renderComposes(0, this.state.appId, this.state.keyword, null)}
+                        {this.renderComposes(false, this.state.appId, this.state.keyword, null)}
                     </tbody>
                 </Table>
                 <ComposeEditModal

@@ -2,10 +2,10 @@ import Apps from './Apps';
 import AppsAutoreplies from './AppsAutoreplies';
 import AppsChatroomsMessages from './AppsChatroomsMessages';
 import AppsComposes from './AppsComposes';
+import AppsFields from './AppsFields';
 import AppsGreetings from './AppsGreetings';
 import AppsKeywordreplies from './AppsKeywordreplies';
 import AppsMessagers from './AppsMessagers';
-import AppsFields from './AppsFields';
 import AppsTickets from './AppsTickets';
 import CalendarsEvents from './CalendarsEvents';
 import Groups from './Groups';
@@ -35,10 +35,10 @@ const databaseApi = {
     appsAutoreplies: new AppsAutoreplies(),
     appsChatroomsMessages: new AppsChatroomsMessages(),
     appsComposes: new AppsComposes(),
+    appsFields: new AppsFields(),
     appsGreetings: new AppsGreetings(),
     appsKeywordreplies: new AppsKeywordreplies(),
     appsMessagers: new AppsMessagers(),
-    appsFields: new AppsFields(),
     appsTickets: new AppsTickets(),
     calendarsEvents: new CalendarsEvents(),
     groups: new Groups(),

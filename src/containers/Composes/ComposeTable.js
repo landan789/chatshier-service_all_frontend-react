@@ -81,7 +81,7 @@ class ComposeTable extends React.Component {
             default:
         }
         if (keyword || 0 < keyword.length) {
-            newIdList = statusList.filter((composeId) => composes[composeId].gender.includes(keyword) || composes[composeId].age.includes(keyword) || composes[composeId].text.includes(keyword));
+            newIdList = statusList.filter((composeId) => composes[composeId].text.includes(keyword));
         } else {
             newIdList = statusList;
         }

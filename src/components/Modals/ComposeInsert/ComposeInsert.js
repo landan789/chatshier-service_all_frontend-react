@@ -15,7 +15,7 @@ class ComposeInsert extends React.Component {
         this.state = {
             appId: '',
             time: '',
-            status: false,
+            status: true,
             radioCategory: {
                 ALL: true,
                 ONE: false
@@ -29,7 +29,9 @@ class ComposeInsert extends React.Component {
             genderButton: true,
             ageInput: '',
             genderInput: '',
-            messages: null,
+            text1: '',
+            text2: '',
+            text3: '',
             isAsyncWorking: false
         };
 
@@ -68,18 +70,24 @@ class ComposeInsert extends React.Component {
     }
     handleCountChange(operator) {
         let count = this.PLUS === operator ? this.state.count + 1 : this.state.count - 1;
-        let messages = [];
-        for (let c = 0; c < count; c++) {
-            messages.push({text: ''});
-        }
         if (3 >= count) {
-            this.setState({ count: 3, messages });
+            this.setState({ count });
+        } else {
+            this.setState({ count: 3 });
         }
     }
     handleTextChange(event) {
         let index = event.target.getAttribute('name');
-        let messages = this.state.messages[index];
-        messages.text = event.target.value;
+        switch (index) {
+            case '0':
+                this.setState({text1: event.target.value});
+                break;
+            case '1':
+                this.setState({text2: event.target.value});
+                break;
+            case '2':
+                this.setState({text3: event.target.value});
+        }
     }
     handleAgeButtonChange(event) {
         let result = !this.state.ageButton;
@@ -121,7 +129,7 @@ class ComposeInsert extends React.Component {
         this.setState({ radioTime });
     }
     insertCompose(event) {
-        if (!this.state.messages) {
+        if (!this.state.text1) {
             return notify('請輸入要送出的訊息', { type: 'warning' });
         } else if (Date.now() > timeHelper.toMilliseconds(this.state.time)) {
             return notify('不能選擇過去的時間', { type: 'warning' });
@@ -131,17 +139,36 @@ class ComposeInsert extends React.Component {
 
         let appId = this.state.appId;
         let userId = authHelper.userId;
-        let postCompose = {
-            type: 'text',
-            text: this.state.messages,
-            time: Date.now(),
-            status: this.state.status,
-            ageRange: this.state.ageInput || '',
-            gender: this.state.genderInput || '',
-            field_ids: {}
-        };
-        // console.log(appId, userId, postCompose);
-        return dbapi.appsComposes.insert(appId, userId, postCompose).then(() => {
+        let texts = [];
+        let usingRecursive = false;
+
+        switch (this.state.count) {
+            case 1:
+                texts = [this.state.text1];
+                break;
+            case 2:
+                texts = [this.state.text1, this.state.text2];
+                usingRecursive = true;
+                break;
+            case 3:
+                texts = [this.state.text1, this.state.text2, this.state.text3];
+                usingRecursive = true;
+        }
+
+        let composes = texts.map((text) => {
+            let compose = {
+                type: 'text',
+                text: text,
+                time: Date.now(),
+                status: this.state.status,
+                ageRange: this.state.ageInput,
+                gender: this.state.genderInput,
+                field_ids: {} // 要加自訂欄位
+            };
+            return compose;
+        });
+
+        return dbapi.appsComposes.insert(appId, userId, composes, usingRecursive).then(() => {
             this.props.close(event);
             return notify('新增成功', { type: 'success' });
         }).catch(() => {
@@ -187,13 +214,13 @@ class ComposeInsert extends React.Component {
         let count = this.state.count;
         let list = [];
         for (let c = 0; c < count; c++) {
-            list.push({text: ''});
+            list.push('');
         }
         return list.map((message, index) => (
             <div key={index}>
                 <span className="remove-btn" onClick={() => this.handleCountChange(this.MINUS)}>刪除</span>
                 輸入文字:
-                <Input type="textarea" name={index} onChange={this.handleTextChange} />
+                <Input type="textarea" name={index} defaultValue={list[index]} onChange={this.handleTextChange} />
             </div>
         ));
     }

@@ -3,7 +3,7 @@ import urlConfig from '../../config/url';
 class Core {
     constructor() {
         let config = window.urlConfig || urlConfig;
-        this.prefixUrl = config.apiUrl + '/api/';
+        this.prefixUrl = config.apiUrl + '/api/database/';
     }
 
     /**

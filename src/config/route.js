@@ -12,7 +12,7 @@ const ROUTES = {
     SETTINGS: '/settings',
     SETTINGS_APPS: '/settings/apps',
     SETTINGS_GROUPS: '/settings/groups',
-    SETTINGS_TAGS: '/settings/tags',
+    SETTINGS_FIELDS: '/settings/fields',
     SETTINGS_USERS: '/settings/users',
     TICKETS: '/tickets'
 };

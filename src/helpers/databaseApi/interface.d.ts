@@ -40,10 +40,10 @@ interface AppsMessagersResponse {
     data: Chatshier.AppsMessagers
 }
 
-interface AppsTagsResponse {
+interface AppsFieldsResponse {
     status: number,
     msg: string,
-    data: Chatshier.AppsTags
+    data: Chatshier.AppsFields
 }
 
 interface AppsTicketsResponse {

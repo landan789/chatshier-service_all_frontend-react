@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Aux from 'react-aux';
 import { Table, Button } from 'reactstrap';
 
-import ComposeEditModal from '../../components/Modals/ComposeEdit/ComposeEdit';
+// import ComposeEditModal from '../../components/Modals/ComposeEdit/ComposeEdit';
 import authHelper from '../../helpers/authentication';
 import dbapi from '../../helpers/databaseApi/index';
 import { notify } from '../../components/Notify/Notify';

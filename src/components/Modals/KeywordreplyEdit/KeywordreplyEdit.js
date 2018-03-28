@@ -61,7 +61,7 @@ class KeywordreplyEdit extends React.Component {
         let userId = authHelper.userId;
         let keywordreply = {
             keyword: this.state.keyword,
-            status: false === this.state.status ? 1 : 0,
+            status: this.state.status ? 0 : 1,
             text: this.state.text,
             updatedTime: Date.now()
         };

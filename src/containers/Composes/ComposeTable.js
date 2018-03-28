@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import Aux from 'react-aux';
 import { Table, Button } from 'reactstrap';
 
-// import ComposeEditModal from '../../components/Modals/ComposeEdit/ComposeEdit';
+import ComposeEditModal from '../../components/Modals/ComposeEdit/ComposeEdit';
 import authHelper from '../../helpers/authentication';
 import dbapi from '../../helpers/databaseApi/index';
 import { notify } from '../../components/Notify/Notify';
+import timeHelper from '../../helpers/timer';
 
 class ComposeTable extends React.Component {
     constructor(props) {
@@ -59,42 +60,41 @@ class ComposeTable extends React.Component {
             return notify('刪除失敗', { type: 'danger' });
         });
     }
-    toLocalTimeString(ms) {
-        let date = new Date(ms);
-        let localDate = date.toLocaleDateString();
-        let localTime = date.toLocaleTimeString();
-        let localTimeString = localDate + localTime;
-        return localTimeString;
-    }
     renderComposes(status, appId, keyword, determineSentTime) { // status 0: draft, 1: history, reserved
         let composes = this.props.appsComposes[appId] ? this.props.appsComposes[appId].composes : {};
         let composeIds = Object.keys(composes);
+        // console.log(composes[composeIds[0]]);
+        // composeIds.map((composeId) => { composes[composeId].startedTime = "2019-03-27T07:43:16.310Z"; }); // 塞假資料
+        composeIds.map((composeId) => { composes[composeId].status = 1; }); // 塞假資料
+        composeIds.map((composeId) => { composes[composeId].age = '30'; }); // 塞假資料
+        composeIds.map((composeId) => { composes[composeId].gender = 'MALE'; }); // 塞假資料
+        composeIds.map((composeId) => { composes[composeId].text = 'Hi'; }); // 塞假資料
         let statusList = composeIds.filter((composeId) => status === composes[composeId].status);
         let newIdList;
         switch (determineSentTime) {
             case this.RESERVED:
-                statusList = statusList.filter((composeId) => Date.now() < composes[composeId].time);
+                statusList = statusList.filter((composeId) => Date.now() < timeHelper.toMilliseconds(composes[composeId].startedTime));
                 break;
             case this.SENT:
-                statusList = statusList.filter((composeId) => Date.now() >= composes[composeId].time);
+                statusList = statusList.filter((composeId) => Date.now() >= timeHelper.toMilliseconds(composes[composeId].startedTime));
                 break;
             default:
         }
         if (keyword || 0 < keyword.length) {
-            newIdList = statusList.filter((composeId) => composes[composeId].keyword.includes(keyword) || composes[composeId].text.includes(keyword));
+            newIdList = statusList.filter((composeId) => composes[composeId].gender.includes(keyword) || composes[composeId].age.includes(keyword) || composes[composeId].text.includes(keyword));
         } else {
             newIdList = statusList;
         }
         return newIdList.map((composeId, index) => {
-            let keywordreply = composes[composeId];
-            if (0 === Object.keys(keywordreply).length) {
+            let compose = composes[composeId];
+            if (0 === Object.keys(compose).length) {
                 return null;
             }
             return (
                 <tr key={index}>
-                    <td>{keywordreply.text}</td>
-                    <td>{this.toLocalTimeString(keywordreply.time)}</td>
-                    <td>{'無'}</td>
+                    <td>{compose.text}</td>
+                    <td>{timeHelper.toLocalTimeString(compose.startedTime)}</td>
+                    <td>{compose.age && compose.gender ? `${compose.age} ${compose.gender}` : '無'}</td>
                     <td>
                         <Button color="secondary" onClick={() => this.openEditModal(appId, composeId, composes[composeId])}><i className="fas fa-pencil-alt"></i></Button>{' '}
                         <Button color="danger" onClick={() => this.removeCompose(appId, composeId)}><i className="fas fa-trash-alt"></i></Button>
@@ -148,11 +148,11 @@ class ComposeTable extends React.Component {
                         {this.renderComposes(0, this.state.appId, this.state.keyword, null)}
                     </tbody>
                 </Table>
-                {/* <ComposeEditModal
+                <ComposeEditModal
                     modalData={this.state.editModalData}
                     isOpen={!!this.state.editModalData}
                     close={this.closeEditModal}>
-                </ComposeEditModal> */}
+                </ComposeEditModal>
             </Aux>
         );
     }

@@ -14,7 +14,7 @@ class ComposeInsert extends React.Component {
         this.state = {
             appId: '',
             time: '',
-            status: 0,
+            status: false,
             radioCategory: {
                 ALL: true,
                 ONE: false
@@ -72,7 +72,7 @@ class ComposeInsert extends React.Component {
             messages.push({text: ''});
         }
         if (3 >= count) {
-            this.setState({ count, messages });
+            this.setState({ count: 3, messages });
         }
     }
     handleTextChange(event) {
@@ -132,10 +132,10 @@ class ComposeInsert extends React.Component {
             type: 'text',
             text: this.state.messages,
             time: Date.now(),
-            status: this.state.status,
+            status: this.state.status ? 0 : 1,
             age: this.state.ageInput || '',
             gender: this.state.genderInput || '',
-            tag_ids: []
+            tag_ids: {}
         };
         // console.log(appId, userId, postCompose);
         return dbapi.appsComposes.insert(appId, userId, postCompose).then(() => {
@@ -215,7 +215,6 @@ class ComposeInsert extends React.Component {
                                                 <Input type="text" value={this.state.ageInput} onChange={this.handleAgeInputChange} />
                                             </Col>
                                             <Col>
-                                                <Button color="success"><i className="fas fa-check"></i></Button>
                                                 <Button color="danger" onClick={this.handleAgeButtonChange}><i className="fas fa-times"></i></Button>
                                             </Col>
                                         </Row>
@@ -229,7 +228,6 @@ class ComposeInsert extends React.Component {
                                                 <Input type="text" value={this.state.genderInput} onChange={this.handleGenderInputChange} />
                                             </Col>
                                             <Col>
-                                                <Button color="success"><i className="fas fa-check"></i></Button>
                                                 <Button color="danger" onClick={this.handleGenderButtonChange}><i className="fas fa-times"></i></Button>
                                             </Col>
                                         </Row>

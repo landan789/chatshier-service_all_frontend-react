@@ -1,7 +1,7 @@
 import React from 'react';
 import { Fade, TabPane, Row, Col } from 'reactstrap';
 
-class TagsTabPane extends React.Component {
+class FieldsTabPane extends React.Component {
     render() {
         return (
             <TabPane tabId="1" className="m-3">
@@ -17,4 +17,4 @@ class TagsTabPane extends React.Component {
     }
 }
 
-export default TagsTabPane;
+export default FieldsTabPane;

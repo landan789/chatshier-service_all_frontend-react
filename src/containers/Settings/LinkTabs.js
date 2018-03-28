@@ -22,8 +22,8 @@ const LinkTabs = (props) => (
             </NavItem>
             <NavItem>
                 <NavLink
-                    active={props.route.includes(ROUTES.SETTINGS_TAGS)}
-                    onClick={() => { props.toggle(ROUTES.SETTINGS_TAGS); }}>
+                    active={props.route.includes(ROUTES.SETTINGS_FIELDS)}
+                    onClick={() => { props.toggle(ROUTES.SETTINGS_FIELDS); }}>
                 客戶分類條件
                 </NavLink>
             </NavItem>

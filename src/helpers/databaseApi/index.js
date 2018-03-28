@@ -5,7 +5,7 @@ import AppsComposes from './AppsComposes';
 import AppsGreetings from './AppsGreetings';
 import AppsKeywordreplies from './AppsKeywordreplies';
 import AppsMessagers from './AppsMessagers';
-import AppsTags from './AppsTags';
+import AppsFields from './AppsFields';
 import AppsTickets from './AppsTickets';
 import CalendarsEvents from './CalendarsEvents';
 import Groups from './Groups';
@@ -38,7 +38,7 @@ const databaseApi = {
     appsGreetings: new AppsGreetings(),
     appsKeywordreplies: new AppsKeywordreplies(),
     appsMessagers: new AppsMessagers(),
-    appsTags: new AppsTags(),
+    appsFields: new AppsFields(),
     appsTickets: new AppsTickets(),
     calendarsEvents: new CalendarsEvents(),
     groups: new Groups(),

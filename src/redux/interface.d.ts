@@ -71,7 +71,7 @@ namespace Chatshier {
         isDeleted?: 0 | 1;
         age: number;
         gender: string;
-        tag_ids: string[];
+        field_ids: string[];
     }
 
     interface AppsComposes {
@@ -132,8 +132,8 @@ namespace Chatshier {
         totalChat: number;
         chatTimeCount: number;
         chatroom_id: string;
-        custom_tags?: {
-            [tagId: string]: string | number | any[]
+        custom_fields?: {
+            [fieldId: string]: string | number | any[]
         };
         isDeleted?: 0 | 1;
     }
@@ -146,7 +146,7 @@ namespace Chatshier {
         }
     }
 
-    interface Tag {
+    interface Field {
         text: string;
         alias: string;
         type: 'SYSTEM' | 'DEFAULT' | 'DEFAULT';
@@ -158,10 +158,10 @@ namespace Chatshier {
         isDeleted?: 0 | 1;
     }
 
-    interface AppsTags {
+    interface AppsFields {
         [appId: string]: {
-            tags: {
-                [tagId: string]: Tag
+            fields: {
+                [fieldId: string]: Field
             }
         }
     }

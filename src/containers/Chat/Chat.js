@@ -35,7 +35,7 @@ class Chat extends React.Component {
             dbapi.apps.find(userId),
             dbapi.appsChatroomsMessages.find(userId),
             dbapi.appsMessagers.find(userId),
-            dbapi.appsTags.find(userId),
+            dbapi.appsFields.find(userId),
             dbapi.groups.find(userId),
             dbapi.users.find(userId)
         ]);
@@ -61,7 +61,7 @@ Chat.propTypes = {
     apps: PropTypes.object,
     appsChatroomsMessages: PropTypes.object,
     appsMessagers: PropTypes.object,
-    appsTags: PropTypes.object,
+    appsFields: PropTypes.object,
     authentications: PropTypes.object,
     groups: PropTypes.object,
     history: PropTypes.object.isRequired
@@ -73,7 +73,7 @@ const mapStateToProps = (state, ownProps) => {
         apps: state.apps,
         appsChatroomsMessages: state.appsChatroomsMessages,
         appsMessagers: state.appsMessagers,
-        appsTags: state.appsTags,
+        appsFields: state.appsFields,
         authentications: state.authentications,
         groups: state.groups
     };

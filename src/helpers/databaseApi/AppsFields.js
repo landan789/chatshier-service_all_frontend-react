@@ -2,25 +2,25 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateTags, deleteTag } from '../../redux/actions/appsTags';
+import { updateFields, deleteField } from '../../redux/actions/appsFields';
 
-class AppsTags extends Core {
+class AppsFields extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'apps-tags/';
+        this.urlPrefix = this.prefixUrl + 'apps-fields/';
     }
 
     /**
      * @param {string} userId
-     * @returns {Promise<AppsTagsResponse>}
+     * @returns {Promise<AppsFieldsResponse>}
      */
     find(userId) {
-        let appsTags = mainStore.getState().appsTags;
-        if (Object.keys(appsTags).length > 0) {
+        let appsFields = mainStore.getState().appsFields;
+        if (Object.keys(appsFields).length > 0) {
             return Promise.resolve({
                 status: 1,
                 msg: '',
-                data: appsTags
+                data: appsFields
             });
         }
 
@@ -30,7 +30,7 @@ class AppsTags extends Core {
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateTags(resJson.data));
+            mainStore.dispatch(updateFields(resJson.data));
             return resJson;
         });
     };
@@ -38,18 +38,18 @@ class AppsTags extends Core {
     /**
      * @param {string} appId
      * @param {string} userId
-     * @param {Chatshier.Tag} tag
-     * @returns {Promise<AppsTagsResponse>}
+     * @param {Chatshier.Field} field
+     * @returns {Promise<AppsFieldsResponse>}
      */
-    insert(appId, userId, tag) {
+    insert(appId, userId, field) {
         let destUrl = this.urlPrefix + 'apps/' + appId + '/users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
-            body: JSON.stringify(tag)
+            body: JSON.stringify(field)
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateTags(resJson.data));
+            mainStore.dispatch(updateFields(resJson.data));
             return resJson;
         });
     };
@@ -58,18 +58,18 @@ class AppsTags extends Core {
      * @param {string} appId
      * @param {string} keywordreplyId
      * @param {string} userId
-     * @param {Chatshier.Tag} tag
-     * @returns {Promise<AppsTagsResponse>}
+     * @param {Chatshier.Field} field
+     * @returns {Promise<AppsFieldsResponse>}
      */
-    update(appId, tagId, userId, tag) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/tags/' + tagId + '/users/' + userId;
+    update(appId, fieldId, userId, field) {
+        let destUrl = this.urlPrefix + 'apps/' + appId + '/fields/' + fieldId + '/users/' + userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
-            body: JSON.stringify(tag)
+            body: JSON.stringify(field)
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateTags(resJson.data));
+            mainStore.dispatch(updateFields(resJson.data));
             return resJson;
         });
     };
@@ -79,17 +79,17 @@ class AppsTags extends Core {
      * @param {string} keywordreplyId
      * @param {string} userId
      */
-    delete(appId, tagId, userId) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/tags/' + tagId + '/users/' + userId;
+    delete(appId, fieldId, userId) {
+        let destUrl = this.urlPrefix + 'apps/' + appId + '/fields/' + fieldId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteTag(appId, tagId));
+            mainStore.dispatch(deleteField(appId, fieldId));
             return resJson;
         });
     };
 }
 
-export default AppsTags;
+export default AppsFields;

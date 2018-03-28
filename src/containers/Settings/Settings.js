@@ -12,7 +12,7 @@ import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 import LinkTabs from './LinkTabs';
 import AppsTabPane from './TabPanes/AppsTabPane';
 import GroupsTabPane from './TabPanes/GroupsTabPane';
-import TagsTabPane from './TabPanes/TagsTabPane';
+import FieldsTabPane from './TabPanes/FieldsTabPane';
 import UsersTabPane from './TabPanes/UsersTabPane';
 
 import './Settings.css';
@@ -48,7 +48,7 @@ class Settings extends React.Component {
                     <Switch>
                         <Route path={ROUTES.SETTINGS_APPS} exact component={AppsTabPane} />
                         <Route path={ROUTES.SETTINGS_USERS} exact component={UsersTabPane} />
-                        <Route path={ROUTES.SETTINGS_TAGS} exact component={TagsTabPane} />
+                        <Route path={ROUTES.SETTINGS_FIELDS} exact component={FieldsTabPane} />
                         <Route path={ROUTES.SETTINGS_GROUPS} exact component={GroupsTabPane} />
                         <Redirect to={ROUTES.SETTINGS_APPS} />
                     </Switch>

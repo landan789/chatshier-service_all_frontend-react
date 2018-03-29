@@ -66,7 +66,8 @@ class ComposeInsert extends React.Component {
         this.setState({time: timeInMs});
     }
     handleDraftChange(event) {
-        this.setState({ status: event.target.checked });
+        let result = !this.state.status;
+        this.setState({ status: result });
     }
     handleCountChange(operator) {
         let count = this.PLUS === operator ? this.state.count + 1 : this.state.count - 1;
@@ -85,7 +86,7 @@ class ComposeInsert extends React.Component {
             case '1':
                 this.setState({text2: event.target.value});
                 break;
-            case '2':
+            default:
                 this.setState({text3: event.target.value});
         }
     }
@@ -150,7 +151,7 @@ class ComposeInsert extends React.Component {
                 texts = [this.state.text1, this.state.text2];
                 usingRecursive = true;
                 break;
-            case 3:
+            default:
                 texts = [this.state.text1, this.state.text2, this.state.text3];
                 usingRecursive = true;
         }
@@ -159,7 +160,7 @@ class ComposeInsert extends React.Component {
             let compose = {
                 type: 'text',
                 text: text,
-                time: Date.now(),
+                time: this.state.time,
                 status: this.state.status,
                 ageRange: this.state.ageInput,
                 gender: this.state.genderInput,

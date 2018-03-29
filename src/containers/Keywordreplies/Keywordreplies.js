@@ -100,7 +100,7 @@ class Keywordreplies extends React.Component {
                                 </Col>
                             </Row>
                         </Jumbotron>
-                        <KeywordreplyTable appId={this.state.appId} appsKeywordreplies={this.props.appsKeywordreplies} keyword={this.state.searchKeyword} />
+                        <KeywordreplyTable appId={this.state.appId} keyword={this.state.searchKeyword} />
                     </div>
                 </Fade>
             </Aux>

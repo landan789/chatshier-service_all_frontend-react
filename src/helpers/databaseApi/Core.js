@@ -56,7 +56,7 @@ class Core {
                     }
                     let _reqInit = _reqInits[i];
 
-                    return window.fetch(url, _reqInit).then(function(res) {
+                    return window.fetch(url, _reqInit).then((res) => {
                         return this.responseChecking(res);
                     }).then(function(resJson) {
                         resJsons.push(resJson);
@@ -66,7 +66,7 @@ class Core {
                 return nextPromise(0);
             } else {
                 return Promise.all(reqInits.map((_reqInit) => {
-                    return window.fetch(url, _reqInit).then(function(res) {
+                    return window.fetch(url, _reqInit).then((res) => {
                         return this.responseChecking(res);
                     });
                 }));

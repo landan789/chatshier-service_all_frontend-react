@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Aux from 'react-aux';
+import { connect } from 'react-redux';
 import { Table, Button } from 'reactstrap';
 
 import ComposeEditModal from '../../components/Modals/ComposeEdit/ComposeEdit';
@@ -164,4 +165,10 @@ ComposeTable.propTypes = {
     keyword: PropTypes.string
 };
 
-export default ComposeTable;
+const mapStateToProps = (state, ownProps) => {
+    return {
+        appsComposes: state.appsComposes
+    };
+};
+
+export default connect(mapStateToProps)(ComposeTable);

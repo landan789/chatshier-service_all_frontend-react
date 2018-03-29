@@ -332,7 +332,7 @@ class ComposeInsert extends React.Component {
 
 ComposeInsert.propTypes = {
     apps: PropTypes.object.isRequired,
-    appsTags: PropTypes.object,
+    appsFields: PropTypes.object,
     isOpen: PropTypes.bool,
     close: PropTypes.func.isRequired
 };

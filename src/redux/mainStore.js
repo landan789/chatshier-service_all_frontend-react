@@ -5,10 +5,10 @@ import { appsReducer } from './reducers/apps';
 import { appsAutorepliesReducer } from './reducers/appsAutoreplies';
 import { appsChatroomsMessagesReducer } from './reducers/appsChatroomsMessages';
 import { appsComposesReducer } from './reducers/appsComposes';
+import { appsFieldsReducer } from './reducers/appsFields';
 import { appsGreetingsReducer } from './reducers/appsGreetings';
 import { appsKeywordrepliesReducer } from './reducers/appsKeywordreplies';
 import { appsMessagersReducer } from './reducers/appsMessagers';
-import { appsTagsReducer } from './reducers/appsTags';
 import { appsTicketsReducer } from './reducers/appsTickets';
 import { calendarsEventsReducer } from './reducers/calendarsEvents';
 import { groupsReducer } from './reducers/groups';
@@ -21,10 +21,10 @@ const rootReducer = combineReducers({
     appsAutoreplies: appsAutorepliesReducer,
     appsChatroomsMessages: appsChatroomsMessagesReducer,
     appsComposes: appsComposesReducer,
+    appsFields: appsFieldsReducer,
     appsGreetings: appsGreetingsReducer,
     appsKeywordreplies: appsKeywordrepliesReducer,
     appsMessagers: appsMessagersReducer,
-    appsTags: appsTagsReducer,
     appsTickets: appsTicketsReducer,
     calendarsEvents: calendarsEventsReducer,
     groups: groupsReducer,

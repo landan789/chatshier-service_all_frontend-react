@@ -21,20 +21,206 @@ class ComposeEdit extends React.Component {
             field_ids: null,
             text: '',
             status: false,
+            fields: null,
             isAsyncWorking: false
         };
 
         this.handleDatetimeChange = this.handleDatetimeChange.bind(this);
         this.handleTextChange = this.handleTextChange.bind(this);
         this.handleDraftChange = this.handleDraftChange.bind(this);
-        this.handleAgeChange = this.handleAgeChange.bind(this);
-        this.handleGenderChange = this.handleGenderChange.bind(this);
-        this.clearAgeText = this.clearAgeText.bind(this);
-        this.clearGenderText = this.clearGenderText.bind(this);
+        this.handleFieldButtonChange = this.handleFieldButtonChange.bind(this);
+        this.handleFieldInputChange = this.handleFieldInputChange.bind(this);
+        this.updateCompose = this.updateCompose.bind(this);
     }
     componentWillReceiveProps(nextProps) {
         let compose = nextProps.modalData ? nextProps.modalData.compose : {};
         let composeLength = Object.keys(compose).length;
+
+        let FIELDS = [
+            {
+                "text" : "Name",
+                "alias" : "name",
+                "type" : "SYSTEM",
+                "sets" : [ 
+                    ""
+                ],
+                "setsType" : "TEXT",
+                "order" : 0,
+                "createdTime" : "2018-03-27T09:04:21.037Z",
+                "updatedTime" : "2018-03-27T09:04:21.037Z",
+                "isDeleted" : false,
+                "_id" : "5aba091561c30448f66ea94f"
+            }, 
+            {
+                "text" : "Assigned",
+                "alias" : "assigned",
+                "type" : "DEFAULT",
+                "sets" : [ 
+                    ""
+                ],
+                "setsType" : "MULTI_SELECT",
+                "order" : 5,
+                "createdTime" : "2018-03-27T09:04:21.049Z",
+                "updatedTime" : "2018-03-27T09:04:21.049Z",
+                "isDeleted" : false,
+                "_id" : "5aba091561c30448f66ea959"
+            }, 
+            {
+                "text" : "Age",
+                "alias" : "age",
+                "type" : "DEFAULT",
+                "sets" : [ 
+                    0
+                ],
+                "setsType" : "NUMBER",
+                "order" : 1,
+                "createdTime" : "2018-03-27T09:04:21.044Z",
+                "updatedTime" : "2018-03-27T09:04:21.044Z",
+                "isDeleted" : false,
+                "_id" : "5aba091561c30448f66ea951"
+            }, 
+            {
+                "text" : "First chat date",
+                "alias" : "createdTime",
+                "type" : "SYSTEM",
+                "sets" : [ 
+                    0
+                ],
+                "setsType" : "DATE",
+                "order" : 6,
+                "createdTime" : "2018-03-27T09:04:21.051Z",
+                "updatedTime" : "2018-03-27T09:04:21.051Z",
+                "isDeleted" : false,
+                "_id" : "5aba091561c30448f66ea95b"
+            }, 
+            {
+                "text" : "Gender",
+                "alias" : "gender",
+                "type" : "DEFAULT",
+                "sets" : [ 
+                    "MALE", 
+                    "FEMALE"
+                ],
+                "setsType" : "SELECT",
+                "order" : 2,
+                "createdTime" : "2018-03-27T09:04:21.045Z",
+                "updatedTime" : "2018-03-27T09:04:21.045Z",
+                "isDeleted" : false,
+                "_id" : "5aba091561c30448f66ea953"
+            }, 
+            {
+                "text" : "Recent chat date",
+                "alias" : "lastTime",
+                "type" : "SYSTEM",
+                "sets" : [ 
+                    0
+                ],
+                "setsType" : "DATE",
+                "order" : 7,
+                "createdTime" : "2018-03-27T09:04:21.052Z",
+                "updatedTime" : "2018-03-27T09:04:21.052Z",
+                "isDeleted" : false,
+                "_id" : "5aba091561c30448f66ea95d"
+            }, 
+            {
+                "text" : "Email",
+                "alias" : "email",
+                "type" : "DEFAULT",
+                "sets" : [ 
+                    ""
+                ],
+                "setsType" : "TEXT",
+                "order" : 3,
+                "createdTime" : "2018-03-27T09:04:21.047Z",
+                "updatedTime" : "2018-03-27T09:04:21.047Z",
+                "isDeleted" : false,
+                "_id" : "5aba091561c30448f66ea955"
+            }, 
+            {
+                "text" : "Chat time(s)",
+                "alias" : "chatCount",
+                "type" : "SYSTEM",
+                "sets" : [ 
+                    0
+                ],
+                "setsType" : "NUMBER",
+                "order" : 8,
+                "createdTime" : "2018-03-27T09:04:21.053Z",
+                "updatedTime" : "2018-03-27T09:04:21.053Z",
+                "isDeleted" : false,
+                "_id" : "5aba091561c30448f66ea95f"
+            }, 
+            {
+                "text" : "Phone",
+                "alias" : "phone",
+                "type" : "DEFAULT",
+                "sets" : [ 
+                    ""
+                ],
+                "setsType" : "TEXT",
+                "order" : 4,
+                "createdTime" : "2018-03-27T09:04:21.048Z",
+                "updatedTime" : "2018-03-27T09:04:21.048Z",
+                "isDeleted" : false,
+                "_id" : "5aba091561c30448f66ea957"
+            }, 
+            {
+                "text" : "Remark",
+                "alias" : "remark",
+                "type" : "DEFAULT",
+                "sets" : [ 
+                    ""
+                ],
+                "setsType" : "TEXT",
+                "order" : 9,
+                "createdTime" : "2018-03-27T09:04:21.053Z",
+                "updatedTime" : "2018-03-27T09:04:21.053Z",
+                "isDeleted" : false,
+                "_id" : "5aba091561c30448f66ea961"
+            }, 
+            {
+                "text" : "語言",
+                "alias" : "",
+                "type" : "CUSTOM",
+                "sets" : [ 
+                    ""
+                ],
+                "setsType" : "TEXT",
+                "order" : 11,
+                "createdTime" : "2018-03-28T07:04:03.006Z",
+                "updatedTime" : "2018-03-28T07:04:03.006Z",
+                "isDeleted" : false,
+                "_id" : "5abb3e63f13990476a7559e8"
+            }, 
+            {
+                "text" : "地區",
+                "alias" : "",
+                "type" : "CUSTOM",
+                "sets" : [ 
+                    ""
+                ],
+                "setsType" : "TEXT",
+                "order" : 10,
+                "createdTime" : "2018-03-28T07:04:03.013Z",
+                "updatedTime" : "2018-03-28T07:04:03.013Z",
+                "isDeleted" : false,
+                "_id" : "5abb3e63f13990476a7559ea"
+            }
+        ];
+        FIELDS = FIELDS.filter((field) => false === field.isDeleted);
+        FIELDS = FIELDS.filter((field) => 'Age' === field.text || 'Gender' === field.text || 'CUSTOM' === field.type);
+        let fields = {};
+
+        FIELDS.map((field) => {
+            let value = compose.field_ids && compose.field_ids[field._id] ? compose.field_ids[field._id].value : '';
+            fields[field.text] = {
+                id: field._id,
+                name: field.text,
+                isSelected: false,
+                value
+            }
+        });
+
         if (0 < composeLength) {
             this.setState({
                 appId: nextProps.modalData.appId,
@@ -44,7 +230,8 @@ class ComposeEdit extends React.Component {
                 gender: compose.gender || '',
                 field_ids: compose.field_ids || {},
                 text: compose.text,
-                status: compose.status
+                status: compose.status,
+                fields
             });
         }
     }
@@ -61,17 +248,21 @@ class ComposeEdit extends React.Component {
     handleDraftChange(event) {
         this.setState({ status: event.target.checked });
     }
-    handleAgeChange(event) {
-        this.setState({ageRange: event.target.value});
+    handleFieldButtonChange(event) {
+        let key = event.target.getAttribute('name');
+        let className = event.target.getAttribute('class');
+        let fields = this.state.fields;
+        fields[key].isSelected = !this.state.fields[key].isSelected;
+        if (className.includes('btn-danger') || className.includes('fa-times')) {
+            fields[key].value = '';
+        }
+        this.setState({fields});
     }
-    handleGenderChange(event) {
-        this.setState({gender: event.target.value});
-    }
-    clearAgeText(event) {
-        this.setState({ageRange: ''});
-    }
-    clearGenderText(event) {
-        this.setState({gender: ''});
+    handleFieldInputChange(event) {
+        let key = event.target.getAttribute('name');
+        let fields = this.state.fields;
+        fields[key].value = event.target.value;
+        this.setState({fields});
     }
     updateCompose(event) {
         if (!this.state.time) {
@@ -87,14 +278,23 @@ class ComposeEdit extends React.Component {
         let appId = this.state.appId;
         let composeId = this.state.composeId;
         let userId = authHelper.userId;
+        let field_ids = {};
+        Object.values(this.state.fields).map((field) => {
+            if ('' === field.value.trim()) {
+                return;
+            }
+            field_ids[field.id] = {
+                value: field.value
+            }
+        })
         let compose = {
             type: 'text',
             text: this.state.text,
             time: this.state.time,
             status: this.state.status,
-            ageRange: this.state.ageRange,
-            gender: this.state.gender,
-            field_ids: this.state.field_ids
+            ageRange: [],
+            gender: '',
+            field_ids
         };
         return dbapi.appsComposes.update(appId, composeId, userId, compose).then(() => {
             this.props.close(event);
@@ -106,23 +306,31 @@ class ComposeEdit extends React.Component {
         });
     }
     renderFilter() {
-        return (
-            <Row>
-                <Col>
-                    <Button color="secondary">自訂</Button>
-                    <FormGroup>
-                        <Row>
-                            <Col>
-                                <Input type="text" />
-                            </Col>
-                            <Col>
-                                <Button color="danger"><i className="fas fa-times"></i></Button>
-                            </Col>
-                        </Row>
-                    </FormGroup>
-                </Col>
-            </Row>
-        );
+        // let appsFields = Object.keys(this.props.appsFields);
+        let appsFields = this.state.fields ? Object.values(this.state.fields) : [];
+        if (0 >= appsFields.length) { return null; }
+        return appsFields.map((field, index) => {
+            return (
+                <Row key={index}>
+                    <Col>
+                        <Button color="secondary" hidden={this.state.fields[field.name].isSelected} name={field.name} onClick={this.handleFieldButtonChange}>
+                            {'' !== field.value.trim() ? `${field.name} : ${field.value}` : field.name}
+                        </Button>
+                        <FormGroup hidden={!this.state.fields[field.name].isSelected}>
+                            <Row>
+                                <Col>
+                                    <Input type="text" name={field.name} defaultValue={this.state.fields[field.name].value} onChange={this.handleFieldInputChange}/>
+                                </Col>
+                                <Col>
+                                    <Button color="success" name={field.name} onClick={this.handleFieldButtonChange}><i className="fas fa-check" name={field.name}></i></Button>{' '}
+                                    <Button color="danger" name={field.name} onClick={this.handleFieldButtonChange}><i className="fas fa-times" name={field.name}></i></Button>
+                                </Col>
+                            </Row>
+                        </FormGroup>
+                    </Col>
+                </Row>
+            );
+        });
     }
     render() {
         return (
@@ -134,34 +342,6 @@ class ComposeEdit extends React.Component {
                     <div className="panel panel-default" hidden={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}>
                         <div className="panel-heading">條件</div>
                         <div className="panel-body">
-                            <Row>
-                                <Col>
-                                    <Button color="secondary">年齡</Button>
-                                    <FormGroup>
-                                        <Row>
-                                            <Col>
-                                                <Input type="text" defaultValue={this.state.ageRange || ''} onChange={this.handleAgeChange} />
-                                            </Col>
-                                            <Col>
-                                                <Button color="danger" onClick={this.clearAgeText}><i className="fas fa-times"></i></Button>
-                                            </Col>
-                                        </Row>
-                                    </FormGroup>
-                                </Col>
-                                <Col>
-                                    <Button color="secondary">性別</Button>
-                                    <FormGroup>
-                                        <Row>
-                                            <Col>
-                                                <Input type="text" defaultValue={this.state.gender || ''} onChange={this.handleGenderChange} />
-                                            </Col>
-                                            <Col>
-                                                <Button color="danger" onClick={this.clearGenderText}><i className="fas fa-times"></i></Button>
-                                            </Col>
-                                        </Row>
-                                    </FormGroup>
-                                </Col>
-                            </Row>
                             { this.renderFilter() }
                         </div>
                     </div>
@@ -177,7 +357,7 @@ class ComposeEdit extends React.Component {
                     </FormGroup>
                 </ModalBody>
                 <ModalFooter>
-                    <Button outline color="success" disabled={this.state.isAsyncWorking} hidden={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}>修改</Button>{' '}
+                    <Button outline color="success" onClick={this.updateCompose} disabled={this.state.isAsyncWorking} hidden={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}>修改</Button>{' '}
                     <Button outline color="danger" onClick={this.props.close}>取消</Button>
                 </ModalFooter>
             </Modal>

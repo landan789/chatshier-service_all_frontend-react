@@ -106,7 +106,6 @@ class ComposeEdit extends React.Component {
         });
     }
     renderFilter() {
-        // let appsTags = this.props.appsTags || {};
         return (
             <Row>
                 <Col>

@@ -51,192 +51,25 @@ class ComposeInsert extends React.Component {
     }
     componentWillReceiveProps(nextProps) {
         let appId = Object.keys(nextProps.apps)[0];
-        let FIELDS = [
-            {
-                "text" : "Name",
-                "alias" : "name",
-                "type" : "SYSTEM",
-                "sets" : [ 
-                    ""
-                ],
-                "setsType" : "TEXT",
-                "order" : 0,
-                "createdTime" : "2018-03-27T09:04:21.037Z",
-                "updatedTime" : "2018-03-27T09:04:21.037Z",
-                "isDeleted" : false,
-                "_id" : "5aba091561c30448f66ea94f"
-            }, 
-            {
-                "text" : "Assigned",
-                "alias" : "assigned",
-                "type" : "DEFAULT",
-                "sets" : [ 
-                    ""
-                ],
-                "setsType" : "MULTI_SELECT",
-                "order" : 5,
-                "createdTime" : "2018-03-27T09:04:21.049Z",
-                "updatedTime" : "2018-03-27T09:04:21.049Z",
-                "isDeleted" : false,
-                "_id" : "5aba091561c30448f66ea959"
-            }, 
-            {
-                "text" : "Age",
-                "alias" : "age",
-                "type" : "DEFAULT",
-                "sets" : [ 
-                    0
-                ],
-                "setsType" : "NUMBER",
-                "order" : 1,
-                "createdTime" : "2018-03-27T09:04:21.044Z",
-                "updatedTime" : "2018-03-27T09:04:21.044Z",
-                "isDeleted" : false,
-                "_id" : "5aba091561c30448f66ea951"
-            }, 
-            {
-                "text" : "First chat date",
-                "alias" : "createdTime",
-                "type" : "SYSTEM",
-                "sets" : [ 
-                    0
-                ],
-                "setsType" : "DATE",
-                "order" : 6,
-                "createdTime" : "2018-03-27T09:04:21.051Z",
-                "updatedTime" : "2018-03-27T09:04:21.051Z",
-                "isDeleted" : false,
-                "_id" : "5aba091561c30448f66ea95b"
-            }, 
-            {
-                "text" : "Gender",
-                "alias" : "gender",
-                "type" : "DEFAULT",
-                "sets" : [ 
-                    "MALE", 
-                    "FEMALE"
-                ],
-                "setsType" : "SELECT",
-                "order" : 2,
-                "createdTime" : "2018-03-27T09:04:21.045Z",
-                "updatedTime" : "2018-03-27T09:04:21.045Z",
-                "isDeleted" : false,
-                "_id" : "5aba091561c30448f66ea953"
-            }, 
-            {
-                "text" : "Recent chat date",
-                "alias" : "lastTime",
-                "type" : "SYSTEM",
-                "sets" : [ 
-                    0
-                ],
-                "setsType" : "DATE",
-                "order" : 7,
-                "createdTime" : "2018-03-27T09:04:21.052Z",
-                "updatedTime" : "2018-03-27T09:04:21.052Z",
-                "isDeleted" : false,
-                "_id" : "5aba091561c30448f66ea95d"
-            }, 
-            {
-                "text" : "Email",
-                "alias" : "email",
-                "type" : "DEFAULT",
-                "sets" : [ 
-                    ""
-                ],
-                "setsType" : "TEXT",
-                "order" : 3,
-                "createdTime" : "2018-03-27T09:04:21.047Z",
-                "updatedTime" : "2018-03-27T09:04:21.047Z",
-                "isDeleted" : false,
-                "_id" : "5aba091561c30448f66ea955"
-            }, 
-            {
-                "text" : "Chat time(s)",
-                "alias" : "chatCount",
-                "type" : "SYSTEM",
-                "sets" : [ 
-                    0
-                ],
-                "setsType" : "NUMBER",
-                "order" : 8,
-                "createdTime" : "2018-03-27T09:04:21.053Z",
-                "updatedTime" : "2018-03-27T09:04:21.053Z",
-                "isDeleted" : false,
-                "_id" : "5aba091561c30448f66ea95f"
-            }, 
-            {
-                "text" : "Phone",
-                "alias" : "phone",
-                "type" : "DEFAULT",
-                "sets" : [ 
-                    ""
-                ],
-                "setsType" : "TEXT",
-                "order" : 4,
-                "createdTime" : "2018-03-27T09:04:21.048Z",
-                "updatedTime" : "2018-03-27T09:04:21.048Z",
-                "isDeleted" : false,
-                "_id" : "5aba091561c30448f66ea957"
-            }, 
-            {
-                "text" : "Remark",
-                "alias" : "remark",
-                "type" : "DEFAULT",
-                "sets" : [ 
-                    ""
-                ],
-                "setsType" : "TEXT",
-                "order" : 9,
-                "createdTime" : "2018-03-27T09:04:21.053Z",
-                "updatedTime" : "2018-03-27T09:04:21.053Z",
-                "isDeleted" : false,
-                "_id" : "5aba091561c30448f66ea961"
-            }, 
-            {
-                "text" : "語言",
-                "alias" : "",
-                "type" : "CUSTOM",
-                "sets" : [ 
-                    ""
-                ],
-                "setsType" : "TEXT",
-                "order" : 11,
-                "createdTime" : "2018-03-28T07:04:03.006Z",
-                "updatedTime" : "2018-03-28T07:04:03.006Z",
-                "isDeleted" : false,
-                "_id" : "5abb3e63f13990476a7559e8"
-            }, 
-            {
-                "text" : "地區",
-                "alias" : "",
-                "type" : "CUSTOM",
-                "sets" : [ 
-                    ""
-                ],
-                "setsType" : "TEXT",
-                "order" : 10,
-                "createdTime" : "2018-03-28T07:04:03.013Z",
-                "updatedTime" : "2018-03-28T07:04:03.013Z",
-                "isDeleted" : false,
-                "_id" : "5abb3e63f13990476a7559ea"
-            }
-        ];
-        FIELDS = FIELDS.filter((field) => false === field.isDeleted);
-        FIELDS = FIELDS.filter((field) => 'Age' === field.text || 'Gender' === field.text || 'CUSTOM' === field.type);
         let fields = {};
-        FIELDS.map((field) => {
-            fields[field.text] = {
-                id: field._id,
-                name: field.text,
-                isSelected: false,
-                value: ''
-            }
-        });
-
-        this.setState({
-            appId,
-            fields
+        let appsFields = nextProps.appsFields[appId] ? nextProps.appsFields[appId].fields : {};
+        Promise.resolve().then(() => {
+            return Object.keys(appsFields).filter((field) => 'Age' === appsFields[field].text || 'Gender' === appsFields[field].text || 'CUSTOM' === appsFields[field].type);
+        }).then((fieldArray) => {
+            fieldArray.map((field) => {
+                fields[field] = {
+                    id: appsFields[field]._id,
+                    name: appsFields[field].text,
+                    isSelected: false,
+                    value: ''
+                };
+            });
+            return fields;
+        }).then((fields) => {
+            this.setState({
+                appId,
+                fields
+            });
         });
     }
     selectedApp(event) {
@@ -340,29 +173,35 @@ class ComposeInsert extends React.Component {
         }
 
         let field_ids = {};
-        Object.values(this.state.fields).map((field, index) => {
-            field_ids[field.id] = {
-                value: field.value
-            };
+        let ageRange = '';
+        let gender = '';
+        let time = '' === this.state.time.trim() ? Date.now() : this.state.time;
+        Object.values(this.state.fields).map((field) => {
+            switch (field.name) {
+                case 'Age':
+                    ageRange = '' === this.state.fields[field.id].value ? '' : this.state.fields[field.id].value;
+                    break;
+                case 'Gender':
+                    gender += this.state.fields[field.id].value;
+                    break;
+                default:
+                    field_ids[field.id] = {
+                        value: field.value
+                    };
+            }
         });
-        let age = [this.state.fields['Age'].value];
-        let gender = this.state.fields['Gender'].value;
-        delete field_ids[this.state.fields['Age'].id];
-        delete field_ids[this.state.fields['Gender'].id];
-
         let composes = texts.map((text) => {
             let compose = {
                 type: 'text',
                 text: text,
-                time: this.state.time,
+                time,
                 status: this.state.status,
-                age,
+                ageRange,
                 gender,
                 field_ids
             };
             return compose;
         });
-
         return dbapi.appsComposes.insert(appId, userId, composes, usingRecursive).then(() => {
             this.props.close(event);
             return notify('新增成功', { type: 'success' });
@@ -386,24 +225,23 @@ class ComposeInsert extends React.Component {
         });
     }
     renderFilter() {
-        // let appsFields = Object.keys(this.props.appsFields);
         let appsFields = this.state.fields ? Object.values(this.state.fields) : [];
         if (0 >= appsFields.length) { return null; }
         return appsFields.map((field, index) => {
             return (
                 <Row key={index}>
                     <Col>
-                        <Button color="secondary" hidden={this.state.fields[field.name].isSelected} name={field.name} onClick={this.handleFieldButtonChange}>
+                        <Button color="secondary" hidden={this.state.fields[field.id].isSelected} name={field.id} onClick={this.handleFieldButtonChange}>
                             {'' !== field.value.trim() ? `${field.name} : ${field.value}` : field.name}
                         </Button>
-                        <FormGroup hidden={!this.state.fields[field.name].isSelected}>
+                        <FormGroup hidden={!this.state.fields[field.id].isSelected}>
                             <Row>
                                 <Col>
-                                    <Input type="text" name={field.name} defaultValue={this.state.fields[field.name].value} onChange={this.handleFieldInputChange}/>
+                                    <Input type="text" name={field.id} onChange={this.handleFieldInputChange}/>
                                 </Col>
                                 <Col>
-                                    <Button color="success" name={field.name} onClick={this.handleFieldButtonChange}><i className="fas fa-check" name={field.name}></i></Button>{' '}
-                                    <Button color="danger" name={field.name} onClick={this.handleFieldButtonChange}><i className="fas fa-times" name={field.name}></i></Button>
+                                    <Button color="success" name={field.id} onClick={this.handleFieldButtonChange}><i className="fas fa-check" name={field.id}></i></Button>{' '}
+                                    <Button color="danger" name={field.id} onClick={this.handleFieldButtonChange}><i className="fas fa-times" name={field.id}></i></Button>
                                 </Col>
                             </Row>
                         </FormGroup>

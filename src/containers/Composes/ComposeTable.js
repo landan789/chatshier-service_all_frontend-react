@@ -37,13 +37,20 @@ class ComposeTable extends React.Component {
         }
         this.updatekeywordSearch(nextProp.keyword);
     }
+    componentDidMount() {
+        let userId = authHelper.userId;
+        return userId && Promise.all([
+            dbapi.appsComposes.find(null, userId),
+            dbapi.appsFields.find(userId)
+        ]);
+    }
     updateAppId(appId) {
         this.setState({ appId });
     }
-    openEditModal(appId, composeId, compose) {
+    openEditModal(appId, composeId, compose, appsFields) {
         this.setState({
             editModalData: {
-                appId, composeId, compose
+                appId, composeId, compose, appsFields
             }
         });
     }
@@ -88,6 +95,7 @@ class ComposeTable extends React.Component {
         }
         return newIdList.map((composeId, index) => {
             let compose = composes[composeId];
+            // debugger;
             if (0 === Object.keys(compose).length) {
                 return null;
             }
@@ -95,9 +103,9 @@ class ComposeTable extends React.Component {
                 <tr key={index}>
                     <td>{compose.text}</td>
                     <td>{timeHelper.toLocalTimeString(compose.time)}</td>
-                    <td>{compose.age || compose.gender ? `${compose.age} ${compose.gender}` : '無'}</td>
+                    <td>{compose.ageRange || compose.gender ? `${compose.ageRange} ${compose.gender}` : '無'}</td>
                     <td>
-                        <Button color="secondary" onClick={() => this.openEditModal(appId, composeId, composes[composeId])}><i className="fas fa-pencil-alt"></i></Button>{' '}
+                        <Button color="secondary" onClick={() => this.openEditModal(appId, composeId, composes[composeId], this.props.appsFields[appId])}><i className="fas fa-pencil-alt"></i></Button>{' '}
                         <Button color="danger" onClick={() => this.removeCompose(appId, composeId)}><i className="fas fa-trash-alt"></i></Button>
                     </td>
                 </tr>
@@ -161,12 +169,14 @@ class ComposeTable extends React.Component {
 
 ComposeTable.propTypes = {
     appsComposes: PropTypes.object,
+    appsFields: PropTypes.object,
     appId: PropTypes.string,
     keyword: PropTypes.string
 };
 
 const mapStateToProps = (state, ownProps) => {
     return {
+        appsFields: state.appsFields,
         appsComposes: state.appsComposes
     };
 };

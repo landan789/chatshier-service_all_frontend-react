@@ -50,7 +50,7 @@ class Core {
                 let _reqInits = reqInits;
                 let resJsons = [];
 
-                let nextPromise = function(i) {
+                let nextPromise = (i) => {
                     if (i >= _reqInits.length) {
                         return Promise.resolve(resJsons);
                     }

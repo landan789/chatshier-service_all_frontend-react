@@ -45,11 +45,13 @@ class Composes extends React.Component {
 
     componentDidMount() {
         let userId = authHelper.userId;
-        return userId && dbapi.appsComposes.find(null, userId);
+        return userId && Promise.all([
+            dbapi.appsComposes.find(null, userId),
+            dbapi.appsFields.find(userId)
+        ]);
     }
 
     componentWillReceiveProps(nextProps) {
-        // console.log(nextProps);
     }
 
     appChanged(appId) {

@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Aux from 'react-aux';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Fade, Row, Col, Jumbotron, Breadcrumb, BreadcrumbItem, Button, Input, InputGroup } from 'reactstrap';
+import { Fade, Row, Col, Jumbotron, Button, Input, InputGroup } from 'reactstrap';
 
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
@@ -77,11 +77,6 @@ class Autoreplies extends React.Component {
                     <div className="Greetings">
                         <Jumbotron>
                             <h1 className="display-3">自動回覆</h1>
-                            <Breadcrumb>
-                                <BreadcrumbItem><Link to="/">首頁</Link></BreadcrumbItem>
-                                <BreadcrumbItem><Link to="#">訊息</Link></BreadcrumbItem>
-                                <BreadcrumbItem active>自動回覆</BreadcrumbItem>
-                            </Breadcrumb>
                             <Row>
                                 <Col>
                                     <AppsSelector onChange={this.appChanged} />

@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Aux from 'react-aux';
+import { connect } from 'react-redux';
 import { Table, Button } from 'reactstrap';
 
-// import ComposeEditModal from '../../components/Modals/ComposeEdit/ComposeEdit';
+import ComposeEditModal from '../../components/Modals/ComposeEdit/ComposeEdit';
 import authHelper from '../../helpers/authentication';
 import dbapi from '../../helpers/databaseApi/index';
 import { notify } from '../../components/Notify/Notify';
+import timeHelper from '../../helpers/timer';
 
 class ComposeTable extends React.Component {
     constructor(props) {
@@ -35,13 +37,20 @@ class ComposeTable extends React.Component {
         }
         this.updatekeywordSearch(nextProp.keyword);
     }
+    componentDidMount() {
+        let userId = authHelper.userId;
+        return userId && Promise.all([
+            dbapi.appsComposes.find(null, userId),
+            dbapi.appsFields.find(userId)
+        ]);
+    }
     updateAppId(appId) {
         this.setState({ appId });
     }
-    openEditModal(appId, composeId, compose) {
+    openEditModal(appId, composeId, compose, appsFields) {
         this.setState({
             editModalData: {
-                appId, composeId, compose
+                appId, composeId, compose, appsFields
             }
         });
     }
@@ -59,44 +68,37 @@ class ComposeTable extends React.Component {
             return notify('刪除失敗', { type: 'danger' });
         });
     }
-    toLocalTimeString(ms) {
-        let date = new Date(ms);
-        let localDate = date.toLocaleDateString();
-        let localTime = date.toLocaleTimeString();
-        let localTimeString = localDate + localTime;
-        return localTimeString;
-    }
-    renderComposes(status, appId, keyword, determineSentTime) { // status 0: draft, 1: history, reserved
+    renderComposes(status, appId, keyword, determineSentTime) { // status 0(false): draft, 1(true): history, reserved
         let composes = this.props.appsComposes[appId] ? this.props.appsComposes[appId].composes : {};
         let composeIds = Object.keys(composes);
         let statusList = composeIds.filter((composeId) => status === composes[composeId].status);
         let newIdList;
         switch (determineSentTime) {
             case this.RESERVED:
-                statusList = statusList.filter((composeId) => Date.now() < composes[composeId].time);
+                statusList = statusList.filter((composeId) => Date.now() < timeHelper.toMilliseconds(composes[composeId].time));
                 break;
             case this.SENT:
-                statusList = statusList.filter((composeId) => Date.now() >= composes[composeId].time);
+                statusList = statusList.filter((composeId) => Date.now() >= timeHelper.toMilliseconds(composes[composeId].time));
                 break;
             default:
         }
         if (keyword || 0 < keyword.length) {
-            newIdList = statusList.filter((composeId) => composes[composeId].keyword.includes(keyword) || composes[composeId].text.includes(keyword));
+            newIdList = statusList.filter((composeId) => composes[composeId].text.includes(keyword));
         } else {
             newIdList = statusList;
         }
         return newIdList.map((composeId, index) => {
-            let keywordreply = composes[composeId];
-            if (0 === Object.keys(keywordreply).length) {
+            let compose = composes[composeId];
+            if (0 === Object.keys(compose).length) {
                 return null;
             }
             return (
                 <tr key={index}>
-                    <td>{keywordreply.text}</td>
-                    <td>{this.toLocalTimeString(keywordreply.time)}</td>
-                    <td>{'無'}</td>
+                    <td>{compose.text}</td>
+                    <td>{timeHelper.toLocalTimeString(compose.time)}</td>
+                    <td>{compose.ageRange || compose.gender ? `${compose.ageRange} ${compose.gender}` : '無'}</td>
                     <td>
-                        <Button color="secondary" onClick={() => this.openEditModal(appId, composeId, composes[composeId])}><i className="fas fa-pencil-alt"></i></Button>{' '}
+                        <Button color="secondary" onClick={() => this.openEditModal(appId, composeId, composes[composeId], this.props.appsFields[appId])}><i className="fas fa-pencil-alt"></i></Button>{' '}
                         <Button color="danger" onClick={() => this.removeCompose(appId, composeId)}><i className="fas fa-trash-alt"></i></Button>
                     </td>
                 </tr>
@@ -117,7 +119,7 @@ class ComposeTable extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.renderComposes(1, this.state.appId, this.state.keyword, this.RESERVED)}
+                        {this.renderComposes(true, this.state.appId, this.state.keyword, this.RESERVED)}
                     </tbody>
                 </Table>
                 <h4>歷史</h4>
@@ -131,7 +133,7 @@ class ComposeTable extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.renderComposes(1, this.state.appId, this.state.keyword, this.SENT)}
+                        {this.renderComposes(true, this.state.appId, this.state.keyword, this.SENT)}
                     </tbody>
                 </Table>
                 <h4>草稿</h4>
@@ -145,14 +147,14 @@ class ComposeTable extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.renderComposes(0, this.state.appId, this.state.keyword, null)}
+                        {this.renderComposes(false, this.state.appId, this.state.keyword, null)}
                     </tbody>
                 </Table>
-                {/* <ComposeEditModal
+                <ComposeEditModal
                     modalData={this.state.editModalData}
                     isOpen={!!this.state.editModalData}
                     close={this.closeEditModal}>
-                </ComposeEditModal> */}
+                </ComposeEditModal>
             </Aux>
         );
     }
@@ -160,8 +162,16 @@ class ComposeTable extends React.Component {
 
 ComposeTable.propTypes = {
     appsComposes: PropTypes.object,
+    appsFields: PropTypes.object,
     appId: PropTypes.string,
     keyword: PropTypes.string
 };
 
-export default ComposeTable;
+const mapStateToProps = (state, ownProps) => {
+    return {
+        appsFields: state.appsFields,
+        appsComposes: state.appsComposes
+    };
+};
+
+export default connect(mapStateToProps)(ComposeTable);

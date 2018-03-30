@@ -23,9 +23,9 @@ class Composes extends React.Component {
         super(props);
 
         this.state = {
+            isInsertModalOpen: false,
             appId: '',
-            searchKeyword: '',
-            selectedAppId: ''
+            searchKeyword: ''
         };
 
         this.appChanged = this.appChanged.bind(this);
@@ -45,11 +45,13 @@ class Composes extends React.Component {
 
     componentDidMount() {
         let userId = authHelper.userId;
-        return userId && dbapi.appsComposes.find(null, userId);
+        return userId && Promise.all([
+            dbapi.appsComposes.find(null, userId),
+            dbapi.appsFields.find(userId)
+        ]);
     }
 
     componentWillReceiveProps(nextProps) {
-        // console.log(nextProps);
     }
 
     appChanged(appId) {
@@ -101,7 +103,7 @@ class Composes extends React.Component {
                                 </Col>
                             </Row>
                         </Jumbotron>
-                        <ComposeTable appId={this.state.appId} appsComposes={this.props.appsComposes} keyword={this.state.searchKeyword} />
+                        <ComposeTable appId={this.state.appId} keyword={this.state.searchKeyword} />
                     </div>
                 </Fade>
             </Aux>

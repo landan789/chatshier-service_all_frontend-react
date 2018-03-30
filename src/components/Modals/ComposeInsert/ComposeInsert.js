@@ -5,6 +5,7 @@ import { DateTimePicker } from 'react-widgets';
 
 import dbapi from '../../../helpers/databaseApi/index';
 import authHelper from '../../../helpers/authentication';
+import timeHelper from '../../../helpers/timer';
 import { notify } from '../../Notify/Notify';
 
 class ComposeInsert extends React.Component {
@@ -14,7 +15,7 @@ class ComposeInsert extends React.Component {
         this.state = {
             appId: '',
             time: '',
-            status: 0,
+            status: true,
             radioCategory: {
                 ALL: true,
                 ONE: false
@@ -24,11 +25,10 @@ class ComposeInsert extends React.Component {
                 LATER: false
             },
             count: 0,
-            ageButton: true,
-            genderButton: true,
-            ageInput: '',
-            genderInput: '',
-            messages: null,
+            fields: null,
+            text1: '',
+            text2: '',
+            text3: '',
             isAsyncWorking: false
         };
 
@@ -38,6 +38,7 @@ class ComposeInsert extends React.Component {
         this.ONE = 'ONE';
         this.NOW = 'NOW';
         this.LATER = 'LATER';
+        this.CUSTOM = 'CUSTOM';
 
         this.selectedApp = this.selectedApp.bind(this);
         this.handleDatetimeChange = this.handleDatetimeChange.bind(this);
@@ -45,14 +46,31 @@ class ComposeInsert extends React.Component {
         this.handleCountChange = this.handleCountChange.bind(this);
         this.handleTextChange = this.handleTextChange.bind(this);
         this.insertCompose = this.insertCompose.bind(this);
-        this.handleAgeButtonChange = this.handleAgeButtonChange.bind(this);
-        this.handleGenderButtonChange = this.handleGenderButtonChange.bind(this);
-        this.handleAgeInputChange = this.handleAgeInputChange.bind(this);
-        this.handleGenderInputChange = this.handleGenderInputChange.bind(this);
+        this.handleFieldButtonChange = this.handleFieldButtonChange.bind(this);
+        this.handleFieldInputChange = this.handleFieldInputChange.bind(this);
     }
     componentWillReceiveProps(nextProps) {
-        let firstApp = Object.keys(nextProps.apps)[0];
-        this.setState({appId: firstApp});
+        let appId = Object.keys(nextProps.apps)[0];
+        let fields = {};
+        let appsFields = nextProps.appsFields[appId] ? nextProps.appsFields[appId].fields : {};
+        Promise.resolve().then(() => {
+            return Object.keys(appsFields).filter((field) => 'Age' === appsFields[field].text || 'Gender' === appsFields[field].text || 'CUSTOM' === appsFields[field].type);
+        }).then((fieldArray) => {
+            fieldArray.map((field) => {
+                fields[field] = {
+                    id: appsFields[field]._id,
+                    name: appsFields[field].text,
+                    isSelected: false,
+                    value: ''
+                };
+            });
+            return fields;
+        }).then((fields) => {
+            this.setState({
+                appId,
+                fields
+            });
+        });
     }
     selectedApp(event) {
         this.setState({appId: event.target.value});
@@ -63,42 +81,50 @@ class ComposeInsert extends React.Component {
         this.setState({time: timeInMs});
     }
     handleDraftChange(event) {
-        this.setState({ status: event.target.checked });
+        let result = !this.state.status;
+        this.setState({ status: result });
     }
     handleCountChange(operator) {
         let count = this.PLUS === operator ? this.state.count + 1 : this.state.count - 1;
-        let messages = [];
-        for (let c = 0; c < count; c++) {
-            messages.push({text: ''});
-        }
         if (3 >= count) {
-            this.setState({ count, messages });
+            this.setState({ count });
+        } else {
+            this.setState({ count: 3 });
         }
     }
     handleTextChange(event) {
         let index = event.target.getAttribute('name');
-        let messages = this.state.messages[index];
-        messages.text = event.target.value;
+        switch (index) {
+            case '2':
+                this.setState({text3: event.target.value});
+                break;
+            case '1':
+                this.setState({text2: event.target.value});
+                break;
+            default:
+                this.setState({text1: event.target.value});
+        }
     }
-    handleAgeButtonChange(event) {
-        let result = !this.state.ageButton;
-        this.setState({ageInput: '', ageButton: result});
+    handleFieldButtonChange(event) {
+        let key = event.target.getAttribute('name');
+        let className = event.target.getAttribute('class');
+        let fields = this.state.fields;
+        fields[key].isSelected = !this.state.fields[key].isSelected;
+        if (className.includes('btn-danger') || className.includes('fa-times')) {
+            fields[key].value = '';
+        }
+        this.setState({fields});
     }
-    handleGenderButtonChange(event) {
-        let result = !this.state.genderButton;
-        this.setState({genderInput: '', genderButton: result});
-    }
-    handleAgeInputChange(event) {
-        this.setState({ageInput: event.target.value});
-    }
-    handleGenderInputChange(event) {
-        this.setState({genderInput: event.target.value});
+    handleFieldInputChange(event) {
+        let key = event.target.getAttribute('name');
+        let fields = this.state.fields;
+        fields[key].value = event.target.value;
+        this.setState({fields});
     }
     categoryChanged(name) {
         if (this.NOW === name) {
             this.setState({
-                ageInput: '',
-                genderInput: ''
+                fieldInputs: []
             });
         }
         let radioCategory = {
@@ -120,25 +146,63 @@ class ComposeInsert extends React.Component {
         this.setState({ radioTime });
     }
     insertCompose(event) {
-        if (!this.state.messages) {
+        if (!this.state.text1) {
             return notify('請輸入要送出的訊息', { type: 'warning' });
+        } else if (Date.now() > timeHelper.toMilliseconds(this.state.time)) {
+            return notify('不能選擇過去的時間', { type: 'warning' });
         }
 
         this.setState({ isAsyncWorking: true });
 
         let appId = this.state.appId;
         let userId = authHelper.userId;
-        let postCompose = {
-            type: 'text',
-            text: this.state.messages,
-            time: Date.now(),
-            status: this.state.status,
-            age: this.state.ageInput || '',
-            gender: this.state.genderInput || '',
-            field_ids: []
-        };
-        // console.log(appId, userId, postCompose);
-        return dbapi.appsComposes.insert(appId, userId, postCompose).then(() => {
+        let texts = [];
+        let usingRecursive = false;
+
+        switch (this.state.count) {
+            case 1:
+                texts = [this.state.text1];
+                break;
+            case 2:
+                texts = [this.state.text1, this.state.text2];
+                usingRecursive = true;
+                break;
+            default:
+                texts = [this.state.text1, this.state.text2, this.state.text3];
+                usingRecursive = true;
+        }
+
+        let field_ids = {};
+        let ageRange = '';
+        let gender = '';
+        let time = '' === this.state.time.trim() ? Date.now() : this.state.time;
+        Object.values(this.state.fields).map((field) => {
+            switch (field.name) {
+                case 'Age':
+                    ageRange = '' === this.state.fields[field.id].value ? '' : this.state.fields[field.id].value;
+                    break;
+                case 'Gender':
+                    gender += this.state.fields[field.id].value;
+                    break;
+                default:
+                    field_ids[field.id] = {
+                        value: field.value
+                    };
+            }
+        });
+        let composes = texts.map((text) => {
+            let compose = {
+                type: 'text',
+                text: text,
+                time,
+                status: this.state.status,
+                ageRange,
+                gender,
+                field_ids
+            };
+            return compose;
+        });
+        return dbapi.appsComposes.insert(appId, userId, composes, usingRecursive).then(() => {
             this.props.close(event);
             return notify('新增成功', { type: 'success' });
         }).catch(() => {
@@ -161,19 +225,42 @@ class ComposeInsert extends React.Component {
         });
     }
     renderFilter() {
-        // let appsFields = this.props.appsFields || {};
+        let appsFields = this.state.fields ? Object.values(this.state.fields) : [];
+        if (0 >= appsFields.length) { return null; }
+        return appsFields.map((field, index) => {
+            return (
+                <Row key={index}>
+                    <Col>
+                        <Button color="secondary" hidden={this.state.fields[field.id].isSelected} name={field.id} onClick={this.handleFieldButtonChange}>
+                            {'' !== field.value.trim() ? `${field.name} : ${field.value}` : field.name}
+                        </Button>
+                        <FormGroup hidden={!this.state.fields[field.id].isSelected}>
+                            <Row>
+                                <Col>
+                                    <Input type="text" name={field.id} onChange={this.handleFieldInputChange}/>
+                                </Col>
+                                <Col>
+                                    <Button color="success" name={field.id} onClick={this.handleFieldButtonChange}><i className="fas fa-check" name={field.id}></i></Button>{' '}
+                                    <Button color="danger" name={field.id} onClick={this.handleFieldButtonChange}><i className="fas fa-times" name={field.id}></i></Button>
+                                </Col>
+                            </Row>
+                        </FormGroup>
+                    </Col>
+                </Row>
+            );
+        });
     }
     renderMessage() {
         let count = this.state.count;
         let list = [];
         for (let c = 0; c < count; c++) {
-            list.push({text: ''});
+            list.push('');
         }
         return list.map((message, index) => (
             <div key={index}>
                 <span className="remove-btn" onClick={() => this.handleCountChange(this.MINUS)}>刪除</span>
                 輸入文字:
-                <Input type="textarea" name={index} onChange={this.handleTextChange} />
+                <Input type="textarea" name={index} defaultValue={list[index]} onChange={this.handleTextChange} />
             </div>
         ));
     }
@@ -206,37 +293,7 @@ class ComposeInsert extends React.Component {
                     <div className="panel panel-default" hidden={!this.state.radioCategory.ONE}>
                         <div className="panel-heading">條件</div>
                         <div className="panel-body">
-                            <Row>
-                                <Col>
-                                    <Button color="secondary" onClick={this.handleAgeButtonChange} hidden={!this.state.ageButton}>年齡</Button>
-                                    <FormGroup hidden={this.state.ageButton}>
-                                        <Row>
-                                            <Col>
-                                                <Input type="text" value={this.state.ageInput} onChange={this.handleAgeInputChange} />
-                                            </Col>
-                                            <Col>
-                                                <Button color="success"><i className="fas fa-check"></i></Button>
-                                                <Button color="danger" onClick={this.handleAgeButtonChange}><i className="fas fa-times"></i></Button>
-                                            </Col>
-                                        </Row>
-                                    </FormGroup>
-                                </Col>
-                                <Col>
-                                    <Button color="secondary" onClick={this.handleGenderButtonChange} hidden={!this.state.genderButton}>性別</Button>
-                                    <FormGroup hidden={this.state.genderButton}>
-                                        <Row>
-                                            <Col>
-                                                <Input type="text" value={this.state.genderInput} onChange={this.handleGenderInputChange} />
-                                            </Col>
-                                            <Col>
-                                                <Button color="success"><i className="fas fa-check"></i></Button>
-                                                <Button color="danger" onClick={this.handleGenderButtonChange}><i className="fas fa-times"></i></Button>
-                                            </Col>
-                                        </Row>
-                                    </FormGroup>
-                                </Col>
-                                { this.renderFilter() }
-                            </Row>
+                            { this.renderFilter() }
                         </div>
                     </div>
                     <FormGroup>

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Aux from 'react-aux';
+import { connect } from 'react-redux';
 import { Table, Button } from 'reactstrap';
 
 import KeywordreplyEditModal from '../../components/Modals/KeywordreplyEdit/KeywordreplyEdit';
@@ -131,4 +132,10 @@ KeywordreplyTable.propTypes = {
     keyword: PropTypes.string
 };
 
-export default KeywordreplyTable;
+const mapStateToProps = (state, ownProps) => {
+    return {
+        appsKeywordreplies: state.appsKeywordreplies
+    };
+};
+
+export default connect(mapStateToProps)(KeywordreplyTable);

@@ -71,12 +71,6 @@ class ComposeTable extends React.Component {
     renderComposes(status, appId, keyword, determineSentTime) { // status 0(false): draft, 1(true): history, reserved
         let composes = this.props.appsComposes[appId] ? this.props.appsComposes[appId].composes : {};
         let composeIds = Object.keys(composes);
-        // console.log(composes[composeIds[0]]);
-        // composeIds.map((composeId) => { composes[composeId].time = "2019-03-27T07:43:16.310Z"; }); // 塞假資料
-        // composeIds.map((composeId) => { composes[composeId].status = 1; }); // 塞假資料
-        // composeIds.map((composeId) => { composes[composeId].age = '30'; }); // 塞假資料
-        // composeIds.map((composeId) => { composes[composeId].gender = 'MALE'; }); // 塞假資料
-        // composeIds.map((composeId) => { composes[composeId].text = 'Hi'; }); // 塞假資料
         let statusList = composeIds.filter((composeId) => status === composes[composeId].status);
         let newIdList;
         switch (determineSentTime) {
@@ -95,7 +89,6 @@ class ComposeTable extends React.Component {
         }
         return newIdList.map((composeId, index) => {
             let compose = composes[composeId];
-            // debugger;
             if (0 === Object.keys(compose).length) {
                 return null;
             }

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Aux from 'react-aux';
-import { withRouter, Link } from 'react-router-dom';
-import { Fade, Jumbotron, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
+import { Fade, Jumbotron } from 'reactstrap';
 
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';

@@ -175,7 +175,7 @@ class ComposeInsert extends React.Component {
         let field_ids = {};
         let ageRange = '';
         let gender = '';
-        let time = '' === this.state.time.trim() ? Date.now() : this.state.time;
+        let time = Date.now() >= this.state.time ? Date.now() : this.state.time;
         Object.values(this.state.fields).map((field) => {
             switch (field.name) {
                 case 'Age':

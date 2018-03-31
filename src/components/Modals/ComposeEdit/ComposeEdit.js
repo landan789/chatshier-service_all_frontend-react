@@ -20,7 +20,7 @@ class ComposeEdit extends React.Component {
             gender: '',
             field_ids: null,
             text: '',
-            status: false,
+            status: null,
             fields: null,
             isAsyncWorking: false
         };
@@ -47,6 +47,7 @@ class ComposeEdit extends React.Component {
                 text: compose.text,
                 status: compose.status
             });
+            debugger;
         }
         Promise.resolve().then(() => {
             return Object.keys(appsFields).filter((field) => 'Age' === appsFields[field].text || 'Gender' === appsFields[field].text || 'CUSTOM' === appsFields[field].type);
@@ -91,7 +92,8 @@ class ComposeEdit extends React.Component {
         this.setState({time: timeInMs});
     }
     handleDraftChange(event) {
-        this.setState({ status: event.target.checked });
+        let status = !this.state.status;
+        this.setState({ status });
     }
     handleFieldButtonChange(event) {
         let key = event.target.getAttribute('name');
@@ -127,6 +129,7 @@ class ComposeEdit extends React.Component {
         let composeId = this.state.composeId;
         let userId = authHelper.userId;
         let field_ids = {};
+        let age, gender;
         Object.values(this.state.fields).map((field) => {
             if ('' === field.value.trim()) {
                 return;
@@ -134,14 +137,16 @@ class ComposeEdit extends React.Component {
             field_ids[field.id] = {
                 value: field.value
             };
+            age = 'Age' === field.name ? field.value : '';
+            gender = 'Gender' === field.name ? field.value : '';
         });
         let compose = {
             type: 'text',
             text: this.state.text,
             time: this.state.time,
             status: this.state.status,
-            ageRange: [].concat(this.state.age),
-            gender: this.state.gender,
+            ageRange: [].concat(age),
+            gender: gender,
             field_ids
         };
         return dbapi.appsComposes.update(appId, composeId, userId, compose).then(() => {
@@ -160,17 +165,17 @@ class ComposeEdit extends React.Component {
             return (
                 <Row key={index}>
                     <Col>
-                        <Button color="secondary" hidden={this.state.fields[field.id].isSelected} name={field.id} onClick={this.handleFieldButtonChange}>
+                        <Button color="secondary" disabled={this.state.status && timeHelper.isHistory(this.state.time, Date.now())} name={field.id} onClick={this.handleFieldButtonChange}>
                             {'' !== field.value.trim() ? `${field.name} : ${field.value}` : field.name}
                         </Button>
-                        <FormGroup hidden={!this.state.fields[field.id].isSelected}>
+                        <FormGroup>
                             <Row>
                                 <Col>
-                                    <Input type="text" name={field.id} defaultValue={this.state.fields[field.id].value} onChange={this.handleFieldInputChange}/>
+                                    <Input type="text" name={field.id} defaultValue={this.state.fields[field.id].value} onChange={this.handleFieldInputChange} disabled={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}/>
                                 </Col>
                                 <Col>
-                                    <Button color="success" name={field.id} onClick={this.handleFieldButtonChange}><i className="fas fa-check" name={field.id}></i></Button>{' '}
-                                    <Button color="danger" name={field.id} onClick={this.handleFieldButtonChange}><i className="fas fa-times" name={field.id}></i></Button>
+                                    <Button color="success" name={field.id} onClick={this.handleFieldButtonChange} disabled={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}><i className="fas fa-check" name={field.id}></i></Button>{' '}
+                                    <Button color="danger" name={field.id} onClick={this.handleFieldButtonChange} disabled={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}><i className="fas fa-times" name={field.id}></i></Button>
                                 </Col>
                             </Row>
                         </FormGroup>
@@ -186,7 +191,7 @@ class ComposeEdit extends React.Component {
                 <ModalBody>
                     時間：
                     <DateTimePicker defaultValue={new Date(this.state.time)} onChange={this.handleDatetimeChange} disabled={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}></DateTimePicker>
-                    <div className="panel panel-default" hidden={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}>
+                    <div className="panel panel-default">
                         <div className="panel-heading">條件</div>
                         <div className="panel-body">
                             { this.renderFilter() }
@@ -198,7 +203,7 @@ class ComposeEdit extends React.Component {
                     </div>
                     <FormGroup check hidden={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}>
                         <Label check>
-                            <Input type="checkbox" checked={!this.state.status} onChange={this.handleDraftChange} />{' '}
+                            <Input type="checkbox" defaultChecked={!this.state.status} onChange={this.handleDraftChange} />{' '}
                             是否儲存為草稿？
                         </Label>
                     </FormGroup>

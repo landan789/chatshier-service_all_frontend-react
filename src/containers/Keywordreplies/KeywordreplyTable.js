@@ -99,7 +99,7 @@ class KeywordreplyTable extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.renderKeywordreplies(1, this.state.appId, this.state.keyword)}
+                        {this.renderKeywordreplies(true, this.state.appId, this.state.keyword)}
                     </tbody>
                 </Table>
                 <h4>草稿</h4>
@@ -113,7 +113,7 @@ class KeywordreplyTable extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.renderKeywordreplies(0, this.state.appId, this.state.keyword)}
+                        {this.renderKeywordreplies(false, this.state.appId, this.state.keyword)}
                     </tbody>
                 </Table>
                 <KeywordreplyEditModal

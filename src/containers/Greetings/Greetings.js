@@ -47,11 +47,6 @@ class Greetings extends React.Component {
                     <div className="Greetings">
                         <Jumbotron>
                             <h1 className="display-3">加好友回覆</h1>
-                            <Breadcrumb>
-                                <BreadcrumbItem><Link to="/">Home</Link></BreadcrumbItem>
-                                <BreadcrumbItem><Link to="#">Message</Link></BreadcrumbItem>
-                                <BreadcrumbItem active>Greeting</BreadcrumbItem>
-                            </Breadcrumb>
                             <p className="lead">一次可傳送五則訊息</p>
                             <AppsSelector onChange={this.appChanged} />
                         </Jumbotron>

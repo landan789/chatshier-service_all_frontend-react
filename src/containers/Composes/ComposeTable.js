@@ -37,13 +37,6 @@ class ComposeTable extends React.Component {
         }
         this.updatekeywordSearch(nextProp.keyword);
     }
-    componentDidMount() {
-        let userId = authHelper.userId;
-        return userId && Promise.all([
-            dbapi.appsComposes.find(null, userId),
-            dbapi.appsFields.find(userId)
-        ]);
-    }
     updateAppId(appId) {
         this.setState({ appId });
     }
@@ -96,7 +89,7 @@ class ComposeTable extends React.Component {
                 <tr key={index}>
                     <td>{compose.text}</td>
                     <td>{timeHelper.toLocalTimeString(compose.time)}</td>
-                    <td>{compose.ageRange || compose.gender ? `${compose.ageRange} ${compose.gender}` : '無'}</td>
+                    <td>{0 < compose.ageRange || compose.gender || 0 < Object.keys(compose.field_ids) ? '有' : '無'}</td>
                     <td>
                         <Button color="secondary" onClick={() => this.openEditModal(appId, composeId, composes[composeId], this.props.appsFields[appId])}><i className="fas fa-pencil-alt"></i></Button>{' '}
                         <Button color="danger" onClick={() => this.removeCompose(appId, composeId)}><i className="fas fa-trash-alt"></i></Button>

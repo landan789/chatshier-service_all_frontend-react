@@ -21,7 +21,6 @@ import './Composes.css';
 class Composes extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
             isInsertModalOpen: false,
             appId: '',
@@ -45,7 +44,8 @@ class Composes extends React.Component {
 
     componentDidMount() {
         let userId = authHelper.userId;
-        return userId && Promise.all([
+        return Promise.all([
+            dbapi.apps.find(userId),
             dbapi.appsComposes.find(null, userId),
             dbapi.appsFields.find(userId)
         ]);

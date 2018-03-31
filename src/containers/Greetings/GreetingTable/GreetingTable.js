@@ -44,21 +44,21 @@ class GreetingTable extends React.Component {
 
     render() {
         let appId = this.props.appId;
-        if (!(appId && this.props.appsGreetings[appId])) {
-            return null;
-        }
+        let greetings, greetingIds, greetingsList;
 
-        let greetings = this.props.appsGreetings[appId].greetings;
-        let greetingIds = Object.keys(greetings);
-        let greetingsList = greetingIds.map((greetingId) => {
-            let greeting = greetings[greetingId];
-            return <Greeting
-                key={greetingId}
-                appId={appId}
-                greetingId={greetingId}
-                text={greeting.text}
-                time={greeting.updatedTime}/>;
-        });
+        if (appId && this.props.appsGreetings[appId]) {
+            greetings = this.props.appsGreetings[appId].greetings;
+            greetingIds = Object.keys(greetings);
+            greetingsList = greetingIds.map((greetingId) => {
+                let greeting = greetings[greetingId];
+                return <Greeting
+                    key={greetingId}
+                    appId={appId}
+                    greetingId={greetingId}
+                    text={greeting.text}
+                    time={greeting.updatedTime}/>;
+            });
+        }
 
         return (
             <Aux>

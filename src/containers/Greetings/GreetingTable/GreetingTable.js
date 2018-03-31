@@ -15,6 +15,7 @@ import './GreetingTable.css';
 class GreetingTable extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
+
         this.state = {
             insertList: []
         };
@@ -25,7 +26,7 @@ class GreetingTable extends React.Component {
 
     componentDidMount() {
         let userId = authHelper.userId;
-        return userId && dbapi.appsGreetings.find('', userId);
+        return dbapi.appsGreetings.find(null, userId);
     }
 
     addInsertMessage(ev) {

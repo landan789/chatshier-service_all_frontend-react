@@ -47,7 +47,6 @@ class ComposeEdit extends React.Component {
                 text: compose.text,
                 status: compose.status
             });
-            debugger;
         }
         Promise.resolve().then(() => {
             return Object.keys(appsFields).filter((field) => 'Age' === appsFields[field].text || 'Gender' === appsFields[field].text || 'CUSTOM' === appsFields[field].type);

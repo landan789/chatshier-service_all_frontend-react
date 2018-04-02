@@ -36,10 +36,9 @@ class Consumers extends Core {
     };
 
     /**
-     * @param {string} appId
      * @param {string} platformUid
      * @param {string} userId
-     * @returns {Promise<AppsMessagersResponse>}
+     * @returns {Promise<ConsumersResponse>}
      */
     findOne(platformUid, userId) {
         let consumers = mainStore.getState().consumers;
@@ -65,8 +64,8 @@ class Consumers extends Core {
     /**
      * @param {string} platformUid
      * @param {string} userId
-     * @param {Chatshier.Messager} messager
-     * @returns {Promise<AppsMessagersResponse>}
+     * @param {Chatshier.Consumer} consumer
+     * @returns {Promise<ConsumerResponse>}
      */
     update(platformUid, userId, consumer) {
         let destUrl = this.urlPrefix + 'consumers/' + platformUid + '/users/' + userId;

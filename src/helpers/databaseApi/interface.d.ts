@@ -34,12 +34,6 @@ interface AppsKeywordrepliesResponse {
     data: Chatshier.AppsKeywordreplies
 }
 
-interface AppsMessagersResponse {
-    status: number,
-    msg: string,
-    data: Chatshier.AppsMessagers
-}
-
 interface AppsFieldsResponse {
     status: number,
     msg: string,
@@ -52,10 +46,16 @@ interface AppsTicketsResponse {
     data: Chatshier.AppsTickets
 }
 
-interface AuthenticationsResponse {
+interface CalendarsEventsResponse {
     status: number,
     msg: string,
-    data: { [userId: string]: firebase.User }
+    data: Chatshier.CalendarsEvents
+}
+
+interface ConsumersResponse {
+    status: number,
+    msg: string,
+    data: Chatshier.Consumers
 }
 
 interface GroupsResponse {

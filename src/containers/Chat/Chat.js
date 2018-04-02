@@ -60,9 +60,8 @@ class Chat extends React.Component {
 Chat.propTypes = {
     apps: PropTypes.object,
     appsChatrooms: PropTypes.object,
-    consumers: PropTypes.object,
     appsFields: PropTypes.object,
-    authentications: PropTypes.object,
+    consumers: PropTypes.object,
     groups: PropTypes.object,
     history: PropTypes.object.isRequired
 };
@@ -72,9 +71,8 @@ const mapStateToProps = (state, ownProps) => {
     return {
         apps: state.apps,
         appsChatrooms: state.appsChatrooms,
-        consumers: state.consumers,
         appsFields: state.appsFields,
-        authentications: state.authentications,
+        consumers: state.consumers,
         groups: state.groups
     };
 };

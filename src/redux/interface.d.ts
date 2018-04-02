@@ -19,13 +19,13 @@ namespace Chatshier {
     }
 
     interface Autoreply {
-        isDeleted?: boolean;
         createdTime?: string;
-        startedTime: string;
         endedTime: string;
+        isDeleted?: boolean;
+        startedTime: string;
         title: string;
         text: string;
-        type: 'text';
+        type: string;
         updatedTime?: string;
     }
 
@@ -38,17 +38,20 @@ namespace Chatshier {
     }
 
     interface ChatroomMessager {
+        createdTime?: string;
+        updatedTime?: string;
         type: 'CHATSHIER' | 'LINE' | 'FACEBOOK' | 'WECHAT';
-        isDeleted?: boolean;
         unRead: number;
         assigned_ids: string[];
         platformUid: string;
+        isDeleted?: boolean;
         _id: string;
     }
 
     interface ChatroomMessage {
         text: string;
-        type: 'text';
+        type: string;
+        src: string;
         messager_id: string;
         from: 'SYSTEM' | 'CHATSHIER' | 'LINE' | 'FACEBOOK' | 'WECHAT';
         time: string;
@@ -76,14 +79,16 @@ namespace Chatshier {
     }
 
     interface Compose {
+        createdTime?: string;
+        updatedTime?: string;
         time: string;
         status: boolean;
-        type: 'text';
+        type: string;
         text: string;
         isDeleted?: boolean;
-        age: number;
+        ageRange: any[];
         gender: string;
-        field_ids: string[];
+        field_ids: { [fieldId: string]: any };
     }
 
     interface AppsComposes {
@@ -117,7 +122,7 @@ namespace Chatshier {
     interface Greeting {
         createdTime?: string;
         updatedTime?: string;
-        type: 'text';
+        type: string;
         text: string;
         isDeleted?: boolean;
     }
@@ -133,7 +138,7 @@ namespace Chatshier {
     interface Keywordreply {
         keyword: string;
         text: string;
-        type: 'text',
+        type: string;
         replyCount: number;
         status: boolean;
         createdTime?: string;
@@ -219,6 +224,9 @@ namespace Chatshier {
         isDeleted?: boolean;
         updatedTime?: string;
         createdTime?: string;
+        members: {
+            [memberId: string]: GroupMember
+        }
     }
 
     interface Groups {

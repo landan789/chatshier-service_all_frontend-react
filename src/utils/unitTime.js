@@ -21,7 +21,7 @@ export const formatTo2Digit = (n) => {
 export const formatDate = (date) => {
     if (!date) {
         return '';
-    } else if ('number' === typeof date) {
+    } else if ('number' === typeof date || 'string' === typeof date) {
         date = new Date(date);
     }
     return date.getFullYear() +
@@ -38,7 +38,7 @@ export const formatDate = (date) => {
 export const formatTime = (time, includeSec = true) => {
     if (!time) {
         return '';
-    } else if ('number' === typeof time) {
+    } else if ('number' === typeof time || 'string' === typeof time) {
         time = new Date(time);
     }
     return formatTo2Digit(time.getHours()) +

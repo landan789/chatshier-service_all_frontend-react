@@ -16,15 +16,17 @@ class TicketInsertModal extends React.Component {
         super(props, ctx);
 
         this.selectedAppId = '';
-        this.selectedMessagerId = '';
+        this.selectedPlatformUid = '';
+        this.selectedAgentUserId = '';
         this.appOptions = this.appsToOptions();
 
         this.state = {
             isAsyncWorking: false,
-            messagerOptions: this.appsMessagersToOptions(),
-            messagerId: '',
-            messagerEmail: '',
-            messagerPhone: '',
+            consumerOptions: this.consumersToOptions(),
+            agentOptions: this.agentsToOptions(),
+            platformUid: '',
+            consumerEmail: '',
+            consumerPhone: '',
             ticketDescription: ''
         };
         this.ticketStatus = 2;
@@ -32,7 +34,8 @@ class TicketInsertModal extends React.Component {
 
         this.insertTicket = this.insertTicket.bind(this);
         this.appChanged = this.appChanged.bind(this);
-        this.messagerChanged = this.messagerChanged.bind(this);
+        this.consumerChanged = this.consumerChanged.bind(this);
+        this.agentChanged = this.agentChanged.bind(this);
         this.statusChanged = this.statusChanged.bind(this);
         this.priorityChanged = this.priorityChanged.bind(this);
         this.descriptionChanged = this.descriptionChanged.bind(this);
@@ -40,7 +43,8 @@ class TicketInsertModal extends React.Component {
 
     componentWillReceiveProps() {
         this.appOptions = this.appsToOptions();
-        this.messagerChanged();
+        this.consumerChanged();
+        this.agentChanged();
     }
 
     appsToOptions() {
@@ -66,55 +70,83 @@ class TicketInsertModal extends React.Component {
         return options;
     }
 
-    appsMessagersToOptions() {
+    consumersToOptions() {
         let options = [];
 
-        /** @type {Chatshier.AppsMessagers} */
-        let appsMessagers = this.props.appsMessagers || {};
+        /** @type {Chatshier.Consumers} */
+        let consumers = this.props.consumers || {};
 
-        if (this.selectedAppId && appsMessagers[this.selectedAppId]) {
-            let messagers = appsMessagers[this.selectedAppId].messagers;
-
-            let firstMessagerId;
-            for (let messagerId in messagers) {
-                let messager = messagers[messagerId];
-                firstMessagerId = firstMessagerId || messagerId;
-                options.push(
-                    <option key={messagerId} value={messagerId}>{messager.name}</option>
-                );
-            }
-            this.selectedMessagerId = firstMessagerId;
+        let firstPlatformUid;
+        for (let platformUid in consumers) {
+            let consumer = consumers[platformUid];
+            firstPlatformUid = firstPlatformUid || platformUid;
+            options.push(
+                <option key={platformUid} value={platformUid}>{consumer.name}</option>
+            );
         }
+        this.selectedPlatformUid = firstPlatformUid;
+        return options;
+    }
+
+    agentsToOptions() {
+        let options = [];
+        let appsAgents = this.props.appsAgents;
+        if (!(this.selectedAppId && appsAgents[this.selectedAppId])) {
+            return options;
+        }
+
+        /** @type {Chatshier.Users} */
+        let agents = appsAgents[this.selectedAppId].agents;
+
+        let firstAgentUserId;
+        for (let userId in agents) {
+            let consumer = agents[userId];
+            firstAgentUserId = firstAgentUserId || userId;
+            options.push(
+                <option key={userId} value={userId}>{consumer.name}</option>
+            );
+        }
+        this.selectedAgentUserId = firstAgentUserId;
         return options;
     }
 
     appChanged(ev) {
         let selectedOpt = ev.target.selectedOptions[0];
         this.selectedAppId = selectedOpt.value;
-        this.messagerChanged();
+        this.consumerChanged();
+        this.agentChanged();
     }
 
-    messagerChanged(ev) {
+    consumerChanged(ev) {
         let newState = {};
         if (ev) {
             let selectedOpt = ev.target.selectedOptions[0];
-            this.selectedMessagerId = selectedOpt.value;
+            this.selectedPlatformUid = selectedOpt.value;
         } else {
-            newState.messagerOptions = this.appsMessagersToOptions();
+            newState.consumerOptions = this.consumersToOptions();
         }
 
-        /** @type {Chatshier.AppsMessagers} */
-        let appsMessagers = this.props.appsMessagers || {};
-        let appId = this.selectedAppId;
-
-        if (appId && appsMessagers[appId]) {
-            let messagerId = this.selectedMessagerId;
-            let messager = appsMessagers[appId].messagers[messagerId];
-            newState.messagerId = messagerId;
-            newState.messagerEmail = messager.email;
-            newState.messagerPhone = messager.phone;
+        /** @type {Chatshier.Consumer} */
+        let consumers = this.props.consumers;
+        let platformUid = this.selectedPlatformUid;
+        if (platformUid && consumers[platformUid]) {
+            let consumer = consumers[platformUid];
+            newState.platformUid = platformUid;
+            newState.consumerEmail = consumer.email;
+            newState.consumerPhone = consumer.phone;
         }
         Object.keys(newState).length > 0 && this.setState(newState);
+    }
+
+    agentChanged(ev) {
+        let newState = {};
+        if (ev) {
+            let selectedOpt = ev.target.selectedOptions[0];
+            this.selectedAgentUserId = selectedOpt.value;
+        } else {
+            newState.agentOptions = this.agentsToOptions();
+            this.setState(newState);
+        }
     }
 
     statusChanged(ev) {
@@ -134,7 +166,7 @@ class TicketInsertModal extends React.Component {
     insertTicket(ev) {
         if (!this.selectedAppId) {
             return notify('請選擇App', { type: 'warning' });
-        } else if (!this.selectedMessagerId) {
+        } else if (!this.selectedPlatformUid) {
             return notify('請選擇目標客戶', { type: 'warning' });
         } else if (!this.state.ticketDescription) {
             return notify('請輸入說明內容', { type: 'warning' });
@@ -145,7 +177,8 @@ class TicketInsertModal extends React.Component {
         let userId = authHelper.userId;
         let ticket = {
             dueTime: Date.now() + (DAY * 3), // 過期時間預設為3天後
-            messager_id: this.selectedMessagerId,
+            platformUid: this.selectedPlatformUid,
+            assigned_id: this.selectedAgentUserId,
             priority: this.ticketPriority,
             status: this.ticketStatus,
             description: this.state.ticketDescription
@@ -153,9 +186,11 @@ class TicketInsertModal extends React.Component {
 
         return dbapi.appsTickets.insert(appId, userId, ticket).then(() => {
             this.props.close(ev);
-            return notify('新增成功', { type: 'success' });
+
+            let agent = this.props.appsAgents[appId].agents[ticket.assigned_id];
+            return notify('待辦事項已新增，指派人: ' + agent.name, { type: 'success' });
         }).catch(() => {
-            return notify('新增失敗', { type: 'danger' });
+            return notify('待辦事項新增失敗', { type: 'danger' });
         }).then(() => {
             this.setState({ isAsyncWorking: false });
         });
@@ -178,21 +213,27 @@ class TicketInsertModal extends React.Component {
                         </div>
                         <div className="form-group">
                             <label htmlFor="name" className="col-form-label">客戶姓名</label>
-                            <select className="form-control" onChange={this.messagerChanged}>
-                                {this.state.messagerOptions}
+                            <select className="form-control" onChange={this.consumerChanged}>
+                                {this.state.consumerOptions}
                             </select>
                         </div>
                         <div className="form-group">
                             <label htmlFor="subject" className="col-form-label">客戶ID</label>
-                            <input type="text" className="form-control" value={this.state.messagerId} readOnly />
+                            <input type="text" className="form-control" value={this.state.platformUid} readOnly />
                         </div>
                         <div className="form-group">
                             <label htmlFor="email" className="col-form-label">電子郵件</label>
-                            <input type="text" className="form-control" value={this.state.messagerEmail} readOnly />
+                            <input type="text" className="form-control" value={this.state.consumerEmail} readOnly />
                         </div>
                         <div className="form-group">
                             <label htmlFor="phone" className="col-form-label">手機</label>
-                            <input type="text" className="form-control" value={this.state.messagerPhone} readOnly />
+                            <input type="text" className="form-control" value={this.state.consumerPhone} readOnly />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="assignedAgent" className="col-form-label">指派人</label>
+                            <select className="form-control" onChange={this.agentChanged}>
+                                {this.state.agentOptions}
+                            </select>
                         </div>
                         <div className="form-group">
                             <label htmlFor="priority">優先</label>
@@ -212,12 +253,6 @@ class TicketInsertModal extends React.Component {
                                 <option value="5">已關閉</option>
                             </select>
                         </div>
-                        {/* <div class="form-group">
-                            <label>負責人</label>
-                            <select class="form-control">
-                                <option value="未指定">請選擇</option>
-                            </select>
-                        </div> */}
                         <div className="form-group">
                             <label htmlFor="description">說明</label>
                             <textarea
@@ -240,8 +275,9 @@ class TicketInsertModal extends React.Component {
 }
 
 TicketInsertModal.propTypes = {
+    appsAgents: PropTypes.object,
     apps: PropTypes.object,
-    appsMessagers: PropTypes.object,
+    consumers: PropTypes.object,
     isOpen: PropTypes.bool,
     close: PropTypes.func.isRequired
 };

@@ -26,6 +26,7 @@ class Tickets extends React.Component {
             searchKeyword: ''
         };
 
+        this.appsAgents = {};
         this.keywordChanged = this.keywordChanged.bind(this);
         this.openInsertModal = this.openInsertModal.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
@@ -44,9 +45,42 @@ class Tickets extends React.Component {
         let userId = authHelper.userId;
         return userId && Promise.all([
             dbapi.apps.find(userId),
-            dbapi.appsMessagers.find(userId),
-            dbapi.appsTickets.find(null, userId)
+            dbapi.appsTickets.find(null, userId),
+            dbapi.consumers.find(userId),
+            dbapi.groups.find(userId),
+            dbapi.users.find(userId)
         ]);
+    }
+
+    componentWillReceiveProps(props) {
+        // 每個 app 因群組不同，指派人清單也會不同，因此須根據群組準備指派人清單
+        if (Object.keys(props.appsTickets).length > 0 &&
+            Object.keys(props.groups).length > 0 &&
+            Object.keys(props.users).length > 0) {
+            /** @type {Chatshier.AppsTickets} */
+            let appsTickets = props.appsTickets;
+            /** @type {Chatshier.Groups} */
+            let groups = props.groups;
+            /** @type {Chatshier.Users} */
+            let users = props.users;
+
+            this.appsAgents = {};
+            for (let appId in appsTickets) {
+                for (let groupId in groups) {
+                    let group = groups[groupId];
+                    if (0 <= group.app_ids.indexOf(appId)) {
+                        this.appsAgents[appId] = { agents: {} };
+                        for (let memberId in group.members) {
+                            let memberUserId = group.members[memberId].user_id;
+                            this.appsAgents[appId].agents[memberUserId] = {
+                                name: users[memberUserId].name,
+                                email: users[memberUserId].email
+                            };
+                        }
+                    }
+                }
+            }
+        }
     }
 
     keywordChanged(ev) {
@@ -73,7 +107,8 @@ class Tickets extends React.Component {
                         </button>
                         <TicketInsertModal
                             apps={this.props.apps}
-                            appsMessagers={this.props.appsMessagers}
+                            appsAgents={this.appsAgents}
+                            consumers={this.props.consumers}
                             isOpen={this.state.isInsertModalOpen}
                             close={this.closeInsertModal}>
                         </TicketInsertModal>
@@ -87,6 +122,7 @@ class Tickets extends React.Component {
                     </div>
 
                     <TicketTable
+                        appsAgents={this.appsAgents}
                         searchKeyword={this.state.searchKeyword}>
                     </TicketTable>
                 </Fade>
@@ -97,8 +133,10 @@ class Tickets extends React.Component {
 
 Tickets.propTypes = {
     apps: PropTypes.object,
-    appsMessagers: PropTypes.object,
     appsTickets: PropTypes.object,
+    consumers: PropTypes.object,
+    groups: PropTypes.object,
+    users: PropTypes.object,
     history: PropTypes.object.isRequired
 };
 
@@ -106,8 +144,10 @@ const mapStateToProps = (state, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
     return {
         apps: state.apps,
-        appsMessagers: state.appsMessagers,
-        appsTickets: state.appsTickets
+        appsTickets: state.appsTickets,
+        consumers: state.consumers,
+        groups: state.groups,
+        users: state.users
     };
 };
 

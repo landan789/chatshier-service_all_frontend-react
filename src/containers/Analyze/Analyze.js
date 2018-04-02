@@ -37,7 +37,7 @@ class Analyze extends React.Component {
 
     componentDidMount() {
         let userId = authHelper.userId;
-        return userId && dbapi.appsChatroomsMessages.find(userId);
+        return userId && dbapi.appsChatrooms.find(userId);
     }
 
     componentWillReceiveProps(props) {
@@ -65,7 +65,7 @@ class Analyze extends React.Component {
 
 Analyze.propTypes = {
     apps: PropTypes.object,
-    appsChatroomsMessages: PropTypes.object,
+    appsChatrooms: PropTypes.object,
     history: PropTypes.object.isRequired
 };
 
@@ -73,7 +73,7 @@ const mapStateToProps = (state, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
     return {
         apps: state.apps,
-        appsChatroomsMessages: state.appsChatroomsMessages
+        appsChatrooms: state.appsChatrooms
     };
 };
 

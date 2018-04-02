@@ -14,6 +14,7 @@ class TicketTable extends React.Component {
         this.state = {
             editModalData: null
         };
+
         this.openEditModal = this.openEditModal.bind(this);
         this.closeEditModal = this.closeEditModal.bind(this);
     }
@@ -22,16 +23,16 @@ class TicketTable extends React.Component {
         /** @type {Chatshier.AppsTickets} */
         let appsTickets = this.props.appsTickets;
         let ticket = appsTickets[appId].tickets[ticketId];
-        /** @type {Chatshier.AppsMessagers} */
-        let appsMessagers = this.props.appsMessagers;
-        let messager = appsMessagers[appId].messagers[ticket.messager_id];
+        /** @type {Chatshier.Consumers} */
+        let consumers = this.props.consumers;
+        let consumer = consumers[ticket.platformUid];
 
         this.setState({
             editModalData: {
                 appId: appId,
                 ticketId: ticketId,
                 ticket: ticket,
-                messager: messager
+                consumer: consumer
             }
         });
     }
@@ -43,29 +44,36 @@ class TicketTable extends React.Component {
     renderTickets() {
         /** @type {Chatshier.AppsTickets} */
         let appsTickets = this.props.appsTickets;
-        /** @type {Chatshier.AppsMessagers} */
-        let appsMessagers = this.props.appsMessagers;
-        if (!(appsTickets && appsMessagers)) {
+        /** @type {Chatshier.Consumers} */
+        let consumers = this.props.consumers;
+        let appsAgents = this.props.appsAgents;
+
+        if (!(appsTickets && consumers && appsAgents)) {
             return;
         }
 
         let ticketCmps = [];
         for (let appId in appsTickets) {
-            if (!(appsTickets[appId] && appsMessagers[appId])) {
+            if (!(appsTickets[appId] && appsAgents[appId])) {
                 continue;
             }
 
+            let agents = appsAgents[appId].agents;
             let tickets = appsTickets[appId].tickets;
             for (let ticketId in tickets) {
                 let ticket = tickets[ticketId];
-                let messagerId = ticket.messager_id;
-                let messager = appsMessagers[appId].messagers[messagerId];
+                let platformUid = ticket.platformUid;
+                if (!(platformUid && consumers[platformUid])) {
+                    continue;
+                }
 
-                let description = ticket.description.substring(0, 10);
+                let consumer = consumers[platformUid];
+                let description = ticket.description;
                 let statusText = toStatusText(ticket.status);
                 let priorityText = toPriorityText(ticket.priority);
                 let localTimeStr = toLocalTimeString(ticket.dueTime);
                 let dueDateElem = toDueDateSpan(ticket.dueTime);
+                let agentName = agents[ticket.assigned_id].name;
 
                 let shouldShow = true;
                 let searchKeyword = this.props.searchKeyword;
@@ -85,11 +93,12 @@ class TicketTable extends React.Component {
                     <div key={ticketId} className="ticket-row d-flex"
                         style={toPriorityBorder(ticket.priority)}
                         onClick={() => this.openEditModal(appId, ticketId)}>
-                        <div className="ticket-col">{messager.name || ''}</div>
+                        <div className="ticket-col">{consumer.name || ''}</div>
                         <div className="ticket-col">{description}</div>
                         <div className="ticket-col">{statusText}</div>
                         <div className="ticket-col">{priorityText}</div>
                         <div className="ticket-col">{localTimeStr}</div>
+                        <div className="ticket-col">{agentName}</div>
                         <div className="ticket-col">{dueDateElem}</div>
                     </div>
                 );
@@ -113,12 +122,15 @@ class TicketTable extends React.Component {
                             <div className="ticket-col">狀態</div>
                             <div className="ticket-col">優先</div>
                             <div className="ticket-col">到期時間</div>
+                            <div className="ticket-col">指派人</div>
                             <div className="ticket-col">&nbsp;</div>
                         </div>
                     </div>
                     {this.renderTickets()}
                 </div>
+
                 <TicketEditModal
+                    appsAgents={this.props.appsAgents}
                     modalData={this.state.editModalData}
                     isOpen={!!this.state.editModalData}
                     close={this.closeEditModal}>
@@ -130,15 +142,16 @@ class TicketTable extends React.Component {
 
 TicketTable.propTypes = {
     searchKeyword: PropTypes.string,
-    appsMessagers: PropTypes.object.isRequired,
-    appsTickets: PropTypes.object.isRequired
+    appsAgents: PropTypes.object,
+    appsTickets: PropTypes.object.isRequired,
+    consumers: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
     return {
-        appsMessagers: state.appsMessagers,
-        appsTickets: state.appsTickets
+        appsTickets: state.appsTickets,
+        consumers: state.consumers
     };
 };
 

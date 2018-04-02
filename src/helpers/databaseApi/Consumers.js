@@ -2,25 +2,25 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateMessagers } from '../../redux/actions/appsMessagers';
+import { updateConsumers } from '../../redux/actions/consumers';
 
-class AppsMessagers extends Core {
+class Consumers extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'apps-messagers/';
+        this.urlPrefix = this.prefixUrl + 'consumers/';
     }
 
     /**
      * @param {string} userId
-     * @returns {Promise<AppsMessagersResponse>}
+     * @returns {Promise<ConsumersResponse>}
      */
     find(userId) {
-        let appsMessagers = mainStore.getState().appsMessagers;
-        if (Object.keys(appsMessagers).length > 0) {
+        let consumers = mainStore.getState().consumers;
+        if (Object.keys(consumers).length > 0) {
             return Promise.resolve({
                 status: 1,
                 msg: '',
-                data: appsMessagers
+                data: consumers
             });
         }
 
@@ -30,57 +30,56 @@ class AppsMessagers extends Core {
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateMessagers(resJson.data));
+            mainStore.dispatch(updateConsumers(resJson.data));
             return resJson;
         });
     };
 
     /**
      * @param {string} appId
-     * @param {string} messgerId
+     * @param {string} platformUid
      * @param {string} userId
      * @returns {Promise<AppsMessagersResponse>}
      */
-    findOne(appId, messgerId, userId) {
-        let appsMessagers = mainStore.getState().appsMessagers;
-        if (appsMessagers[appId] && appsMessagers[appId].messagers[messgerId]) {
+    findOne(platformUid, userId) {
+        let consumers = mainStore.getState().consumers;
+        if (consumers[platformUid]) {
             return Promise.resolve({
                 status: 1,
                 msg: '',
-                data: appsMessagers
+                data: consumers
             });
         }
 
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/messager/' + messgerId + '/users/' + userId;
+        let destUrl = this.urlPrefix + 'consumers/' + platformUid + '/users/' + userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateMessagers(resJson.data));
+            mainStore.dispatch(updateConsumers(resJson.data));
             return resJson;
         });
     };
 
     /**
-     * @param {string} appId
-     * @param {string} msgerId
+     * @param {string} platformUid
      * @param {string} userId
      * @param {Chatshier.Messager} messager
      * @returns {Promise<AppsMessagersResponse>}
      */
-    update(appId, msgerId, userId, messager) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/messager/' + msgerId + '/users/' + userId;
+    update(platformUid, userId, consumer) {
+        let destUrl = this.urlPrefix + 'consumers/' + platformUid + '/users/' + userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
-            body: JSON.stringify(messager)
+            body: JSON.stringify(consumer)
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateMessagers(resJson.data));
+            mainStore.dispatch(updateConsumers(resJson.data));
             return resJson;
         });
     };
 }
 
-export default AppsMessagers;
+export default Consumers;

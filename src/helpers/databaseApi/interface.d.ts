@@ -10,10 +10,10 @@ interface AppsAutorepliesResponse {
     data: Chatshier.AppsAutoreplies
 }
 
-interface AppsChatroomsMessagesResponse {
+interface AppsChatroomsResponse {
     status: number,
     msg: string,
-    data: Chatshier.AppsChatroomsMessages
+    data: Chatshier.AppsChatrooms
 }
 
 interface AppsComposesResponse {

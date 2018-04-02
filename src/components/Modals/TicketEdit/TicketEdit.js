@@ -20,12 +20,15 @@ class TicketEditModal extends React.Component {
         this.state = {
             isAsyncWorking: false,
             dueTime: new Date(),
+            agentUserId: '',
+            agentOptions: [],
             status: 0,
             priority: 0,
             description: ''
         };
 
         this.statusChanged = this.statusChanged.bind(this);
+        this.agentChanged = this.agentChanged.bind(this);
         this.priorityChanged = this.priorityChanged.bind(this);
         this.descriptionChanged = this.descriptionChanged.bind(this);
         this.dueTimeChanged = this.dueTimeChanged.bind(this);
@@ -34,14 +37,39 @@ class TicketEditModal extends React.Component {
     }
 
     componentWillReceiveProps(props) {
+        if (!props.modalData) {
+            return;
+        }
+
+        let agentOptions = [];
+        if (Object.keys(props.appsAgents).length > 0) {
+            let appId = props.modalData.appId;
+            /** @type {Chatshier.Users} */
+            let agents = props.appsAgents[appId].agents;
+
+            for (let userId in agents) {
+                let consumer = agents[userId];
+                agentOptions.push(
+                    <option key={userId} value={userId}>{consumer.name}</option>
+                );
+            }
+        }
+
         /** @type {Chatshier.Ticket} */
         let ticket = props.modalData ? props.modalData.ticket : {};
         this.setState({
+            agentUserId: ticket.assigned_id,
+            agentOptions: agentOptions,
             dueTime: ticket.dueTime,
             status: ticket.status,
             priority: ticket.priority,
             description: ticket.description
         });
+    }
+
+    agentChanged(ev) {
+        let selectedOpt = ev.target.selectedOptions[0];
+        this.setState({ agentUserId: selectedOpt.value });
     }
 
     statusChanged(ev) {
@@ -69,6 +97,7 @@ class TicketEditModal extends React.Component {
 
         /** @type {Chatshier.Ticket} */
         let ticket = {
+            assigned_id: this.state.agentUserId,
             dueTime: this.state.dueTime,
             status: this.state.status,
             priority: this.state.priority,
@@ -76,7 +105,8 @@ class TicketEditModal extends React.Component {
         };
 
         let shouldUpdate = ((oldTicket, newTicket) => {
-            if ((oldTicket.dueTime !== newTicket.dueTime) ||
+            if ((oldTicket.assigned_id !== newTicket.assigned_id) ||
+                (oldTicket.dueTime !== newTicket.dueTime) ||
                 (oldTicket.status !== newTicket.status) ||
                 (oldTicket.priority !== newTicket.priority) ||
                 (oldTicket.description !== newTicket.description)) {
@@ -92,9 +122,11 @@ class TicketEditModal extends React.Component {
         this.setState({ isAsyncWorking: true });
         return dbapi.appsTickets.update(appId, ticketId, userId, ticket).then(() => {
             this.props.close(ev);
-            return notify('更新成功', { type: 'success' });
+
+            let agent = this.props.appsAgents[appId].agents[ticket.assigned_id];
+            return notify('待辦事項已更新，指派人: ' + agent.name, { type: 'success' });
         }).catch(() => {
-            return notify('更新失敗', { type: 'danger' });
+            return notify('待辦事項更新失敗', { type: 'danger' });
         }).then(() => {
             this.setState({ isAsyncWorking: false });
         });
@@ -118,19 +150,19 @@ class TicketEditModal extends React.Component {
 
     render() {
         let ticket = this.props.modalData ? this.props.modalData.ticket : {};
-        let messager = this.props.modalData ? this.props.modalData.messager : {};
+        let consumer = this.props.modalData ? this.props.modalData.consumer : {};
 
         return (
             <Modal size="lg" className="ticket-edit-modal" isOpen={this.props.isOpen} toggle={this.props.close}>
                 <ModalHeader toggle={this.props.close}>
-                    {messager.name || ''}
+                    {consumer.name || ''}
                 </ModalHeader>
 
                 <ModalBody>
                     <div className="ticket-content">
                         <div className="form-group row">
                             <span className="col-6 col-form-label ticket-col">客戶ID</span>
-                            <span className="col-6 ticket-col">{ticket.messager_id}</span>
+                            <span className="col-6 ticket-col">{ticket.platformUid}</span>
                         </div>
                         <div className="form-group row">
                             <span className="col-6 col-form-label ticket-col priority">優先</span>
@@ -165,6 +197,15 @@ class TicketEditModal extends React.Component {
                                     onChange={this.descriptionChanged}
                                 ></textarea>
                             </span>
+                        </div>
+                        <div className="form-group row">
+                            <span className="col-6 col-form-label ticket-col agent">指派人</span>
+                            <select
+                                className="col-6 form-control ticket-col"
+                                value={this.state.agentUserId}
+                                onChange={this.agentChanged}>
+                                {this.state.agentOptions}
+                            </select>
                         </div>
                         <div className="form-group row">
                             <span className="col-12 col-form-label ticket-col">到期時間 {toDueDateSpan(ticket.dueTime)}</span>
@@ -204,6 +245,7 @@ class TicketEditModal extends React.Component {
 }
 
 TicketEditModal.propTypes = {
+    appsAgents: PropTypes.object,
     modalData: PropTypes.object,
     isOpen: PropTypes.bool.isRequired,
     close: PropTypes.func.isRequired

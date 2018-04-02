@@ -130,7 +130,7 @@ class ComposeEdit extends React.Component {
         let field_ids = {};
         let age, gender;
         Object.values(this.state.fields).map((field) => {
-            if ('' === field.value.trim()) {
+            if (!field.value) {
                 return;
             }
             field_ids[field.id] = {
@@ -165,7 +165,7 @@ class ComposeEdit extends React.Component {
                 <Row key={index}>
                     <Col>
                         <Button color="secondary" disabled={this.state.status && timeHelper.isHistory(this.state.time, Date.now())} name={field.id} onClick={this.handleFieldButtonChange}>
-                            {'' !== field.value.trim() ? `${field.name} : ${field.value}` : field.name}
+                            {field.value ? `${field.name} : ${field.value}` : field.name}
                         </Button>
                         <FormGroup>
                             <Row>

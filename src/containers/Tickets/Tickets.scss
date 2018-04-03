@@ -75,10 +75,9 @@
         }
 
         .ticket-col {
-            flex: 0 0 16.66667%;
-            max-width: 16.66667%;
-            padding-top: .5rem;
-            padding-bottom: .5rem;
+            flex: 0 0 14.285%;
+            max-width: 14.285%;
+            padding: .5rem .5rem .5rem 0;
             overflow: hidden;
             text-overflow: ellipsis;
         }

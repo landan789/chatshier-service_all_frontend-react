@@ -33,9 +33,9 @@ class Chat extends React.Component {
         let userId = authHelper.userId;
         return userId && Promise.all([
             dbapi.apps.find(userId),
-            dbapi.appsChatroomsMessages.find(userId),
-            dbapi.appsMessagers.find(userId),
+            dbapi.appsChatrooms.find(userId),
             dbapi.appsFields.find(userId),
+            dbapi.consumers.find(userId),
             dbapi.groups.find(userId),
             dbapi.users.find(userId)
         ]);
@@ -59,10 +59,9 @@ class Chat extends React.Component {
 
 Chat.propTypes = {
     apps: PropTypes.object,
-    appsChatroomsMessages: PropTypes.object,
-    appsMessagers: PropTypes.object,
+    appsChatrooms: PropTypes.object,
     appsFields: PropTypes.object,
-    authentications: PropTypes.object,
+    consumers: PropTypes.object,
     groups: PropTypes.object,
     history: PropTypes.object.isRequired
 };
@@ -71,10 +70,9 @@ const mapStateToProps = (state, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
     return {
         apps: state.apps,
-        appsChatroomsMessages: state.appsChatroomsMessages,
-        appsMessagers: state.appsMessagers,
+        appsChatrooms: state.appsChatrooms,
         appsFields: state.appsFields,
-        authentications: state.authentications,
+        consumers: state.consumers,
         groups: state.groups
     };
 };

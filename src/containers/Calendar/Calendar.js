@@ -101,7 +101,7 @@ class Calendar extends React.Component {
         return userId && Promise.all([
             dbapi.calendarsEvents.find(userId),
             dbapi.appsTickets.find(null, userId),
-            dbapi.appsMessagers.find(userId)
+            dbapi.consumers.find(userId)
         ]);
     }
 
@@ -199,15 +199,15 @@ class Calendar extends React.Component {
             let ticketId = calendarEvent.id;
             /** @type {Chatshier.Ticket} */
             let ticket = origin;
-            /** @type {Chatshier.AppsMessagers} */
-            let appsMessagers = this.props.appsMessagers;
-            let messager = appsMessagers[appId].messagers[ticket.messager_id];
+            /** @type {Chatshier.Consumers} */
+            let consumers = this.props.consumers;
+            let consumer = consumers[ticket.platformUid];
 
             let modalData = {
                 appId: appId,
                 ticketId: ticketId,
                 ticket: origin,
-                messager: messager
+                consumer: consumer
             };
             this.setState({ editTicketData: modalData });
         } else {
@@ -399,7 +399,7 @@ class Calendar extends React.Component {
 }
 
 Calendar.propTypes = {
-    appsMessagers: PropTypes.object,
+    consumers: PropTypes.object,
     appsTickets: PropTypes.object,
     calendarsEvents: PropTypes.object,
     history: PropTypes.object.isRequired
@@ -408,7 +408,7 @@ Calendar.propTypes = {
 const mapStateToProps = (state, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
     return {
-        appsMessagers: state.appsMessagers,
+        consumers: state.consumers,
         appsTickets: state.appsTickets,
         calendarsEvents: state.calendarsEvents
     };

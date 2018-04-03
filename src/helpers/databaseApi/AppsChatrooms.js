@@ -2,25 +2,25 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateMessages } from '../../redux/actions/appsChatroomsMessages';
+import { updateChatroomsMessages } from '../../redux/actions/appsChatrooms';
 
-class AppsChatroomsMessages extends Core {
+class AppsChatrooms extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'apps-chatrooms-messages/';
+        this.urlPrefix = this.prefixUrl + 'apps-chatrooms/';
     }
 
     /**
      * @param {string} userId
-     * @returns {Promise<AppsChatroomsMessagesResponse>}
+     * @returns {Promise<AppsChatroomsResponse>}
      */
     find(userId) {
-        let appsChatroomsMessages = mainStore.getState().appsChatroomsMessages;
-        if (Object.keys(appsChatroomsMessages).length > 0) {
+        let appsChatrooms = mainStore.getState().appsChatrooms;
+        if (Object.keys(appsChatrooms).length > 0) {
             return Promise.resolve({
                 status: 1,
                 msg: '',
-                data: appsChatroomsMessages
+                data: appsChatrooms
             });
         }
 
@@ -30,10 +30,10 @@ class AppsChatroomsMessages extends Core {
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateMessages(resJson.data));
+            mainStore.dispatch(updateChatroomsMessages(resJson.data));
             return resJson;
         });
     };
 }
 
-export default AppsChatroomsMessages;
+export default AppsChatrooms;

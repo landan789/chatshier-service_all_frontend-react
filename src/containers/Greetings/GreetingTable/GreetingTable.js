@@ -82,7 +82,7 @@ class GreetingTable extends React.Component {
                             </tr>
                         ))}
                         <tr>
-                            <th className="Greeting__text"></th>
+                            <td className="Greeting__text"></td>
                             <td className="Greeting__time"></td>
                             <td className="Greeting__button">
                                 <Button

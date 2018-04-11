@@ -95,11 +95,11 @@ class AutoreplyTable extends React.Component {
                 <Table className="AutoreplyTable" striped>
                     <thead>
                         <tr>
-                            <th className="title">標題</th>
-                            <th className="time-start">開始時間</th>
-                            <th className="time-end">結束時間</th>
-                            <th className="text">訊息內容</th>
-                            <th className="edit">設定</th>
+                            <th className="title" scope="col">標題</th>
+                            <th className="time-start" scope="col">開始時間</th>
+                            <th className="time-end" scope="col">結束時間</th>
+                            <th className="text" scope="col">訊息內容</th>
+                            <th className="edit" scope="col">設定</th>
                         </tr>
                     </thead>
                     <tbody>

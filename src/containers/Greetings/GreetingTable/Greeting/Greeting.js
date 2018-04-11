@@ -36,7 +36,7 @@ class Greeting extends Component {
         return (
             <Aux>
                 <tr className="Greeting">
-                    <th className="Greeting__text">{this.props.text}</th>
+                    <td className="Greeting__text">{this.props.text}</td>
                     <td className="Greeting__time">{new Date(this.props.time).toLocaleString()}</td>
                     <td className="Greeting__button">
                         <Button disabled={this.state.isDeleteing}

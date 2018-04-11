@@ -43,6 +43,77 @@
     color: red;
 }
 
-.table td {
-    width: 500px;
+.Compose {
+    display: block;
+    padding-bottom: 5%;
+    thead, tbody {
+        display: block;
+        tr {
+            display: flex;
+            letter-spacing: .1rem;
+            color: #333;
+            .text {
+                width: 50%;
+                word-wrap: break-word;
+            }
+            .time {
+                width: 20%;
+                word-wrap: break-word;
+            }
+            .cata {
+                width: 15%;
+            }
+            .edit {
+                width: 15%;
+                button {
+                    display: block;
+                    font-size: 1rem;
+                    letter-spacing: unset;
+                }
+                .btn-danger {
+                    margin-top: 10%;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .Compose {
+        thead, tbody {
+            tr {
+                .time {
+                    width: 15%;
+                }
+                .edit {
+                    width: 20%;
+                    button {
+                        display: inline;
+                    }
+                    .btn-danger {
+                        margin-top: 0%;
+                        margin-left: 5%;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 1024px) {
+    .Compose {
+        thead, tbody {
+            tr {
+                .text {
+                    width: 60%;
+                }
+                .time {
+                    width: 10%;
+                }
+                .edit {
+                    width: 15%;
+                }
+            }
+        }
+    }
 }

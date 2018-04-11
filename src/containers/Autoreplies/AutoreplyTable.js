@@ -77,11 +77,11 @@ class AutoreplyTable extends React.Component {
             }
             return (
                 <tr key={index}>
-                    <td>{autoreplies[autoreplyId].title}</td>
-                    <td>{this.toLocalTimeString(autoreplies[autoreplyId].startedTime)}</td>
-                    <td>{this.toLocalTimeString(autoreplies[autoreplyId].endedTime)}</td>
-                    <td>{autoreplies[autoreplyId].text}</td>
-                    <td>
+                    <td className="title">{autoreplies[autoreplyId].title}</td>
+                    <td className="time-start">{this.toLocalTimeString(autoreplies[autoreplyId].startedTime)}</td>
+                    <td className="time-end">{this.toLocalTimeString(autoreplies[autoreplyId].endedTime)}</td>
+                    <td className="text">{autoreplies[autoreplyId].text}</td>
+                    <td className="edit">
                         <Button color="secondary" onClick={() => this.openEditModal(appId, autoreplyId, autoreplies[autoreplyId])}><i className="fas fa-pencil-alt"></i></Button>{' '}
                         <Button color="danger" onClick={() => this.removeAutoreply(appId, autoreplyId)}><i className="fas fa-trash-alt"></i></Button>
                     </td>
@@ -92,14 +92,14 @@ class AutoreplyTable extends React.Component {
     render() {
         return (
             <Aux>
-                <Table striped>
+                <Table className="AutoreplyTable" striped>
                     <thead>
                         <tr>
-                            <th scope="col">標題</th>
-                            <th scope="col">開始時間</th>
-                            <th scope="col">結束時間</th>
-                            <th scope="col">訊息內容</th>
-                            <th scope="col">編輯/刪除</th>
+                            <th className="title">標題</th>
+                            <th className="time-start">開始時間</th>
+                            <th className="time-end">結束時間</th>
+                            <th className="text">訊息內容</th>
+                            <th className="edit">設定</th>
                         </tr>
                     </thead>
                     <tbody>

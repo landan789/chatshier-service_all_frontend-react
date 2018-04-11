@@ -1,41 +1,51 @@
 .Table {
     width: 100%;
     display: block;
-    thead {
+    thead, tbody {
         display: block;
         tr {
             display: flex;
+            .Greeting {
+                display: flex;
+                &__text {
+                    width: 55%;
+                    word-wrap: break-word;
 
-            th {
-                flex: 2;
-            }
-
-            th:last-child {
-                flex:1;
+                    textarea {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+            
+                &__time {
+                    width: 25%;
+                }
+                &__button {
+                    width: 20%;
+                    .btn-secondary {
+                        margin-top: 5%;
+                    }
+                }
             }
         }
     }
+}
 
-    tbody {
-        display: block;
-        tr {
-            display: flex;
-
-            th, td {
-                flex: 2;
-
-                textarea {
-                    width: 100%;
-                    outline: none;
+@media (min-width: 480px) {
+    .Table {
+        thead, tbody {
+            tr {
+                .Greeting {
+                    &__text {
+                        width: 60%;
+                    }
+                    &__button {
+                        width: 15%;
+                        button {
+                            display: block;
+                        }
+                    }
                 }
-
-                button {
-                    margin-right: 8px;
-                }
-            }
-
-            td:last-child {
-                flex:1;
             }
         }
     }

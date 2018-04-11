@@ -1,0 +1,12 @@
+.Greeting {
+    display: block;
+    // width: 100%;
+    &__text {
+        width: 60%;
+        word-wrap: break-word;
+    }
+
+    &__time, &__button {
+        width: 20%;
+    }
+}

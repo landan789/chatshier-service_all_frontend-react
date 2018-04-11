@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import authHelper from '../../../../helpers/authentication';
 import dbapi from '../../../../helpers/databaseApi/index';
 import { notify } from '../../../../components/Notify/Notify';
+import './Greeting.css';
 
 class Greeting extends Component {
     constructor(props, ctx) {
@@ -34,10 +35,10 @@ class Greeting extends Component {
     render() {
         return (
             <Aux>
-                <tr>
-                    <th>{this.props.text}</th>
-                    <td>{new Date(this.props.time).toLocaleString()}</td>
-                    <td>
+                <tr className="Greeting">
+                    <th className="Greeting__text">{this.props.text}</th>
+                    <td className="Greeting__time">{new Date(this.props.time).toLocaleString()}</td>
+                    <td className="Greeting__button">
                         <Button disabled={this.state.isDeleteing}
                             color="danger"
                             onClick={this.deleteGreeting.bind(this)}>

@@ -43,7 +43,7 @@
     color: red;
 }
 
-.table {
+.Compose {
     display: block;
     padding-bottom: 5%;
     thead, tbody {
@@ -79,7 +79,7 @@
 }
 
 @media (min-width: 768px) {
-    .table {
+    .Compose {
         thead, tbody {
             tr {
                 .time {
@@ -101,7 +101,7 @@
 }
 
 @media (min-width: 1024px) {
-    .table {
+    .Compose {
         thead, tbody {
             tr {
                 .text {

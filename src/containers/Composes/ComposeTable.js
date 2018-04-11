@@ -102,7 +102,7 @@ class ComposeTable extends React.Component {
         return (
             <Aux>
                 <h4>預約</h4>
-                <Table striped>
+                <Table className="Compose" striped>
                     <thead>
                         <tr>
                             <th className="text" scope="col">內容</th>
@@ -116,7 +116,7 @@ class ComposeTable extends React.Component {
                     </tbody>
                 </Table>
                 <h4>歷史</h4>
-                <Table striped>
+                <Table className="Compose" striped>
                     <thead>
                         <tr>
                             <th className="text" scope="col">內容</th>
@@ -130,7 +130,7 @@ class ComposeTable extends React.Component {
                     </tbody>
                 </Table>
                 <h4>草稿</h4>
-                <Table striped>
+                <Table className="Compose" striped>
                     <thead>
                         <tr>
                             <th className="text" scope="col">內容</th>

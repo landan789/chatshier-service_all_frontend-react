@@ -1,0 +1,82 @@
+.KeywordreplyTable {
+    display: block;
+    padding-bottom: 5%;
+    thead, tbody {
+        display: block;
+        tr {
+            display: flex;
+            letter-spacing: .1rem;
+            color: #333;
+            .keywords {
+                width: 35%;
+                word-wrap: break-word;
+            }
+            .text {
+                width: 50%;
+                word-wrap: break-word;
+            }
+            .count {
+                width: 10%;
+                display: none;
+            }
+            .edit {
+                width: 15%;
+                button {
+                    display: block;
+                    font-size: 1rem;
+                    letter-spacing: unset;
+                }
+                .btn-danger {
+                    margin-top: 10%;
+                }
+            }
+        }
+    }
+}
+
+@media(min-width: 480px) {
+    .KeywordreplyTable {
+        thead, tbody {
+            tr {
+                .keywords {
+                    width: 25%;
+                }
+                .count {
+                    width: 12.5%;
+                    display: block;
+                }
+                .edit {
+                    width: 12.5%;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 1024px) {
+    .KeywordreplyTable {
+        thead, tbody {
+            tr {
+                .keywords {
+                    width: 20%;
+                }
+                .text {
+                    width: 55%;
+                }
+                .count {
+                    width: 10%;
+                }
+                .edit {
+                    width: 15%;
+                    button {
+                        display: inline;
+                    }
+                    .btn-danger {
+                        margin-top: 0%;
+                        margin-left: 5%;
+                    }
+                }
+            }
+        }
+    }
+}

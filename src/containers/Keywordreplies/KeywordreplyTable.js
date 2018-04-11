@@ -74,10 +74,10 @@ class KeywordreplyTable extends React.Component {
             }
             return (
                 <tr key={index}>
-                    <td>{keywordreply.keyword}</td>
-                    <td>{keywordreply.text}</td>
-                    <td>{keywordreply.replyCount}</td>
-                    <td>
+                    <td className="keywords">{keywordreply.keyword}</td>
+                    <td className="text">{keywordreply.text}</td>
+                    <td className="count">{keywordreply.replyCount}</td>
+                    <td className="edit">
                         <Button color="secondary" onClick={() => this.openEditModal(appId, keywordreplyId, keywordreplies[keywordreplyId])}><i className="fas fa-pencil-alt"></i></Button>{' '}
                         <Button color="danger" onClick={() => this.removekeywordreply(appId, keywordreplyId)}><i className="fas fa-trash-alt"></i></Button>
                     </td>
@@ -89,13 +89,13 @@ class KeywordreplyTable extends React.Component {
         return (
             <Aux>
                 <h4>開放</h4>
-                <Table striped>
+                <Table className="KeywordreplyTable" striped>
                     <thead>
                         <tr>
-                            <th scope="col">關鍵字</th>
-                            <th scope="col">內容</th>
-                            <th scope="col">回應次數</th>
-                            <th scope="col">編輯</th>
+                            <th className="keywords" scope="col">關鍵字</th>
+                            <th className="text" scope="col">內容</th>
+                            <th className="count" scope="col">回應次數</th>
+                            <th className="edit" scope="col">編輯</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -103,13 +103,13 @@ class KeywordreplyTable extends React.Component {
                     </tbody>
                 </Table>
                 <h4>草稿</h4>
-                <Table striped>
+                <Table className="KeywordreplyTable" striped>
                     <thead>
                         <tr>
-                            <th scope="col">關鍵字</th>
-                            <th scope="col">內容</th>
-                            <th scope="col">回應次數</th>
-                            <th scope="col">編輯</th>
+                            <th className="keywords" scope="col">關鍵字</th>
+                            <th className="text" scope="col">內容</th>
+                            <th className="count" scope="col">回應次數</th>
+                            <th className="edit" scope="col">編輯</th>
                         </tr>
                     </thead>
                     <tbody>

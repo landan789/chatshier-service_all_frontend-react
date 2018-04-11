@@ -5,6 +5,8 @@
         display: block;
         tr {
             display: flex;
+            letter-spacing: .1rem;
+            color: #333;
             .Greeting {
                 display: flex;
                 &__text {

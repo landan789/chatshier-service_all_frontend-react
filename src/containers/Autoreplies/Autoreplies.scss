@@ -5,3 +5,81 @@
 .lean-right {
     float: right;
 }
+
+.AutoreplyTable {
+    display: block;
+    padding-bottom: 5%;
+    thead, tbody {
+        display: block;
+        tr {
+            display: flex;
+            letter-spacing: .1rem;
+            color: #333;
+            .title {
+                width: 35%;
+                word-wrap: break-word;
+            }
+            .time-start, .time-end {
+                width: 10%;
+                word-wrap: break-word;
+                display: none;
+            }
+            .text {
+                width: 45%;
+                word-wrap: break-word;
+            }
+            .edit {
+                width: 20%;
+                button {
+                    display: block;
+                    font-size: 1rem;
+                    letter-spacing: unset;
+                }
+                .btn-danger {
+                    margin-top: 10%;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 480px) {
+    .AutoreplyTable {
+        thead, tbody {
+            tr {
+                .title {
+                    width: 25%;
+                }
+                .time-start, .time-end {
+                    width: 10%;
+                    display: block;
+                }
+                .text {
+                    width: 40%;
+                }
+                .edit {
+                    width: 15%;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 1024px) {
+    .AutoreplyTable {
+        thead, tbody {
+            tr {
+                .edit {
+                    width: 15%;
+                    button {
+                        display: inline;
+                    }
+                    .btn-danger {
+                        margin-top: 0%;
+                        margin-left: 5%;
+                    }
+                }
+            }
+        }
+    }
+}

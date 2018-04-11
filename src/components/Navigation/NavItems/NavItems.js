@@ -2,9 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Aux from 'react-aux';
 
+import urlConfig from '../../../config/url';
+import regex from '../../../utils/regex';
+
 import NavItem from './NavItem';
 
 import './NavItems.css';
+
+const URL = window.urlConfig || urlConfig;
+const wwwUrl = URL.wwwUrl
+    ? URL.wwwUrl + (80 !== URL.port ? ':' + URL.port : '')
+    : window.location.protocol + '//' + document.domain.replace(regex.domainPrefix, 'www.');
 
 class NavItems extends React.Component {
     constructor(props, ctx) {
@@ -65,7 +73,7 @@ class NavItems extends React.Component {
         this.props.items.forEach((item, i) => {
             let container = item.rightSide ? rightItems : leftItems;
             container.push(
-                <NavItem key={i + 1} link={item.link}
+                <NavItem className="d-flex align-items-center h-100" key={i + 1} link={item.link}
                     showDropdown={!!this.state.showDropdown[i]}
                     dropdownItems={item.dropdownItems}
                     dropdownToggle={() => this.dropdownToggle(i)}>
@@ -77,11 +85,16 @@ class NavItems extends React.Component {
 
         return (
             <Aux>
-                <ul className="chsr nav-items">
+                <ul className="nav navbar-left nav-items align-items-center h-100">
+                    <li className="nav-item d-flex align-items-center h-100">
+                        <a className="navbar-brand white ml-3" href={wwwUrl}>
+                            <span>Chatshier</span>
+                        </a>
+                    </li>
                     {leftItems}
                 </ul>
 
-                <ul className="chsr nav-items right">
+                <ul className="nav navbar-right nav-items h-100">
                     {rightItems}
                 </ul>
             </Aux>

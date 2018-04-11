@@ -9,7 +9,7 @@ import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
-import dbapi from '../../helpers/databaseApi/index';
+import apiDatabase from '../../helpers/apiDatabase/index';
 
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 
@@ -32,12 +32,12 @@ class Chat extends React.Component {
     componentDidMount() {
         let userId = authHelper.userId;
         return userId && Promise.all([
-            dbapi.apps.find(userId),
-            dbapi.appsChatrooms.find(userId),
-            dbapi.appsFields.find(userId),
-            dbapi.consumers.find(userId),
-            dbapi.groups.find(userId),
-            dbapi.users.find(userId)
+            apiDatabase.apps.find(userId),
+            apiDatabase.appsChatrooms.find(userId),
+            apiDatabase.appsFields.find(userId),
+            apiDatabase.consumers.find(userId),
+            apiDatabase.groups.find(userId),
+            apiDatabase.users.find(userId)
         ]);
     }
 

@@ -6,7 +6,7 @@ import { Button, Modal, ModalHeader,
 import { DateTimePicker } from 'react-widgets';
 
 import { formatDate, formatTime } from '../../../utils/unitTime';
-import dbapi from '../../../helpers/databaseApi/index';
+import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
 import { notify } from '../../Notify/Notify';
 
@@ -89,7 +89,7 @@ class CalendarEditModal extends React.Component {
         let userId = authHelper.userId;
 
         this.setState({ isAsyncWorking: true });
-        return dbapi.calendarsEvents.delete(calendarId, eventId, userId).then(() => {
+        return apiDatabase.calendarsEvents.delete(calendarId, eventId, userId).then(() => {
             this.props.close(ev);
             return notify('刪除成功', { type: 'success' });
         }).catch(() => {

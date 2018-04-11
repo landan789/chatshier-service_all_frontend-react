@@ -9,7 +9,7 @@ import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
-import dbapi from '../../helpers/databaseApi/index';
+import apiDatabase from '../../helpers/apiDatabase/index';
 
 import { notify } from '../../components/Notify/Notify';
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
@@ -99,9 +99,9 @@ class Calendar extends React.Component {
     componentDidMount() {
         let userId = authHelper.userId;
         return userId && Promise.all([
-            dbapi.calendarsEvents.find(userId),
-            dbapi.appsTickets.find(null, userId),
-            dbapi.consumers.find(userId)
+            apiDatabase.calendarsEvents.find(userId),
+            apiDatabase.appsTickets.find(null, userId),
+            apiDatabase.consumers.find(userId)
         ]);
     }
 
@@ -266,14 +266,14 @@ class Calendar extends React.Component {
         let userId = authHelper.userId;
         switch (eventType) {
             case CalendarEventTypes.CALENDAR:
-                return dbapi.calendarsEvents.update(calendarId, eventId, userId, event);
+                return apiDatabase.calendarsEvents.update(calendarId, eventId, userId, event);
             case CalendarEventTypes.TICKET:
                 /** @type {Chatshier.Ticket} */
                 let ticket = {
                     description: event.description,
                     dueTime: event.endedTime
                 };
-                return dbapi.appsTickets.update(calendarId, eventId, userId, ticket);
+                return apiDatabase.appsTickets.update(calendarId, eventId, userId, ticket);
             // case CalendarEventTypes.GOOGLE:
             //     let dateFormatOpts = {
             //         year: 'numeric',

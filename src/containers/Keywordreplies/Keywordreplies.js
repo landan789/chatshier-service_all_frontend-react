@@ -9,7 +9,7 @@ import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
-import dbapi from '../../helpers/databaseApi/index';
+import apiDatabase from '../../helpers/apiDatabase/index';
 
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
@@ -47,8 +47,8 @@ class Keywordreplies extends React.Component {
         let userId = authHelper.userId;
 
         return Promise.all([
-            dbapi.apps.find(userId),
-            dbapi.appsKeywordreplies.find(null, userId)
+            apiDatabase.apps.find(userId),
+            apiDatabase.appsKeywordreplies.find(null, userId)
         ]);
     }
 

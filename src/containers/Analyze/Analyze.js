@@ -9,7 +9,7 @@ import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
-import dbapi from '../../helpers/databaseApi/index';
+import apiDatabase from '../../helpers/apiDatabase/index';
 
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
@@ -37,7 +37,7 @@ class Analyze extends React.Component {
 
     componentDidMount() {
         let userId = authHelper.userId;
-        return userId && dbapi.appsChatrooms.find(userId);
+        return userId && apiDatabase.appsChatrooms.find(userId);
     }
 
     componentWillReceiveProps(props) {

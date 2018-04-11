@@ -7,7 +7,7 @@ import { DateTimePicker } from 'react-widgets';
 
 import { toDueDateSpan } from '../../../utils/ticket';
 import { formatDate, formatTime } from '../../../utils/unitTime';
-import dbapi from '../../../helpers/databaseApi/index';
+import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
 import { notify } from '../../Notify/Notify';
 
@@ -120,7 +120,7 @@ class TicketEditModal extends React.Component {
         }
 
         this.setState({ isAsyncWorking: true });
-        return dbapi.appsTickets.update(appId, ticketId, userId, ticket).then(() => {
+        return apiDatabase.appsTickets.update(appId, ticketId, userId, ticket).then(() => {
             this.props.close(ev);
 
             let agent = this.props.appsAgents[appId].agents[ticket.assigned_id];
@@ -138,7 +138,7 @@ class TicketEditModal extends React.Component {
         let userId = authHelper.userId;
 
         this.setState({ isAsyncWorking: true });
-        return dbapi.appsTickets.delete(appId, ticketId, userId).then(() => {
+        return apiDatabase.appsTickets.delete(appId, ticketId, userId).then(() => {
             this.props.close(ev);
             return notify('刪除成功', { type: 'success' });
         }).catch(() => {
@@ -209,15 +209,13 @@ class TicketEditModal extends React.Component {
                         </div>
                         <div className="form-group row">
                             <span className="col-12 col-form-label ticket-col">到期時間 {toDueDateSpan(ticket.dueTime)}</span>
-                            <span className="col-12 ticket-col">
-                                <DateTimePicker
-                                    culture="zh-TW"
-                                    format={(datetime) => formatDate(datetime) + ' ' + formatTime(datetime, false)}
-                                    timeFormat={(time) => formatTime(time, false)}
-                                    value={new Date(this.state.dueTime)}
-                                    onChange={this.dueTimeChanged}>
-                                </DateTimePicker>
-                            </span>
+                            <DateTimePicker
+                                culture="zh-TW"
+                                format={(datetime) => formatDate(datetime) + ' ' + formatTime(datetime, false)}
+                                timeFormat={(time) => formatTime(time, false)}
+                                value={new Date(this.state.dueTime)}
+                                onChange={this.dueTimeChanged}>
+                            </DateTimePicker>
                         </div>
                         <div className="form-group row">
                             <span className="col-6 col-form-label ticket-col">建立日期</span>

@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader,
     ModalBody, ModalFooter } from 'reactstrap';
 
-import dbapi from '../../../helpers/databaseApi/index';
+import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
 import { DAY } from '../../../utils/unitTime';
 import { notify } from '../../Notify/Notify';
 
-const appTypes = dbapi.apps.enums.type;
+const appTypes = apiDatabase.apps.enums.type;
 
 class TicketInsertModal extends React.Component {
     constructor(props, ctx) {
@@ -184,7 +184,7 @@ class TicketInsertModal extends React.Component {
             description: this.state.ticketDescription
         };
 
-        return dbapi.appsTickets.insert(appId, userId, ticket).then(() => {
+        return apiDatabase.appsTickets.insert(appId, userId, ticket).then(() => {
             this.props.close(ev);
 
             let agent = this.props.appsAgents[appId].agents[ticket.assigned_id];

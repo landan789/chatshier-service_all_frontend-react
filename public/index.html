@@ -30,39 +30,12 @@
 
         <title>Chatshier</title>
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div class="root" id="charshier_root"></div>
-
-        <script type="text/javascript">
-            (function() {
-                var configUrls = [
-                    'config/firebaseConfig.js',
-                    'config/url-config.js'
-                ];
-
-                var hasContainConfig = function(filename) {
-                    for (var i = 0; i < configUrls.length; i++) {
-                        if (filename.indexOf(configUrls[i]) >= 0) {
-                            return true;
-                        }
-                    }
-                    return false;
-                };
-
-                window.addEventListener('error', function(ev) {
-                    if (ev && 'Uncaught SyntaxError: Unexpected token <' === ev.message &&
-                        hasContainConfig(ev.filename.replace(window.location.origin, ''))) {
-                        ev.preventDefault();
-                    }
-                }, true);
-            })();
-        </script>
-        <script src="config/firebaseConfig.js"></script>
         <script src="config/url-config.js"></script>
     </body>
 </html>

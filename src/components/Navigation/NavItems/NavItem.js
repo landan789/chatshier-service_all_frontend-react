@@ -35,9 +35,9 @@ class NavItem extends React.Component {
 
     render() {
         let itemSymbol =
-            <li className={(this.props.className + ' chsr nav-item').trim()}
+            <li className={('nav-item ' + (this.props.className || '')).trim()}
                 onClick={this.onClickItem}>
-                {this.props.children}
+                <a className="nav-link">{this.props.children}</a>
                 {this.props.dropdownItems && (
                     <DropdownMenu
                         dropdownItems={this.props.dropdownItems}

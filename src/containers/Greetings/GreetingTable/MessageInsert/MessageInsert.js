@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import Aux from 'react-aux';
 
-import dbapi from '../../../../helpers/databaseApi/index';
+import apiDatabase from '../../../../helpers/apiDatabase/index';
 import authHelper from '../../../../helpers/authentication';
 import { notify } from '../../../../components/Notify/Notify';
 import '../GreetingTable.css';
@@ -43,7 +43,7 @@ class MessageInsert extends Component {
         };
 
         this.setState({ isInserting: true });
-        return dbapi.appsGreetings.insert(appId, userId, greeting).then(() => {
+        return apiDatabase.appsGreetings.insert(appId, userId, greeting).then(() => {
             this.setState({ isInserting: false });
             this.props.delete(ev);
         });

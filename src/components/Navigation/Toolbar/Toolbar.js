@@ -6,20 +6,13 @@ import { withRouter } from 'react-router-dom';
 import ROUTES from '../../../config/route';
 import NavItems from '../NavItems/NavItems';
 import SideMenu from '../SideMenu/SideMenu';
-import urlConfig from '../../../config/url';
-import regex from '../../../utils/regex';
 
 import './Toolbar.css';
-
-const URL = window.urlConfig || urlConfig;
-const wwwUrl = URL.wwwUrl
-    ? URL.wwwUrl + (80 !== URL.port ? ':' + URL.port : '')
-    : window.location.protocol + '//' + document.domain.replace(regex.domainPrefix, 'www.');
 
 const navItems = [
     {
         link: ROUTES.CHAT,
-        icon: 'fas fa-comment-alt fa-fw',
+        icon: 'fas fa-comment-dots fa-fw',
         text: '聊天室'
     }, {
         link: ROUTES.CALENDAR,
@@ -101,12 +94,9 @@ class Toolbar extends React.Component {
     render() {
         return (
             <Aux>
-                <header className="toolbar">
-                    <nav className="navbar normal">
-                        <div className="navbar-header">
-                            <a className="navbar-brand" href={wwwUrl}>Chatshier</a>
-                            <NavItems items={navItems} />
-                        </div>
+                <header className="chsr toolbar">
+                    <nav className="chsr navbar navbar-light desktop">
+                        <NavItems items={navItems} />
                     </nav>
                     <nav className="navbar mobile">
                         <div className="navbar-header">

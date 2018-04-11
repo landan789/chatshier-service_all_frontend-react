@@ -6,7 +6,7 @@ import { Table, Button } from 'reactstrap';
 
 import KeywordreplyEditModal from '../../components/Modals/KeywordreplyEdit/KeywordreplyEdit';
 import authHelper from '../../helpers/authentication';
-import dbapi from '../../helpers/databaseApi/index';
+import apiDatabase from '../../helpers/apiDatabase/index';
 import { notify } from '../../components/Notify/Notify';
 
 class KeywordreplyTable extends React.Component {
@@ -51,7 +51,7 @@ class KeywordreplyTable extends React.Component {
     }
     removekeywordreply(appId, keywordreplyId) {
         let userId = authHelper.userId;
-        return dbapi.appsKeywordreplies.delete(appId, keywordreplyId, userId).then(() => {
+        return apiDatabase.appsKeywordreplies.delete(appId, keywordreplyId, userId).then(() => {
             return notify('刪除成功', { type: 'success' });
         }).catch(() => {
             return notify('刪除失敗', { type: 'danger' });

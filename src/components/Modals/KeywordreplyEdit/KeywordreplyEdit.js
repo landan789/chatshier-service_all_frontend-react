@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input } from 'reactstrap';
 
-import dbapi from '../../../helpers/databaseApi/index';
+import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
 import { notify } from '../../Notify/Notify';
 
@@ -66,7 +66,7 @@ class KeywordreplyEdit extends React.Component {
             updatedTime: Date.now()
         };
 
-        return dbapi.appsKeywordreplies.update(appId, keywordreplyId, userId, keywordreply).then(() => {
+        return apiDatabase.appsKeywordreplies.update(appId, keywordreplyId, userId, keywordreply).then(() => {
             this.props.close(event);
             return notify('新增成功', { type: 'success' });
         }).catch(() => {

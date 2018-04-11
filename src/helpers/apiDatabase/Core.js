@@ -39,10 +39,12 @@ class Core {
 
     /**
      * @param {string} url
-     * @param {RequestInit} reqInits
-     * @param {Boolean} usingRecursive If true, the processes will do step one by one
+     * @param {RequestInit|RequestInit[]} [reqInits]
+     * @param {Boolean} [usingRecursive=false] If true, the processes will do step one by one
      */
     sendRequest(url, reqInits, usingRecursive) {
+        reqInits = reqInits || {};
+        reqInits.method = reqInits.method || 'GET';
         usingRecursive = !!usingRecursive;
 
         if (reqInits instanceof Array) {
@@ -66,12 +68,25 @@ class Core {
                 return nextPromise(0);
             } else {
                 return Promise.all(reqInits.map((_reqInit) => {
+                    _reqInit.cache = 'no-cache';
+                    _reqInit.mode = 'cors';
+                    if ('POST' === reqInits.method.toUpperCase() ||
+                        'PUT' === reqInits.method.toUpperCase()) {
+                        reqInits.headers.set('Content-Type', 'application/json');
+                    }
                     return window.fetch(url, _reqInit).then((res) => {
                         return this.responseChecking(res);
                     });
                 }));
             }
         }
+
+        if ('POST' === reqInits.method.toUpperCase() ||
+            'PUT' === reqInits.method.toUpperCase()) {
+            reqInits.headers.set('Content-Type', 'application/json');
+        }
+        reqInits.cache = 'no-cache';
+        reqInits.mode = 'cors';
 
         return window.fetch(url, reqInits).then((res) => {
             return this.responseChecking(res);

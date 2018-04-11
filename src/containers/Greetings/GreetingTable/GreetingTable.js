@@ -65,9 +65,9 @@ class GreetingTable extends React.Component {
                 <Table className="Table">
                     <thead>
                         <tr>
-                            <th>文字</th>
-                            <th>新增時間</th>
-                            <th>操作</th>
+                            <th className="Greeting__text">文字</th>
+                            <th className="Greeting__time">新增時間</th>
+                            <th className="Greeting__button">操作</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -81,15 +81,14 @@ class GreetingTable extends React.Component {
                                 </MessageInsert>
                             </tr>
                         ))}
-                        <tr className="buttons">
-                            <th></th>
-                            <td></td>
-                            <td>
+                        <tr>
+                            <th className="Greeting__text"></th>
+                            <td className="Greeting__time"></td>
+                            <td className="Greeting__button">
                                 <Button
                                     color="primary"
                                     onClick={this.addInsertMessage}>
                                     <span className="fas fa-plus fa-fw"></span>
-                                    新增
                                 </Button>
                             </td>
                         </tr>

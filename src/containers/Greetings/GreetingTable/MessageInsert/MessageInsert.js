@@ -8,6 +8,7 @@ import Aux from 'react-aux';
 import dbapi from '../../../../helpers/databaseApi/index';
 import authHelper from '../../../../helpers/authentication';
 import { notify } from '../../../../components/Notify/Notify';
+import '../GreetingTable.css';
 
 class MessageInsert extends Component {
     constructor(props, ctx) {
@@ -55,14 +56,14 @@ class MessageInsert extends Component {
     render() {
         return (
             <Aux>
-                <td>
+                <td className="Greeting__text">
                     <textarea
                         value={this.state.text}
                         onChange={this.messageChanged}>
                     </textarea>
                 </td>
-                <td>{this.state.time}</td>
-                <td>
+                <td className="Greeting__time">{this.state.time}</td>
+                <td className="Greeting__button">
                     <Button disabled={this.state.isInserting}
                         color="info"
                         onClick={this.insertMessage}>

@@ -87,11 +87,11 @@ class ComposeTable extends React.Component {
             }
             return (
                 <tr key={index}>
-                    <td>{compose.text}</td>
-                    <td>{timeHelper.toLocalTimeString(compose.time)}</td>
-                    <td>{0 < compose.ageRange || compose.gender || 0 < Object.keys(compose.field_ids) ? '有' : '無'}</td>
-                    <td>
-                        <Button color="secondary" onClick={() => this.openEditModal(appId, composeId, composes[composeId], this.props.appsFields[appId])}><i className="fas fa-pencil-alt"></i></Button>{' '}
+                    <td className="text">{compose.text}</td>
+                    <td className="time">{timeHelper.toLocalTimeString(compose.time)}</td>
+                    <td className="cata">{0 < compose.ageRange || compose.gender || 0 < Object.keys(compose.field_ids) ? '有' : '無'}</td>
+                    <td className="edit">
+                        <Button color="secondary" onClick={() => this.openEditModal(appId, composeId, composes[composeId], this.props.appsFields[appId])}><i className="fas fa-pencil-alt"></i></Button>
                         <Button color="danger" onClick={() => this.removeCompose(appId, composeId)}><i className="fas fa-trash-alt"></i></Button>
                     </td>
                 </tr>
@@ -105,10 +105,10 @@ class ComposeTable extends React.Component {
                 <Table striped>
                     <thead>
                         <tr>
-                            <th scope="col">內容</th>
-                            <th scope="col">時間</th>
-                            <th scope="col">分類項目</th>
-                            <th scope="col">編輯</th>
+                            <th className="text" scope="col">內容</th>
+                            <th className="time" scope="col">時間</th>
+                            <th className="cata" scope="col">分類項目</th>
+                            <th className="edit" scope="col">編輯</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -119,10 +119,10 @@ class ComposeTable extends React.Component {
                 <Table striped>
                     <thead>
                         <tr>
-                            <th scope="col">內容</th>
-                            <th scope="col">時間</th>
-                            <th scope="col">分類項目</th>
-                            <th scope="col">編輯</th>
+                            <th className="text" scope="col">內容</th>
+                            <th className="time" scope="col">時間</th>
+                            <th className="cata" scope="col">分類項目</th>
+                            <th className="edit" scope="col">編輯</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -133,10 +133,10 @@ class ComposeTable extends React.Component {
                 <Table striped>
                     <thead>
                         <tr>
-                            <th scope="col">內容</th>
-                            <th scope="col">時間</th>
-                            <th scope="col">分類項目</th>
-                            <th scope="col">編輯</th>
+                            <th className="text" scope="col">內容</th>
+                            <th className="time" scope="col">時間</th>
+                            <th className="cata" scope="col">分類項目</th>
+                            <th className="edit" scope="col">編輯</th>
                         </tr>
                     </thead>
                     <tbody>

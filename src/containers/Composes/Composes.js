@@ -9,7 +9,7 @@ import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
-import dbapi from '../../helpers/databaseApi/index';
+import apiDatabase from '../../helpers/apiDatabase/index';
 
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
@@ -45,9 +45,9 @@ class Composes extends React.Component {
     componentDidMount() {
         let userId = authHelper.userId;
         return Promise.all([
-            dbapi.apps.find(userId),
-            dbapi.appsComposes.find(null, userId),
-            dbapi.appsFields.find(userId)
+            apiDatabase.apps.find(userId),
+            apiDatabase.appsComposes.find(null, userId),
+            apiDatabase.appsFields.find(userId)
         ]);
     }
 

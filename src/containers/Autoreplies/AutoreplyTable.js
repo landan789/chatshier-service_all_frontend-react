@@ -7,7 +7,7 @@ import { Table, Button } from 'reactstrap';
 
 import AutoreplyEditModal from '../../components/Modals/AutoreplyEdit/AutoreplyEdit';
 import authHelper from '../../helpers/authentication';
-import dbapi from '../../helpers/databaseApi/index';
+import apiDatabase from '../../helpers/apiDatabase/index';
 import { notify } from '../../components/Notify/Notify';
 
 class AutoreplyTable extends React.Component {
@@ -47,7 +47,7 @@ class AutoreplyTable extends React.Component {
     }
     removeAutoreply(appId, autoreplyId) {
         let userId = authHelper.userId;
-        return dbapi.appsAutoreplies.delete(appId, autoreplyId, userId).then(() => {
+        return apiDatabase.appsAutoreplies.delete(appId, autoreplyId, userId).then(() => {
             return notify('刪除成功', { type: 'success' });
         }).catch(() => {
             return notify('刪除失敗', { type: 'danger' });

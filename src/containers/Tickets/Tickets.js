@@ -9,7 +9,7 @@ import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
-import dbapi from '../../helpers/databaseApi/index';
+import apiDatabase from '../../helpers/apiDatabase/index';
 
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 import TicketInsertModal from '../../components/Modals/TicketInsert/TicketInsert';
@@ -44,11 +44,11 @@ class Tickets extends React.Component {
     componentDidMount() {
         let userId = authHelper.userId;
         return userId && Promise.all([
-            dbapi.apps.find(userId),
-            dbapi.appsTickets.find(null, userId),
-            dbapi.consumers.find(userId),
-            dbapi.groups.find(userId),
-            dbapi.users.find(userId)
+            apiDatabase.apps.find(userId),
+            apiDatabase.appsTickets.find(null, userId),
+            apiDatabase.consumers.find(userId),
+            apiDatabase.groups.find(userId),
+            apiDatabase.users.find(userId)
         ]);
     }
 

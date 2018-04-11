@@ -7,7 +7,7 @@ import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reac
 
 import authHelper from '../../helpers/authentication';
 import { updateApps } from '../../redux/actions/apps';
-import dbapi from '../../helpers/databaseApi/index';
+import apiDatabase from '../../helpers/apiDatabase/index';
 
 class AppsSelector extends React.Component {
     constructor(props, ctx) {
@@ -30,7 +30,7 @@ class AppsSelector extends React.Component {
 
     componentDidMount() {
         let userId = authHelper.userId;
-        return userId && dbapi.apps.find(userId);
+        return userId && apiDatabase.apps.find(userId);
     }
 
     componentWillReceiveProps(props) {

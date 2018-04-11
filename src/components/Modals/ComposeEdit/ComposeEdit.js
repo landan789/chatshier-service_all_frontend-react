@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input, Row, Col } from 'reactstrap';
 import { DateTimePicker } from 'react-widgets';
 
-import dbapi from '../../../helpers/databaseApi/index';
+import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
 import timeHelper from '../../../helpers/timer';
 import { notify } from '../../Notify/Notify';
@@ -148,7 +148,7 @@ class ComposeEdit extends React.Component {
             gender: gender,
             field_ids
         };
-        return dbapi.appsComposes.update(appId, composeId, userId, compose).then(() => {
+        return apiDatabase.appsComposes.update(appId, composeId, userId, compose).then(() => {
             this.props.close(event);
             return notify('修改成功', { type: 'success' });
         }).catch(() => {

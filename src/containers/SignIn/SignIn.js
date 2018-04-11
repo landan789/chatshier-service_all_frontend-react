@@ -9,7 +9,7 @@ import browserHelper from '../../helpers/browser';
 import authHelper from '../../helpers/authentication';
 import apiSign from '../../helpers/apiSign/index';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
-import { setJWT } from '../../helpers/databaseApi/index';
+import { setJWT } from '../../helpers/apiDatabase/index';
 import regex from '../../utils/regex';
 
 import { notify } from '../../components/Notify/Notify';

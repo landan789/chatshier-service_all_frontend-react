@@ -24,7 +24,7 @@ class Users extends Core {
         destUrl += (useFuzzy ? ('fuzzy=1') : '');
 
         let reqInit = {
-            methods: 'GET',
+            method: 'GET',
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {

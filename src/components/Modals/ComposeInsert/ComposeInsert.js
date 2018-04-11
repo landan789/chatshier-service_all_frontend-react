@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input, Row, Col, Table } from 'reactstrap';
 import { DateTimePicker } from 'react-widgets';
 
-import dbapi from '../../../helpers/databaseApi/index';
+import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
 import timeHelper from '../../../helpers/timer';
 import { notify } from '../../Notify/Notify';
@@ -202,7 +202,7 @@ class ComposeInsert extends React.Component {
             };
             return compose;
         });
-        return dbapi.appsComposes.insert(appId, userId, composes, usingRecursive).then(() => {
+        return apiDatabase.appsComposes.insert(appId, userId, composes, usingRecursive).then(() => {
             this.props.close(event);
             return notify('新增成功', { type: 'success' });
         }).catch(() => {

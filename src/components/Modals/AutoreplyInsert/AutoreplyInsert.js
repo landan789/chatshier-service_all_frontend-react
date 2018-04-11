@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input, InputGroup } from 'reactstrap';
 import { DateTimePicker } from 'react-widgets';
 
-import dbapi from '../../../helpers/databaseApi/index';
+import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
 import { notify } from '../../Notify/Notify';
 
@@ -75,7 +75,7 @@ class AutoreplyInsert extends React.Component {
             updatedTime: Date.now()
         };
 
-        return dbapi.appsAutoreplies.insert(appId, userId, autoreply).then(() => {
+        return apiDatabase.appsAutoreplies.insert(appId, userId, autoreply).then(() => {
             this.props.close(event);
             return notify('新增成功', { type: 'success' });
         }).catch(() => {

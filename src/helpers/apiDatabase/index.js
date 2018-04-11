@@ -16,7 +16,7 @@ import cookieHelper from '../cookie';
 
 let jwt = '';
 let reqHeaders = new Headers();
-reqHeaders.set('Content-Type', 'application/json');
+reqHeaders.set('Accept', 'application/json');
 
 /**
  * 設定 API 驗證身份所需的 JSON Web Token
@@ -30,7 +30,7 @@ const setJWT = (value) => {
 };
 cookieHelper.hasSignedin() && setJWT(window.localStorage.getItem('jwt'));
 
-const databaseApi = {
+const apiDatabase = {
     apps: new Apps(),
     appsAutoreplies: new AppsAutoreplies(),
     appsChatrooms: new AppsChatrooms(),
@@ -46,5 +46,5 @@ const databaseApi = {
     users: new Users()
 };
 
-export default databaseApi;
-export { databaseApi, setJWT, jwt, reqHeaders };
+export default apiDatabase;
+export { apiDatabase, setJWT, jwt, reqHeaders };

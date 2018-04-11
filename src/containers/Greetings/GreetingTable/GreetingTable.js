@@ -5,7 +5,7 @@ import Aux from 'react-aux';
 import { connect } from 'react-redux';
 
 import authHelper from '../../../helpers/authentication';
-import dbapi from '../../../helpers/databaseApi/index';
+import apiDatabase from '../../../helpers/apiDatabase/index';
 
 import Greeting from './Greeting/Greeting';
 import MessageInsert from './MessageInsert/MessageInsert';
@@ -26,7 +26,7 @@ class GreetingTable extends React.Component {
 
     componentDidMount() {
         let userId = authHelper.userId;
-        return dbapi.appsGreetings.find(null, userId);
+        return apiDatabase.appsGreetings.find(null, userId);
     }
 
     addInsertMessage(ev) {

@@ -9,7 +9,7 @@ import browserHelper from '../../helpers/browser';
 import authHelper from '../../helpers/authentication';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
 import apiSign from '../../helpers/apiSign/index';
-import { setJWT } from '../../helpers/databaseApi/index';
+import { setJWT } from '../../helpers/apiDatabase/index';
 import regex from '../../utils/regex';
 import { notify } from '../../components/Notify/Notify';
 
@@ -108,7 +108,6 @@ class SignUp extends React.Component {
     }
 
     signup(name, email, password) {
-
         this.setState({
             isSignUping: true,
             signupBtnHtml: '<i class="fas fa-circle-notch fa-spin"></i> 註冊中...'

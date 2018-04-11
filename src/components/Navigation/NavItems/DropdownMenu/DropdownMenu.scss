@@ -1,10 +1,10 @@
 .chsr.dropdown-menu {
     color: black;
-    transform-origin: center top;
-    animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
-    animation-fill-mode: both;
-    animation-duration: 250ms;
-    animation-name: scaleYGrowUp;
+    // transform-origin: center top;
+    // animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+    // animation-fill-mode: both;
+    // animation-duration: 250ms;
+    // animation-name: scaleYGrowUp;
 
     &.open {
         display: block;

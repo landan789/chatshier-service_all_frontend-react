@@ -122,9 +122,9 @@ AutoreplyTable.propTypes = {
     keyword: PropTypes.string
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (storeState, ownProps) => {
     return {
-        appsAutoreplies: state.appsAutoreplies
+        appsAutoreplies: storeState.appsAutoreplies
     };
 };
 

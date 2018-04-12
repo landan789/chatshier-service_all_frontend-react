@@ -11,6 +11,11 @@
     
         &.navbar-right {
             margin-left: auto;
+
+            .dropdown-menu {
+                right: .2rem;
+                left: initial;
+            }
         }
 
         .navbar-brand.white,

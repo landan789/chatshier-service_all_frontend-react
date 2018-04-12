@@ -115,10 +115,10 @@ Autoreplies.propTypes = {
     history: PropTypes.object.isRequired
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (storeState, ownProps) => {
     return {
-        apps: state.apps,
-        appsAutoreplies: state.appsAutoreplies
+        apps: storeState.apps,
+        appsAutoreplies: storeState.appsAutoreplies
     };
 };
 

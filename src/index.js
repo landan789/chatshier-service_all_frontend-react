@@ -98,6 +98,6 @@ ReactDOM.render(
             </Switch>
         </BrowserRouter>
     </Provider>,
-    document.getElementById('charshier_root')
+    document.getElementById('charshierRoot')
 );
 // registerServiceWorker();

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Aux from 'react-aux';
 import { withRouter } from 'react-router-dom';
 import { Fade, Jumbotron } from 'reactstrap';
 
@@ -42,9 +41,9 @@ class Greetings extends React.Component {
 
     render() {
         return (
-            <Aux>
+            <div className="ml-auto w-100">
                 <Toolbar />
-                <Fade className="col-12 col-sm-9 ml-auto has-toolbar">
+                <Fade className="greetings-wrapper">
                     <div className="Greetings">
                         <Jumbotron>
                             <h1 className="display-3">加好友回覆</h1>
@@ -54,7 +53,7 @@ class Greetings extends React.Component {
                         <GreetingTable appId={this.state.selectedAppId} />
                     </div>
                 </Fade>
-            </Aux>
+            </div>
         );
     }
 }

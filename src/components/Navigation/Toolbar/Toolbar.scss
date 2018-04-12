@@ -2,15 +2,7 @@
 
 $_toolbar-bg-color: $primary-color;
 
-.has-toolbar {
-    margin-top: $toolbar-height;
-}
-
 .chsr.toolbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
     background-color: $_toolbar-bg-color;
     height: $toolbar-height;
     font-size: .9rem;

@@ -147,8 +147,8 @@ class Toolbar extends React.Component {
     render() {
         return (
             <Aux>
-                <header className="chsr toolbar">
-                    <nav className="col-12 col-sm-9 ml-auto navbar px-1">
+                <header className="chsr toolbar w-100">
+                    <nav className="navbar px-1">
                         <button type="button"
                             className="btn text-light transparent d-sm-none"
                             onClick={this.mobileToggleSideMenu}>

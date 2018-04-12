@@ -1,11 +1,9 @@
 @import '../../../styles/_variables';
 
+$side-menu-width: 16rem;
+
 .chsr.side-menu {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 25%;
-    min-width: 12rem;
+    min-width: $side-menu-width;
     // min-height: calc(100% - #{$toolbar-height});
     // margin-top: $toolbar-height;
     min-height: 100%;
@@ -17,6 +15,7 @@
     animation-fill-mode: both;
 
     &.sm {
+        position: absolute;
         animation-name: sideMenuSlideIn;
     }
 
@@ -26,6 +25,8 @@
     }
 
     .list-group-item {
+        cursor: pointer;
+
         &.nested i {
             padding-left: 1rem;
         }
@@ -42,10 +43,11 @@
 
 .side-menu-backdrop {
     position: absolute;
-    left: 0;
+    left: $side-menu-width;
     top: 0;
-    width: 100%;
+    width: calc(100vw - #{$side-menu-width});
     height: 100vh;
+    z-index: 999;
     background-color: transparent;
 }
 

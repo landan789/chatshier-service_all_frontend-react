@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Aux from 'react-aux';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Fade, Jumbotron, Row, Col, InputGroup, Input, Button } from 'reactstrap';
@@ -73,10 +72,10 @@ class Composes extends React.Component {
 
     render() {
         return (
-            <Aux>
+            <div className="ml-auto w-100">
                 <Toolbar />
-                <Fade in className="col-12 col-sm-9 ml-auto has-toolbar composes-wrapper">
-                    <div className="Greetings">
+                <Fade in className="composes-wrapper">
+                    <div className="composes">
                         <Jumbotron>
                             <h1 className="display-3">群發</h1><br/>
                             <Row>
@@ -107,7 +106,7 @@ class Composes extends React.Component {
                         <ComposeTable appId={this.state.appId} keyword={this.state.searchKeyword} />
                     </div>
                 </Fade>
-            </Aux>
+            </div>
         );
     }
 }

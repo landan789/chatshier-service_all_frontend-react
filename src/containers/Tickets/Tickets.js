@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Aux from 'react-aux';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Fade } from 'reactstrap';
@@ -98,9 +97,9 @@ class Tickets extends React.Component {
 
     render() {
         return (
-            <Aux>
+            <div className="ml-auto w-100">
                 <Toolbar />
-                <Fade in className="col-12 col-sm-9 ml-auto has-toolbar ticket-wrapper">
+                <Fade in className="ticket-wrapper">
                     <div className="ticket-toolbar">
                         <button type="button" className="btn btn-light ticket-insert" onClick={this.openInsertModal}>
                             <span className="fas fa-plus fa-fw"></span>
@@ -127,7 +126,7 @@ class Tickets extends React.Component {
                         searchKeyword={this.state.searchKeyword}>
                     </TicketTable>
                 </Fade>
-            </Aux>
+            </div>
         );
     }
 }

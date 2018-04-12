@@ -95,7 +95,7 @@ class Toolbar extends React.Component {
         return (
             <Aux>
                 <header className="chsr toolbar">
-                    <nav className="chsr navbar navbar-light desktop">
+                    <nav className="chsr navbar navbar-light p-0 desktop">
                         <NavItems items={navItems} />
                     </nav>
                     <nav className="navbar mobile">

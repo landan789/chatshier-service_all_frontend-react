@@ -55,16 +55,16 @@ class TicketEventItem extends CalendarEventItem {
     }
 }
 
-// class GoogleEventItem extends CalendarEventItem {
-//     constructor(options) {
-//         options = options || {};
-//         super(options);
-//         this.eventType = CalendarEventTypes.GOOGLE;
-//         this.backgroundColor = '#468af5';
-//         this.borderColor = '#468af5';
-//         this.textColor = '#efeff0';
-//     }
-// }
+class GoogleEventItem extends CalendarEventItem {
+    constructor(options) {
+        options = options || {};
+        super(options);
+        this.eventType = CalendarEventTypes.GOOGLE;
+        this.backgroundColor = '#468af5';
+        this.borderColor = '#468af5';
+        this.textColor = '#efeff0';
+    }
+}
 
 class Calendar extends React.Component {
     constructor(props) {
@@ -75,6 +75,7 @@ class Calendar extends React.Component {
             editModalData: null
         };
 
+        this.appsAgents = {};
         /** @type {JQuery<HTMLElement>} */
         this.$calendar = null;
 
@@ -101,12 +102,43 @@ class Calendar extends React.Component {
         return userId && Promise.all([
             apiDatabase.calendarsEvents.find(userId),
             apiDatabase.appsTickets.find(null, userId),
-            apiDatabase.consumers.find(userId)
+            apiDatabase.consumers.find(userId),
+            apiDatabase.groups.find(userId),
+            apiDatabase.users.find(userId)
         ]);
     }
 
     componentWillReceiveProps(props) {
         this.reload(props);
+
+        // 每個 app 因群組不同，指派人清單也會不同，因此須根據群組準備指派人清單
+        if (Object.keys(props.appsTickets).length > 0 &&
+            Object.keys(props.groups).length > 0 &&
+            Object.keys(props.users).length > 0) {
+            /** @type {Chatshier.AppsTickets} */
+            let appsTickets = props.appsTickets;
+            /** @type {Chatshier.Groups} */
+            let groups = props.groups;
+            /** @type {Chatshier.Users} */
+            let users = props.users;
+
+            this.appsAgents = {};
+            for (let appId in appsTickets) {
+                for (let groupId in groups) {
+                    let group = groups[groupId];
+                    if (0 <= group.app_ids.indexOf(appId)) {
+                        this.appsAgents[appId] = { agents: {} };
+                        for (let memberId in group.members) {
+                            let memberUserId = group.members[memberId].user_id;
+                            this.appsAgents[appId].agents[memberUserId] = {
+                                name: users[memberUserId].name,
+                                email: users[memberUserId].email
+                            };
+                        }
+                    }
+                }
+            }
+        }
     }
 
     reload(props) {
@@ -274,44 +306,45 @@ class Calendar extends React.Component {
                     dueTime: event.endedTime
                 };
                 return apiDatabase.appsTickets.update(calendarId, eventId, userId, ticket);
-            // case CalendarEventTypes.GOOGLE:
-            //     let dateFormatOpts = {
-            //         year: 'numeric',
-            //         month: '2-digit',
-            //         day: '2-digit'
-            //     };
+            case CalendarEventTypes.GOOGLE:
+                // let dateFormatOpts = {
+                //     year: 'numeric',
+                //     month: '2-digit',
+                //     day: '2-digit'
+                // };
 
-            //     let gEvent = {
-            //         summary: calendar.title,
-            //         description: calendar.description,
-            //         start: {
-            //             date: calendar.isAllDay ? new Date(calendar.startedTime).toLocaleDateString('zh', dateFormatOpts).replace(/\//g, '-') : void 0,
-            //             dateTime: !calendar.isAllDay ? new Date(calendar.startedTime).toJSON() : void 0
-            //         },
-            //         end: {
-            //             date: calendar.isAllDay ? new Date(calendar.endedTime).toLocaleDateString('zh', dateFormatOpts).replace(/\//g, '-') : void 0,
-            //             dateTime: !calendar.isAllDay ? new Date(calendar.endedTime).toJSON() : void 0
-            //         }
-            //     };
+                // let gEvent = {
+                //     summary: event.title,
+                //     description: event.description,
+                //     start: {
+                //         date: event.isAllDay ? new Date(event.startedTime).toLocaleDateString('zh', dateFormatOpts).replace(/\//g, '-') : void 0,
+                //         dateTime: !event.isAllDay ? new Date(event.startedTime).toJSON() : void 0
+                //     },
+                //     end: {
+                //         date: event.isAllDay ? new Date(event.endedTime).toLocaleDateString('zh', dateFormatOpts).replace(/\//g, '-') : void 0,
+                //         dateTime: !event.isAllDay ? new Date(event.endedTime).toJSON() : void 0
+                //     }
+                // };
 
-            //     return window.googleCalendarHelper.updateEvent('primary', eventId, gEvent).then((googleEvent) => {
-            //         let isAllDay = !!(googleEvent.start.date && googleEvent.end.date);
-            //         let startDate = isAllDay ? new Date(googleEvent.start.date) : new Date(googleEvent.start.dateTime);
-            //         isAllDay && startDate.setHours(0, 0, 0, 0);
-            //         let endDate = isAllDay ? new Date(googleEvent.end.date) : new Date(googleEvent.end.dateTime);
-            //         isAllDay && endDate.setHours(0, 0, 0, 0);
+                // return window.googleCalendarHelper.updateEvent('primary', eventId, gEvent).then((googleEvent) => {
+                //     let isAllDay = !!(googleEvent.start.date && googleEvent.end.date);
+                //     let startDate = isAllDay ? new Date(googleEvent.start.date) : new Date(googleEvent.start.dateTime);
+                //     isAllDay && startDate.setHours(0, 0, 0, 0);
+                //     let endDate = isAllDay ? new Date(googleEvent.end.date) : new Date(googleEvent.end.dateTime);
+                //     isAllDay && endDate.setHours(0, 0, 0, 0);
 
-            //         let eventItem = new GoogleEventItem({
-            //             calendarId: googleEvent.iCalUID,
-            //             id: eventId,
-            //             title: googleEvent.summary,
-            //             description: googleEvent.description,
-            //             start: startDate,
-            //             end: endDate,
-            //             origin: googleEvent
-            //         });
-            //         this.$calendar.fullCalendar('updateEvent', eventItem, true);
-            //     });
+                //     let eventItem = new GoogleEventItem({
+                //         calendarId: googleEvent.iCalUID,
+                //         id: eventId,
+                //         title: googleEvent.summary,
+                //         description: googleEvent.description,
+                //         start: startDate,
+                //         end: endDate,
+                //         origin: googleEvent
+                //     });
+                //     this.$calendar.fullCalendar('updateEvent', eventItem, true);
+                // });
+                return;
             default:
                 return Promise.reject(new Error('UNKNOWN_EVENT_TYPE'));
         }
@@ -389,6 +422,7 @@ class Calendar extends React.Component {
                     close={this.closeEditModal}>
                 </CalendarEditModal>
                 <TicketEditModal
+                    appsAgents={this.appsAgents}
                     modalData={this.state.editTicketData}
                     isOpen={!!this.state.editTicketData}
                     close={this.closeEditModal}>
@@ -402,15 +436,19 @@ Calendar.propTypes = {
     consumers: PropTypes.object,
     appsTickets: PropTypes.object,
     calendarsEvents: PropTypes.object,
+    groups: PropTypes.object,
+    users: PropTypes.object,
     history: PropTypes.object.isRequired
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
     return {
-        consumers: state.consumers,
-        appsTickets: state.appsTickets,
-        calendarsEvents: state.calendarsEvents
+        consumers: storeState.consumers,
+        appsTickets: storeState.appsTickets,
+        calendarsEvents: storeState.calendarsEvents,
+        groups: storeState.groups,
+        users: storeState.users
     };
 };
 

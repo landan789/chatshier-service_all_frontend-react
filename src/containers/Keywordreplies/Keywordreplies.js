@@ -114,11 +114,11 @@ Keywordreplies.propTypes = {
     history: PropTypes.object.isRequired
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
     return {
-        apps: state.apps,
-        appsKeywordreplies: state.appsKeywordreplies
+        apps: storeState.apps,
+        appsKeywordreplies: storeState.appsKeywordreplies
     };
 };
 

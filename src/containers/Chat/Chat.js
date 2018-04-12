@@ -66,14 +66,14 @@ Chat.propTypes = {
     history: PropTypes.object.isRequired
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
     return {
-        apps: state.apps,
-        appsChatrooms: state.appsChatrooms,
-        appsFields: state.appsFields,
-        consumers: state.consumers,
-        groups: state.groups
+        apps: storeState.apps,
+        appsChatrooms: storeState.appsChatrooms,
+        appsFields: storeState.appsFields,
+        consumers: storeState.consumers,
+        groups: storeState.groups
     };
 };
 

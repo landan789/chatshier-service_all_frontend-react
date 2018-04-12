@@ -160,10 +160,10 @@ ComposeTable.propTypes = {
     keyword: PropTypes.string
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (storeState, ownProps) => {
     return {
-        appsFields: state.appsFields,
-        appsComposes: state.appsComposes
+        appsFields: storeState.appsFields,
+        appsComposes: storeState.appsComposes
     };
 };
 

@@ -132,9 +132,9 @@ KeywordreplyTable.propTypes = {
     keyword: PropTypes.string
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (storeState, ownProps) => {
     return {
-        appsKeywordreplies: state.appsKeywordreplies
+        appsKeywordreplies: storeState.appsKeywordreplies
     };
 };
 

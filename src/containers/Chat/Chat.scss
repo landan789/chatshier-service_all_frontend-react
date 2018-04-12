@@ -1,0 +1,6 @@
+@import '../../styles/_variables';
+
+.chat-wrapper {
+    font-family: Microsoft JhengHei;
+    height: calc(100% - #{$toolbar-height});
+}

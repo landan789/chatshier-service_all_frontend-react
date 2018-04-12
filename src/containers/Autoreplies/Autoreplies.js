@@ -12,7 +12,7 @@ import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import AutoreplyTable from '../Autoreplies/AutoreplyTable.js';
-import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
+import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import AutoreplyInsertModal from '../../components/Modals/AutoreplyInsert/AutoreplyInsert';
 
@@ -36,6 +36,7 @@ class Autoreplies extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('自動回覆');
+        setNavTitle('自動回覆');
 
         if (!cookieHelper.hasSignedin()) {
             authHelper.signOut();
@@ -73,7 +74,7 @@ class Autoreplies extends React.Component {
         return (
             <Aux>
                 <Toolbar />
-                <Fade in className="has-toolbar">
+                <Fade in className="col-12 col-sm-9 ml-auto has-toolbar">
                     <div className="Greetings">
                         <Jumbotron>
                             <h1 className="display-3">自動回覆</h1>

@@ -12,7 +12,7 @@ import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import { notify } from '../../components/Notify/Notify';
-import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
+import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import CalendarInsertModal from '../../components/Modals/CalendarInsert/CalendarInsert';
 import CalendarEditModal, { CalendarEventTypes } from '../../components/Modals/CalendarEdit/CalendarEdit';
 import TicketEditModal from '../../components/Modals/TicketEdit/TicketEdit';
@@ -90,6 +90,7 @@ class Calendar extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('行事曆');
+        setNavTitle('行事曆');
 
         if (!cookieHelper.hasSignedin()) {
             authHelper.signOut();
@@ -407,7 +408,7 @@ class Calendar extends React.Component {
         return (
             <Aux>
                 <Toolbar />
-                <Fade in className="has-toolbar calendar-wrapper">
+                <Fade in className="col-12 col-sm-9 ml-auto has-toolbar calendar-wrapper">
                     <div className="chsr calendar" ref={this.initCalendar}></div>
                 </Fade>
                 <CalendarInsertModal

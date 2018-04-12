@@ -9,7 +9,7 @@ import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 
-import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
+import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import GreetingTable from './GreetingTable/GreetingTable';
 
@@ -28,6 +28,7 @@ class Greetings extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('加好友回覆');
+        setNavTitle('加好友回覆');
 
         if (!cookieHelper.hasSignedin()) {
             authHelper.signOut();
@@ -43,7 +44,7 @@ class Greetings extends React.Component {
         return (
             <Aux>
                 <Toolbar />
-                <Fade className="has-toolbar">
+                <Fade className="col-12 col-sm-9 ml-auto has-toolbar">
                     <div className="Greetings">
                         <Jumbotron>
                             <h1 className="display-3">加好友回覆</h1>

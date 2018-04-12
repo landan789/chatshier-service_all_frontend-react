@@ -11,7 +11,7 @@ import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
-import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
+import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import TicketInsertModal from '../../components/Modals/TicketInsert/TicketInsert';
 import TicketTable from './TicketTable';
 
@@ -34,6 +34,7 @@ class Tickets extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('待辦事項');
+        setNavTitle('待辦事項');
 
         if (!cookieHelper.hasSignedin()) {
             authHelper.signOut();
@@ -99,9 +100,9 @@ class Tickets extends React.Component {
         return (
             <Aux>
                 <Toolbar />
-                <Fade in className="has-toolbar ticket-wrapper">
+                <Fade in className="col-12 col-sm-9 ml-auto has-toolbar ticket-wrapper">
                     <div className="ticket-toolbar">
-                        <button type="button" className="btn btn-default ticket-insert" onClick={this.openInsertModal}>
+                        <button type="button" className="btn btn-light ticket-insert" onClick={this.openInsertModal}>
                             <span className="fas fa-plus fa-fw"></span>
                             <span>新增待辦</span>
                         </button>

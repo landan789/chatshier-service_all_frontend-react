@@ -4,9 +4,11 @@
     position: fixed;
     left: 0;
     top: 0;
-    width: 192px;
-    min-height: calc(100% - #{$toolbar-height});
-    margin-top: $toolbar-height;
+    width: 25%;
+    min-width: 12rem;
+    // min-height: calc(100% - #{$toolbar-height});
+    // margin-top: $toolbar-height;
+    min-height: 100%;
     background-color: #fff;
     z-index: 1000;
 
@@ -14,12 +16,13 @@
     animation-duration: 300ms;
     animation-fill-mode: both;
 
-    &.show {
+    &.sm {
         animation-name: sideMenuSlideIn;
     }
 
-    &.hide {
-        display: none;
+    &,
+    .list-group-item {
+        background-color: #4d394b;
     }
 
     .list-group-item {
@@ -31,6 +34,19 @@
             padding-left: .25rem;
         }
     }
+
+    .side-menu-title {
+        font-size: 1.25rem;
+    }
+}
+
+.side-menu-backdrop {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: transparent;
 }
 
 @keyframes sideMenuSlideIn {

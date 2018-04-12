@@ -11,7 +11,7 @@ import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
-import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
+import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import ComposeInsertModal from '../../components/Modals/ComposeInsert/ComposeInsert';
 import ComposeTable from '../Composes/ComposeTable';
@@ -35,6 +35,7 @@ class Composes extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('群發');
+        setNavTitle('群發');
 
         if (!cookieHelper.hasSignedin()) {
             authHelper.signOut();
@@ -74,7 +75,7 @@ class Composes extends React.Component {
         return (
             <Aux>
                 <Toolbar />
-                <Fade in className="has-toolbar composes-wrapper">
+                <Fade in className="col-12 col-sm-9 ml-auto has-toolbar composes-wrapper">
                     <div className="Greetings">
                         <Jumbotron>
                             <h1 className="display-3">群發</h1><br/>

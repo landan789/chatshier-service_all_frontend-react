@@ -11,7 +11,7 @@ import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
-import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
+import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import KeywordreplyTable from '../Keywordreplies/KeywordreplyTable';
 import KeywordreplyInsertModal from '../../components/Modals/KeywordreplyInsert/KeywordreplyInsert';
@@ -36,6 +36,7 @@ class Keywordreplies extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('關鍵字回覆');
+        setNavTitle('關鍵字回覆');
 
         if (!cookieHelper.hasSignedin()) {
             authHelper.signOut();
@@ -72,7 +73,7 @@ class Keywordreplies extends React.Component {
         return (
             <Aux>
                 <Toolbar />
-                <Fade in className="has-toolbar">
+                <Fade in className="col-12 col-sm-9 ml-auto has-toolbar">
                     <div className="Greetings">
                         <Jumbotron>
                             <h1 className="display-3">關鍵字回覆</h1><br/>

@@ -8,7 +8,7 @@ import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 
-import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
+import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import LinkTabs from './LinkTabs';
 import AppsTabPane from './TabPanes/AppsTabPane';
 import GroupsTabPane from './TabPanes/GroupsTabPane';
@@ -26,6 +26,7 @@ class Settings extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('設定');
+        setNavTitle('設定');
 
         if (!cookieHelper.hasSignedin()) {
             authHelper.signOut();
@@ -43,7 +44,7 @@ class Settings extends React.Component {
         return (
             <Aux>
                 <Toolbar />
-                <div className="has-toolbar setting-wrapper">
+                <div className="col-12 col-sm-9 ml-auto has-toolbar setting-wrapper">
                     <LinkTabs route={route} toggle={this.toggle} />
                     <Switch>
                         <Route path={ROUTES.SETTINGS_APPS} exact component={AppsTabPane} />

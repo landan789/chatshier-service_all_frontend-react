@@ -11,7 +11,7 @@ import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
-import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
+import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 
 import './Chat.css';
 
@@ -22,6 +22,7 @@ class Chat extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('聊天室');
+        setNavTitle('聊天室');
 
         if (!cookieHelper.hasSignedin()) {
             authHelper.signOut();
@@ -49,7 +50,7 @@ class Chat extends React.Component {
         return (
             <Aux>
                 <Toolbar />
-                <Fade in className="has-toolbar chat-wrapper">
+                <Fade in className="col-12 col-sm-9 ml-auto has-toolbar chat-wrapper">
                     聊天室
                 </Fade>
             </Aux>

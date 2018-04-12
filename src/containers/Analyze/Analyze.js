@@ -11,7 +11,7 @@ import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
-import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
+import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 
 import './Analyze.css';
@@ -28,6 +28,7 @@ class Analyze extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('訊息分析');
+        setNavTitle('訊息分析');
 
         if (!cookieHelper.hasSignedin()) {
             authHelper.signOut();
@@ -52,7 +53,7 @@ class Analyze extends React.Component {
         return (
             <Aux>
                 <Toolbar />
-                <Fade in className="has-toolbar analyze-wrapper">
+                <Fade in className="col-12 col-sm-9 ml-auto has-toolbar analyze-wrapper">
                     <h2>分析頁面</h2>
                     <div className="analyze-container">
                         <AppsSelector showAll onChange={this.appChanged} />

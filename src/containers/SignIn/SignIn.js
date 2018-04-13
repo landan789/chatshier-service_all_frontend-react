@@ -118,7 +118,7 @@ class SignIn extends React.Component {
 
     render() {
         return (
-            <Fade in className="signin-container">
+            <Fade in className="signin-container w-100">
                 <div className="col-md-12 text-center logo-container">
                     <a className="chatshier-logo" href={wwwUrl}>
                         <img alt="Chatshier-logo" src="image/logo.png" />

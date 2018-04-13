@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Aux from 'react-aux';
 import { Fade, Jumbotron, Row, Col, InputGroup, Input, Button } from 'reactstrap';
 
 import ROUTES from '../../config/route';
@@ -10,6 +11,7 @@ import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
+import SideMenu from '../../components/Navigation/SideMenu/SideMenu';
 import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import KeywordreplyTable from '../Keywordreplies/KeywordreplyTable';
@@ -70,40 +72,43 @@ class Keywordreplies extends React.Component {
 
     render() {
         return (
-            <div className="ml-auto w-100">
-                <Toolbar />
-                <Fade in className="keywordreplies-wrapper">
-                    <div className="keywordreplies">
-                        <Jumbotron>
-                            <h1 className="display-3">關鍵字回覆</h1><br/>
-                            <Row>
-                                <Col>
-                                    <AppsSelector onChange={this.appChanged} />
-                                </Col>
-                                <Col>
-                                    <InputGroup>
-                                        <Input
-                                            type="text"
-                                            className="ticket-search-bar lean-right"
-                                            placeholder="搜尋"
-                                            value={this.state.searchKeyword}
-                                            onChange={this.keywordChanged} />
-                                        <Button color="primary" className="pointer lean-right" onClick={this.openInsertModal}>
-                                            <i className="fas fa-plus"></i>
-                                        </Button>
-                                    </InputGroup>
-                                    <KeywordreplyInsertModal
-                                        apps={this.props.apps}
-                                        isOpen={this.state.isInsertModalOpen}
-                                        close={this.closeInsertModal}>
-                                    </KeywordreplyInsertModal>
-                                </Col>
-                            </Row>
-                        </Jumbotron>
-                        <KeywordreplyTable appId={this.state.appId} keyword={this.state.searchKeyword} />
-                    </div>
-                </Fade>
-            </div>
+            <Aux>
+                <SideMenu />
+                <div className="ml-auto w-100">
+                    <Toolbar />
+                    <Fade in className="keywordreplies-wrapper">
+                        <div className="keywordreplies">
+                            <Jumbotron>
+                                <h1 className="display-3">關鍵字回覆</h1><br/>
+                                <Row>
+                                    <Col>
+                                        <AppsSelector onChange={this.appChanged} />
+                                    </Col>
+                                    <Col>
+                                        <InputGroup>
+                                            <Input
+                                                type="text"
+                                                className="ticket-search-bar lean-right"
+                                                placeholder="搜尋"
+                                                value={this.state.searchKeyword}
+                                                onChange={this.keywordChanged} />
+                                            <Button color="primary" className="pointer lean-right" onClick={this.openInsertModal}>
+                                                <i className="fas fa-plus"></i>
+                                            </Button>
+                                        </InputGroup>
+                                        <KeywordreplyInsertModal
+                                            apps={this.props.apps}
+                                            isOpen={this.state.isInsertModalOpen}
+                                            close={this.closeInsertModal}>
+                                        </KeywordreplyInsertModal>
+                                    </Col>
+                                </Row>
+                            </Jumbotron>
+                            <KeywordreplyTable appId={this.state.appId} keyword={this.state.searchKeyword} />
+                        </div>
+                    </Fade>
+                </div>
+            </Aux>
         );
     }
 }

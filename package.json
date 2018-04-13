@@ -33,12 +33,14 @@
     "react-widgets": "4.2.6",
     "react-widgets-moment": "4.0.12",
     "reactstrap": "5.0.0",
-    "redux": "3.7.2"
+    "redux": "3.7.2",
+    "swiper": "4.2.2"
   },
   "devDependencies": {
     "@types/react": "16.3.9",
     "@types/react-redux": "5.0.16",
     "@types/react-router-redux": "5.0.13",
+    "@types/swiper": "3.4.6",
     "eslint": "4.19.1",
     "eslint-plugin-import": "2.10.0",
     "eslint-plugin-promise": "3.7.0",

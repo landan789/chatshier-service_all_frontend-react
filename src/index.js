@@ -27,6 +27,8 @@ import Tickets from './containers/Tickets/Tickets';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // https://jquense.github.io/react-widgets/
 import 'react-widgets/dist/css/react-widgets.css';
+// http://idangero.us/swiper/
+import 'swiper/dist/css/swiper.min.css';
 import './index.css';
 
 const routes = [

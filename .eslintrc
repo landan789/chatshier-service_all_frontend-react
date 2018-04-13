@@ -27,11 +27,8 @@
         "document": true,
         "navigator": true,
         "window": true,
-        "firebase": true,
         "io": true,
         "SOCKET_EVENTS": true,
-        "auth": true,
-        "database": true,
         "urlConfig": true
     },
 

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Aux from 'react-aux';
 import { Fade, Row, Col, Jumbotron, Button, Input, InputGroup } from 'reactstrap';
 
 import ROUTES from '../../config/route';
@@ -11,6 +12,7 @@ import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import AutoreplyTable from '../Autoreplies/AutoreplyTable.js';
+import SideMenu from '../../components/Navigation/SideMenu/SideMenu';
 import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import AutoreplyInsertModal from '../../components/Modals/AutoreplyInsert/AutoreplyInsert';
@@ -71,40 +73,43 @@ class Autoreplies extends React.Component {
 
     render() {
         return (
-            <div className="ml-auto w-100">
-                <Toolbar />
-                <Fade in className="autoreplies-wrapper">
-                    <div className="autoreplies">
-                        <Jumbotron>
-                            <h1 className="display-3">自動回覆</h1>
-                            <Row>
-                                <Col>
-                                    <AppsSelector onChange={this.appChanged} />
-                                </Col>
-                                <Col>
-                                    <InputGroup>
-                                        <Input
-                                            type="text"
-                                            className="ticket-search-bar lean-right"
-                                            placeholder="搜尋"
-                                            value={this.state.searchKeyword}
-                                            onChange={this.keywordChanged} />
-                                        <Button color="primary" className="pointer lean-right" onClick={this.openInsertModal}>
-                                            <i className="fas fa-plus"></i>
-                                        </Button>
-                                    </InputGroup>
-                                    <AutoreplyInsertModal
-                                        apps={this.props.apps}
-                                        isOpen={this.state.isInsertModalOpen}
-                                        close={this.closeInsertModal}>
-                                    </AutoreplyInsertModal>
-                                </Col>
-                            </Row>
-                        </Jumbotron>
-                        <AutoreplyTable keyword={this.state.searchKeyword} appId={this.state.appId}></AutoreplyTable>
-                    </div>
-                </Fade>
-            </div>
+            <Aux>
+                <SideMenu />
+                <div className="ml-auto w-100">
+                    <Toolbar />
+                    <Fade in className="autoreplies-wrapper">
+                        <div className="autoreplies">
+                            <Jumbotron>
+                                <h1 className="display-3">自動回覆</h1>
+                                <Row>
+                                    <Col>
+                                        <AppsSelector onChange={this.appChanged} />
+                                    </Col>
+                                    <Col>
+                                        <InputGroup>
+                                            <Input
+                                                type="text"
+                                                className="ticket-search-bar lean-right"
+                                                placeholder="搜尋"
+                                                value={this.state.searchKeyword}
+                                                onChange={this.keywordChanged} />
+                                            <Button color="primary" className="pointer lean-right" onClick={this.openInsertModal}>
+                                                <i className="fas fa-plus"></i>
+                                            </Button>
+                                        </InputGroup>
+                                        <AutoreplyInsertModal
+                                            apps={this.props.apps}
+                                            isOpen={this.state.isInsertModalOpen}
+                                            close={this.closeInsertModal}>
+                                        </AutoreplyInsertModal>
+                                    </Col>
+                                </Row>
+                            </Jumbotron>
+                            <AutoreplyTable keyword={this.state.searchKeyword} appId={this.state.appId}></AutoreplyTable>
+                        </div>
+                    </Fade>
+                </div>
+            </Aux>
         );
     }
 }

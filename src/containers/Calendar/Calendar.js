@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Aux from 'react-aux';
 import { Fade } from 'reactstrap';
 
 import ROUTES from '../../config/route';
@@ -11,6 +12,7 @@ import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import { notify } from '../../components/Notify/Notify';
+import SideMenu from '../../components/Navigation/SideMenu/SideMenu';
 import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import CalendarInsertModal from '../../components/Modals/CalendarInsert/CalendarInsert';
 import CalendarEditModal, { CalendarEventTypes } from '../../components/Modals/CalendarEdit/CalendarEdit';
@@ -405,29 +407,32 @@ class Calendar extends React.Component {
 
     render() {
         return (
-            <div className="ml-auto w-100">
-                <Toolbar />
-                <Fade in className="calendar-wrapper">
-                    <div className="chsr calendar" ref={this.initCalendar}></div>
-                </Fade>
-                <CalendarInsertModal
-                    modalData={this.state.insertModalData}
-                    isOpen={!!this.state.insertModalData}
-                    close={this.closeInsertModal}>
-                </CalendarInsertModal>
-                <CalendarEditModal
-                    modalData={this.state.editModalData}
-                    isOpen={!!this.state.editModalData}
-                    updateHandle={this.updateCalendarEvent}
-                    close={this.closeEditModal}>
-                </CalendarEditModal>
-                <TicketEditModal
-                    appsAgents={this.appsAgents}
-                    modalData={this.state.editTicketData}
-                    isOpen={!!this.state.editTicketData}
-                    close={this.closeEditModal}>
-                </TicketEditModal>
-            </div>
+            <Aux>
+                <SideMenu />
+                <div className="ml-auto w-100">
+                    <Toolbar />
+                    <Fade in className="calendar-wrapper">
+                        <div className="chsr calendar" ref={this.initCalendar}></div>
+                    </Fade>
+                    <CalendarInsertModal
+                        modalData={this.state.insertModalData}
+                        isOpen={!!this.state.insertModalData}
+                        close={this.closeInsertModal}>
+                    </CalendarInsertModal>
+                    <CalendarEditModal
+                        modalData={this.state.editModalData}
+                        isOpen={!!this.state.editModalData}
+                        updateHandle={this.updateCalendarEvent}
+                        close={this.closeEditModal}>
+                    </CalendarEditModal>
+                    <TicketEditModal
+                        appsAgents={this.appsAgents}
+                        modalData={this.state.editTicketData}
+                        isOpen={!!this.state.editTicketData}
+                        close={this.closeEditModal}>
+                    </TicketEditModal>
+                </div>
+            </Aux>
         );
     }
 }

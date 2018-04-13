@@ -101,6 +101,9 @@
 }
 
 @media (min-width: 1024px) {
+    .composes-wrapper {
+        padding: 4%;
+    }
     .Compose {
         thead, tbody {
             tr {

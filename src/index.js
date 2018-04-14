@@ -100,6 +100,11 @@ ReactDOM.render(
             </Switch>
         </BrowserRouter>
     </Provider>,
-    document.getElementById('charshierRoot')
+    document.getElementById('charshierRoot'),
+    () => {
+        let loadingWrapper = document.getElementById('loadingWrapper');
+        loadingWrapper.parentElement.removeChild(loadingWrapper);
+        loadingWrapper = void 0;
+    }
 );
 // registerServiceWorker();

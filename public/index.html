@@ -35,6 +35,56 @@
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
+
+        <div class="loading-wrapper" id="loadingWrapper">
+            <style>
+                .loading-wrapper {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: #eee;
+                    z-index: 9999; }
+                    .loading-wrapper .loading-body {
+                        position: relative;
+                        display: inherit;
+                        flex-direction: column;
+                        align-items: center;
+                        height: 50%; }
+                    .loading-wrapper .loading-text {
+                        font-size: 6rem;
+                        font-family: Helvetica;
+                        font-weight: 900;
+                        color: #33ccff; }
+                    .loading-wrapper .loader-container {
+                        width: 128px;
+                        height: 128px; }
+                    .loading-wrapper .loader {
+                        width: 100%;
+                        height: 100%;
+                        border: 16px solid #f3f3f3;
+                        border-radius: 50%;
+                        border-top: 16px solid #3498db;
+                        animation: loaderSpin 1s linear infinite; }
+
+                @keyframes loaderSpin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+            </style>
+            <div class="loading-body">
+                <div class="loading-text">
+                    <span>Chatshier...</span>
+                </div>
+                <div class="loader-container">
+                    <div class="loader"></div>
+                </div>
+            </div>
+        </div>
         <div class="root d-flex w-100 h-100" id="charshierRoot"></div>
         <script src="config/url-config.js"></script>
     </body>

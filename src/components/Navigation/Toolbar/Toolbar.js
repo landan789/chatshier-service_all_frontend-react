@@ -73,9 +73,16 @@ class Toolbar extends React.Component {
                             <i className="fas fa-bars"></i>
                         </button>
 
-                        <div className="nav-title text-light d-flex m-auto">
+                        <div className="nav-title text-light d-flex ml-2 mr-auto">
                             {navTitle}
                         </div>
+
+                        <button type="button" className="btn mx-1 transparent d-none">
+                            <i className="far fa-file-alt"></i>
+                        </button>
+                        <button type="button" className="btn mx-1 transparent d-none">
+                            <i className="far fa-calendar-check"></i>
+                        </button>
 
                         <Dropdown isOpen={this.state.dropdownOpen} toggle={this.mobileToggleSetting}>
                             <DropdownToggle color="none" className="text-light transparent">

@@ -27,10 +27,21 @@ $_toolbar-bg-color: $primary-color;
         }
     }
 
-    .transparent {
-        background-color: transparent;
+    .btn {
         border: none;
         box-shadow: none;
+
+        &.active {
+            color: #343a40;
+        }
+
+        &:not(.active) {
+            color: #f8f9fa;
+
+            &.transparent {
+                background-color: transparent;
+            }
+        }
     }
 }
 
@@ -43,6 +54,11 @@ $_toolbar-bg-color: $primary-color;
     // animation-fill-mode: both;
     // animation-duration: 250ms;
     // animation-name: scaleYGrowUp;
+
+    &.right-side {
+        left: initial;
+        right: 0;
+    }
 
     &.open {
         display: block;

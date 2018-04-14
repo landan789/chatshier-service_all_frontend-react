@@ -70,6 +70,9 @@ const linkItems = [
     }
 ];
 
+const startEvents = ['animationstart', 'oAnimationStart', 'webkitAnimationStart'];
+const endEvents = ['animationend', 'oAnimationEnd', 'webkitAnimationEnd'];
+
 const sideMenuOpenState = (state = false, action) => {
     switch (action.type) {
         case TOGGLE_MENU:
@@ -104,6 +107,8 @@ class SideMenu extends React.Component {
         this.linkTo = this.linkTo.bind(this);
         this.initSwiper = this.initSwiper.bind(this);
         this.widthChanged = this.widthChanged.bind(this);
+        this.startAnimating = this.startAnimating.bind(this);
+        this.endAnimating = this.endAnimating.bind(this);
     }
 
     componentDidMount() {
@@ -150,8 +155,39 @@ class SideMenu extends React.Component {
         this.setState({ itemCollapse: itemCollapse });
     }
 
+    startAnimating() {
+        if (!this.swiper) {
+            return;
+        }
+
+        /** @type {HTMLElement} */
+        let elem = this.swiper.el;
+        !elem.classList.contains('animating') && elem.classList.add('animating');
+    };
+
+    endAnimating() {
+        if (!this.swiper) {
+            return;
+        }
+
+        /** @type {HTMLElement} */
+        let elem = this.swiper.el;
+        elem.classList.remove('animating');
+        if (elem.classList.contains('slide-in')) {
+            elem.classList.remove('slide-in');
+        } else if (elem.classList.contains('slide-out')) {
+            elem.classList.remove('slide-out');
+            elem.classList.add('d-none');
+        }
+    };
+
+    /**
+     * @param {HTMLElement} elem
+     */
     initSwiper(elem) {
         if (this.swiper && !elem) {
+            startEvents.forEach((evName) => this.swiper.el.removeEventListener(evName, this.startAnimating));
+            endEvents.forEach((evName) => this.swiper.el.removeEventListener(evName, this.endAnimating));
             this.swiper.destroy(true, true);
             return;
         }
@@ -161,9 +197,12 @@ class SideMenu extends React.Component {
             initialSlide: 1,
             threshold: 10, // 撥動超過 10px 才進行 slide 動作
             pagination: {
-                el: '.swiper-pagination'
+                el: '.side-menu .swiper-pagination'
             }
         });
+
+        startEvents.forEach((evName) => elem.addEventListener(evName, this.startAnimating));
+        endEvents.forEach((evName) => elem.addEventListener(evName, this.endAnimating));
     }
 
     getGridState(width) {
@@ -244,11 +283,12 @@ class SideMenu extends React.Component {
             }
         }
 
-        let isOpen = this.state.isOpen || 'sm' !== this.state.gridState;
-        let shouldShowBackdrop = isOpen && 'sm' === this.state.gridState;
+        let isSmall = 'sm' === this.state.gridState;
+        let isOpen = this.state.isOpen || !isSmall;
+        let shouldShowBackdrop = isOpen && isSmall;
         return (
             <Aux>
-                <div className={classes.sideMenu + ' ' + this.state.gridState + (isOpen ? '' : ' d-none')} ref={this.initSwiper}>
+                <div className={classes.sideMenu + (isSmall ? ' animated' : '') + (isOpen ? ' slide-in' : ' slide-out')} ref={this.initSwiper}>
                     <div className="swiper-wrapper">
                         <div className="swiper-slide">
                             <ListGroup>

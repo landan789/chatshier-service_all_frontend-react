@@ -11,4 +11,8 @@ body,
 
 .root {
     background-color: $body-bg-color;
+
+    .animated {
+        animation-duration: 300ms;
+    }
 }

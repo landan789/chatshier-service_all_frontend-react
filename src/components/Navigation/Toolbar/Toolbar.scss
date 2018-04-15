@@ -49,11 +49,6 @@ $_toolbar-bg-color: $primary-color;
     color: black;
     padding: 0;
     box-shadow: 0 .4rem .8rem rgba(0, 0, 0, .175);
-    // transform-origin: center top;
-    // animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
-    // animation-fill-mode: both;
-    // animation-duration: 250ms;
-    // animation-name: scaleYGrowUp;
 
     &.right-side {
         left: initial;
@@ -84,16 +79,10 @@ $_toolbar-bg-color: $primary-color;
 
         &:focus,
         &:hover {
-            // background-color: rgb(207, 255, 253);
             background-color: #f8f9fa;
             text-decoration: none;
             color: black;
             transition: all .2s ease-in-out;
         }
     }
-}
-
-@keyframes scaleYGrowUp {
-    from { transform: scaleY(0); }
-    to { transform: scaleY(1); }
 }

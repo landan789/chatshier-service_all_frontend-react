@@ -50,6 +50,15 @@ $side-menu-width: 16rem;
         padding-left: 2.5rem;
     }
 
+    .swiper-wrapper {
+        height: 90%;
+    }
+
+    .swiper-slide {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
     .swiper-pagination-bullet {
         background-color: white;
     }

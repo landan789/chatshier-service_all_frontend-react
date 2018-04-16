@@ -27,11 +27,13 @@ $side-menu-width: 16vw;
 
     &,
     .list-group-item {
-        background-color: #4d394b;
+        background-color: #4a8998;
     }
 
     .list-group-item {
         cursor: pointer;
+        letter-spacing: 1.2px;
+        font-weight: 300;
 
         &.nested i {
             padding-left: 1rem;

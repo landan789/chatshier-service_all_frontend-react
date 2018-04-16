@@ -126,7 +126,7 @@ class Toolbar extends React.Component {
         }
 
         // 如果目前狀態是屬於平板的尺寸時，不關閉 sideMenu
-        if ('lg' === this.gridState) {
+        if ('xs' === this.gridState) {
             return;
         }
         this.setState({ isSideMenuOpen: false });
@@ -134,10 +134,12 @@ class Toolbar extends React.Component {
 
     getGridState(width) {
         if (width <= 576) {
-            return 'sm';
+            return 'xs';
         } else if (width > 576 && width <= 768) {
-            return 'md';
+            return 'sm';
         } else if (width > 768 && width <= 992) {
+            return 'md';
+        } else if (width > 992 && width <= 1200) {
             return 'lg';
         } else {
             return 'xl';

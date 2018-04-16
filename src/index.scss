@@ -18,7 +18,19 @@ body,
     width: 100%;
 }
 
-@media (min-width: 576px) {
+@media (min-width: 576px) and (max-width: 768px) {
+    .admin-content {
+        width: 70vw;
+    }
+}
+
+@media (min-width: 769px) {
+    .admin-content {
+        width: 75vw;
+    }
+}
+
+@media (min-width: 1200px) {
     .admin-content {
         width: 84vw;
     }

@@ -1,15 +1,14 @@
 @import '../../../styles/_variables';
 
 $side-menu-width: 16rem;
+$side-menu-bg-color: #0a1f42;
 
 .chsr.side-menu {
     min-width: $side-menu-width;
     max-width: $side-menu-width;
-    // min-height: calc(100% - #{$toolbar-height});
-    // margin-top: $toolbar-height;
     min-height: 100%;
-    background-color: #4d394b;
-    z-index: 1000;
+    background-color: $side-menu-bg-color;
+    z-index: 1040;
 
     &.animated {
         position: absolute;
@@ -32,22 +31,38 @@ $side-menu-width: 16rem;
     }
 
     .list-group-item {
-        background-color: #4d394b;
+        display: flex;
+        align-items: center;    
+        background-color: $side-menu-bg-color;
         cursor: pointer;
         border: none;
 
+        > :first-child {
+            margin-right: .5rem;
+        }
+
         span {
-            padding-left: .25rem;
+            max-width: 55%;
+            white-space: nowrap;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
         }
     }
 
-    .nested > :first-child {
-        padding-left: 1rem;
-        padding-right: .25rem;
-    }
+    .nested {
+        > :first-child {
+            margin-left: .75rem;
+        }
 
-    .nested .nested > :first-child {
-        padding-left: 2.5rem;
+        .nested {
+            > :first-child {
+                margin-left: 1rem;
+            }
+
+            .nested > :first-child {
+                margin-left: 1.25rem;
+            }
+        }
     }
 
     .swiper-wrapper {
@@ -55,8 +70,14 @@ $side-menu-width: 16rem;
     }
 
     .swiper-slide {
+        font-size: .85rem;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+
+        &::-webkit-scrollbar {
+            width: 0;
+            background-color: transparent;
+        }
     }
 
     .swiper-pagination-bullet {
@@ -66,6 +87,12 @@ $side-menu-width: 16rem;
     .swiper-pagination-bullet-active {
         background-color: $primary-color;
     }
+
+    .app-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: .5rem;
+    }
 }
 
 .side-menu-backdrop {
@@ -74,7 +101,7 @@ $side-menu-width: 16rem;
     top: 0;
     width: calc(100vw - #{$side-menu-width});
     height: 100vh;
-    z-index: 999;
+    z-index: 1039;
     background-color: transparent;
 }
 

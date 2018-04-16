@@ -15,4 +15,15 @@ body,
     .animated {
         animation-duration: 300ms;
     }
+
+    .page-wrapper {
+        position: relative;
+        max-width: calc(100% - 16rem);
+
+        @media (max-width: 576px) {
+            & {
+                max-width: 100%;
+            }
+        }
+    }
 }

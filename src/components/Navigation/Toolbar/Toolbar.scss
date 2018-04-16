@@ -3,10 +3,11 @@
 $_toolbar-bg-color: $primary-color;
 
 .chsr.toolbar {
+    position: relative;
     background-color: $_toolbar-bg-color;
     height: $toolbar-height;
     font-size: .9rem;
-    z-index: 1050;
+    z-index: 1030;
 
     .navbar-header {
         display: flex;
@@ -15,9 +16,15 @@ $_toolbar-bg-color: $primary-color;
         height: 100%;
     }
 
+    .nav-title {
+        max-width: 50%;
+        text-overflow: ellipsis;
+        overflow-x: hidden;
+    }
+
     > .navbar {
         display: flex;
-        justify-content: flex-start;
+        flex-wrap: nowrap;
         height: 100%;
     }
 

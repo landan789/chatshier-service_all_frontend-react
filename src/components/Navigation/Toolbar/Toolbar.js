@@ -73,7 +73,7 @@ class Toolbar extends React.Component {
                             <i className="fas fa-bars"></i>
                         </button>
 
-                        <div className="nav-title text-light d-flex ml-2 mr-auto">
+                        <div className="nav-title text-nowrap text-light ml-2">
                             {navTitle}
                         </div>
 

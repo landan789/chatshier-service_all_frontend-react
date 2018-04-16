@@ -54,7 +54,7 @@ class Analyze extends React.Component {
         return (
             <Aux>
                 <SideMenu />
-                <div className="ml-auto w-100">
+                <div className="ml-auto w-100 page-wrapper">
                     <Toolbar />
                     <Fade in className="analyze-wrapper">
                         <h2>分析頁面</h2>

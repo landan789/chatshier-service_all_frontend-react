@@ -7,25 +7,25 @@ import { Dropdown, DropdownItem, DropdownMenu,
 
 import ROUTES from '../../../config/route';
 import SideMenu from '../SideMenu/SideMenu';
+import User from '../../Modals/User/User';
+import Group from '../../Modals/Group/Group';
+import Integration from '../../Modals/Integration/Integration';
 
 import './Toolbar.css';
 
 const setingsItems = [
     {
-        link: ROUTES.USER,
+        link: ROUTES.SETTINGS_USERS,
         icon: 'fa fa-user',
-        text: '基本設定',
-        useReactRouter: false
+        text: '基本設定'
     }, {
-        link: ROUTES.SETTINGS,
+        link: ROUTES.SETTINGS_GROUPS,
         icon: 'fas fa-object-group',
-        text: '內部群組',
-        useReactRouter: false
+        text: '內部群組'
     }, {
-        link: ROUTES.SETTINGS,
+        link: ROUTES.SETTINGS_APPS,
         icon: 'fab fa-android',
-        text: '系統整合',
-        useReactRouter: false
+        text: '系統整合'
     }, {
         link: ROUTES.SIGNOUT,
         icon: 'fa fa-sign-out-alt',
@@ -100,14 +100,32 @@ class Toolbar extends React.Component {
         this.state = {
             grid: this.getGridState(window.innerWidth),
             isSideMenuOpen: false,
-            dropdownOpen: false
+            dropdownOpen: false,
+            isUserModalOpen: false,
+            isGroupModalOpen: false,
+            isIntegrationModalOpen: false
         };
         this.linkTo = this.linkTo.bind(this);
         this.mobileToggleSideMenu = this.mobileToggleSideMenu.bind(this);
         this.mobileToggleSetting = this.mobileToggleSetting.bind(this);
         this.sizeChanged = this.sizeChanged.bind(this);
+        this.closeUserModal = this.closeUserModal.bind(this);
+        this.closeGroupModal = this.closeGroupModal.bind(this);
+        this.closeIntegrationModal = this.closeIntegrationModal.bind(this);
 
         window.addEventListener('resize', this.sizeChanged);
+    }
+
+    closeUserModal() {
+        this.setState({ isUserModalOpen: false });
+    }
+
+    closeGroupModal() {
+        this.setState({ isGroupModalOpen: false });
+    }
+
+    closeIntegrationModal() {
+        this.setState({ isIntegrationModalOpen: false });
     }
 
     componentWillUnmount() {
@@ -127,12 +145,22 @@ class Toolbar extends React.Component {
     }
 
     linkTo(route, useReactRouter) {
-        if (route) {
-            if (useReactRouter) {
-                this.props.history.push(route);
-            } else {
-                window.location.href = route;
-            }
+        switch (route) {
+            case ROUTES.SETTINGS_USERS:
+                this.setState({ isUserModalOpen: true });
+                break;
+            case ROUTES.SETTINGS_GROUPS:
+                this.setState({ isGroupModalOpen: true });
+                break;
+            case ROUTES.SETTINGS_APPS:
+                this.setState({ isIntegrationModalOpen: true });
+                break;
+            default:
+                if (useReactRouter) {
+                    this.props.history.push(route);
+                } else {
+                    window.location.href = route;
+                }
         }
 
         // 如果目前狀態是屬於平板的尺寸時，不關閉 sideMenu
@@ -187,6 +215,10 @@ class Toolbar extends React.Component {
                             gridState={this.state.grid}
                             isOpen={this.state.isSideMenuOpen}
                             close={this.linkTo}/>
+
+                        <User isOpen={this.state.isUserModalOpen} close={this.closeUserModal}/>
+                        <Group isOpen={this.state.isGroupModalOpen} close={this.closeGroupModal}/>
+                        <Integration isOpen={this.state.isIntegrationModalOpen} close={this.closeIntegrationModal}/>
                     </nav>
                 </header>
             </Aux>

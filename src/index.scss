@@ -18,20 +18,20 @@ body,
     width: 100%;
 }
 
-@media (min-width: 576px) and (max-width: 768px) {
+@media (min-width: 576px) {
     .admin-content {
-        width: 70vw;
+        width: 70%;
     }
 }
 
 @media (min-width: 769px) {
     .admin-content {
-        width: 75vw;
+        width: 75%;
     }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 993px) {
     .admin-content {
-        width: 84vw;
+        width: 84%;
     }
 }

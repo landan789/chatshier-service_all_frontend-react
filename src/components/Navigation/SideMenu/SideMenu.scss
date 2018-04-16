@@ -18,7 +18,11 @@ $side-menu-width: 16vw;
     &.sm {
         position: absolute;
         animation-name: sideMenuSlideIn;
-        width: 70%;
+        width: 30%;
+    }
+
+    &.md, &.lg {
+        width: 25vw;
     }
 
     &,

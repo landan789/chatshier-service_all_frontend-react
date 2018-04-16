@@ -1,5 +1,4 @@
 .Greetings {
-    padding: 4%;
     border-radius: 6px;
 
     .jumbotron {
@@ -16,7 +15,7 @@
 }
 
 @media (min-width: 1024px) {
-    .Greetings {
-        padding: 4% 8%;
+    .greetings-wrapper {
+        padding: 4%;
     }
 }

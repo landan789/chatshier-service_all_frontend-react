@@ -88,7 +88,7 @@ const sideMenuStore = createStore(sideMenuOpenState);
 
 const classes = {
     sideMenu: 'chsr side-menu swiper-container h-100',
-    menuToggle: 'float-right py-1 fas fa-bars d-sm-none menu-toggle'
+    menuToggle: 'ml-auto fas fa-bars d-sm-none menu-toggle'
 };
 
 class SideMenu extends React.Component {
@@ -229,7 +229,7 @@ class SideMenu extends React.Component {
                         <ListGroupItem className="text-light" onClick={() => this.toggleItem(i)}>
                             <i className={item.icon}></i>
                             <span>{item.text}</span>
-                            <i className={'float-right py-1 fas ' + (this.state.itemCollapse[i] ? 'fa-chevron-up' : 'fa-chevron-down')}></i>
+                            <i className={'ml-auto fas ' + (this.state.itemCollapse[i] ? 'fa-chevron-up' : 'fa-chevron-down')}></i>
                         </ListGroupItem>
                         <Collapse isOpen={!this.state.itemCollapse[i]}>
                             {item.dropdownItems.map((dropdownItem, j) => (
@@ -260,6 +260,7 @@ class SideMenu extends React.Component {
                 case LINE:
                     lineApps.push(
                         <ListGroupItem key={appId} className="text-light nested">
+                            <i className="fab fa-line"></i>
                             <span>{app.name}</span>
                         </ListGroupItem>
                     );
@@ -267,6 +268,7 @@ class SideMenu extends React.Component {
                 case FACEBOOK:
                     fbApps.push(
                         <ListGroupItem key={appId} className="text-light nested">
+                            <i className="fab fa-facebook-messenger"></i>
                             <span>{app.name}</span>
                         </ListGroupItem>
                     );
@@ -274,6 +276,7 @@ class SideMenu extends React.Component {
                 case CHATSHIER:
                     chatshierApps.push(
                         <ListGroupItem key={appId} className="text-light nested">
+                            <i className="fas fa-copyright"></i>
                             <span>{app.name}</span>
                         </ListGroupItem>
                     );
@@ -302,27 +305,27 @@ class SideMenu extends React.Component {
                                 </ListGroupItem>
                                 <Collapse isOpen={!this.state.itemCollapse['CHATBOT']}>
                                     <ListGroupItem className="text-light nested" onClick={() => this.toggleItem(LINE)}>
-                                        <i className="fab fa-line"></i>
+                                        <img className="app-icon" src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" />
                                         <span>{LINE}</span>
-                                        <i className={'float-right py-1 fas ' + (this.state.itemCollapse[LINE] ? 'fa-chevron-up' : 'fa-chevron-down')}></i>
+                                        <i className={'ml-auto fas ' + (this.state.itemCollapse[LINE] ? 'fa-chevron-up' : 'fa-chevron-down')}></i>
                                     </ListGroupItem>
                                     <Collapse className="nested" isOpen={!this.state.itemCollapse[LINE]}>
                                         {lineApps}
                                     </Collapse>
 
                                     <ListGroupItem className="text-light nested" onClick={() => this.toggleItem(FACEBOOK)}>
-                                        <i className="fab fa-facebook-messenger"></i>
+                                        <img className="app-icon" src="https://facebookbrand.com/wp-content/themes/fb-branding/prj-fb-branding/assets/images/fb-art.png" />
                                         <span>{FACEBOOK}</span>
-                                        <i className={'float-right py-1 fas ' + (this.state.itemCollapse[FACEBOOK] ? 'fa-chevron-up' : 'fa-chevron-down')}></i>
+                                        <i className={'ml-auto fas ' + (this.state.itemCollapse[FACEBOOK] ? 'fa-chevron-up' : 'fa-chevron-down')}></i>
                                     </ListGroupItem>
                                     <Collapse className="nested" isOpen={!this.state.itemCollapse[FACEBOOK]}>
                                         {fbApps}
                                     </Collapse>
 
                                     <ListGroupItem className="text-light nested" onClick={() => this.toggleItem(CHATSHIER)}>
-                                        <i className="fas fa-comment-dots"></i>
+                                        <img className="app-icon" src="/image/logo-no-transparent.png" />
                                         <span>{CHATSHIER}</span>
-                                        <i className={'float-right py-1 fas ' + (this.state.itemCollapse[CHATSHIER] ? 'fa-chevron-up' : 'fa-chevron-down')}></i>
+                                        <i className={'ml-auto fas ' + (this.state.itemCollapse[CHATSHIER] ? 'fa-chevron-up' : 'fa-chevron-down')}></i>
                                     </ListGroupItem>
                                     <Collapse className="nested" isOpen={!this.state.itemCollapse[CHATSHIER]}>
                                         {chatshierApps}

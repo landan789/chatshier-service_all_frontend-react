@@ -1,3 +1,8 @@
+.keywordreplies {
+    h4 {
+        padding: .75rem;
+    }
+}
 .KeywordreplyTable {
     display: block;
     padding-bottom: 5%;
@@ -8,7 +13,7 @@
             letter-spacing: .1rem;
             color: #333;
             .keywords {
-                width: 35%;
+                width: 30%;
                 word-wrap: break-word;
             }
             .text {
@@ -20,7 +25,7 @@
                 display: none;
             }
             .edit {
-                width: 15%;
+                width: 20%;
                 button {
                     display: block;
                     font-size: 1rem;
@@ -54,6 +59,9 @@
 }
 
 @media (min-width: 1024px) {
+    .keywordreplies-wrapper {
+        padding: 4%;
+    }
     .KeywordreplyTable {
         thead, tbody {
             tr {
@@ -73,7 +81,7 @@
                     }
                     .btn-danger {
                         margin-top: 0%;
-                        margin-left: 5%;
+                        margin-left: 2%;
                     }
                 }
             }

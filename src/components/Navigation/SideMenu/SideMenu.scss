@@ -1,7 +1,7 @@
 @import '../../../styles/_variables';
 
 $side-menu-width: 16rem;
-$side-menu-bg-color: #0a1f42;
+$side-menu-bg-color: #4a8998;
 
 .chsr.side-menu {
     min-width: $side-menu-width;
@@ -36,6 +36,8 @@ $side-menu-bg-color: #0a1f42;
         background-color: $side-menu-bg-color;
         cursor: pointer;
         border: none;
+        letter-spacing: 1.2px;
+        font-weight: 300;
 
         > :first-child {
             margin-right: .5rem;
@@ -91,7 +93,7 @@ $side-menu-bg-color: #0a1f42;
     .app-icon {
         width: 1.5rem;
         height: 1.5rem;
-        border-radius: .5rem;
+        border-radius: .25rem;
     }
 }
 

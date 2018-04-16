@@ -147,7 +147,7 @@ class Toolbar extends React.Component {
     render() {
         return (
             <Aux>
-                <header className="chsr toolbar admin-content">
+                <header className="chsr toolbar">
                     <nav className="navbar px-1">
                         <button type="button"
                             className="btn text-light transparent d-sm-none"

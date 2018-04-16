@@ -11,4 +11,15 @@ body,
 
 .root {
     background-color: $body-bg-color;
+    align-items: stretch;
+}
+
+.admin-content {
+    width: 100%;
+}
+
+@media (min-width: 576px) {
+    .admin-content {
+        width: 84vw;
+    }
 }

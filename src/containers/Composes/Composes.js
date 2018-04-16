@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Aux from 'react-aux';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Fade, Jumbotron, Row, Col, InputGroup, Input, Button } from 'reactstrap';
@@ -11,7 +10,7 @@ import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
-import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
+import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import ComposeInsertModal from '../../components/Modals/ComposeInsert/ComposeInsert';
 import ComposeTable from '../Composes/ComposeTable';
@@ -35,6 +34,7 @@ class Composes extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('群發');
+        setNavTitle('群發');
 
         if (!cookieHelper.hasSignedin()) {
             authHelper.signOut();
@@ -72,10 +72,10 @@ class Composes extends React.Component {
 
     render() {
         return (
-            <Aux>
+            <div className="ml-auto w-100">
                 <Toolbar />
-                <Fade in className="has-toolbar composes-wrapper">
-                    <div className="Greetings">
+                <Fade in className="composes-wrapper">
+                    <div className="composes">
                         <Jumbotron>
                             <h1 className="display-3">群發</h1><br/>
                             <Row>
@@ -106,7 +106,7 @@ class Composes extends React.Component {
                         <ComposeTable appId={this.state.appId} keyword={this.state.searchKeyword} />
                     </div>
                 </Fade>
-            </Aux>
+            </div>
         );
     }
 }

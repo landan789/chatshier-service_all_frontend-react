@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Aux from 'react-aux';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Fade, Row, Col, Jumbotron, Button, Input, InputGroup } from 'reactstrap';
@@ -12,7 +11,7 @@ import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import AutoreplyTable from '../Autoreplies/AutoreplyTable.js';
-import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
+import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import AutoreplyInsertModal from '../../components/Modals/AutoreplyInsert/AutoreplyInsert';
 
@@ -36,6 +35,7 @@ class Autoreplies extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('自動回覆');
+        setNavTitle('自動回覆');
 
         if (!cookieHelper.hasSignedin()) {
             authHelper.signOut();
@@ -71,10 +71,10 @@ class Autoreplies extends React.Component {
 
     render() {
         return (
-            <Aux>
+            <div className="ml-auto w-100">
                 <Toolbar />
-                <Fade in className="has-toolbar">
-                    <div className="Greetings">
+                <Fade in className="autoreplies-wrapper">
+                    <div className="autoreplies">
                         <Jumbotron>
                             <h1 className="display-3">自動回覆</h1>
                             <Row>
@@ -104,7 +104,7 @@ class Autoreplies extends React.Component {
                         <AutoreplyTable keyword={this.state.searchKeyword} appId={this.state.appId}></AutoreplyTable>
                     </div>
                 </Fade>
-            </Aux>
+            </div>
         );
     }
 }

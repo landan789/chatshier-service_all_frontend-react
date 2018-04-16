@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Aux from 'react-aux';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 
 import ROUTES from '../../config/route';
@@ -8,7 +7,7 @@ import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 
-import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
+import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import LinkTabs from './LinkTabs';
 import AppsTabPane from './TabPanes/AppsTabPane';
 import GroupsTabPane from './TabPanes/GroupsTabPane';
@@ -26,6 +25,7 @@ class Settings extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('設定');
+        setNavTitle('設定');
 
         if (!cookieHelper.hasSignedin()) {
             authHelper.signOut();
@@ -41,9 +41,9 @@ class Settings extends React.Component {
         let route = this.props.location.pathname;
 
         return (
-            <Aux>
+            <div className="ml-auto w-100">
                 <Toolbar />
-                <div className="has-toolbar setting-wrapper">
+                <div className="setting-wrapper">
                     <LinkTabs route={route} toggle={this.toggle} />
                     <Switch>
                         <Route path={ROUTES.SETTINGS_APPS} exact component={AppsTabPane} />
@@ -53,7 +53,7 @@ class Settings extends React.Component {
                         <Redirect to={ROUTES.SETTINGS_APPS} />
                     </Switch>
                 </div>
-            </Aux>
+            </div>
         );
     }
 }

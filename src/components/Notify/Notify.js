@@ -31,7 +31,7 @@ class Notify extends React.Component {
                 color={this.props.color}
                 isOpen={this.state.visible}
                 toggle={this.onDismiss}>
-                {this.props.text}
+                <span>{this.props.text}</span>
             </Alert>
         );
     }
@@ -85,13 +85,9 @@ const notify = (text, options) => {
         notifyContainer.appendChild(notifyItem);
     }
 
-    let shownPromise = new Promise((resolve) => {
-        ReactDOM.render(notifyElem, notifyItem, () => {
-            resolve();
-        });
-    });
-
-    shownPromise.then(() => {
+    return new Promise((resolve) => {
+        ReactDOM.render(notifyElem, notifyItem, () => resolve());
+    }).then(() => {
         return dismissPromise;
     }).then(() => {
         ReactDOM.unmountComponentAtNode(notifyItem);
@@ -102,8 +98,6 @@ const notify = (text, options) => {
         }
         notifyWapper = notifyContainer = notifyElem = void 0;
     });
-
-    return shownPromise;
 };
 
 export default Notify;

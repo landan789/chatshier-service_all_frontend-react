@@ -12,9 +12,3 @@ body,
 .root {
     background-color: $body-bg-color;
 }
-
-@include media-breakpoint-down(sm) {
-    html {
-        font-size: 80%;
-    }
-}

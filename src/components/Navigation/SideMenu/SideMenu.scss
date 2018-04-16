@@ -1,12 +1,12 @@
 @import '../../../styles/_variables';
 
+$side-menu-width: 16rem;
+
 .chsr.side-menu {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 192px;
-    min-height: calc(100% - #{$toolbar-height});
-    margin-top: $toolbar-height;
+    min-width: $side-menu-width;
+    // min-height: calc(100% - #{$toolbar-height});
+    // margin-top: $toolbar-height;
+    min-height: 100%;
     background-color: #fff;
     z-index: 1000;
 
@@ -14,15 +14,19 @@
     animation-duration: 300ms;
     animation-fill-mode: both;
 
-    &.show {
+    &.sm {
+        position: absolute;
         animation-name: sideMenuSlideIn;
     }
 
-    &.hide {
-        display: none;
+    &,
+    .list-group-item {
+        background-color: #4d394b;
     }
 
     .list-group-item {
+        cursor: pointer;
+
         &.nested i {
             padding-left: 1rem;
         }
@@ -31,6 +35,20 @@
             padding-left: .25rem;
         }
     }
+
+    .side-menu-title {
+        font-size: 1.25rem;
+    }
+}
+
+.side-menu-backdrop {
+    position: absolute;
+    left: $side-menu-width;
+    top: 0;
+    width: calc(100vw - #{$side-menu-width});
+    height: 100vh;
+    z-index: 999;
+    background-color: transparent;
 }
 
 @keyframes sideMenuSlideIn {

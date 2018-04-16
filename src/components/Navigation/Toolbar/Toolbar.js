@@ -12,10 +12,20 @@ import './Toolbar.css';
 
 const setingsItems = [
     {
-        link: ROUTES.SETTINGS,
+        link: ROUTES.USER,
         icon: 'fa fa-user',
-        text: '設定',
-        useReactRouter: true
+        text: '基本設定',
+        useReactRouter: false
+    }, {
+        link: ROUTES.SETTINGS,
+        icon: 'fas fa-object-group',
+        text: '內部群組',
+        useReactRouter: false
+    }, {
+        link: ROUTES.SETTINGS,
+        icon: 'fab fa-android',
+        text: '系統整合',
+        useReactRouter: false
     }, {
         link: ROUTES.SIGNOUT,
         icon: 'fa fa-sign-out-alt',
@@ -161,7 +171,7 @@ class Toolbar extends React.Component {
 
                         <Dropdown isOpen={this.state.dropdownOpen} toggle={this.mobileToggleSetting}>
                             <DropdownToggle color="none" className="text-light transparent">
-                                <i className="fa fa-cog fa-lg"></i>
+                                <i className="fas fa-ellipsis-v"></i>
                             </DropdownToggle>
                             <DropdownMenu>
                                 {setingsItems.map((item, i) => (

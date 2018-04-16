@@ -9,16 +9,22 @@ class User extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isAsyncWorking: false,
             style: {'z-index': '0'}
         };
+        this.updateStyle = this.updateStyle.bind(this);
+        this.updateUser = this.updateUser.bind(this);
+    }
+    updateStyle() {
+        this.setState({style: {'z-index': '2000'}});
+    }
+    updateUser(event) {
     }
     render() {
         return (
             <div className="user-screen" style={this.state.style}>
                 <Modal size="lg" isOpen={this.props.isOpen} toggle={this.props.close}>
-                    <ModalHeader toggle={this.props.close}>
-                        修改自動回覆訊息
-                    </ModalHeader>
+                    <ModalHeader toggle={this.props.close}></ModalHeader>
                     <ModalBody>
                         <FormGroup>
                             <Label>ID: </Label>
@@ -42,7 +48,7 @@ class User extends React.Component {
                         </FormGroup>
                     </ModalBody>
                     <ModalFooter>
-                        <Button outline color="success" onClick={this.updateAutoreply} disabled={this.state.isAsyncWorking}>修改</Button>{' '}
+                        <Button outline color="success" onClick={this.updateUser} disabled={this.state.isAsyncWorking}>修改</Button>{' '}
                         <Button outline color="danger" onClick={this.props.close}>取消</Button>
                     </ModalFooter>
                 </Modal>

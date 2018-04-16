@@ -14,7 +14,8 @@ const ROUTES = {
     SETTINGS_GROUPS: '/settings/groups',
     SETTINGS_FIELDS: '/settings/fields',
     SETTINGS_USERS: '/settings/users',
-    TICKETS: '/tickets'
+    TICKETS: '/tickets',
+    USER: '/user'
 };
 
 export default ROUTES;

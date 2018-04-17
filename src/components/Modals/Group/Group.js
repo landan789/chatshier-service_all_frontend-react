@@ -14,7 +14,6 @@ class Group extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
     }
 
     componentDidMount() {

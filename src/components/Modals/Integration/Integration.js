@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input } from 'reactstrap';
 import Switch from 'react-switch';
 
 import './Integration.css';
@@ -14,8 +14,10 @@ class Integration extends React.Component {
         this.turnOnGoogleAPI = this.turnOnGoogleAPI.bind(this);
     }
 
+    componentDidMount() {
+    }
+
     turnOnGoogleAPI() {
-        this.setState({google: !this.state.google});
     }
 
     render() {

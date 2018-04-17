@@ -8,7 +8,7 @@ import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 
-import SideMenu from '../../components/Navigation/SideMenu/SideMenu';
+import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import LinkTabs from './LinkTabs';
 import AppsTabPane from './TabPanes/AppsTabPane';
@@ -44,7 +44,7 @@ class Settings extends React.Component {
 
         return (
             <Aux>
-                <SideMenu />
+                <ControlPanel />
                 <div className="ml-auto w-100 page-wrapper">
                     <Toolbar />
                     <div className="setting-wrapper">

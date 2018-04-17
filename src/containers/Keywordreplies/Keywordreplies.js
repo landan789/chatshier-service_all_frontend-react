@@ -11,7 +11,7 @@ import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
-import SideMenu from '../../components/Navigation/SideMenu/SideMenu';
+import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import KeywordreplyTable from '../Keywordreplies/KeywordreplyTable';
@@ -73,7 +73,7 @@ class Keywordreplies extends React.Component {
     render() {
         return (
             <Aux>
-                <SideMenu />
+                <ControlPanel />
                 <div className="ml-auto admin-content page-wrapper">
                     <Toolbar />
                     <Fade in className="keywordreplies-wrapper">

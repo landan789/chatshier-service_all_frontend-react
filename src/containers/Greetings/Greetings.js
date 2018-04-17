@@ -9,7 +9,7 @@ import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 
-import SideMenu from '../../components/Navigation/SideMenu/SideMenu';
+import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import GreetingTable from './GreetingTable/GreetingTable';
@@ -44,7 +44,7 @@ class Greetings extends React.Component {
     render() {
         return (
             <Aux>
-                <SideMenu />
+                <ControlPanel />
                 <div className="ml-auto admin-content page-wrapper">
                     <Toolbar />
                     <Fade className="greetings-wrapper">

@@ -6,7 +6,7 @@ import { Dropdown, DropdownItem, DropdownMenu,
     DropdownToggle } from 'reactstrap';
 
 import ROUTES from '../../../config/route';
-import { sideMenuStore } from '../SideMenu/SideMenu';
+import { ctrlPanelStore } from '../ControlPanel/ControlPanel';
 
 import './Toolbar.css';
 
@@ -34,11 +34,11 @@ class Toolbar extends React.Component {
         super(props, ctx);
 
         this.state = {
-            isSideMenuOpen: false,
+            isControlPanelOpen: false,
             dropdownOpen: false
         };
         this.linkTo = this.linkTo.bind(this);
-        this.mobileToggleSideMenu = this.mobileToggleSideMenu.bind(this);
+        this.mobileToggleControlPanel = this.mobileToggleControlPanel.bind(this);
         this.mobileToggleSetting = this.mobileToggleSetting.bind(this);
     }
 
@@ -46,8 +46,8 @@ class Toolbar extends React.Component {
         this.setState({ dropdownOpen: !this.state.dropdownOpen });
     }
 
-    mobileToggleSideMenu() {
-        sideMenuStore.dispatch({ type: 'TOGGLE_MENU' });
+    mobileToggleControlPanel() {
+        ctrlPanelStore.dispatch({ type: 'TOGGLE_MENU' });
     }
 
     linkTo(route, useReactRouter) {
@@ -69,7 +69,7 @@ class Toolbar extends React.Component {
                     <nav className="navbar px-1">
                         <button type="button"
                             className="btn text-light transparent d-sm-none"
-                            onClick={this.mobileToggleSideMenu}>
+                            onClick={this.mobileToggleControlPanel}>
                             <i className="fas fa-bars"></i>
                         </button>
 

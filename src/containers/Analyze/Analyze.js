@@ -11,7 +11,7 @@ import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
-import SideMenu from '../../components/Navigation/SideMenu/SideMenu';
+import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 
@@ -53,7 +53,7 @@ class Analyze extends React.Component {
     render() {
         return (
             <Aux>
-                <SideMenu />
+                <ControlPanel />
                 <div className="ml-auto w-100 page-wrapper">
                     <Toolbar />
                     <Fade in className="analyze-wrapper">

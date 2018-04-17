@@ -12,7 +12,7 @@ import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import { notify } from '../../components/Notify/Notify';
-import SideMenu from '../../components/Navigation/SideMenu/SideMenu';
+import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import CalendarInsertModal from '../../components/Modals/CalendarInsert/CalendarInsert';
 import CalendarEditModal, { CalendarEventTypes } from '../../components/Modals/CalendarEdit/CalendarEdit';
@@ -408,7 +408,7 @@ class Calendar extends React.Component {
     render() {
         return (
             <Aux>
-                <SideMenu />
+                <ControlPanel />
                 <div className="ml-auto admin-content page-wrapper">
                     <Toolbar />
                     <Fade in className="calendar-wrapper">

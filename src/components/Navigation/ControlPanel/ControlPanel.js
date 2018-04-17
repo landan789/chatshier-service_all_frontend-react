@@ -12,7 +12,7 @@ import authHelper from '../../../helpers/authentication';
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import ROUTES from '../../../config/route';
 
-import './SideMenu.css';
+import './ControlPanel.css';
 
 const TOGGLE_MENU = 'TOGGLE_MENU';
 const CLOSE_MENU = 'CLOSE_MENU';
@@ -73,7 +73,7 @@ const linkItems = [
 const startEvents = ['animationstart', 'oAnimationStart', 'webkitAnimationStart'];
 const endEvents = ['animationend', 'oAnimationEnd', 'webkitAnimationEnd'];
 
-const sideMenuOpenState = (state = false, action) => {
+const ctrlPanelOpenState = (state = false, action) => {
     switch (action.type) {
         case TOGGLE_MENU:
             return !state;
@@ -84,14 +84,14 @@ const sideMenuOpenState = (state = false, action) => {
     }
 };
 
-const sideMenuStore = createStore(sideMenuOpenState);
+const ctrlPanelStore = createStore(ctrlPanelOpenState);
 
 const classes = {
-    sideMenu: 'chsr side-menu swiper-container h-100',
+    ctrlPanel: 'chsr ctrl-panel swiper-container h-100',
     menuToggle: 'ml-auto fas fa-bars d-sm-none menu-toggle'
 };
 
-class SideMenu extends React.Component {
+class ControlPanel extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
 
@@ -113,8 +113,8 @@ class SideMenu extends React.Component {
 
     componentDidMount() {
         this.storeUnsubscribe && this.storeUnsubscribe();
-        this.storeUnsubscribe = sideMenuStore.subscribe(() => {
-            let isOpen = sideMenuStore.getState();
+        this.storeUnsubscribe = ctrlPanelStore.subscribe(() => {
+            let isOpen = ctrlPanelStore.getState();
             this.setState({ isOpen: isOpen });
         });
         window.addEventListener('resize', this.widthChanged);
@@ -135,7 +135,7 @@ class SideMenu extends React.Component {
 
     linkTo(route, useReactRouter) {
         if ('sm' === this.state.gridState) {
-            sideMenuStore.dispatch({ type: CLOSE_MENU });
+            ctrlPanelStore.dispatch({ type: CLOSE_MENU });
         }
 
         if (!route) {
@@ -197,7 +197,7 @@ class SideMenu extends React.Component {
             initialSlide: 1,
             threshold: 10, // 撥動超過 10px 才進行 slide 動作
             pagination: {
-                el: '.side-menu .swiper-pagination'
+                el: '.ctrl-panel .swiper-pagination'
             }
         });
 
@@ -291,12 +291,12 @@ class SideMenu extends React.Component {
         let shouldShowBackdrop = isOpen && isSmall;
         return (
             <Aux>
-                <div className={classes.sideMenu + (isSmall ? ' animated' : '') + (isOpen ? ' slide-in' : ' slide-out')} ref={this.initSwiper}>
+                <div className={classes.ctrlPanel + (isSmall ? ' animated' : '') + (isOpen ? ' slide-in' : ' slide-out')} ref={this.initSwiper}>
                     <div className="swiper-wrapper">
                         <div className="swiper-slide">
                             <ListGroup>
                                 <ListGroupItem className="text-light" onClick={() => this.linkTo()}>
-                                    <span className="side-menu-title">Chatshier</span>
+                                    <span className="ctrl-panel-title">Chatshier</span>
                                     <i className={classes.menuToggle}></i>
                                 </ListGroupItem>
 
@@ -341,7 +341,7 @@ class SideMenu extends React.Component {
                         <div className="swiper-slide">
                             <ListGroup>
                                 <ListGroupItem className="text-light" onClick={() => this.linkTo()}>
-                                    <span className="side-menu-title">Chatshier</span>
+                                    <span className="ctrl-panel-title">Chatshier</span>
                                     <i className={classes.menuToggle}></i>
                                 </ListGroupItem>
                                 {linkElems}
@@ -350,13 +350,13 @@ class SideMenu extends React.Component {
                     </div>
                     <div className="swiper-pagination"></div>
                 </div>
-                <div className={'side-menu-backdrop' + (shouldShowBackdrop ? '' : ' d-none')} onClick={() => this.linkTo()}></div>
+                <div className={'ctrl-panel-backdrop' + (shouldShowBackdrop ? '' : ' d-none')} onClick={() => this.linkTo()}></div>
             </Aux>
         );
     }
 }
 
-SideMenu.propTypes = {
+ControlPanel.propTypes = {
     apps: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired
 };
@@ -368,5 +368,5 @@ const mapStateToProps = (storeState, ownProps) => {
     };
 };
 
-export default connect(mapStateToProps)(withRouter(SideMenu));
-export { sideMenuStore };
+export default connect(mapStateToProps)(withRouter(ControlPanel));
+export { ctrlPanelStore };

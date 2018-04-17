@@ -12,7 +12,7 @@ import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import AutoreplyTable from '../Autoreplies/AutoreplyTable.js';
-import SideMenu from '../../components/Navigation/SideMenu/SideMenu';
+import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import AutoreplyInsertModal from '../../components/Modals/AutoreplyInsert/AutoreplyInsert';
@@ -74,7 +74,7 @@ class Autoreplies extends React.Component {
     render() {
         return (
             <Aux>
-                <SideMenu />
+                <ControlPanel />
                 <div className="ml-auto admin-content page-wrapper">
                     <Toolbar />
                     <Fade in className="autoreplies-wrapper">

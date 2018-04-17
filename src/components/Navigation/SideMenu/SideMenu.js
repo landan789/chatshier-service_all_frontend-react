@@ -33,13 +33,13 @@ class SideMenu extends React.Component {
     }
 
     componentWillReceiveProps(props) {
-        if ('sm' === props.gridState && !props.isOpen) {
+        if ('xs' === props.gridState && !props.isOpen) {
             this.unmountNode();
             return;
         }
 
         if (!this.sideMenu) {
-            this.mountNode('sm' === props.gridState);
+            this.mountNode('xs' === props.gridState);
         }
         ReactDOM.render(this.generateSideMenu(), this.sideMenu);
     }
@@ -52,7 +52,7 @@ class SideMenu extends React.Component {
         this.sideMenu = document.createElement('section');
         if (includeBackdrop) {
             this.sideMenuBackdrop = document.createElement('div');
-            this.sideMenuBackdrop.className = 'd-sm-none side-menu-backdrop';
+            this.sideMenuBackdrop.className = 'd-xs-none side-menu-backdrop';
             this.charshierRoot.insertBefore(this.sideMenuBackdrop, this.charshierRoot.firstChild);
         }
         this.charshierRoot.insertBefore(this.sideMenu, this.charshierRoot.firstChild);

@@ -72,7 +72,7 @@ class Composes extends React.Component {
 
     render() {
         return (
-            <div className="ml-auto w-100">
+            <div className="ml-auto admin-content">
                 <Toolbar />
                 <Fade in className="composes-wrapper">
                     <div className="composes">

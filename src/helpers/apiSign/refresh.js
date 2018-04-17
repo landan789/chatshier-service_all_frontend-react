@@ -1,10 +1,10 @@
 import Core from './Core';
 import { reqHeaders } from './index';
 
-class SignOut extends Core {
+class Refresh extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'signout';
+        this.urlPrefix = this.prefixUrl + 'refresh';
     }
     do(user) {
         let destUrl = this.urlPrefix;
@@ -15,4 +15,4 @@ class SignOut extends Core {
         return this.sendRequest(destUrl, reqInit);
     }
 }
-export default SignOut;
+export default Refresh;

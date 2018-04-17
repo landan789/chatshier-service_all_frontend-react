@@ -1,6 +1,6 @@
 @import '../../../styles/_variables';
 
-$side-menu-width: 16rem;
+$side-menu-width: 16vw;
 
 .chsr.side-menu {
     min-width: $side-menu-width;
@@ -9,6 +9,7 @@ $side-menu-width: 16rem;
     min-height: 100%;
     background-color: #fff;
     z-index: 1000;
+    position: fixed;
 
     animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1);
     animation-duration: 300ms;
@@ -17,15 +18,22 @@ $side-menu-width: 16rem;
     &.sm {
         position: absolute;
         animation-name: sideMenuSlideIn;
+        width: 30%;
+    }
+
+    &.md {
+        width: 25%;
     }
 
     &,
     .list-group-item {
-        background-color: #4d394b;
+        background-color: #4a8998;
     }
 
     .list-group-item {
         cursor: pointer;
+        letter-spacing: 1.2px;
+        font-weight: 300;
 
         &.nested i {
             padding-left: 1rem;

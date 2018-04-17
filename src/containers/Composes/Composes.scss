@@ -43,6 +43,12 @@
     color: red;
 }
 
+.composes {
+    h4 {
+        padding: .75rem;
+    }
+}
+
 .Compose {
     display: block;
     padding-bottom: 5%;
@@ -101,6 +107,9 @@
 }
 
 @media (min-width: 1024px) {
+    .composes-wrapper {
+        padding: 4%;
+    }
     .Compose {
         thead, tbody {
             tr {

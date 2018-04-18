@@ -28,25 +28,3 @@ body,
         }
     }
 }
-
-.admin-content {
-    width: 100%;
-}
-
-@media (min-width: 576px) {
-    .admin-content {
-        width: 70%;
-    }
-}
-
-@media (min-width: 769px) {
-    .admin-content {
-        width: 75%;
-    }
-}
-
-@media (min-width: 993px) {
-    .admin-content {
-        width: 84%;
-    }
-}

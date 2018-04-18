@@ -101,7 +101,7 @@ class Tickets extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <div className="ml-auto admin-content page-wrapper">
+                <div className="ml-auto w-100 page-wrapper">
                     <Toolbar />
                     <Fade in className="ticket-wrapper">
                         <div className="ticket-toolbar">

@@ -88,7 +88,7 @@ const ctrlPanelStore = createStore(ctrlPanelOpenState);
 
 const classes = {
     ctrlPanel: 'chsr ctrl-panel swiper-container h-100',
-    menuToggle: 'ml-auto fas fa-bars d-sm-none menu-toggle'
+    menuToggle: 'ml-auto p-2 fas fa-times d-sm-none menu-toggle'
 };
 
 class ControlPanel extends React.Component {

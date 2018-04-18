@@ -57,9 +57,9 @@ class Users extends Core {
      * @returns {Promise<UsersResponse>}
      */
     update(userId, user) {
-        let destUrl = this.prefixUrl + 'users/' + userId;
+        let destUrl = this.urlPrefix + 'users/' + userId;
         let reqInit = {
-            medthod: 'PUT',
+            method: 'PUT',
             headers: reqHeaders,
             body: JSON.stringify(user)
         };

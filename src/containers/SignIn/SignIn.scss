@@ -24,7 +24,7 @@ $_signin-logo-height: 4rem;
     }
 
     .padding-left-right {
-        padding: 0 5rem;
+        padding: 0 2.5rem;
     }
 
     .logo-container {
@@ -37,6 +37,7 @@ $_signin-logo-height: 4rem;
     }
     
     .form-container {
+        max-width: 40rem;
         margin: 1rem 0 2rem;
         border: 1px solid #e5e5e5;
         background-color: #fff;
@@ -64,7 +65,7 @@ $_signin-logo-height: 4rem;
         }
 
         .padding-left-right {
-            padding: 0 1.5rem;
+            padding: 0 1rem;
         }
 
         .signin-logo {
@@ -78,7 +79,7 @@ $_signin-logo-height: 4rem;
         }
 
         .padding-left-right {
-            padding: 0 2.5rem;
+            padding: 0 2rem;
         }
 
         .signin-logo {

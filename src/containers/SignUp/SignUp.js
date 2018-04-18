@@ -159,15 +159,15 @@ class SignUp extends React.Component {
     render() {
         return (
             <Fade in className="signup-container w-100">
-                <div className="col-md-12 text-center logo-container">
+                <div className="col-12 text-center logo-container">
                     <a className="chatshier-logo" href={wwwUrl}>
                         <img alt="Chatshier-logo" src="image/logo.png" />
                     </a>
                 </div>
 
-                <div className="col-md-12">
+                <div className="mx-auto col-md-12 col-lg-6">
                     <div className="row justify-content-center">
-                        <div className="form-container col-12 col-sm-10 col-md-8">
+                        <div className="form-container col-12 col-sm-10 col-md-8 col-lg-12">
                             <h2 className="text-center signup-title">開始體驗您的Chatshier</h2>
                             <p className="text-center lead">不需付費。馬上體驗聊天功能。</p>
                             <form className="signup-form" onSubmit={this.checkInputs}>

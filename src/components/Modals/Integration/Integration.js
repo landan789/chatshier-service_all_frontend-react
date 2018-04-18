@@ -4,7 +4,6 @@ import { Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input } from 're
 import Switch from 'react-switch';
 
 import { CLIENT_ID, SCOPES } from '../../../config/google-app';
-
 import './Integration.css';
 
 class Integration extends React.Component {

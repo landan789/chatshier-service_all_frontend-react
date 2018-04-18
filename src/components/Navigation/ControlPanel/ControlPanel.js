@@ -129,6 +129,10 @@ class ControlPanel extends React.Component {
         window.removeEventListener('resize', this.widthChanged);
     }
 
+    componentDidUpdate() {
+        this.swiper && this.swiper.update();
+    }
+
     widthChanged(ev) {
         this.setState({ gridState: this.getGridState(ev.target.innerWidth) });
     }
@@ -348,7 +352,7 @@ class ControlPanel extends React.Component {
                             </ListGroup>
                         </div>
                     </div>
-                    <div className="swiper-pagination"></div>
+                    <div className="swiper-pagination w-100"></div>
                 </div>
                 <div className={'ctrl-panel-backdrop' + (shouldShowBackdrop ? '' : ' d-none')} onClick={() => this.linkTo()}></div>
             </Aux>

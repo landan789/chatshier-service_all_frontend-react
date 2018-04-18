@@ -1,0 +1,118 @@
+@import '../../../styles/_variables';
+
+$ctrl-panel-width: 16rem;
+$ctrl-panel-bg-color: #4a8998;
+
+.chsr.ctrl-panel {
+    min-width: $ctrl-panel-width;
+    max-width: $ctrl-panel-width;
+    min-height: 100%;
+    background-color: $ctrl-panel-bg-color;
+    z-index: 1040;
+
+    &.animated {
+        position: absolute;
+        left: 0;
+        top: 0;
+        animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1);
+        animation-duration: 300ms;
+
+        &.slide-in {
+            animation-name: ctrlPanelSlideIn;
+        }
+    
+        &.slide-out {
+            animation-name: ctrlPanelSlideOut;
+        }
+    }
+
+    .ctrl-panel-title {
+        font-size: 1.25rem;
+    }
+
+    .list-group-item {
+        display: flex;
+        align-items: center;    
+        background-color: $ctrl-panel-bg-color;
+        cursor: pointer;
+        border: none;
+        letter-spacing: 1.2px;
+        font-weight: 300;
+
+        > :first-child {
+            margin-right: .5rem;
+        }
+
+        span {
+            max-width: 55%;
+            white-space: nowrap;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .nested {
+        > :first-child {
+            margin-left: .75rem;
+        }
+
+        .nested {
+            > :first-child {
+                margin-left: 1rem;
+            }
+
+            .nested > :first-child {
+                margin-left: 1.25rem;
+            }
+        }
+    }
+
+    .swiper-wrapper {
+        height: 90%;
+    }
+
+    .swiper-slide {
+        font-size: .85rem;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+
+        &::-webkit-scrollbar {
+            width: 0;
+            background-color: transparent;
+        }
+    }
+
+    .swiper-pagination-bullet {
+        background-color: white;
+    }
+
+    .swiper-pagination-bullet-active {
+        background-color: $primary-color;
+    }
+
+    .app-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: .25rem;
+    }
+}
+
+.ctrl-panel-backdrop {
+    position: absolute;
+    left: $ctrl-panel-width;
+    top: 0;
+    width: calc(100vw - #{$ctrl-panel-width});
+    height: 100vh;
+    z-index: 1039;
+    background-color: transparent;
+}
+
+@keyframes ctrlPanelSlideIn {
+    from { transform: translate3d(-100%, 0, 0); }
+    to { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes ctrlPanelSlideOut {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-100%, 0, 0); }
+}

@@ -7,7 +7,7 @@ import { updateKeywordreplies, deleteKeywordreply } from '../../redux/actions/ap
 class AppsKeywordreplies extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'apps-keywordreplies/';
+        this.apiEndPoint += 'apps-keywordreplies/';
     }
 
     /**
@@ -25,7 +25,7 @@ class AppsKeywordreplies extends Core {
             });
         }
 
-        let destUrl = this.urlPrefix + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
+        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -43,7 +43,7 @@ class AppsKeywordreplies extends Core {
      * @returns {Promise<AppsKeywordrepliesResponse>}
      */
     insert(appId, userId, keywordreply) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -63,7 +63,7 @@ class AppsKeywordreplies extends Core {
      * @returns {Promise<AppsKeywordrepliesResponse>}
      */
     update(appId, keywordreplyId, userId, keywordreply) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/keywordreplies/' + keywordreplyId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/keywordreplies/' + keywordreplyId + '/users/' + userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -81,7 +81,7 @@ class AppsKeywordreplies extends Core {
      * @param {string} userId
      */
     delete(appId, keywordreplyId, userId) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/keywordreplies/' + keywordreplyId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/keywordreplies/' + keywordreplyId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

@@ -4,10 +4,14 @@ import { reqHeaders } from './index';
 class Refresh extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'refresh';
+        this.apiEndPoint += 'refresh/';
     }
-    do(user) {
-        let destUrl = this.urlPrefix;
+
+    /**
+     * @param {string} userId
+     */
+    do(userId) {
+        let destUrl = this.apiEndPoint + 'users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders

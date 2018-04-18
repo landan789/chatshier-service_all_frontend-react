@@ -7,7 +7,7 @@ import { updateGroupsMembers, deleteGroupMember } from '../../redux/actions/grou
 class GroupsMembers extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'groups-members/';
+        this.apiEndPoint += 'groups-members/';
         this.enums = Object.freeze({
             type: {
                 OWNER: 'OWNER',
@@ -32,7 +32,7 @@ class GroupsMembers extends Core {
             });
         }
 
-        let destUrl = this.urlPrefix + 'users/' + userId;
+        let destUrl = this.apiEndPoint + 'users/' + userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -50,7 +50,7 @@ class GroupsMembers extends Core {
      * @returns {Promise<GroupsMembersResponse>}
      */
     insert(groupId, userId, groupMember) {
-        let destUrl = this.urlPrefix + 'groups/' + groupId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'groups/' + groupId + '/users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -70,7 +70,7 @@ class GroupsMembers extends Core {
      * @returns {Promise<GroupsMembersResponse>}
      */
     update(groupId, memberId, userId, groupMember) {
-        let destUrl = this.urlPrefix + 'groups/' + groupId + '/members/' + memberId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'groups/' + groupId + '/members/' + memberId + '/users/' + userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -88,7 +88,7 @@ class GroupsMembers extends Core {
      * @param {string} userId
      */
     delete(groupId, memberId, userId) {
-        let destUrl = this.urlPrefix + 'groups/' + groupId + '/members/' + memberId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'groups/' + groupId + '/members/' + memberId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

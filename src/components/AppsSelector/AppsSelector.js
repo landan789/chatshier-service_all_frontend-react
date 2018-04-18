@@ -1,12 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 
 import PropTypes from 'prop-types';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 import authHelper from '../../helpers/authentication';
-import { updateApps } from '../../redux/actions/apps';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 class AppsSelector extends React.Component {
@@ -100,11 +98,4 @@ const mapStateToProps = (storeState, ownProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch) => {
-    // 將此頁面有需要用到的 store 更新方法綁定至 props 中
-    return {
-        updateApps: bindActionCreators(updateApps, dispatch)
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(AppsSelector);
+export default connect(mapStateToProps)(AppsSelector);

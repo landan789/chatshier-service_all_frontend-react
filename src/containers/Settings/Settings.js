@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Aux from 'react-aux';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 
 import ROUTES from '../../config/route';
@@ -7,6 +8,7 @@ import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 
+import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import LinkTabs from './LinkTabs';
 import AppsTabPane from './TabPanes/AppsTabPane';
@@ -41,19 +43,22 @@ class Settings extends React.Component {
         let route = this.props.location.pathname;
 
         return (
-            <div className="ml-auto w-100">
-                <Toolbar />
-                <div className="setting-wrapper">
-                    <LinkTabs route={route} toggle={this.toggle} />
-                    <Switch>
-                        <Route path={ROUTES.SETTINGS_APPS} exact component={AppsTabPane} />
-                        <Route path={ROUTES.SETTINGS_USERS} exact component={UsersTabPane} />
-                        <Route path={ROUTES.SETTINGS_FIELDS} exact component={FieldsTabPane} />
-                        <Route path={ROUTES.SETTINGS_GROUPS} exact component={GroupsTabPane} />
-                        <Redirect to={ROUTES.SETTINGS_APPS} />
-                    </Switch>
+            <Aux>
+                <ControlPanel />
+                <div className="ml-auto w-100 page-wrapper">
+                    <Toolbar />
+                    <div className="setting-wrapper">
+                        <LinkTabs route={route} toggle={this.toggle} />
+                        <Switch>
+                            <Route path={ROUTES.SETTINGS_APPS} exact component={AppsTabPane} />
+                            <Route path={ROUTES.SETTINGS_USERS} exact component={UsersTabPane} />
+                            <Route path={ROUTES.SETTINGS_FIELDS} exact component={FieldsTabPane} />
+                            <Route path={ROUTES.SETTINGS_GROUPS} exact component={GroupsTabPane} />
+                            <Redirect to={ROUTES.SETTINGS_APPS} />
+                        </Switch>
+                    </div>
                 </div>
-            </div>
+            </Aux>
         );
     }
 }

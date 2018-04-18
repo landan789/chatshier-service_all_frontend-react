@@ -6,7 +6,7 @@ import { Dropdown, DropdownItem, DropdownMenu,
     DropdownToggle } from 'reactstrap';
 
 import ROUTES from '../../../config/route';
-import SideMenu from '../SideMenu/SideMenu';
+import { ctrlPanelStore } from '../ControlPanel/ControlPanel';
 
 import './Toolbar.css';
 
@@ -24,60 +24,6 @@ const setingsItems = [
     }
 ];
 
-const navItems = [
-    {
-        link: ROUTES.CHAT,
-        icon: 'fas fa-comment-dots fa-fw',
-        text: '聊天室',
-        useReactRouter: false
-    }, {
-        link: ROUTES.CALENDAR,
-        icon: 'far fa-calendar-alt fa-fw',
-        text: '行事曆',
-        useReactRouter: true
-    }, {
-        link: ROUTES.TICKETS,
-        icon: 'fa fa-list-ul fa-fw',
-        text: '待辦事項',
-        useReactRouter: true
-    }, {
-        link: ROUTES.ANALYZE,
-        icon: 'fa fa-chart-bar fa-fw',
-        text: '訊息分析',
-        useReactRouter: true
-    }, {
-        icon: 'fa fa-envelope fa-fw',
-        text: '訊息',
-        dropdownItems: [
-            {
-                link: ROUTES.COMPOSES,
-                icon: 'fa fa-comments',
-                text: '群發',
-                useReactRouter: true
-            }, {
-                link: ROUTES.AUTOREPLIES,
-                icon: 'fa fa-comments',
-                text: '自動回覆',
-                useReactRouter: true
-            }, {
-                link: ROUTES.KEYWORDREPLIES,
-                icon: 'fa fa-comments',
-                text: '關鍵字回覆',
-                useReactRouter: true
-            }, {
-                link: ROUTES.GREETINGS,
-                icon: 'fa fa-comments',
-                text: '加好友回覆',
-                useReactRouter: true
-            }
-        ]
-    }, {
-        icon: 'fa fa-cog fa-lg',
-        rightSide: true,
-        dropdownItems: setingsItems
-    }
-];
-
 let navTitle = 'Title';
 const setNavTitle = (title) => {
     navTitle = title;
@@ -88,61 +34,31 @@ class Toolbar extends React.Component {
         super(props, ctx);
 
         this.state = {
-            grid: this.getGridState(window.innerWidth),
-            isSideMenuOpen: false,
+            isControlPanelOpen: false,
             dropdownOpen: false
         };
         this.linkTo = this.linkTo.bind(this);
-        this.mobileToggleSideMenu = this.mobileToggleSideMenu.bind(this);
+        this.mobileToggleControlPanel = this.mobileToggleControlPanel.bind(this);
         this.mobileToggleSetting = this.mobileToggleSetting.bind(this);
-        this.sizeChanged = this.sizeChanged.bind(this);
-
-        window.addEventListener('resize', this.sizeChanged);
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.sizeChanged);
-    }
-
-    sizeChanged(ev) {
-        this.setState({ grid: this.getGridState(ev.target.innerWidth) });
     }
 
     mobileToggleSetting() {
         this.setState({ dropdownOpen: !this.state.dropdownOpen });
     }
 
-    mobileToggleSideMenu() {
-        this.setState({ isSideMenuOpen: !this.state.isSideMenuOpen });
+    mobileToggleControlPanel() {
+        ctrlPanelStore.dispatch({ type: 'TOGGLE_MENU' });
     }
 
     linkTo(route, useReactRouter) {
-        if (route) {
-            if (useReactRouter) {
-                this.props.history.push(route);
-            } else {
-                window.location.href = route;
-            }
-        }
-
-        // 如果目前狀態是屬於平板的尺寸時，不關閉 sideMenu
-        if ('xs' === this.gridState) {
+        if (!route) {
             return;
         }
-        this.setState({ isSideMenuOpen: false });
-    }
 
-    getGridState(width) {
-        if (width <= 576) {
-            return 'xs';
-        } else if (width > 576 && width <= 768) {
-            return 'sm';
-        } else if (width > 768 && width <= 992) {
-            return 'md';
-        } else if (width > 992 && width <= 1200) {
-            return 'lg';
+        if (useReactRouter) {
+            this.props.history.push(route);
         } else {
-            return 'xl';
+            window.location.assign(route);
         }
     }
 
@@ -153,13 +69,20 @@ class Toolbar extends React.Component {
                     <nav className="navbar px-1">
                         <button type="button"
                             className="btn text-light transparent d-sm-none"
-                            onClick={this.mobileToggleSideMenu}>
+                            onClick={this.mobileToggleControlPanel}>
                             <i className="fas fa-bars"></i>
                         </button>
 
-                        <div className="nav-title text-light d-flex m-auto">
+                        <div className="nav-title text-nowrap text-light ml-2">
                             {navTitle}
                         </div>
+
+                        <button type="button" className="btn mx-1 transparent d-none">
+                            <i className="far fa-file-alt"></i>
+                        </button>
+                        <button type="button" className="btn mx-1 transparent d-none">
+                            <i className="far fa-calendar-check"></i>
+                        </button>
 
                         <Dropdown isOpen={this.state.dropdownOpen} toggle={this.mobileToggleSetting}>
                             <DropdownToggle color="none" className="text-light transparent">
@@ -174,11 +97,6 @@ class Toolbar extends React.Component {
                                 ))}
                             </DropdownMenu>
                         </Dropdown>
-
-                        <SideMenu items={navItems}
-                            gridState={this.state.grid}
-                            isOpen={this.state.isSideMenuOpen}
-                            close={this.linkTo}/>
                     </nav>
                 </header>
             </Aux>

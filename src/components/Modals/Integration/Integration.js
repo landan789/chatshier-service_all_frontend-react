@@ -100,8 +100,10 @@ class Integration extends React.Component {
                     <div className="row">
                         <div className="col-2 content">
                             <div className="box-border">
-                                <i className="fab fa-google fa-3x"></i>
-                                <br/><br/>
+                                <img className="google-calendar" src="https://firebasestorage.googleapis.com/v0/b/dev-chatshier.appspot.com/o/google_calendar.png?alt=media&token=e9402eeb-3cf9-4fc0-870d-25815b93b68a" />
+                                <br/>
+                                <span className="title">Google Calendar</span>
+                                <br/>
                                 <Switch onChange={this.turnOnGoogleAPI} checked={this.state.google} className="react-switch" id="normal-switch"/>
                             </div>
                         </div>

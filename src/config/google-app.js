@@ -1,6 +1,6 @@
 module.exports = {
     API_KEY: '',
-    CLIENT_ID: '710049392797-41g539dngajh9oknu8rbagns1ck0c1n7.apps.googleusercontent.com',
-    DISCOVERY_DOCS: [],
+    CLIENT_ID: '1074711200692-ds4lin2uh3q4bs5doqsdipuak83j6te1.apps.googleusercontent.com',
+    DISCOVERY_DOCS: [''],
     SCOPES: 'https://www.googleapis.com/auth/calendar'
 };

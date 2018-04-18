@@ -7,7 +7,7 @@ import { updateCalendarsEvents, deleteCalendarEvent } from '../../redux/actions/
 class CalendarsEvents extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'calendars-events/';
+        this.apiEndPoint += 'calendars-events/';
     }
 
     /**
@@ -24,7 +24,7 @@ class CalendarsEvents extends Core {
             });
         }
 
-        let destUrl = this.urlPrefix + 'users/' + userId;
+        let destUrl = this.apiEndPoint + 'users/' + userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -41,7 +41,7 @@ class CalendarsEvents extends Core {
      * @returns {Promise<CalendarsEventsResponse>}
      */
     insert(userId, calendarEvent) {
-        let destUrl = this.urlPrefix + 'users/' + userId;
+        let destUrl = this.apiEndPoint + 'users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -61,7 +61,7 @@ class CalendarsEvents extends Core {
      * @returns {Promise<CalendarsEventsResponse>}
      */
     update(calendarId, eventId, userId, calendarEvent) {
-        let destUrl = this.urlPrefix + 'calendars/' + calendarId + '/events/' + eventId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'calendars/' + calendarId + '/events/' + eventId + '/users/' + userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -80,7 +80,7 @@ class CalendarsEvents extends Core {
      * @returns {Promise<CalendarsEventsResponse>}
      */
     delete(calendarId, eventId, userId) {
-        let destUrl = this.urlPrefix + 'calendars/' + calendarId + '/events/' + eventId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'calendars/' + calendarId + '/events/' + eventId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

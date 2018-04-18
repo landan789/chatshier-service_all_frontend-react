@@ -7,7 +7,7 @@ import { updateAutoreplies, deleteAutoreply } from '../../redux/actions/appsAuto
 class AppsAutoreplies extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'apps-autoreplies/';
+        this.apiEndPoint += 'apps-autoreplies/';
     }
 
     /**
@@ -25,7 +25,7 @@ class AppsAutoreplies extends Core {
             });
         }
 
-        let destUrl = this.urlPrefix + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
+        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -43,7 +43,7 @@ class AppsAutoreplies extends Core {
      * @returns {Promise<AppsAutorepliesResponse>}
      */
     insert(appId, userId, autoreply) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -63,7 +63,7 @@ class AppsAutoreplies extends Core {
      * @returns {Promise<AppsAutorepliesResponse>}
      */
     update(appId, autoreplyId, userId, autoreply) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/autoreplies/' + autoreplyId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/autoreplies/' + autoreplyId + '/users/' + userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -81,7 +81,7 @@ class AppsAutoreplies extends Core {
      * @param {string} userId
      */
     delete(appId, autoreplyId, userId) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/autoreplies/' + autoreplyId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/autoreplies/' + autoreplyId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

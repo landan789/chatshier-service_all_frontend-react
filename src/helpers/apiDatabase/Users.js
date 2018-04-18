@@ -7,7 +7,7 @@ import { updateUsers } from '../../redux/actions/users';
 class Users extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'users/';
+        this.apiEndPoint += 'users/';
     }
 
     /**
@@ -19,7 +19,7 @@ class Users extends Core {
     find(userId, email, useFuzzy) {
         useFuzzy = !!useFuzzy;
 
-        let destUrl = this.urlPrefix + 'users/' + userId + '?';
+        let destUrl = this.apiEndPoint + 'users/' + userId + '?';
         destUrl += (email ? ('email=' + email + '&') : '');
         destUrl += (useFuzzy ? ('fuzzy=1') : '');
 
@@ -39,7 +39,7 @@ class Users extends Core {
      * @returns {Promise<UsersResponse>}
      */
     insert(userId, user) {
-        let destUrl = this.urlPrefix + 'users/' + userId;
+        let destUrl = this.apiEndPoint + 'users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,

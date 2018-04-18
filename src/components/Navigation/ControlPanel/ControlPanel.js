@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { createStore } from 'redux';
 
 import { Collapse, ListGroup, ListGroupItem } from 'reactstrap';
-import Swiper from 'swiper';
+import Swiper from 'swiper/dist/js/swiper.js';
 
 import authHelper from '../../../helpers/authentication';
 import apiDatabase from '../../../helpers/apiDatabase/index';

@@ -1,0 +1,15 @@
+.box-border {
+    width: 100%;
+    border: 1px solid #000;
+}
+
+.group-tab {
+    padding: 1rem 0;
+    margin-bottom: 0;
+    border: 1px solid #ddd;
+}
+
+.group-tab:first-child {
+    border-top-left-radius: .5rem;
+    border-top-right-radius: .5rem;
+}

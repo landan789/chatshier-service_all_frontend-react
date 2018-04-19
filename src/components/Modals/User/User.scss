@@ -1,0 +1,29 @@
+.user-modal-content {
+    .modal-header {
+        background-color: #4a8998;
+    }
+}
+
+.modal-header .close {
+    color: #FFFFFF !important;
+    text-shadow: 0 1px 0 #FFFFFF !important;
+    opacity: 1 !important;
+}
+
+.modal-body {
+    overflow: scroll;
+}
+
+.modal.show .modal-dialog {
+    margin: 0;
+    width: 100%;
+}
+
+.modal-content {
+    height: 100%;
+}
+
+.modal.show .modal-dialog.modal-lg {
+    max-width: 100% !important;
+    height: 100%;
+}

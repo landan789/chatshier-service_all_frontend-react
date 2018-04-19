@@ -1,0 +1,70 @@
+$iphone_portrait: 375px;
+$iphone_landscape: 667px;
+$ipad_portrait: 768px;
+$pc: 1024px;
+
+.modal-body {
+    .col-2.content {
+        .box-border {
+            width: 160px;
+            height: 160px;
+            text-align: center;
+            padding-top: 30%;
+            .google-calendar {
+                width: 64px;
+                height: 64px;
+            }
+            .title {
+                font-size: 0.5em;
+            }
+            @media (min-width: $ipad_portrait) {
+                width: 200px;
+                height: 200px;
+                .google-calendar {
+                    width: 64px;
+                    height: 64px;
+                }
+                .title {
+                    font-size: 0.7em;
+                }
+            }
+            @media (min-width: $pc) {
+                width: 300px;
+                height: 300px;
+                padding-top: 20%;
+                .google-calendar {
+                    width: 96px;
+                    height: 96px;
+                }
+                .title {
+                    font-size: 1em;
+                }
+            }
+            .react-switch {
+                text-align: left;
+            }
+        }
+    }
+    .box-border {
+        border: 1px solid #000;
+        height: 160px;
+        .box-title {
+            padding-top: 15%;
+        }
+        @media (min-width: $iphone_landscape) {
+            .box-title {
+                padding-top: 10%;
+            }
+        }
+        @media (min-width: $ipad_portrait) {
+            .box-title {
+                padding-top: 7%;
+            }
+        }
+        @media (min-width: $pc) {
+            .box-title {
+                padding-top: 3%;
+            }
+        }
+    }
+}

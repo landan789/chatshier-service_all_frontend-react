@@ -4,10 +4,11 @@ import { reqHeaders } from './index';
 class SignUp extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'signup';
+        this.apiEndPoint += 'signup/';
     }
+
     do(user) {
-        let destUrl = this.urlPrefix;
+        let destUrl = this.apiEndPoint;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,

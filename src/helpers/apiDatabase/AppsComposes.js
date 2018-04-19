@@ -7,7 +7,7 @@ import { updateComposes, deleteCompose } from '../../redux/actions/appsComposes'
 class AppsComposes extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'apps-composes/';
+        this.apiEndPoint += 'apps-composes/';
     }
 
     /**
@@ -25,7 +25,7 @@ class AppsComposes extends Core {
             });
         }
 
-        let destUrl = this.urlPrefix + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
+        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -43,7 +43,7 @@ class AppsComposes extends Core {
      * @returns {Promise<AppsComposesResponse>}
      */
     insert(appId, userId, composes, usingRecursive) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
 
         let reqInit;
         if (composes instanceof Array) {
@@ -76,7 +76,7 @@ class AppsComposes extends Core {
      * @returns {Promise<AppscomposesResponse>}
      */
     update(appId, composeId, userId, compose) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/composes/' + composeId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/composes/' + composeId + '/users/' + userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -94,7 +94,7 @@ class AppsComposes extends Core {
      * @param {string} userId
      */
     delete(appId, composeId, userId) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/composes/' + composeId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/composes/' + composeId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

@@ -7,7 +7,7 @@ import { updateFields, deleteField } from '../../redux/actions/appsFields';
 class AppsFields extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'apps-fields/';
+        this.apiEndPoint += 'apps-fields/';
     }
 
     /**
@@ -24,7 +24,7 @@ class AppsFields extends Core {
             });
         }
 
-        let destUrl = this.urlPrefix + 'users/' + userId;
+        let destUrl = this.apiEndPoint + 'users/' + userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -42,7 +42,7 @@ class AppsFields extends Core {
      * @returns {Promise<AppsFieldsResponse>}
      */
     insert(appId, userId, field) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -62,7 +62,7 @@ class AppsFields extends Core {
      * @returns {Promise<AppsFieldsResponse>}
      */
     update(appId, fieldId, userId, field) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/fields/' + fieldId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/fields/' + fieldId + '/users/' + userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -80,7 +80,7 @@ class AppsFields extends Core {
      * @param {string} userId
      */
     delete(appId, fieldId, userId) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/fields/' + fieldId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/fields/' + fieldId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

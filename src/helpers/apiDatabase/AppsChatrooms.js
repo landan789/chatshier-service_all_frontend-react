@@ -7,7 +7,7 @@ import { updateChatroomsMessages } from '../../redux/actions/appsChatrooms';
 class AppsChatrooms extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'apps-chatrooms/';
+        this.apiEndPoint += 'apps-chatrooms/';
     }
 
     /**
@@ -24,7 +24,7 @@ class AppsChatrooms extends Core {
             });
         }
 
-        let destUrl = this.urlPrefix + 'users/' + userId;
+        let destUrl = this.apiEndPoint + 'users/' + userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders

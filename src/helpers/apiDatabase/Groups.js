@@ -7,7 +7,7 @@ import { updateGroups, deleteGroup } from '../../redux/actions/groups';
 class Groups extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'groups/';
+        this.apiEndPoint += 'groups/';
     }
 
     /**
@@ -24,7 +24,7 @@ class Groups extends Core {
             });
         }
 
-        let destUrl = this.urlPrefix + 'users/' + userId;
+        let destUrl = this.apiEndPoint + 'users/' + userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -41,7 +41,7 @@ class Groups extends Core {
      * @returns {Promise<GroupsResponse>}
      */
     insert(userId, group) {
-        let destUrl = this.urlPrefix + 'users/' + userId;
+        let destUrl = this.apiEndPoint + 'users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -60,7 +60,7 @@ class Groups extends Core {
      * @returns {Promise<GroupsResponse>}
      */
     update(groupId, userId, group) {
-        let destUrl = this.urlPrefix + 'groups/' + groupId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'groups/' + groupId + '/users/' + userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -77,7 +77,7 @@ class Groups extends Core {
      * @param {string} userId
      */
     delete(groupId, userId) {
-        let destUrl = this.urlPrefix + 'groups/' + groupId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'groups/' + groupId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

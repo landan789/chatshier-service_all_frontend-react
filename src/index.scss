@@ -12,26 +12,19 @@ body,
 .root {
     background-color: $body-bg-color;
     align-items: stretch;
-}
 
-.admin-content {
-    width: 100%;
-}
-
-@media (min-width: 576px) {
-    .admin-content {
-        width: 70%;
+    .animated {
+        animation-duration: 300ms;
     }
-}
 
-@media (min-width: 769px) {
-    .admin-content {
-        width: 75%;
-    }
-}
+    .page-wrapper {
+        position: relative;
+        max-width: calc(100% - 16rem);
 
-@media (min-width: 993px) {
-    .admin-content {
-        width: 84%;
+        @media (max-width: 576px) {
+            & {
+                max-width: 100%;
+            }
+        }
     }
 }

@@ -45,7 +45,6 @@ class SignIn extends React.Component {
         if (cookieHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }
-        authHelper.signOut();
     }
 
     emailChanged(ev) {
@@ -94,6 +93,8 @@ class SignIn extends React.Component {
             cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
             cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
             setJWT(jwt);
+            authHelper.activateRefreshToken();
+
             // this.props.history.replace(ROUTES.CHAT);
             window.location.replace(ROUTES.CHAT);
         }).catch((err) => {
@@ -101,6 +102,7 @@ class SignIn extends React.Component {
                 isSignIning: false,
                 signInBtnHtml: '登入'
             });
+
             switch (err.msg) {
                 case USER_FAILED_TO_FIND:
                     notify('找不到使用者', { type: 'danger' });
@@ -112,22 +114,21 @@ class SignIn extends React.Component {
                     notify('錯誤！', { type: 'danger' });
                     break;
             }
-            return;
         });
     }
 
     render() {
         return (
             <Fade in className="signin-container w-100">
-                <div className="col-md-12 text-center logo-container">
+                <div className="col-12 text-center logo-container">
                     <a className="chatshier-logo" href={wwwUrl}>
                         <img alt="Chatshier-logo" src="image/logo.png" />
                     </a>
                 </div>
 
-                <div className="col-md-12">
+                <div className="mx-auto col-md-12 col-lg-6">
                     <div className="row justify-content-center">
-                        <div className="form-container col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3">
+                        <div className="form-container col-12 col-sm-10 col-md-8 col-lg-12">
                             <h2 className="text-center signin-title">登入</h2>
                             <form className="signin-form" onSubmit={this.checkInputs}>
                                 <fieldset>

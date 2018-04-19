@@ -7,7 +7,7 @@ import { updateConsumers } from '../../redux/actions/consumers';
 class Consumers extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'consumers/';
+        this.apiEndPoint += 'consumers/';
     }
 
     /**
@@ -24,7 +24,7 @@ class Consumers extends Core {
             });
         }
 
-        let destUrl = this.urlPrefix + 'users/' + userId;
+        let destUrl = this.apiEndPoint + 'users/' + userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -50,7 +50,7 @@ class Consumers extends Core {
             });
         }
 
-        let destUrl = this.urlPrefix + 'consumers/' + platformUid + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'consumers/' + platformUid + '/users/' + userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -68,7 +68,7 @@ class Consumers extends Core {
      * @returns {Promise<ConsumerResponse>}
      */
     update(platformUid, userId, consumer) {
-        let destUrl = this.urlPrefix + 'consumers/' + platformUid + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'consumers/' + platformUid + '/users/' + userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,

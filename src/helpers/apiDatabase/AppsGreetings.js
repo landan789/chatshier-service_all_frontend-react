@@ -7,7 +7,7 @@ import { updateGreetings, deleteGreeting } from '../../redux/actions/appsGreetin
 class AppsGreetings extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'apps-greetings/';
+        this.apiEndPoint += 'apps-greetings/';
     }
 
     find(appId, userId) {
@@ -20,7 +20,7 @@ class AppsGreetings extends Core {
             });
         }
 
-        let destUrl = this.urlPrefix + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
+        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -32,7 +32,7 @@ class AppsGreetings extends Core {
     };
 
     insert(appId, userId, greeting) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -45,7 +45,7 @@ class AppsGreetings extends Core {
     };
 
     delete(appId, userId, greetingId) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/greetings/' + greetingId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/greetings/' + greetingId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

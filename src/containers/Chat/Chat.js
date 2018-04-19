@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Aux from 'react-aux';
 import { Fade } from 'reactstrap';
 
 import ROUTES from '../../config/route';
@@ -10,6 +11,7 @@ import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
+import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 
 import './Chat.css';
@@ -47,12 +49,15 @@ class Chat extends React.Component {
 
     render() {
         return (
-            <div className="ml-auto w-100">
-                <Toolbar />
-                <Fade in className="chat-wrapper">
-                    聊天室
-                </Fade>
-            </div>
+            <Aux>
+                <ControlPanel />
+                <div className="ml-auto w-100 page-wrapper">
+                    <Toolbar />
+                    <Fade in className="chat-wrapper">
+                        聊天室
+                    </Fade>
+                </div>
+            </Aux>
         );
     }
 }

@@ -7,7 +7,7 @@ import { updateTickets, deleteTicket } from '../../redux/actions/appsTickets';
 class AppsTickets extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'apps-tickets/';
+        this.apiEndPoint += 'apps-tickets/';
     }
 
     /**
@@ -25,7 +25,7 @@ class AppsTickets extends Core {
             });
         }
 
-        let destUrl = this.urlPrefix + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
+        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -43,7 +43,7 @@ class AppsTickets extends Core {
      * @returns {Promise<AppsTicketsResponse>}
      */
     insert(appId, userId, ticket) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -63,7 +63,7 @@ class AppsTickets extends Core {
      * @returns {Promise<AppsTicketsResponse>}
      */
     update(appId, ticketId, userId, ticket) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/tickets/' + ticketId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/tickets/' + ticketId + '/users/' + userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -81,7 +81,7 @@ class AppsTickets extends Core {
      * @param {string} userId
      */
     delete(appId, ticketId, userId) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/tickets/' + ticketId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/tickets/' + ticketId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

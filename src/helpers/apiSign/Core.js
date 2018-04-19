@@ -3,7 +3,7 @@ import urlConfig from '../../config/url';
 class Core {
     constructor() {
         let config = window.urlConfig || urlConfig;
-        this.prefixUrl = config.apiUrl + '/api/sign/';
+        this.apiEndPoint = config.apiUrl + '/api/sign/';
     }
 
     /**
@@ -39,40 +39,18 @@ class Core {
 
     /**
      * @param {RequestInfo} reqInfo
-     * @param {RequestInit} reqInits
+     * @param {RequestInit} reqInit
      */
-    sendRequest(reqInfo, reqInits, usingRecursive) {
-        usingRecursive = !!usingRecursive;
-
-        if (reqInits instanceof Array) {
-            if (usingRecursive) {
-                let _reqInits = reqInits;
-                let resJsons = [];
-
-                let nextPromise = function(i) {
-                    if (i >= _reqInits.length) {
-                        return Promise.resolve(resJsons);
-                    }
-                    let _reqInit = _reqInits[i];
-
-                    return window.fetch(reqInfo, _reqInit).then(function(res) {
-                        return this.responseChecking(res);
-                    }).then(function(resJson) {
-                        resJsons.push(resJson);
-                        return nextPromise(i + 1);
-                    });
-                };
-                return nextPromise(0);
-            } else {
-                return Promise.all(reqInits.map((_reqInit) => {
-                    return window.fetch(reqInfo, _reqInit).then(function(res) {
-                        return this.responseChecking(res);
-                    });
-                }));
-            }
+    sendRequest(reqInfo, reqInit) {
+        if ('POST' === reqInit.method.toUpperCase() ||
+            'PUT' === reqInit.method.toUpperCase()) {
+            reqInit.headers.set('Content-Type', 'application/json');
         }
+        reqInit.cache = 'no-cache';
+        reqInit.mode = 'cors';
+        reqInit.credentials = 'include';
 
-        return window.fetch(reqInfo, reqInits).then((res) => {
+        return window.fetch(reqInfo, reqInit).then((res) => {
             return this.responseChecking(res);
         });
     };

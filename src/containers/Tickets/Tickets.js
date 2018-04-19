@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Aux from 'react-aux';
 import { Fade } from 'reactstrap';
 
 import ROUTES from '../../config/route';
@@ -10,6 +11,7 @@ import browserHelper from '../../helpers/browser';
 import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
+import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import TicketInsertModal from '../../components/Modals/TicketInsert/TicketInsert';
 import TicketTable from './TicketTable';
@@ -97,36 +99,39 @@ class Tickets extends React.Component {
 
     render() {
         return (
-            <div className="ml-auto admin-content">
-                <Toolbar />
-                <Fade in className="ticket-wrapper">
-                    <div className="ticket-toolbar">
-                        <button type="button" className="btn btn-light ticket-insert" onClick={this.openInsertModal}>
-                            <span className="fas fa-plus fa-fw"></span>
-                            <span>新增待辦</span>
-                        </button>
-                        <TicketInsertModal
-                            apps={this.props.apps}
+            <Aux>
+                <ControlPanel />
+                <div className="ml-auto w-100 page-wrapper">
+                    <Toolbar />
+                    <Fade in className="ticket-wrapper">
+                        <div className="ticket-toolbar">
+                            <button type="button" className="btn btn-light ticket-insert" onClick={this.openInsertModal}>
+                                <span className="fas fa-plus fa-fw"></span>
+                                <span>新增待辦</span>
+                            </button>
+                            <TicketInsertModal
+                                apps={this.props.apps}
+                                appsAgents={this.appsAgents}
+                                consumers={this.props.consumers}
+                                isOpen={this.state.isInsertModalOpen}
+                                close={this.closeInsertModal}>
+                            </TicketInsertModal>
+
+                            <input
+                                type="text"
+                                className="ticket-search-bar"
+                                placeholder="搜尋"
+                                value={this.state.searchKeyword}
+                                onChange={this.keywordChanged} />
+                        </div>
+
+                        <TicketTable
                             appsAgents={this.appsAgents}
-                            consumers={this.props.consumers}
-                            isOpen={this.state.isInsertModalOpen}
-                            close={this.closeInsertModal}>
-                        </TicketInsertModal>
-
-                        <input
-                            type="text"
-                            className="ticket-search-bar"
-                            placeholder="搜尋"
-                            value={this.state.searchKeyword}
-                            onChange={this.keywordChanged} />
-                    </div>
-
-                    <TicketTable
-                        appsAgents={this.appsAgents}
-                        searchKeyword={this.state.searchKeyword}>
-                    </TicketTable>
-                </Fade>
-            </div>
+                            searchKeyword={this.state.searchKeyword}>
+                        </TicketTable>
+                    </Fade>
+                </div>
+            </Aux>
         );
     }
 }

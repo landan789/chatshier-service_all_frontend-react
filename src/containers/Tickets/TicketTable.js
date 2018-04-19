@@ -73,7 +73,7 @@ class TicketTable extends React.Component {
                 let priorityText = toPriorityText(ticket.priority);
                 let localTimeStr = toLocalTimeString(ticket.dueTime);
                 let dueDateElem = toDueDateSpan(ticket.dueTime);
-                let agentName = agents[ticket.assigned_id].name;
+                let agentName = ticket.assigned_id ? agents[ticket.assigned_id].name : '';
 
                 let shouldShow = true;
                 let searchKeyword = this.props.searchKeyword;
@@ -98,7 +98,7 @@ class TicketTable extends React.Component {
                         <div className="ticket-col">{statusText}</div>
                         <div className="ticket-col">{priorityText}</div>
                         <div className="ticket-col">{localTimeStr}</div>
-                        <div className="ticket-col">{agentName}</div>
+                        <div className="ticket-col">{agentName || '無'}</div>
                         <div className="ticket-col">{dueDateElem}</div>
                     </div>
                 );

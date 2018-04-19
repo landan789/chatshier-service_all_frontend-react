@@ -7,7 +7,7 @@ import { updateApps, deleteApp } from '../../redux/actions/apps';
 class Apps extends Core {
     constructor() {
         super();
-        this.urlPrefix = this.prefixUrl + 'apps/';
+        this.apiEndPoint += 'apps/';
         this.enums = Object.freeze({
             type: {
                 SYSTEM: 'SYSTEM',
@@ -32,7 +32,7 @@ class Apps extends Core {
             });
         }
 
-        let destUrl = this.urlPrefix + 'users/' + userId;
+        let destUrl = this.apiEndPoint + 'users/' + userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -57,7 +57,7 @@ class Apps extends Core {
             });
         }
 
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -74,7 +74,7 @@ class Apps extends Core {
      * @returns {Promise<AppsResponse>}
      */
     insert(userId, app) {
-        let destUrl = this.urlPrefix + 'users/' + userId;
+        let destUrl = this.apiEndPoint + 'users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -93,7 +93,7 @@ class Apps extends Core {
      * @returns {Promise<AppsResponse>}
      */
     update(appId, userId, app) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -110,7 +110,7 @@ class Apps extends Core {
      * @param {string} userId
      */
     delete(appId, userId) {
-        let destUrl = this.urlPrefix + 'apps/' + appId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

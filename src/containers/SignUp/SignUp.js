@@ -62,7 +62,6 @@ class SignUp extends React.Component {
         if (cookieHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }
-        authHelper.signOut();
     }
 
     nameChanged(ev) {
@@ -127,6 +126,8 @@ class SignUp extends React.Component {
             cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
             cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
             setJWT(jwt);
+            authHelper.activateRefreshToken();
+
             // this.props.history.replace(ROUTES.CHAT);
             window.location.replace(ROUTES.CHAT);
         }).catch((err) => {
@@ -134,6 +135,7 @@ class SignUp extends React.Component {
                 isSignUping: false,
                 signupBtnHtml: '註冊'
             });
+
             switch (err.msg) {
                 case NAME_WAS_EMPTY:
                     notify('姓名未填寫', { type: 'danger' });
@@ -151,22 +153,21 @@ class SignUp extends React.Component {
                     notify('錯誤！', { type: 'danger' });
                     break;
             }
-            return;
         });
     }
 
     render() {
         return (
             <Fade in className="signup-container w-100">
-                <div className="col-md-12 text-center logo-container">
+                <div className="col-12 text-center logo-container">
                     <a className="chatshier-logo" href={wwwUrl}>
                         <img alt="Chatshier-logo" src="image/logo.png" />
                     </a>
                 </div>
 
-                <div className="col-md-12">
+                <div className="mx-auto col-md-12 col-lg-6">
                     <div className="row justify-content-center">
-                        <div className="form-container col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3">
+                        <div className="form-container col-12 col-sm-10 col-md-8 col-lg-12">
                             <h2 className="text-center signup-title">開始體驗您的Chatshier</h2>
                             <p className="text-center lead">不需付費。馬上體驗聊天功能。</p>
                             <form className="signup-form" onSubmit={this.checkInputs}>

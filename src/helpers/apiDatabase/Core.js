@@ -3,7 +3,7 @@ import urlConfig from '../../config/url';
 class Core {
     constructor() {
         let config = window.urlConfig || urlConfig;
-        this.prefixUrl = config.apiUrl + '/api/database/';
+        this.apiEndPoint = config.apiUrl + '/api/database/';
     }
 
     /**
@@ -57,6 +57,9 @@ class Core {
                         return Promise.resolve(resJsons);
                     }
                     let _reqInit = _reqInits[i];
+                    _reqInit.cache = 'no-cache';
+                    _reqInit.mode = 'cors';
+                    _reqInit.credentials = 'include';
 
                     return window.fetch(url, _reqInit).then((res) => {
                         return this.responseChecking(res);
@@ -70,6 +73,8 @@ class Core {
                 return Promise.all(reqInits.map((_reqInit) => {
                     _reqInit.cache = 'no-cache';
                     _reqInit.mode = 'cors';
+                    _reqInit.credentials = 'include';
+
                     if ('POST' === reqInits.method.toUpperCase() ||
                         'PUT' === reqInits.method.toUpperCase()) {
                         reqInits.headers.set('Content-Type', 'application/json');
@@ -87,6 +92,7 @@ class Core {
         }
         reqInits.cache = 'no-cache';
         reqInits.mode = 'cors';
+        reqInits.credentials = 'include';
 
         return window.fetch(url, reqInits).then((res) => {
             return this.responseChecking(res);

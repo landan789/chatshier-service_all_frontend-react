@@ -102,16 +102,6 @@ class Toolbar extends React.Component {
                     window.location.href = route;
                 }
         }
-
-        if (!route) {
-            return;
-        }
-
-        if (useReactRouter) {
-            this.props.history.push(route);
-        } else {
-            window.location.assign(route);
-        }
     }
 
     render() {

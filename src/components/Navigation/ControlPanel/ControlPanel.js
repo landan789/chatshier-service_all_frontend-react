@@ -5,7 +5,7 @@ import Aux from 'react-aux';
 import { withRouter } from 'react-router-dom';
 import { createStore } from 'redux';
 
-import { Collapse, ListGroup, ListGroupItem } from 'reactstrap';
+import { Fade, Collapse, ListGroup, ListGroupItem } from 'reactstrap';
 import Swiper from 'swiper/dist/js/swiper.js';
 
 import authHelper from '../../../helpers/authentication';
@@ -295,7 +295,7 @@ class ControlPanel extends React.Component {
         let shouldShowBackdrop = isOpen && isSmall;
         return (
             <Aux>
-                <div className={classes.ctrlPanel + (isSmall ? ' animated' : '') + (isOpen ? ' slide-in' : ' slide-out')} ref={this.initSwiper}>
+                <Fade in className={classes.ctrlPanel + (isSmall ? ' animated' : '') + (isOpen ? ' slide-in' : ' slide-out')} ref={this.initSwiper}>
                     <div className="swiper-wrapper">
                         <div className="swiper-slide">
                             <ListGroup>
@@ -353,7 +353,7 @@ class ControlPanel extends React.Component {
                         </div>
                     </div>
                     <div className="swiper-pagination w-100"></div>
-                </div>
+                </Fade>
                 <div className={'ctrl-panel-backdrop' + (shouldShowBackdrop ? '' : ' d-none')} onClick={() => this.linkTo()}></div>
             </Aux>
         );

@@ -51,12 +51,12 @@ class Chat extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <div className="ml-auto w-100 page-wrapper">
+                <Fade in className="ml-auto w-100 page-wrapper">
                     <Toolbar />
-                    <Fade in className="chat-wrapper">
+                    <div className="chat-wrapper">
                         聊天室
-                    </Fade>
-                </div>
+                    </div>
+                </Fade>
             </Aux>
         );
     }

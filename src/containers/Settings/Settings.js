@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Aux from 'react-aux';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
+import { Fade } from 'reactstrap';
 
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
@@ -45,7 +46,7 @@ class Settings extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <div className="ml-auto w-100 page-wrapper">
+                <Fade in className="ml-auto w-100 page-wrapper">
                     <Toolbar />
                     <div className="setting-wrapper">
                         <LinkTabs route={route} toggle={this.toggle} />
@@ -57,7 +58,7 @@ class Settings extends React.Component {
                             <Redirect to={ROUTES.SETTINGS_APPS} />
                         </Switch>
                     </div>
-                </div>
+                </Fade>
             </Aux>
         );
     }

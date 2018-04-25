@@ -76,9 +76,9 @@ class Composes extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <div className="ml-auto w-100 page-wrapper">
+                <Fade in className="ml-auto w-100 page-wrapper">
                     <Toolbar />
-                    <Fade in className="composes-wrapper">
+                    <div className="composes-wrapper">
                         <div className="composes">
                             <Jumbotron>
                                 <h1 className="display-3">群發</h1><br/>
@@ -109,8 +109,8 @@ class Composes extends React.Component {
                             </Jumbotron>
                             <ComposeTable appId={this.state.appId} keyword={this.state.searchKeyword} />
                         </div>
-                    </Fade>
-                </div>
+                    </div>
+                </Fade>
             </Aux>
         );
     }

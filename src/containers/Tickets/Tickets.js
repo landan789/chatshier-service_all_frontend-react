@@ -101,9 +101,9 @@ class Tickets extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <div className="ml-auto w-100 page-wrapper">
+                <Fade in className="ml-auto w-100 page-wrapper">
                     <Toolbar />
-                    <Fade in className="ticket-wrapper">
+                    <div className="ticket-wrapper">
                         <div className="ticket-toolbar">
                             <button type="button" className="btn btn-light ticket-insert" onClick={this.openInsertModal}>
                                 <span className="fas fa-plus fa-fw"></span>
@@ -129,8 +129,8 @@ class Tickets extends React.Component {
                             appsAgents={this.appsAgents}
                             searchKeyword={this.state.searchKeyword}>
                         </TicketTable>
-                    </Fade>
-                </div>
+                    </div>
+                </Fade>
             </Aux>
         );
     }

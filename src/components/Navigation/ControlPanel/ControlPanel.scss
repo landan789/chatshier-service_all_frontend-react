@@ -4,8 +4,7 @@ $ctrl-panel-width: 16rem;
 $ctrl-panel-bg-color: #4a8998;
 
 .chsr.ctrl-panel {
-    min-width: $ctrl-panel-width;
-    max-width: $ctrl-panel-width;
+    width: $ctrl-panel-width;
     min-height: 100%;
     background-color: $ctrl-panel-bg-color;
     z-index: 1040;

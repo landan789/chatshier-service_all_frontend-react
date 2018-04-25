@@ -29,7 +29,7 @@ class Group extends React.Component {
 
     render() {
         return (
-            <Modal size="lg" isOpen={this.props.isOpen} toggle={this.props.close} className="user-modal-content">
+            <Modal className="user-modal" size="lg" isOpen={this.props.isOpen} toggle={this.props.close}>
                 <ModalHeader toggle={this.props.close}></ModalHeader>
                 <ModalBody>
                     <div className="row">

@@ -112,9 +112,11 @@ class TicketTable extends React.Component {
     };
 
     render() {
+        let className = ((this.props.className || '') + ' ticket-grid').trim();
+
         return (
             <Aux>
-                <div className="ticket-grid">
+                <div className={className}>
                     <div className="ticket-head">
                         <div className="ticket-row d-flex">
                             <div className="ticket-col">客戶姓名</div>
@@ -141,6 +143,7 @@ class TicketTable extends React.Component {
 }
 
 TicketTable.propTypes = {
+    className: PropTypes.string,
     searchKeyword: PropTypes.string,
     appsAgents: PropTypes.object,
     appsTickets: PropTypes.object.isRequired,

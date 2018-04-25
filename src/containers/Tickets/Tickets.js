@@ -103,32 +103,34 @@ class Tickets extends React.Component {
                 <ControlPanel />
                 <Fade in className="ml-auto w-100 page-wrapper">
                     <Toolbar />
-                    <div className="ticket-wrapper">
-                        <div className="ticket-toolbar">
-                            <button type="button" className="btn btn-light ticket-insert" onClick={this.openInsertModal}>
-                                <span className="fas fa-plus fa-fw"></span>
-                                <span>新增待辦</span>
-                            </button>
-                            <TicketInsertModal
-                                apps={this.props.apps}
+                    <div className="mt-5 container ticket-wrapper">
+                        <div className="pb-5 chsr card">
+                            <div className="mx-4 ticket-toolbar">
+                                <button type="button" className="btn btn-light ticket-insert" onClick={this.openInsertModal}>
+                                    <span className="fas fa-plus fa-fw"></span>
+                                    <span>新增待辦</span>
+                                </button>
+                                <TicketInsertModal
+                                    apps={this.props.apps}
+                                    appsAgents={this.appsAgents}
+                                    consumers={this.props.consumers}
+                                    isOpen={this.state.isInsertModalOpen}
+                                    close={this.closeInsertModal}>
+                                </TicketInsertModal>
+
+                                <input
+                                    type="text"
+                                    className="ticket-search-bar"
+                                    placeholder="搜尋"
+                                    value={this.state.searchKeyword}
+                                    onChange={this.keywordChanged} />
+                            </div>
+
+                            <TicketTable className="mx-4"
                                 appsAgents={this.appsAgents}
-                                consumers={this.props.consumers}
-                                isOpen={this.state.isInsertModalOpen}
-                                close={this.closeInsertModal}>
-                            </TicketInsertModal>
-
-                            <input
-                                type="text"
-                                className="ticket-search-bar"
-                                placeholder="搜尋"
-                                value={this.state.searchKeyword}
-                                onChange={this.keywordChanged} />
+                                searchKeyword={this.state.searchKeyword}>
+                            </TicketTable>
                         </div>
-
-                        <TicketTable
-                            appsAgents={this.appsAgents}
-                            searchKeyword={this.state.searchKeyword}>
-                        </TicketTable>
                     </div>
                 </Fade>
             </Aux>

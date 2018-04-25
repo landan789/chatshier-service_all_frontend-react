@@ -5,7 +5,7 @@ import Aux from 'react-aux';
 import { withRouter } from 'react-router-dom';
 import { createStore } from 'redux';
 
-import { Fade, Collapse, ListGroup, ListGroupItem } from 'reactstrap';
+import { Collapse, ListGroup, ListGroupItem } from 'reactstrap';
 import Swiper from 'swiper/dist/js/swiper.js';
 
 import authHelper from '../../../helpers/authentication';
@@ -87,7 +87,7 @@ const ctrlPanelOpenState = (state = false, action) => {
 const ctrlPanelStore = createStore(ctrlPanelOpenState);
 
 const classes = {
-    ctrlPanel: 'chsr ctrl-panel swiper-container h-100',
+    ctrlPanel: 'chsr ctrl-panel swiper-container h-100 d-none d-sm-block',
     menuToggle: 'ml-auto p-2 fas fa-times d-sm-none menu-toggle'
 };
 
@@ -233,7 +233,7 @@ class ControlPanel extends React.Component {
                         <ListGroupItem className="text-light" onClick={() => this.toggleItem(i)}>
                             <i className={item.icon}></i>
                             <span>{item.text}</span>
-                            <i className={'ml-auto fas ' + (this.state.itemCollapse[i] ? 'fa-chevron-up' : 'fa-chevron-down')}></i>
+                            <i className={'ml-auto fas' + (this.state.itemCollapse[i] ? ' fa-chevron-up' : ' fa-chevron-down') + ' collapse-icon'}></i>
                         </ListGroupItem>
                         <Collapse isOpen={!this.state.itemCollapse[i]}>
                             {item.dropdownItems.map((dropdownItem, j) => (
@@ -295,10 +295,10 @@ class ControlPanel extends React.Component {
         let shouldShowBackdrop = isOpen && isSmall;
         return (
             <Aux>
-                <Fade in className={classes.ctrlPanel + (isSmall ? ' animated' : '') + (isOpen ? ' slide-in' : ' slide-out')} ref={this.initSwiper}>
+                <div className={classes.ctrlPanel + (isSmall ? ' animated' : '') + (isOpen ? ' slide-in' : ' slide-out')} ref={this.initSwiper}>
                     <div className="swiper-wrapper">
                         <div className="swiper-slide">
-                            <ListGroup>
+                            <ListGroup className="detail-list">
                                 <ListGroupItem className="text-light" onClick={() => this.linkTo()}>
                                     <span className="ctrl-panel-title">Chatshier</span>
                                     <i className={classes.menuToggle}></i>
@@ -308,7 +308,7 @@ class ControlPanel extends React.Component {
                                     <span>機器人</span>
                                 </ListGroupItem>
                                 <Collapse isOpen={!this.state.itemCollapse['CHATBOT']}>
-                                    <ListGroupItem className="text-light nested" onClick={() => this.toggleItem(LINE)}>
+                                    <ListGroupItem className="text-light" onClick={() => this.toggleItem(LINE)}>
                                         <img className="app-icon" src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" />
                                         <span>{LINE}</span>
                                         <i className={'ml-auto fas ' + (this.state.itemCollapse[LINE] ? 'fa-chevron-up' : 'fa-chevron-down')}></i>
@@ -317,7 +317,7 @@ class ControlPanel extends React.Component {
                                         {lineApps}
                                     </Collapse>
 
-                                    <ListGroupItem className="text-light nested" onClick={() => this.toggleItem(FACEBOOK)}>
+                                    <ListGroupItem className="text-light" onClick={() => this.toggleItem(FACEBOOK)}>
                                         <img className="app-icon" src="https://facebookbrand.com/wp-content/themes/fb-branding/prj-fb-branding/assets/images/fb-art.png" />
                                         <span>{FACEBOOK}</span>
                                         <i className={'ml-auto fas ' + (this.state.itemCollapse[FACEBOOK] ? 'fa-chevron-up' : 'fa-chevron-down')}></i>
@@ -326,7 +326,7 @@ class ControlPanel extends React.Component {
                                         {fbApps}
                                     </Collapse>
 
-                                    <ListGroupItem className="text-light nested" onClick={() => this.toggleItem(CHATSHIER)}>
+                                    <ListGroupItem className="text-light" onClick={() => this.toggleItem(CHATSHIER)}>
                                         <img className="app-icon" src="/image/logo-no-transparent.png" />
                                         <span>{CHATSHIER}</span>
                                         <i className={'ml-auto fas ' + (this.state.itemCollapse[CHATSHIER] ? 'fa-chevron-up' : 'fa-chevron-down')}></i>
@@ -343,7 +343,7 @@ class ControlPanel extends React.Component {
                             </ListGroup>
                         </div>
                         <div className="swiper-slide">
-                            <ListGroup>
+                            <ListGroup className="detail-list">
                                 <ListGroupItem className="text-light" onClick={() => this.linkTo()}>
                                     <span className="ctrl-panel-title">Chatshier</span>
                                     <i className={classes.menuToggle}></i>
@@ -353,7 +353,7 @@ class ControlPanel extends React.Component {
                         </div>
                     </div>
                     <div className="swiper-pagination w-100"></div>
-                </Fade>
+                </div>
                 <div className={'ctrl-panel-backdrop' + (shouldShowBackdrop ? '' : ' d-none')} onClick={() => this.linkTo()}></div>
             </Aux>
         );

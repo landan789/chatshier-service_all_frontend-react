@@ -411,8 +411,8 @@ class Calendar extends React.Component {
                 <ControlPanel />
                 <Fade in className="ml-auto w-100 page-wrapper">
                     <Toolbar />
-                    <div className="calendar-wrapper">
-                        <div className="chsr calendar" ref={this.initCalendar}></div>
+                    <div className="container mt-5 calendar-wrapper">
+                        <div className="mb-5 card chsr calendar" ref={this.initCalendar}></div>
                     </div>
                     <CalendarInsertModal
                         modalData={this.state.insertModalData}

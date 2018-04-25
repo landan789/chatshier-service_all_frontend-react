@@ -186,6 +186,7 @@ class SignUp extends React.Component {
                                                 placeholder="姓名"
                                                 value={this.state.name}
                                                 onChange={this.nameChanged}
+                                                autoFocus="true"
                                                 required />
                                         </div>
                                     </div>
@@ -204,6 +205,9 @@ class SignUp extends React.Component {
                                                 placeholder="電子郵件"
                                                 value={this.state.email}
                                                 onChange={this.emailChanged}
+                                                autoCapitalize="none"
+                                                autoCorrect="off"
+                                                spellCheck="false"
                                                 required />
                                         </div>
                                     </div>
@@ -221,6 +225,7 @@ class SignUp extends React.Component {
                                                 placeholder="密碼"
                                                 value={this.state.password}
                                                 onChange={this.pwChanged}
+                                                autoCapitalize="none"
                                                 required />
                                         </div>
                                     </div>
@@ -238,6 +243,7 @@ class SignUp extends React.Component {
                                                 placeholder="確認密碼"
                                                 value={this.state.passwordConfirm}
                                                 onChange={this.pwConfirmChanged}
+                                                autoCapitalize="none"
                                                 required />
                                         </div>
                                     </div>

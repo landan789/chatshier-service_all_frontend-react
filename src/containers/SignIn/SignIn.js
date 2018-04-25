@@ -146,6 +146,10 @@ class SignIn extends React.Component {
                                                 placeholder="電子郵件"
                                                 value={this.state.email}
                                                 onChange={this.emailChanged}
+                                                autoCapitalize="none"
+                                                autoCorrect="off"
+                                                spellCheck="false"
+                                                autoFocus="true"
                                                 required />
                                         </div>
                                     </div>

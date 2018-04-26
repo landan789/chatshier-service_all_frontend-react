@@ -131,7 +131,7 @@ class ChatroomPanel extends React.Component {
      * @param {number} inputTime
      */
     _toDateStr(inputTime) {
-        let str = ' ';
+        let str = '';
         let date = new Date(inputTime);
         let addZero = (val) => val < 10 ? '0' + val : val;
 

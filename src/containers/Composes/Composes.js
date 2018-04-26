@@ -38,7 +38,7 @@ class Composes extends React.Component {
         browserHelper.setTitle('群發');
         setNavTitle('群發');
 
-        if (!cookieHelper.hasSignedin()) {
+        if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }

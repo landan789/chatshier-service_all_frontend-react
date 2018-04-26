@@ -30,7 +30,7 @@ class Settings extends React.Component {
         browserHelper.setTitle('設定');
         setNavTitle('設定');
 
-        if (!cookieHelper.hasSignedin()) {
+        if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }

@@ -9,7 +9,6 @@ import browserHelper from '../../helpers/browser';
 import authHelper from '../../helpers/authentication';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
 import apiSign from '../../helpers/apiSign/index';
-import { setJWT } from '../../helpers/apiDatabase/index';
 import regex from '../../utils/regex';
 import { notify } from '../../components/Notify/Notify';
 
@@ -59,7 +58,7 @@ class SignUp extends React.Component {
     componentWillMount() {
         browserHelper.setTitle('註冊');
 
-        if (cookieHelper.hasSignedin()) {
+        if (authHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }
     }
@@ -125,7 +124,7 @@ class SignUp extends React.Component {
             let _user = users[userId];
             cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
             cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
-            setJWT(jwt);
+            authHelper.jwt = jwt;
             authHelper.activateRefreshToken();
 
             // this.props.history.replace(ROUTES.CHAT);

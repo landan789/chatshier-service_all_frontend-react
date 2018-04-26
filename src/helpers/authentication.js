@@ -3,7 +3,7 @@ import cookieHelper, { CHSR_COOKIE } from './cookie';
 import { MINUTE } from '../utils/unitTime';
 
 import ROUTES from '../config/route';
-import { setJWT } from './apiDatabase/index';
+import apiDatabase from './apiDatabase/index';
 import apiSign from './apiSign/index';
 
 // token 過期 5 分鐘前更新 token
@@ -11,10 +11,9 @@ const PREPARE_TIME = 5 * MINUTE;
 
 class AuthenticationHelper {
     constructor() {
-        let jwt = window.localStorage.getItem('jwt');
-
         /** @type {Chatshier.JWT} */
-        this.payload = jwt ? jwtDecode(jwt) : {};
+        this.payload = {};
+        this.jwt = window.localStorage.getItem('jwt');
         this._refreshTimer = null;
 
         if (this.payload.exp) {
@@ -30,8 +29,27 @@ class AuthenticationHelper {
         }
     }
 
+    /**
+     * @returns {string}
+     */
     get userId() {
         return this.payload.uid || '';
+    }
+
+    /**
+     * @param {string} value
+     */
+    set jwt(value = '') {
+        this._jwt = value;
+        if (this._jwt) {
+            this.payload = jwtDecode(this._jwt) || {};
+            window.localStorage.setItem('jwt', this._jwt);
+        } else {
+            this.payload = {};
+            window.localStorage.removeItem('jwt');
+        }
+        apiDatabase.setJWT(this._jwt);
+        apiSign.setJWT(this._jwt);
     }
 
     activateRefreshToken() {
@@ -54,9 +72,17 @@ class AuthenticationHelper {
     signOut() {
         cookieHelper.deleteCookie(CHSR_COOKIE.USER_NAME);
         cookieHelper.deleteCookie(CHSR_COOKIE.USER_EMAIL);
-        window.localStorage.removeItem('jwt');
-        this.payload = {};
+        this.jwt = '';
         return apiSign.signOut.do();
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    hasSignedin() {
+        return !!(cookieHelper.getCookie(CHSR_COOKIE.USER_NAME) &&
+            cookieHelper.getCookie(CHSR_COOKIE.USER_EMAIL) &&
+            window.localStorage.getItem('jwt'));
     }
 
     /**
@@ -75,9 +101,7 @@ class AuthenticationHelper {
                 window.location.replace(ROUTES.SIGNIN);
                 return;
             }
-            this.payload = jwtDecode(jwt) || {};
-            window.localStorage.setItem('jwt', jwt);
-            setJWT(jwt);
+            this.jwt = jwt;
 
             let waittingTime = Math.max(0, this.payload.exp - Date.now() - PREPARE_TIME);
             return this._keepToken(waittingTime);

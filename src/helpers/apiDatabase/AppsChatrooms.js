@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateChatroomsMessages } from '../../redux/actions/appsChatrooms';
+import { updateChatrooms } from '../../redux/actions/appsChatrooms';
 
 class AppsChatrooms extends Core {
     constructor() {
@@ -30,7 +30,7 @@ class AppsChatrooms extends Core {
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateChatroomsMessages(resJson.data));
+            mainStore.dispatch(updateChatrooms(resJson.data));
             return resJson;
         });
     };

@@ -39,7 +39,7 @@ class Keywordreplies extends React.Component {
         browserHelper.setTitle('關鍵字回覆');
         setNavTitle('關鍵字回覆');
 
-        if (!cookieHelper.hasSignedin()) {
+        if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }

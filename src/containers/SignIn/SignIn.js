@@ -9,7 +9,6 @@ import browserHelper from '../../helpers/browser';
 import authHelper from '../../helpers/authentication';
 import apiSign from '../../helpers/apiSign/index';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
-import { setJWT } from '../../helpers/apiDatabase/index';
 import regex from '../../utils/regex';
 
 import { notify } from '../../components/Notify/Notify';
@@ -42,7 +41,7 @@ class SignIn extends React.Component {
     componentWillMount() {
         browserHelper.setTitle('登入');
 
-        if (cookieHelper.hasSignedin()) {
+        if (authHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }
     }
@@ -92,7 +91,7 @@ class SignIn extends React.Component {
 
             cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
             cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
-            setJWT(jwt);
+            authHelper.jwt = jwt;
             authHelper.activateRefreshToken();
 
             // this.props.history.replace(ROUTES.CHAT);

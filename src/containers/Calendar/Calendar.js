@@ -93,7 +93,7 @@ class Calendar extends React.Component {
         browserHelper.setTitle('行事曆');
         setNavTitle('行事曆');
 
-        if (!cookieHelper.hasSignedin()) {
+        if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }

@@ -31,7 +31,7 @@ class Greetings extends React.Component {
         browserHelper.setTitle('加好友回覆');
         setNavTitle('加好友回覆');
 
-        if (!cookieHelper.hasSignedin()) {
+        if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }

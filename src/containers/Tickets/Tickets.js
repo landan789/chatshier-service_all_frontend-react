@@ -37,7 +37,7 @@ class Tickets extends React.Component {
         browserHelper.setTitle('待辦事項');
         setNavTitle('待辦事項');
 
-        if (!cookieHelper.hasSignedin()) {
+        if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }

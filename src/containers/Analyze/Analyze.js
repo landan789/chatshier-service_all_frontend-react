@@ -31,7 +31,7 @@ class Analyze extends React.Component {
         browserHelper.setTitle('訊息分析');
         setNavTitle('訊息分析');
 
-        if (!cookieHelper.hasSignedin()) {
+        if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }

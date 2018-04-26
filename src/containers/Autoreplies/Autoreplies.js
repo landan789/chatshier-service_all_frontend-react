@@ -39,7 +39,7 @@ class Autoreplies extends React.Component {
         browserHelper.setTitle('自動回覆');
         setNavTitle('自動回覆');
 
-        if (!cookieHelper.hasSignedin()) {
+        if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }

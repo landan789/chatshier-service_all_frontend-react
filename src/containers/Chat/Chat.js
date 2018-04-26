@@ -14,12 +14,24 @@ import apiDatabase from '../../helpers/apiDatabase/index';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 
+import ChatroomPanel from './ChatroomPanel';
+import ProfilePanel from './ProfilePanel';
+import TicketPanel from './TicketPanel';
+
 import './Chat.css';
 
 class Chat extends React.Component {
-    // constructor(props) {
-    //     super(props);
-    // }
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isOpenChatroom: true,
+            isOpenProfile: false,
+            isOpenTicket: false,
+            selectedAppId: '',
+            selectedChatroomId: ''
+        };
+    }
 
     componentWillMount() {
         browserHelper.setTitle('聊天室');
@@ -37,6 +49,7 @@ class Chat extends React.Component {
             apiDatabase.apps.find(userId),
             apiDatabase.appsChatrooms.find(userId),
             apiDatabase.appsFields.find(userId),
+            apiDatabase.appsTickets.find(null, userId),
             apiDatabase.consumers.find(userId),
             apiDatabase.groups.find(userId),
             apiDatabase.users.find(userId)
@@ -51,12 +64,27 @@ class Chat extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <Fade in className="ml-auto w-100 page-wrapper">
+                <div className="ml-auto w-100 page-wrapper">
                     <Toolbar />
-                    <div className="chat-wrapper">
-                        聊天室
-                    </div>
-                </Fade>
+                    <Fade in className="chat-wrapper">
+                        <div className="d-flex position-relative w-100 h-100 chatroom-container">
+                            <span className="position-absolute text-center watermark-text">歡迎使用 錢掌櫃 整合平台</span>
+                            <ChatroomPanel
+                                className="position-relative h-100 col px-0 animated slideInLeft"
+                                isOpen={this.state.isOpenChatroom}
+                                appId={this.state.selectedAppId}
+                                chatroomId={this.state.selectedChatroomId}
+                                appsChatrooms={this.props.appsChatrooms}
+                                consumers={this.props.consumers}
+                                users={this.props.users}>
+                            </ChatroomPanel>
+                            <ProfilePanel className="position-relative h-100 animated slideInRight">
+                            </ProfilePanel>
+                            <TicketPanel className="position-relative h-100 animated slideInRight">
+                            </TicketPanel>
+                        </div>
+                    </Fade>
+                </div>
             </Aux>
         );
     }
@@ -66,8 +94,10 @@ Chat.propTypes = {
     apps: PropTypes.object,
     appsChatrooms: PropTypes.object,
     appsFields: PropTypes.object,
+    appsTickets: PropTypes.object,
     consumers: PropTypes.object,
     groups: PropTypes.object,
+    users: PropTypes.object,
     history: PropTypes.object.isRequired
 };
 
@@ -77,8 +107,10 @@ const mapStateToProps = (storeState, ownProps) => {
         apps: storeState.apps,
         appsChatrooms: storeState.appsChatrooms,
         appsFields: storeState.appsFields,
+        appsTickets: storeState.appsTickets,
         consumers: storeState.consumers,
-        groups: storeState.groups
+        groups: storeState.groups,
+        users: storeState.users
     };
 };
 

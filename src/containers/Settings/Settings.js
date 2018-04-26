@@ -46,9 +46,9 @@ class Settings extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <Fade in className="ml-auto w-100 page-wrapper">
+                <div className="ml-auto w-100 page-wrapper">
                     <Toolbar />
-                    <div className="setting-wrapper">
+                    <Fade in className="setting-wrapper">
                         <LinkTabs route={route} toggle={this.toggle} />
                         <Switch>
                             <Route path={ROUTES.SETTINGS_APPS} exact component={AppsTabPane} />
@@ -57,8 +57,8 @@ class Settings extends React.Component {
                             <Route path={ROUTES.SETTINGS_GROUPS} exact component={GroupsTabPane} />
                             <Redirect to={ROUTES.SETTINGS_APPS} />
                         </Switch>
-                    </div>
-                </Fade>
+                    </Fade>
+                </div>
             </Aux>
         );
     }

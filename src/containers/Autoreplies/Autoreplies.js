@@ -75,9 +75,9 @@ class Autoreplies extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <Fade in className="ml-auto w-100 page-wrapper">
+                <div className="ml-auto w-100 page-wrapper">
                     <Toolbar />
-                    <div className="autoreplies-wrapper">
+                    <Fade in className="autoreplies-wrapper">
                         <div className="autoreplies">
                             <Jumbotron>
                                 <h1 className="display-3">自動回覆</h1>
@@ -107,8 +107,8 @@ class Autoreplies extends React.Component {
                             </Jumbotron>
                             <AutoreplyTable keyword={this.state.searchKeyword} appId={this.state.appId}></AutoreplyTable>
                         </div>
-                    </div>
-                </Fade>
+                    </Fade>
+                </div>
             </Aux>
         );
     }

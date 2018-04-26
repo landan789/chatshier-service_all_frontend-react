@@ -409,11 +409,11 @@ class Calendar extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <Fade in className="ml-auto w-100 page-wrapper">
+                <div className="ml-auto w-100 page-wrapper">
                     <Toolbar />
-                    <div className="container mt-5 calendar-wrapper">
+                    <Fade in className="container mt-5 calendar-wrapper">
                         <div className="mb-5 card chsr calendar" ref={this.initCalendar}></div>
-                    </div>
+                    </Fade>
                     <CalendarInsertModal
                         modalData={this.state.insertModalData}
                         isOpen={!!this.state.insertModalData}
@@ -431,7 +431,7 @@ class Calendar extends React.Component {
                         isOpen={!!this.state.editTicketData}
                         close={this.closeEditModal}>
                     </TicketEditModal>
-                </Fade>
+                </div>
             </Aux>
         );
     }

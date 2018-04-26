@@ -11,18 +11,20 @@ class Users extends Core {
     }
 
     /**
-     * @param {string} [userId]
-     * @param {string} [email]
-     * @param {boolean} [useFuzzy=false]
+     * @param {string} userId
      * @returns {Promise<UsersResponse>}
      */
-    find(userId, email, useFuzzy) {
-        useFuzzy = !!useFuzzy;
+    find(userId) {
+        let users = mainStore.getState().users;
+        if (Object.keys(users).length > 0) {
+            return Promise.resolve({
+                status: 1,
+                msg: '',
+                data: users
+            });
+        }
 
-        let destUrl = this.apiEndPoint + 'users/' + userId + '?';
-        destUrl += (email ? ('email=' + email + '&') : '');
-        destUrl += (useFuzzy ? ('fuzzy=1') : '');
-
+        let destUrl = this.apiEndPoint + 'users/' + userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -31,6 +33,20 @@ class Users extends Core {
             mainStore.dispatch(updateUsers(resJson.data));
             return resJson;
         });
+    };
+
+    /**
+     * @param {string} userId
+     * @param {string} email
+     * @returns {Promise<UsersResponse>}
+     */
+    search(userId, email) {
+        let destUrl = this.apiEndPoint + 'users/' + userId + '?email=' + email + '&fuzzy=1';
+        let reqInit = {
+            method: 'GET',
+            headers: reqHeaders
+        };
+        return this.sendRequest(destUrl, reqInit);
     };
 
     /**

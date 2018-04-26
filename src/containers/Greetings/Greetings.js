@@ -45,9 +45,9 @@ class Greetings extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <Fade in className="ml-auto w-100 page-wrapper">
+                <div className="ml-auto w-100 page-wrapper">
                     <Toolbar />
-                    <div className="greetings-wrapper">
+                    <Fade in className="greetings-wrapper">
                         <div className="Greetings">
                             <Jumbotron>
                                 <h1 className="display-3">加好友回覆</h1>
@@ -56,8 +56,8 @@ class Greetings extends React.Component {
                             </Jumbotron>
                             <GreetingTable appId={this.state.selectedAppId} />
                         </div>
-                    </div>
-                </Fade>
+                    </Fade>
+                </div>
             </Aux>
         );
     }

@@ -24,10 +24,10 @@ class Tickets extends React.Component {
 
         this.state = {
             isInsertModalOpen: false,
-            searchKeyword: ''
+            searchKeyword: '',
+            appsAgents: {}
         };
 
-        this.appsAgents = {};
         this.keywordChanged = this.keywordChanged.bind(this);
         this.openInsertModal = this.openInsertModal.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
@@ -51,30 +51,21 @@ class Tickets extends React.Component {
             apiDatabase.consumers.find(userId),
             apiDatabase.groups.find(userId),
             apiDatabase.users.find(userId)
-        ]);
-    }
+        ]).then((resJsons) => {
+            // 每個 app 因群組不同，指派人清單也會不同，因此須根據群組準備指派人清單
+            let appsTickets = resJsons[1].data;
+            let groups = resJsons[3].data;
+            let users = resJsons[4].data;
 
-    componentWillReceiveProps(props) {
-        // 每個 app 因群組不同，指派人清單也會不同，因此須根據群組準備指派人清單
-        if (Object.keys(props.appsTickets).length > 0 &&
-            Object.keys(props.groups).length > 0 &&
-            Object.keys(props.users).length > 0) {
-            /** @type {Chatshier.AppsTickets} */
-            let appsTickets = props.appsTickets;
-            /** @type {Chatshier.Groups} */
-            let groups = props.groups;
-            /** @type {Chatshier.Users} */
-            let users = props.users;
-
-            this.appsAgents = {};
+            let appsAgents = {};
             for (let appId in appsTickets) {
                 for (let groupId in groups) {
                     let group = groups[groupId];
                     if (0 <= group.app_ids.indexOf(appId)) {
-                        this.appsAgents[appId] = { agents: {} };
+                        appsAgents[appId] = { agents: {} };
                         for (let memberId in group.members) {
                             let memberUserId = group.members[memberId].user_id;
-                            this.appsAgents[appId].agents[memberUserId] = {
+                            appsAgents[appId].agents[memberUserId] = {
                                 name: users[memberUserId].name,
                                 email: users[memberUserId].email
                             };
@@ -82,7 +73,8 @@ class Tickets extends React.Component {
                     }
                 }
             }
-        }
+            this.setState({ appsAgents: appsAgents });
+        });
     }
 
     keywordChanged(ev) {
@@ -101,9 +93,9 @@ class Tickets extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <Fade in className="ml-auto w-100 page-wrapper">
+                <div className="ml-auto w-100 page-wrapper">
                     <Toolbar />
-                    <div className="mt-5 container ticket-wrapper">
+                    <Fade in className="mt-5 container ticket-wrapper">
                         <div className="pb-5 chsr card">
                             <div className="mx-4 ticket-toolbar">
                                 <button type="button" className="btn btn-light ticket-insert" onClick={this.openInsertModal}>
@@ -112,7 +104,7 @@ class Tickets extends React.Component {
                                 </button>
                                 <TicketInsertModal
                                     apps={this.props.apps}
-                                    appsAgents={this.appsAgents}
+                                    appsAgents={this.state.appsAgents}
                                     consumers={this.props.consumers}
                                     isOpen={this.state.isInsertModalOpen}
                                     close={this.closeInsertModal}>
@@ -127,12 +119,12 @@ class Tickets extends React.Component {
                             </div>
 
                             <TicketTable className="mx-4"
-                                appsAgents={this.appsAgents}
+                                appsAgents={this.state.appsAgents}
                                 searchKeyword={this.state.searchKeyword}>
                             </TicketTable>
                         </div>
-                    </div>
-                </Fade>
+                    </Fade>
+                </div>
             </Aux>
         );
     }

@@ -74,9 +74,9 @@ class Keywordreplies extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <Fade in className="ml-auto w-100 page-wrapper">
+                <div className="ml-auto w-100 page-wrapper">
                     <Toolbar />
-                    <div className="keywordreplies-wrapper">
+                    <Fade in className="keywordreplies-wrapper">
                         <div className="keywordreplies">
                             <Jumbotron>
                                 <h1 className="display-3">關鍵字回覆</h1><br/>
@@ -106,8 +106,8 @@ class Keywordreplies extends React.Component {
                             </Jumbotron>
                             <KeywordreplyTable appId={this.state.appId} keyword={this.state.searchKeyword} />
                         </div>
-                    </div>
-                </Fade>
+                    </Fade>
+                </div>
             </Aux>
         );
     }

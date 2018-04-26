@@ -54,15 +54,15 @@ class Analyze extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <Fade in className="ml-auto w-100 page-wrapper">
+                <div className="ml-auto w-100 page-wrapper">
                     <Toolbar />
-                    <div className="analyze-wrapper">
+                    <Fade in className="analyze-wrapper">
                         <h2>分析頁面</h2>
                         <div className="analyze-container">
                             <AppsSelector showAll onChange={this.appChanged} />
                         </div>
-                    </div>
-                </Fade>
+                    </Fade>
+                </div>
             </Aux>
         );
     }

@@ -8,7 +8,7 @@ import { Fade } from 'reactstrap';
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
-import cookieHelper from '../../helpers/cookie';
+import socketHelper from '../../helpers/socket';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
@@ -39,7 +39,7 @@ class Chat extends React.Component {
         browserHelper.setTitle('聊天室');
         setNavTitle('聊天室');
 
-        if (!cookieHelper.hasSignedin()) {
+        if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }
@@ -63,7 +63,8 @@ class Chat extends React.Component {
             apiDatabase.appsTickets.find(null, userId),
             apiDatabase.consumers.find(userId),
             apiDatabase.groups.find(userId),
-            apiDatabase.users.find(userId)
+            apiDatabase.users.find(userId),
+            socketHelper.connectionReady
         ]);
     }
 
@@ -86,11 +87,7 @@ class Chat extends React.Component {
                                 className="position-relative h-100 col px-0 animated slideInLeft"
                                 isOpen={this.state.isOpenChatroom}
                                 appId={this.state.selectedAppId}
-                                chatroomId={this.state.selectedChatroomId}
-                                apps={this.props.apps}
-                                appsChatrooms={this.props.appsChatrooms}
-                                consumers={this.props.consumers}
-                                users={this.props.users}>
+                                chatroomId={this.state.selectedChatroomId}>
                             </ChatroomPanel>
                             <ProfilePanel className="position-relative h-100 animated slideInRight">
                             </ProfilePanel>

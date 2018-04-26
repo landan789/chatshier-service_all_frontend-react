@@ -1,12 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Aux from 'react-aux';
+import { connect } from 'react-redux';
 
 import authHelper from '../../helpers/authentication';
+import socketHelper from '../../helpers/socket';
 import { MINUTE } from '../../utils/unitTime';
 
 import Message from './Message';
 
+const LINE = 'LINE';
+const FACEBOOK = 'FACEBOOK';
+const WECHAT = 'WECHAT';
 const CHATSHIER = 'CHATSHIER';
 const SYSTEM = 'SYSTEM';
 
@@ -18,6 +23,73 @@ class ChatroomPanel extends React.Component {
 
         this.prevTime = 0;
         this.nowDateStr = '';
+
+        this.state = {
+            messageText: ''
+        };
+
+        /** @type {HTMLElement} */
+        this.messagePanelElem = null;
+
+        this.onMessageChange = this.onMessageChange.bind(this);
+        this.sendMessage = this.sendMessage.bind(this);
+    }
+
+    componentDidMount() {
+        this.scrollToBottom();
+    }
+
+    componentDidUpdate() {
+        this.scrollToBottom();
+    }
+
+    scrollToBottom() {
+        this.messagePanelElem && this.messagePanelElem.scrollTo({
+            top: this.messagePanelElem.scrollHeight,
+            behavior: 'instant'
+        });
+    }
+
+    /**
+     * @param {KeyboardEvent} ev
+     **/
+    onMessageChange(ev) {
+        this.setState({ messageText: ev.target.value });
+    }
+
+    sendMessage() {
+        let messageText = this.state.messageText;
+        let appId = this.props.appId;
+        /** @type {Chatshier.App} */
+        let app = this.props.apps[appId];
+
+        let chatroomId = this.props.chatroomId;
+        let platformMessager = this._findChatroomMessager(appId, chatroomId, app.type);
+        let messagerSelf = this._findMessagerSelf(appId, chatroomId);
+        let userId = authHelper.userId;
+
+        /** @type {ChatshierMessage} */
+        let messageToSend = {
+            from: CHATSHIER,
+            time: Date.now(),
+            text: messageText,
+            src: '',
+            type: 'text',
+            messager_id: messagerSelf._id
+        };
+
+        /** @type {ChatshierChatSocketBody} */
+        let socketBody = {
+            app_id: appId,
+            type: app.type,
+            chatroom_id: chatroomId,
+            senderUid: userId,
+            recipientUid: platformMessager.platformUid,
+            messages: [messageToSend]
+        };
+
+        this.setState({ messageText: '' });
+        return socketHelper.sendMessageToServer(socketBody);
     }
 
     render() {
@@ -36,6 +108,9 @@ class ChatroomPanel extends React.Component {
 
         let className = ((this.props.className || '') + ' chatroom-panel').trim();
         let messageIds = Object.keys(messages);
+
+        console.log(JSON.stringify(messages[messageIds[messageIds.length - 1]], void 0, 2));
+
         // 根據發送的時間從早到晚排序
         messageIds.sort((a, b) => new Date(messages[a].time).getTime() - new Date(messages[b].time).getTime());
 
@@ -43,7 +118,7 @@ class ChatroomPanel extends React.Component {
             <div className={className}>
                 <div className="w-100 chatroom-body">
                     <div className="chat-content">
-                        <div className="h-100 d-flex flex-column message-panel">
+                        <div className="h-100 d-flex flex-column message-panel" ref={(elem) => (this.messagePanelElem = elem)}>
                             {messageIds.length < 10 && <p className="message-time font-weight-bold">-沒有更舊的歷史訊息-</p>}
                             {messageIds.map((messageId) => {
                                 let message = messages[messageId];
@@ -119,12 +194,67 @@ class ChatroomPanel extends React.Component {
                         </div>
                     </div>
                     <div className="message-input form-lower">
-                        <input className="submit-message-input px-2" type="text" placeholder="輸入訊息..." />
-                        <i className="submit-message-btn p-0 ml-2"></i>
+                        <input className="submit-message-input px-2" type="text"
+                            placeholder="輸入訊息..."
+                            value={this.state.messageText}
+                            onChange={this.onMessageChange}
+                            onKeyDown={(ev) => (13 === ev.keyCode) && this.sendMessage()} />
+                        <img className="submit-message-btn p-0 ml-2" src="/image/send-btn.svg" alt="" onClick={this.sendMessage} />
                     </div>
                 </div>
             </div>
         );
+    }
+
+    _findMessagerSelf(appId, chatroomId) {
+        let chatrooms = this.props.appsChatrooms[appId].chatrooms;
+        let messagers = chatrooms[chatroomId].messagers;
+        let userId = authHelper.userId;
+
+        for (let messagerId in messagers) {
+            let messager = messagers[messagerId];
+            if (userId === messager.platformUid) {
+                return messager;
+            }
+        }
+
+        // 前端暫時用的資料，不會儲存至資料庫
+        let _messagerSelf = {
+            type: CHATSHIER,
+            platformUid: userId,
+            unRead: 0
+        };
+        messagers[userId] = _messagerSelf;
+        return _messagerSelf;
+    }
+
+    _findChatroomMessager(appId, chatroomId, appType) {
+        let chatroom = this.props.appsChatrooms[appId].chatrooms[chatroomId];
+        let messagers = chatroom.messagers;
+        let userId = authHelper.userId;
+
+        // 從 chatroom 中找尋唯一的 consumer platformUid
+        for (let messagerId in messagers) {
+            let messager = messagers[messagerId];
+
+            switch (appType) {
+                case LINE:
+                case FACEBOOK:
+                case WECHAT:
+                    if (appType === messager.type) {
+                        return messager;
+                    }
+                    break;
+                case CHATSHIER:
+                default:
+                    if (CHATSHIER === messager.type &&
+                        userId === messager.platformUid) {
+                        return messager;
+                    }
+                    break;
+            }
+        }
+        return {};
     }
 
     /**
@@ -152,4 +282,14 @@ ChatroomPanel.propTypes = {
     users: PropTypes.object
 };
 
-export default ChatroomPanel;
+const mapStateToProps = (storeState, ownProps) => {
+    // 將此頁面需要使用的 store state 抓出，綁定至 props 中
+    return {
+        apps: storeState.apps,
+        appsChatrooms: storeState.appsChatrooms,
+        consumers: storeState.consumers,
+        users: storeState.users
+    };
+};
+
+export default connect(mapStateToProps)(ChatroomPanel);

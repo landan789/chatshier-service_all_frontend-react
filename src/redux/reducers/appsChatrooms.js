@@ -1,8 +1,14 @@
-import { UPDATE_CHATROOMS_MESSAGES } from '../actions/appsChatrooms';
+import { UPDATE_CHATROOMS, UPDATE_CHATROOMS_MESSAGERS,
+    UPDATE_CHATROOMS_MESSAGES } from '../actions/appsChatrooms';
 
 export const appsChatroomsReducer = (state = {}, action) => {
+    /** @type {string} */
+    let appId;
+    /** @type {string} */
+    let chatroomId;
+
     switch (action.type) {
-        case UPDATE_CHATROOMS_MESSAGES:
+        case UPDATE_CHATROOMS:
             for (let appId in action.appsChatrooms) {
                 /** @type {Chatshier.AppsChatrooms} */
                 let app = action.appsChatrooms[appId];
@@ -17,6 +23,31 @@ export const appsChatroomsReducer = (state = {}, action) => {
                     }
                     state[appId].chatrooms[chatroomId] = chatroom;
                 }
+            }
+            return Object.assign({}, state);
+        case UPDATE_CHATROOMS_MESSAGERS:
+            appId = action.appId;
+            chatroomId = action.chatroomId;
+            state[appId] = state[appId] || { chatrooms: {} };
+            state[appId].chatrooms[chatroomId] = state[appId].chatrooms[chatroomId] || { messagers: {} };
+
+            let messagers = action.messagers;
+            for (let messagerId in messagers) {
+                let messager = messagers[messagerId];
+                state[appId].chatrooms[chatroomId].messagers[messagerId] = messager;
+            }
+            return Object.assign({}, state);
+        case UPDATE_CHATROOMS_MESSAGES:
+            appId = action.appId;
+            chatroomId = action.chatroomId;
+            state[appId] = state[appId] || { chatrooms: {} };
+            state[appId].chatrooms[chatroomId] = state[appId].chatrooms[chatroomId] || { messages: {} };
+
+            let messages = action.messages;
+            for (let messageId in messages) {
+                let message = messages[messageId];
+                state[appId].chatrooms[chatroomId].messages[messageId] = message;
+                console.log(state[appId].chatrooms[chatroomId].messages[messageId]);
             }
             return Object.assign({}, state);
         default:

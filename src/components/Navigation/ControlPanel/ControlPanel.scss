@@ -4,10 +4,11 @@ $ctrl-panel-bg-color: #4a8998;
 $ctrl-panel-active-color: rgb(46, 85, 95);
 
 .ctrl-panel {
+    display: none;
     width: $ctrl-panel-width;
     min-height: 100%;
     background-color: $ctrl-panel-bg-color;
-    z-index: 1040;
+    z-index: 1040 !important; // 由於 swiper container 層級較高，因此需設定 !important
     transition: width 200ms;
 
     &.put-away {
@@ -19,13 +20,15 @@ $ctrl-panel-active-color: rgb(46, 85, 95);
         left: 0;
         top: 0;
         animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1);
-        animation-duration: 300ms;
+        animation-duration: 250ms;
 
         &.slide-in {
+            display: block;
             animation-name: controlPanelSlideIn;
         }
     
         &.slide-out {
+            display: block;
             animation-name: controlPanelSlideOut;
         }
     }
@@ -35,7 +38,7 @@ $ctrl-panel-active-color: rgb(46, 85, 95);
     }
 
     .swiper-wrapper {
-        height: 90%;
+        height: calc(100% - 2rem);
     }
 
     .swiper-slide {

@@ -12,6 +12,7 @@ import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
+import ctrlPanelStore from '../../components/Navigation/ControlPanel/ctrlPanelStore';
 import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 
 import ChatroomPanel from './ChatroomPanel';
@@ -24,6 +25,7 @@ class Chat extends React.Component {
     constructor(props) {
         super(props);
 
+        this.storeUnsubscribe = null;
         this.state = {
             isOpenChatroom: true,
             isOpenProfile: false,
@@ -44,6 +46,15 @@ class Chat extends React.Component {
     }
 
     componentDidMount() {
+        this.storeUnsubscribe && this.storeUnsubscribe();
+        this.storeUnsubscribe = ctrlPanelStore.subscribe(() => {
+            let selectedChatroom = ctrlPanelStore.getState().selectedChatroom;
+            this.setState({
+                selectedAppId: selectedChatroom.appId,
+                selectedChatroomId: selectedChatroom.chatroomId
+            });
+        });
+
         let userId = authHelper.userId;
         return userId && Promise.all([
             apiDatabase.apps.find(userId),
@@ -56,24 +67,27 @@ class Chat extends React.Component {
         ]);
     }
 
-    componentWillReceiveProps(props) {
-
+    componentWillUnmount() {
+        this.storeUnsubscribe && this.storeUnsubscribe();
+        this.storeUnsubscribe = void 0;
     }
 
     render() {
+        let shouldContainerOpen = this.state.selectedAppId && this.state.selectedChatroomId;
         return (
             <Aux>
                 <ControlPanel />
                 <div className="ml-auto w-100 page-wrapper">
                     <Toolbar />
                     <Fade in className="chat-wrapper">
-                        <div className="d-flex position-relative w-100 h-100 chatroom-container">
+                        <div className={'d-flex position-relative w-100 h-100 chatroom-container' + (shouldContainerOpen ? ' open' : '')}>
                             <span className="position-absolute text-center watermark-text">歡迎使用 錢掌櫃 整合平台</span>
                             <ChatroomPanel
                                 className="position-relative h-100 col px-0 animated slideInLeft"
                                 isOpen={this.state.isOpenChatroom}
                                 appId={this.state.selectedAppId}
                                 chatroomId={this.state.selectedChatroomId}
+                                apps={this.props.apps}
                                 appsChatrooms={this.props.appsChatrooms}
                                 consumers={this.props.consumers}
                                 users={this.props.users}>

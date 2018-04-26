@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Aux from 'react-aux';
 import { withRouter } from 'react-router-dom';
-import { createStore } from 'redux';
 
 import { Collapse, ListGroup, ListGroupItem } from 'reactstrap';
 import Swiper from 'swiper/dist/js/swiper.js';
@@ -11,11 +10,10 @@ import Swiper from 'swiper/dist/js/swiper.js';
 import authHelper from '../../../helpers/authentication';
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import ROUTES from '../../../config/route';
+import ctrlPanelStore, { CLOSE_MENU, SELECT_CHATROOM } from './ctrlPanelStore';
 
 import './ControlPanel.css';
 
-const TOGGLE_MENU = 'TOGGLE_MENU';
-const CLOSE_MENU = 'CLOSE_MENU';
 const LINE = 'LINE';
 const FACEBOOK = 'FACEBOOK';
 const WECHAT = 'WECHAT';
@@ -74,21 +72,8 @@ const linkItems = [
 const startEvents = ['animationstart', 'oAnimationStart', 'webkitAnimationStart'];
 const endEvents = ['animationend', 'oAnimationEnd', 'webkitAnimationEnd'];
 
-const ctrlPanelOpenState = (state = false, action) => {
-    switch (action.type) {
-        case TOGGLE_MENU:
-            return !state;
-        case CLOSE_MENU:
-            return false;
-        default:
-            return state;
-    }
-};
-
-const ctrlPanelStore = createStore(ctrlPanelOpenState);
-
 const classes = {
-    ctrlPanel: 'chsr ctrl-panel swiper-container h-100 d-none d-sm-block',
+    ctrlPanel: 'chsr ctrl-panel swiper-container h-100 d-sm-block',
     menuToggle: 'ml-auto p-2 fas fa-times d-sm-none menu-toggle'
 };
 
@@ -115,7 +100,10 @@ class ControlPanel extends React.Component {
     componentDidMount() {
         this.storeUnsubscribe && this.storeUnsubscribe();
         this.storeUnsubscribe = ctrlPanelStore.subscribe(() => {
-            let isOpen = ctrlPanelStore.getState();
+            let isOpen = ctrlPanelStore.getState().isOpen;
+            /** @type {HTMLElement} */
+            let elem = this.swiper.el;
+            isOpen && elem.classList.contains('d-none') && elem.classList.remove('d-none');
             this.setState({ isOpen: isOpen });
         });
         window.addEventListener('resize', this.widthChanged);
@@ -168,7 +156,7 @@ class ControlPanel extends React.Component {
         /** @type {HTMLElement} */
         let elem = this.swiper.el;
         !elem.classList.contains('animating') && elem.classList.add('animating');
-    };
+    }
 
     endAnimating() {
         if (!this.swiper) {
@@ -178,13 +166,18 @@ class ControlPanel extends React.Component {
         /** @type {HTMLElement} */
         let elem = this.swiper.el;
         elem.classList.remove('animating');
-        if (elem.classList.contains('slide-in')) {
-            elem.classList.remove('slide-in');
-        } else if (elem.classList.contains('slide-out')) {
-            elem.classList.remove('slide-out');
+        if (elem.classList.contains('slide-out')) {
             elem.classList.add('d-none');
         }
-    };
+    }
+
+    selectChatroom(appId, chatroomId) {
+        ctrlPanelStore.dispatch({
+            type: SELECT_CHATROOM,
+            appId: appId,
+            chatroomId: chatroomId
+        });
+    }
 
     /**
      * @param {HTMLElement} elem
@@ -206,6 +199,7 @@ class ControlPanel extends React.Component {
             }
         });
 
+        elem.classList.add('d-none');
         startEvents.forEach((evName) => elem.addEventListener(evName, this.startAnimating));
         endEvents.forEach((evName) => elem.addEventListener(evName, this.endAnimating));
     }
@@ -259,7 +253,7 @@ class ControlPanel extends React.Component {
 
                 if (CHATSHIER === app.type) {
                     messagerItems.push(
-                        <ListGroupItem key={chatroomId} className="text-light nested tablinks">
+                        <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
                             <img className="app-icon consumer-photo" src="/image/group.png" alt="無法顯示相片" />
                             <span className="app-name">群組聊天室</span>
                             <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messager.unRead ? ' d-none' : '')}>{unReadStr}</span>
@@ -268,7 +262,7 @@ class ControlPanel extends React.Component {
                 } else {
                     let consumer = this.props.consumers[platformUid];
                     messagerItems.push(
-                        <ListGroupItem key={chatroomId} className="text-light nested tablinks">
+                        <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
                             <img className="app-icon consumer-photo" src={consumer.photo} alt="無法顯示相片" />
                             <span className="app-name">{consumer.name}</span>
                             <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messager.unRead ? ' d-none' : '')}>{unReadStr}</span>
@@ -391,38 +385,34 @@ class ControlPanel extends React.Component {
         let isInChat = ROUTES.CHAT === this.props.history.location.pathname;
 
         let lineApps = [];
-        let fbApps = [];
+        let facebookApps = [];
         let chatshierApps = [];
         for (let appId in this.props.apps) {
             let app = this.props.apps[appId];
+            let appIcon = '';
+
             switch (app.type) {
                 case LINE:
-                    lineApps.push(
-                        <ListGroupItem key={appId} className="text-light nested">
-                            <i className="fab fa-line"></i>
-                            <span>{app.name}</span>
-                        </ListGroupItem>
-                    );
+                    appIcon = 'fab fa-line';
                     break;
                 case FACEBOOK:
-                    fbApps.push(
-                        <ListGroupItem key={appId} className="text-light nested">
-                            <i className="fab fa-facebook-messenger"></i>
-                            <span>{app.name}</span>
-                        </ListGroupItem>
-                    );
+                    appIcon = 'fab fa-facebook-messenger';
                     break;
                 case CHATSHIER:
-                    chatshierApps.push(
-                        <ListGroupItem key={appId} className="text-light nested">
-                            <i className="fas fa-copyright"></i>
-                            <span>{app.name}</span>
-                        </ListGroupItem>
-                    );
-                    break;
                 default:
+                    appIcon = 'fas fa-copyright';
                     break;
             }
+
+            let appSymbol = (
+                <ListGroupItem key={appId} className="text-light nested">
+                    <i className={appIcon}></i>
+                    <span>{app.name}</span>
+                </ListGroupItem>
+            );
+            (LINE === app.type) && lineApps.push(appSymbol);
+            (FACEBOOK === app.type) && facebookApps.push(appSymbol);
+            (CHATSHIER === app.type) && chatshierApps.push(appSymbol);
         }
 
         let isSmall = 'sm' === this.state.gridState;
@@ -442,6 +432,7 @@ class ControlPanel extends React.Component {
                                 </ListGroupItem>
 
                                 <ListGroupItem className="text-light" onClick={() => this.toggleItem('CHATBOT')}>
+                                    <i className="fab fa-android"></i>
                                     <span>機器人</span>
                                 </ListGroupItem>
                                 <Collapse isOpen={!itemCollapse['CHATBOT']}>
@@ -450,27 +441,21 @@ class ControlPanel extends React.Component {
                                         <span>{LINE}</span>
                                         <i className={'ml-auto fas ' + (itemCollapse['CHATBOT_' + LINE] ? 'fa-chevron-down' : 'fa-chevron-up')}></i>
                                     </ListGroupItem>
-                                    <Collapse className="nested" isOpen={!itemCollapse['CHATBOT_' + LINE]}>
-                                        {lineApps}
-                                    </Collapse>
+                                    <Collapse className="nested" isOpen={!itemCollapse['CHATBOT_' + LINE]}>{lineApps}</Collapse>
 
                                     <ListGroupItem className="text-light" onClick={() => this.toggleItem('CHATBOT_' + FACEBOOK)}>
                                         <img className="app-icon" src="https://facebookbrand.com/wp-content/themes/fb-branding/prj-fb-branding/assets/images/fb-art.png" alt="Facebook" />
                                         <span>{FACEBOOK}</span>
                                         <i className={'ml-auto fas ' + (itemCollapse['CHATBOT_' + FACEBOOK] ? 'fa-chevron-down' : 'fa-chevron-up')}></i>
                                     </ListGroupItem>
-                                    <Collapse className="nested" isOpen={!itemCollapse['CHATBOT_' + FACEBOOK]}>
-                                        {fbApps}
-                                    </Collapse>
+                                    <Collapse className="nested" isOpen={!itemCollapse['CHATBOT_' + FACEBOOK]}>{facebookApps}</Collapse>
 
                                     <ListGroupItem className="text-light" onClick={() => this.toggleItem('CHATBOT_' + CHATSHIER)}>
                                         <img className="app-icon" src="/image/logo-no-transparent.png" alt="Chatshier" />
                                         <span>{CHATSHIER}</span>
                                         <i className={'ml-auto fas ' + (itemCollapse['CHATBOT_' + CHATSHIER] ? 'fa-chevron-down' : 'fa-chevron-up')}></i>
                                     </ListGroupItem>
-                                    <Collapse className="nested" isOpen={!itemCollapse['CHATBOT_' + CHATSHIER]}>
-                                        {chatshierApps}
-                                    </Collapse>
+                                    <Collapse className="nested" isOpen={!itemCollapse['CHATBOT_' + CHATSHIER]}>{chatshierApps}</Collapse>
                                 </Collapse>
 
                                 <ListGroupItem className="text-light">
@@ -490,9 +475,7 @@ class ControlPanel extends React.Component {
                                     <span>聊天室</span>
                                     {isInChat && <i className={'ml-auto fas ' + (itemCollapse[ROUTES.CHAT] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>}
                                 </ListGroupItem>
-                                <Collapse isOpen={!itemCollapse[ROUTES.CHAT]}>
-                                    {this.renderChatroomList()}
-                                </Collapse>
+                                <Collapse isOpen={!itemCollapse[ROUTES.CHAT]}>{this.renderChatroomList()}</Collapse>
                                 {this.renderLinkItems()}
                             </ListGroup>
                         </div>
@@ -551,4 +534,3 @@ const mapStateToProps = (storeState, ownProps) => {
 };
 
 export default connect(mapStateToProps)(withRouter(ControlPanel));
-export { ctrlPanelStore };

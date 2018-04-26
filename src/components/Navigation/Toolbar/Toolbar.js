@@ -9,7 +9,7 @@ import ROUTES from '../../../config/route';
 import User from '../../Modals/User/User';
 import Group from '../../Modals/Group/Group';
 import Integration from '../../Modals/Integration/Integration';
-import { ctrlPanelStore } from '../ControlPanel/ControlPanel';
+import ctrlPanelStore, { TOGGLE_MENU } from '../ControlPanel/ctrlPanelStore';
 
 import './Toolbar.css';
 
@@ -81,7 +81,7 @@ class Toolbar extends React.Component {
     }
 
     mobileToggleControlPanel() {
-        ctrlPanelStore.dispatch({ type: 'TOGGLE_MENU' });
+        ctrlPanelStore.dispatch({ type: TOGGLE_MENU });
     }
 
     linkTo(route, useReactRouter) {

@@ -35,7 +35,7 @@ class CookieHelper {
         expires = expires || new Date(Date.now() + YEAR).toUTCString();
         domain = domain || this.DEFAULT_DOMAIN;
 
-        document.cookie = name + '=' + val + ';expires=' + expires + ';domain=' + domain;
+        document.cookie = name + '=' + unescape(val) + ';expires=' + expires + ';domain=' + domain;
         return true;
     }
 

@@ -8,7 +8,7 @@
     transition: max-width,opacity $ctrl-panel-transition-duration;
 
     &.put-away  {
-        max-width: calc(100% - #{$ctrl-panel-logo-size});
+        max-width: calc(100% - #{$ctrl-panel-put-away-width});
     }
 
     @media (max-width: 576px) {

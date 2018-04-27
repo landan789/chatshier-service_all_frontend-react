@@ -454,6 +454,9 @@ class ControlPanel extends React.Component {
                         <div className="swiper-slide">
                             <ListGroup className={('detail-list ' + (isPutAway ? 'd-none' : '')).trim()}>
                                 <ListGroupItem className="text-light" onClick={() => this.linkTo()}>
+                                    <div className="p-1 ctrl-panel-logo">
+                                        <img className="w-100 h-100" src="/image/logo-small.png" alt="" />
+                                    </div>
                                     <span className="ctrl-panel-title">Chatshier</span>
                                     <i className={classes.menuToggle}></i>
                                 </ListGroupItem>
@@ -494,6 +497,9 @@ class ControlPanel extends React.Component {
                         <div className="swiper-slide">
                             <ListGroup className={('detail-list ' + (isPutAway ? 'd-none' : '')).trim()}>
                                 <ListGroupItem className="text-light" onClick={() => this.linkTo()}>
+                                    <div className="p-1 ctrl-panel-logo">
+                                        <img className="w-100 h-100" src="/image/logo-small.png" alt="" />
+                                    </div>
                                     <span className="ctrl-panel-title">Chatshier</span>
                                     <i className={classes.menuToggle}></i>
                                 </ListGroupItem>
@@ -507,24 +513,24 @@ class ControlPanel extends React.Component {
                             </ListGroup>
 
                             <ListGroup className={('simple-list animated slideInRight ' + (isPutAway ? '' : 'd-none')).trim()}>
-                                <ListGroupItem className="mb-4 p-0 text-light">
-                                    <div className="p-1 ctrl-panel-logo">
-                                        <img className="w-100 h-100" src="/image/logo-small.png" />
+                                <ListGroupItem className="mb-3 px-0 text-light">
+                                    <div className="p-1 mx-auto ctrl-panel-logo">
+                                        <img className="w-100 h-100" src="/image/logo-small.png" alt="" />
                                     </div>
                                 </ListGroupItem>
-                                <ListGroupItem className="my-3 p-0 text-light text-center" onClick={this.putAwayControlPanel}>
+                                <ListGroupItem className="px-0 text-light text-center" onClick={this.putAwayControlPanel}>
                                     <i className="fas fa-comment-dots fa-2x"></i>
                                 </ListGroupItem>
-                                <ListGroupItem className="my-3 p-0 text-light text-center" onClick={() => this.linkTo(ROUTES.CALENDAR, true)}>
+                                <ListGroupItem className="mt-3 px-0 text-light text-center" onClick={() => this.linkTo(ROUTES.CALENDAR, true)}>
                                     <i className="far fa-calendar-alt fa-2x"></i>
                                 </ListGroupItem>
-                                <ListGroupItem className="my-3 p-0 text-light text-center" onClick={() => this.linkTo(ROUTES.TICKETS, true)}>
+                                <ListGroupItem className="mt-3 px-0 text-light text-center" onClick={() => this.linkTo(ROUTES.TICKETS, true)}>
                                     <i className="fa fa-list-ul fa-2x"></i>
                                 </ListGroupItem>
-                                <ListGroupItem className="my-3 p-0 text-light text-center" onClick={() => this.linkTo(ROUTES.ANALYZE, true)}>
+                                <ListGroupItem className="mt-3 px-0 text-light text-center" onClick={() => this.linkTo(ROUTES.ANALYZE, true)}>
                                     <i className="fa fa-chart-bar fa-2x"></i>
                                 </ListGroupItem>
-                                <ListGroupItem className="my-3 p-0 text-light text-center" onClick={this.putAwayControlPanel}>
+                                <ListGroupItem className="mt-3 px-0 text-light text-center" onClick={this.putAwayControlPanel}>
                                     <i className="fa fa-envelope fa-2x"></i>
                                 </ListGroupItem>
                             </ListGroup>

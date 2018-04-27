@@ -8,10 +8,7 @@ import './PageWrapper.css';
 
 class PageWrapper extends React.Component {
     static propTypes = {
-        children: PropTypes.oneOfType([
-            PropTypes.array,
-            PropTypes.symbol
-        ])
+        children: PropTypes.element
     }
 
     constructor(props, ctx) {

@@ -12,7 +12,8 @@ $ctrl-panel-active-color: rgb(46, 85, 95);
     transition: width $ctrl-panel-transition-duration;
 
     &.put-away {
-      width: $ctrl-panel-logo-size; }
+        width: $ctrl-panel-put-away-width;
+    }
 
     &.animated {
         position: absolute;
@@ -70,17 +71,6 @@ $ctrl-panel-active-color: rgb(46, 85, 95);
         background-color: $ctrl-panel-bg-color;
         cursor: pointer;
         border: none;
-
-        > :first-child {
-            margin-right: .5rem;
-        }
-
-        span {
-            max-width: 55%;
-            white-space: nowrap;
-            overflow-x: hidden;
-            text-overflow: ellipsis;
-        }
     }
 
     .detail-list {

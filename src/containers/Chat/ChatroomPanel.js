@@ -9,6 +9,8 @@ import { MINUTE } from '../../utils/unitTime';
 
 import Message from './Message';
 
+import './ChatroomPanel.css';
+
 const LINE = 'LINE';
 const FACEBOOK = 'FACEBOOK';
 const WECHAT = 'WECHAT';
@@ -142,7 +144,12 @@ class ChatroomPanel extends React.Component {
                                     sender = CHATSHIER === messager.type ? props.users[platformUid] : props.consumers[platformUid];
                                 }
                                 let senderName = SYSTEM === message.from ? '由系統發送' : (sender.name || '');
-                                let isMedia = 'image' === message.type || 'audio' === message.type || 'video' === message.type;
+                                let isMedia = (
+                                    'image' === message.type ||
+                                    'audio' === message.type ||
+                                    'video' === message.type ||
+                                    'sticker' === message.type
+                                );
 
                                 // 如果訊息是來自於 Chatshier 或 系統自動回覆 的話，訊息一律放在右邊
                                 // 如果訊息是來自於其他平台的話，訊息一律放在左邊

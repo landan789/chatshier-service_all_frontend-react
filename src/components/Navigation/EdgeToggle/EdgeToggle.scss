@@ -17,7 +17,7 @@ $_edge-toggle-btn-height: 2.25rem;
     transition: opacity $ctrl-panel-transition-duration;
 
     &.put-away {
-        transform: translate3d(-#{$ctrl-panel-width - $ctrl-panel-logo-size}, 0, 0);
+        transform: translate3d(-#{$ctrl-panel-width - $ctrl-panel-put-away-width}, 0, 0);
     }
 
     &:hover,

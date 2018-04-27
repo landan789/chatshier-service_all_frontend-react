@@ -1,5 +1,5 @@
 import { UPDATE_CHATROOMS, UPDATE_CHATROOMS_MESSAGERS,
-    UPDATE_CHATROOMS_MESSAGES } from '../actions/appsChatrooms';
+    UPDATE_CHATROOMS_MESSAGES } from '../../actions/mainStore/appsChatrooms';
 
 export const appsChatroomsReducer = (state = {}, action) => {
     /** @type {string} */

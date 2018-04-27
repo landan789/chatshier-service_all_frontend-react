@@ -11,7 +11,8 @@ import browserHelper from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import ComposeInsertModal from '../../components/Modals/ComposeInsert/ComposeInsert';
 import ComposeTable from '../Composes/ComposeTable';
@@ -82,8 +83,7 @@ class Composes extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <div className="ml-auto w-100 page-wrapper">
-                    <Toolbar />
+                <PageWrapper>
                     <Fade in className="composes-wrapper">
                         <div className="composes">
                             <Jumbotron>
@@ -116,7 +116,7 @@ class Composes extends React.Component {
                             <ComposeTable appId={this.state.appId} keyword={this.state.searchKeyword} />
                         </div>
                     </Fade>
-                </div>
+                </PageWrapper>
             </Aux>
         );
     }

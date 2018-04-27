@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateKeywordreplies, deleteKeywordreply } from '../../redux/actions/appsKeywordreplies';
+import { updateKeywordreplies, deleteKeywordreply } from '../../redux/actions/mainStore/appsKeywordreplies';
 
 class AppsKeywordreplies extends Core {
     constructor() {

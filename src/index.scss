@@ -18,22 +18,4 @@ body,
     .animated {
         animation-duration: 300ms;
     }
-
-    .page-wrapper {
-        position: relative;
-        max-width: calc(100% - #{$ctrl-panel-width});
-        overflow: auto;
-        -webkit-overflow-scrolling: touch;
-        transition: max-width,opacity 200ms;
-
-        .page-wrapper.put-away  {
-            max-width: calc(100% - #{$ctrl-panel-logo-size});
-        }
-
-        @media (max-width: 576px) {
-            & {
-                max-width: 100%;
-            }
-        }
-    }
 }

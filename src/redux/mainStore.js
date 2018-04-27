@@ -1,19 +1,19 @@
 import { createStore, combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 
-import { appsReducer } from './reducers/apps';
-import { appsAutorepliesReducer } from './reducers/appsAutoreplies';
-import { appsChatroomsReducer } from './reducers/appsChatrooms';
-import { appsComposesReducer } from './reducers/appsComposes';
-import { appsFieldsReducer } from './reducers/appsFields';
-import { appsGreetingsReducer } from './reducers/appsGreetings';
-import { appsKeywordrepliesReducer } from './reducers/appsKeywordreplies';
-import { appsTicketsReducer } from './reducers/appsTickets';
-import { calendarsEventsReducer } from './reducers/calendarsEvents';
-import { consumersReducer } from './reducers/consumers';
-import { groupsReducer } from './reducers/groups';
-import { groupsMembersReducer } from './reducers/groupsMembers';
-import { usersReducer } from './reducers/users';
+import { appsReducer } from './reducers/mainStore/apps';
+import { appsAutorepliesReducer } from './reducers/mainStore/appsAutoreplies';
+import { appsChatroomsReducer } from './reducers/mainStore/appsChatrooms';
+import { appsComposesReducer } from './reducers/mainStore/appsComposes';
+import { appsFieldsReducer } from './reducers/mainStore/appsFields';
+import { appsGreetingsReducer } from './reducers/mainStore/appsGreetings';
+import { appsKeywordrepliesReducer } from './reducers/mainStore/appsKeywordreplies';
+import { appsTicketsReducer } from './reducers/mainStore/appsTickets';
+import { calendarsEventsReducer } from './reducers/mainStore/calendarsEvents';
+import { consumersReducer } from './reducers/mainStore/consumers';
+import { groupsReducer } from './reducers/mainStore/groups';
+import { groupsMembersReducer } from './reducers/mainStore/groupsMembers';
+import { usersReducer } from './reducers/mainStore/users';
 
 const rootReducer = combineReducers({
     router: routerReducer,

@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateAutoreplies, deleteAutoreply } from '../../redux/actions/appsAutoreplies';
+import { updateAutoreplies, deleteAutoreply } from '../../redux/actions/mainStore/appsAutoreplies';
 
 class AppsAutoreplies extends Core {
     constructor() {

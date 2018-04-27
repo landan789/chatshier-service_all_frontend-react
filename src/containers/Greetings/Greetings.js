@@ -9,7 +9,8 @@ import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import GreetingTable from './GreetingTable/GreetingTable';
 
@@ -48,8 +49,7 @@ class Greetings extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <div className="ml-auto w-100 page-wrapper">
-                    <Toolbar />
+                <PageWrapper>
                     <Fade in className="greetings-wrapper">
                         <div className="Greetings">
                             <Jumbotron>
@@ -60,7 +60,7 @@ class Greetings extends React.Component {
                             <GreetingTable appId={this.state.selectedAppId} />
                         </div>
                     </Fade>
-                </div>
+                </PageWrapper>
             </Aux>
         );
     }

@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateFields, deleteField } from '../../redux/actions/appsFields';
+import { updateFields, deleteField } from '../../redux/actions/mainStore/appsFields';
 
 class AppsFields extends Core {
     constructor() {

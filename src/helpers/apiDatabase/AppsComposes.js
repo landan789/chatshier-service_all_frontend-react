@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateComposes, deleteCompose } from '../../redux/actions/appsComposes';
+import { updateComposes, deleteCompose } from '../../redux/actions/mainStore/appsComposes';
 
 class AppsComposes extends Core {
     constructor() {

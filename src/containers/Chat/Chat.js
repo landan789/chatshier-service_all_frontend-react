@@ -10,10 +10,11 @@ import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 import socketHelper from '../../helpers/socket';
 import apiDatabase from '../../helpers/apiDatabase/index';
+import controlPanelStore from '../../redux/controlPanelStore';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import ctrlPanelStore from '../../components/Navigation/ControlPanel/ctrlPanelStore';
-import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 
 import ChatroomPanel from './ChatroomPanel';
 import ProfilePanel from './ProfilePanel';
@@ -58,8 +59,8 @@ class Chat extends React.Component {
 
     componentDidMount() {
         this.storeUnsubscribe && this.storeUnsubscribe();
-        this.storeUnsubscribe = ctrlPanelStore.subscribe(() => {
-            let selectedChatroom = ctrlPanelStore.getState().selectedChatroom;
+        this.storeUnsubscribe = controlPanelStore.subscribe(() => {
+            let selectedChatroom = controlPanelStore.getState().selectedChatroom;
             this.setState({
                 selectedAppId: selectedChatroom.appId,
                 selectedChatroomId: selectedChatroom.chatroomId
@@ -89,8 +90,7 @@ class Chat extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <div className="ml-auto w-100 page-wrapper">
-                    <Toolbar />
+                <PageWrapper>
                     <Fade in className="chat-wrapper">
                         <div className={'d-flex position-relative w-100 h-100 chatroom-container' + (shouldContainerOpen ? ' open' : '')}>
                             <span className="position-absolute text-center watermark-text">歡迎使用 錢掌櫃 整合平台</span>
@@ -106,7 +106,7 @@ class Chat extends React.Component {
                             </TicketPanel>
                         </div>
                     </Fade>
-                </div>
+                </PageWrapper>
             </Aux>
         );
     }

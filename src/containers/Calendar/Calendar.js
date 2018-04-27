@@ -12,7 +12,8 @@ import apiDatabase from '../../helpers/apiDatabase/index';
 
 import { notify } from '../../components/Notify/Notify';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import CalendarInsertModal from '../../components/Modals/CalendarInsert/CalendarInsert';
 import CalendarEditModal, { CalendarEventTypes } from '../../components/Modals/CalendarEdit/CalendarEdit';
 import TicketEditModal from '../../components/Modals/TicketEdit/TicketEdit';
@@ -24,15 +25,6 @@ import 'fullcalendar/dist/fullcalendar.min.css';
 import './Calendar.css';
 
 class CalendarEventItem {
-    static propTypes = {
-        consumers: PropTypes.object,
-        appsTickets: PropTypes.object,
-        calendarsEvents: PropTypes.object,
-        groups: PropTypes.object,
-        users: PropTypes.object,
-        history: PropTypes.object.isRequired
-    }
-
     constructor(options) {
         options = options || {};
         // 目前只設定使用到的項目，並無全部都設定
@@ -76,6 +68,15 @@ class GoogleEventItem extends CalendarEventItem {
 }
 
 class Calendar extends React.Component {
+    static propTypes = {
+        consumers: PropTypes.object,
+        appsTickets: PropTypes.object,
+        calendarsEvents: PropTypes.object,
+        groups: PropTypes.object,
+        users: PropTypes.object,
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props) {
         super(props);
 
@@ -417,8 +418,7 @@ class Calendar extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <div className="ml-auto w-100 page-wrapper">
-                    <Toolbar />
+                <PageWrapper>
                     <Fade in className="container mt-5 calendar-wrapper">
                         <div className="mb-5 card chsr calendar" ref={this.initCalendar}></div>
                     </Fade>
@@ -439,7 +439,7 @@ class Calendar extends React.Component {
                         isOpen={!!this.state.editTicketData}
                         close={this.closeEditModal}>
                     </TicketEditModal>
-                </div>
+                </PageWrapper>
             </Aux>
         );
     }

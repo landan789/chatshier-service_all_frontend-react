@@ -9,18 +9,17 @@ $ctrl-panel-active-color: rgb(46, 85, 95);
     min-height: 100%;
     background-color: $ctrl-panel-bg-color;
     z-index: 1040 !important; // 由於 swiper container 層級較高，因此需設定 !important
-    transition: width 200ms;
+    transition: width $ctrl-panel-transition-duration;
 
     &.put-away {
-      width: $ctrl-panel-logo-size;
-      margin: 0; }
+      width: $ctrl-panel-logo-size; }
 
     &.animated {
         position: absolute;
         left: 0;
         top: 0;
         animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1);
-        animation-duration: 250ms;
+        animation-duration: $ctrl-panel-transition-duration;
 
         &.slide-in {
             display: block;
@@ -129,14 +128,9 @@ $ctrl-panel-active-color: rgb(46, 85, 95);
         }
     }
 
-
-    .simple-list {
-        display: none;
-
-        .ctrl-panel-logo {
-            width: $ctrl-panel-logo-size;
-            height: $ctrl-panel-logo-size;
-        }
+    .ctrl-panel-logo {
+        width: $ctrl-panel-logo-size;
+        height: $ctrl-panel-logo-size;
     }
 
     &:not(.put-away) + .edge-toggle-container:hover .edge-toggle-btn:hover i::before {
@@ -145,6 +139,10 @@ $ctrl-panel-active-color: rgb(46, 85, 95);
 
     &.put-away + .edge-toggle-container:hover .edge-toggle-btn:hover i::before {
         content: "\f054";
+    }
+
+    + .edge-toggle-container {
+        left: $ctrl-panel-width;
     }
 }
 
@@ -156,53 +154,6 @@ $ctrl-panel-active-color: rgb(46, 85, 95);
     height: 100vh;
     z-index: 1039;
     background-color: transparent;
-}
-
-.edge-toggle-container {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    left: 16rem;
-    width: 1rem;
-    display: flex;
-    align-items: center;
-    z-index: 1000;
-    opacity: 0;
-    transition: opacity 300ms;
-
-    &.put-away {
-        transform: translate3d(-12rem, 0, 0);
-    }
-
-    &:hover,
-    &.hover {
-        opacity: 1;
-    }
-
-    &:hover .edge-toggle-btn:hover i {
-        transform: rotate(0deg);
-    }
-
-    .edge-toggle-btn {
-        width: 100%;
-        height: 2.25rem;
-        padding: 0;
-        cursor: pointer;
-        color: transparent;
-        background: none;
-        border-width: initial;
-        border-style: none;
-        border-color: initial;
-        border-image: initial;
-
-        i {
-            color: #212529;
-            font-size: .85rem;
-            transition: transform 300ms;
-            transform: rotate(90deg);
-        }
-    }
-
 }
 
 @keyframes controlPanelSlideIn {

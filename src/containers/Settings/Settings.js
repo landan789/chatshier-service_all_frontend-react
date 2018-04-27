@@ -9,7 +9,8 @@ import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import LinkTabs from './LinkTabs';
 import AppsTabPane from './TabPanes/AppsTabPane';
 import GroupsTabPane from './TabPanes/GroupsTabPane';
@@ -50,8 +51,7 @@ class Settings extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <div className="ml-auto w-100 page-wrapper">
-                    <Toolbar />
+                <PageWrapper>
                     <Fade in className="setting-wrapper">
                         <LinkTabs route={route} toggle={this.toggle} />
                         <Switch>
@@ -62,7 +62,7 @@ class Settings extends React.Component {
                             <Redirect to={ROUTES.SETTINGS_APPS} />
                         </Switch>
                     </Fade>
-                </div>
+                </PageWrapper>
             </Aux>
         );
     }

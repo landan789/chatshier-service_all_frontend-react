@@ -1,0 +1,52 @@
+@import '../../../styles/_variables';
+
+$_edge-toggle-width: 1rem;
+$_edge-toggle-btn-height: 2.25rem;
+
+.edge-toggle-container {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    left: 0;
+    width: $_edge-toggle-width;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity $ctrl-panel-transition-duration;
+
+    &.put-away {
+        transform: translate3d(-#{$ctrl-panel-width - $ctrl-panel-logo-size}, 0, 0);
+    }
+
+    &:hover,
+    &.hover {
+        opacity: 1;
+    }
+
+    &:hover .edge-toggle-btn:hover i {
+        transform: rotate(0deg);
+    }
+
+    .edge-toggle-btn {
+        width: 100%;
+        height: $_edge-toggle-btn-height;
+        padding: 0;
+        cursor: pointer;
+        color: transparent;
+        background: none;
+        border-width: initial;
+        border-style: none;
+        border-color: initial;
+        border-image: initial;
+        outline: none;
+
+        i {
+            color: #212529;
+            font-size: .85rem;
+            transition: transform $ctrl-panel-transition-duration;
+            transform: rotate(90deg);
+        }
+    }
+}

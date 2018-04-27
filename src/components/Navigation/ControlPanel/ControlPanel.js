@@ -10,7 +10,11 @@ import Swiper from 'swiper/dist/js/swiper.js';
 import authHelper from '../../../helpers/authentication';
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import ROUTES from '../../../config/route';
-import ctrlPanelStore, { CLOSE_MENU, SELECT_CHATROOM } from './ctrlPanelStore';
+import controlPanelStore from '../../../redux/controlPanelStore';
+import { closePanel } from '../../../redux/actions/controlPanelStore/isOpen';
+import { putAwayPanel } from '../../../redux/actions/controlPanelStore/isPutAway';
+import { selectChatroom } from '../../../redux/actions/controlPanelStore/selectedChatroom';
+import EdgeToggle from '../EdgeToggle/EdgeToggle';
 
 import './ControlPanel.css';
 
@@ -73,9 +77,11 @@ const startEvents = ['animationstart', 'oAnimationStart', 'webkitAnimationStart'
 const endEvents = ['animationend', 'oAnimationEnd', 'webkitAnimationEnd'];
 
 const classes = {
-    ctrlPanel: 'chsr ctrl-panel swiper-container h-100 d-sm-block',
+    ctrlPanel: 'chsr ctrl-panel swiper-container h-100 m-0 d-sm-block',
     menuToggle: 'ml-auto p-2 fas fa-times d-sm-none menu-toggle'
 };
+
+const TRANSITION_DURATION = 300;
 
 class ControlPanel extends React.Component {
     static propTypes = {
@@ -93,6 +99,7 @@ class ControlPanel extends React.Component {
         this.state = {
             gridState: this.getGridState(window.innerWidth),
             isOpen: false,
+            isPutAway: controlPanelStore.getState().isPutAway,
             itemCollapse: {}
         };
 
@@ -102,16 +109,24 @@ class ControlPanel extends React.Component {
         this.widthChanged = this.widthChanged.bind(this);
         this.startAnimating = this.startAnimating.bind(this);
         this.endAnimating = this.endAnimating.bind(this);
+        this.putAwayControlPanel = this.putAwayControlPanel.bind(this);
     }
 
     componentDidMount() {
         this.storeUnsubscribe && this.storeUnsubscribe();
-        this.storeUnsubscribe = ctrlPanelStore.subscribe(() => {
-            let isOpen = ctrlPanelStore.getState().isOpen;
+        this.storeUnsubscribe = controlPanelStore.subscribe(() => {
+            let storeState = controlPanelStore.getState();
+            let isPutAway = storeState.isPutAway;
+            let isOpen = storeState.isOpen;
+
             /** @type {HTMLElement} */
             let elem = this.swiper.el;
             isOpen && elem.classList.contains('d-none') && elem.classList.remove('d-none');
-            this.setState({ isOpen: isOpen });
+
+            this.setState({
+                isOpen: isOpen,
+                isPutAway: isPutAway
+            });
         });
         window.addEventListener('resize', this.widthChanged);
 
@@ -126,7 +141,11 @@ class ControlPanel extends React.Component {
     }
 
     componentDidUpdate() {
-        this.swiper && this.swiper.update();
+        return new Promise((resolve) => {
+            window.setTimeout(resolve, TRANSITION_DURATION + 50);
+        }).then(() => {
+            this.swiper && this.swiper.update();
+        });
     }
 
     widthChanged(ev) {
@@ -135,7 +154,7 @@ class ControlPanel extends React.Component {
 
     linkTo(route, useReactRouter) {
         if ('sm' === this.state.gridState) {
-            ctrlPanelStore.dispatch({ type: CLOSE_MENU });
+            controlPanelStore.dispatch(closePanel());
         }
 
         if (!route) {
@@ -153,6 +172,10 @@ class ControlPanel extends React.Component {
         let itemCollapse = this.state.itemCollapse;
         itemCollapse[key] = !itemCollapse[key];
         this.setState({ itemCollapse: itemCollapse });
+    }
+
+    putAwayControlPanel() {
+        controlPanelStore.dispatch(putAwayPanel());
     }
 
     startAnimating() {
@@ -179,11 +202,7 @@ class ControlPanel extends React.Component {
     }
 
     selectChatroom(appId, chatroomId) {
-        ctrlPanelStore.dispatch({
-            type: SELECT_CHATROOM,
-            appId: appId,
-            chatroomId: chatroomId
-        });
+        controlPanelStore.dispatch(selectChatroom(appId, chatroomId));
     }
 
     /**
@@ -424,15 +443,16 @@ class ControlPanel extends React.Component {
 
         let isSmall = 'sm' === this.state.gridState;
         let isOpen = this.state.isOpen || !isSmall;
+        let isPutAway = this.state.isPutAway;
         let shouldShowBackdrop = isOpen && isSmall;
         let itemCollapse = this.state.itemCollapse;
 
         return (
             <Aux>
-                <div className={classes.ctrlPanel + (isSmall ? ' animated' : '') + (isOpen ? ' slide-in' : ' slide-out')} ref={this.initSwiper}>
+                <div className={classes.ctrlPanel + (isSmall ? ' animated' : '') + (isOpen ? ' slide-in' : ' slide-out') + (isPutAway ? ' put-away' : '')} ref={this.initSwiper}>
                     <div className="swiper-wrapper">
                         <div className="swiper-slide">
-                            <ListGroup className="detail-list">
+                            <ListGroup className={('detail-list ' + (isPutAway ? 'd-none' : '')).trim()}>
                                 <ListGroupItem className="text-light" onClick={() => this.linkTo()}>
                                     <span className="ctrl-panel-title">Chatshier</span>
                                     <i className={classes.menuToggle}></i>
@@ -472,7 +492,7 @@ class ControlPanel extends React.Component {
                             </ListGroup>
                         </div>
                         <div className="swiper-slide">
-                            <ListGroup className="detail-list">
+                            <ListGroup className={('detail-list ' + (isPutAway ? 'd-none' : '')).trim()}>
                                 <ListGroupItem className="text-light" onClick={() => this.linkTo()}>
                                     <span className="ctrl-panel-title">Chatshier</span>
                                     <i className={classes.menuToggle}></i>
@@ -485,10 +505,34 @@ class ControlPanel extends React.Component {
                                 <Collapse isOpen={!itemCollapse[ROUTES.CHAT]}>{this.renderChatroomList()}</Collapse>
                                 {this.renderLinkItems()}
                             </ListGroup>
+
+                            <ListGroup className={('simple-list animated slideInRight ' + (isPutAway ? '' : 'd-none')).trim()}>
+                                <ListGroupItem className="mb-4 p-0 text-light">
+                                    <div className="p-1 ctrl-panel-logo">
+                                        <img className="w-100 h-100" src="/image/logo-small.png" />
+                                    </div>
+                                </ListGroupItem>
+                                <ListGroupItem className="my-3 p-0 text-light text-center" onClick={this.putAwayControlPanel}>
+                                    <i className="fas fa-comment-dots fa-2x"></i>
+                                </ListGroupItem>
+                                <ListGroupItem className="my-3 p-0 text-light text-center" onClick={() => this.linkTo(ROUTES.CALENDAR, true)}>
+                                    <i className="far fa-calendar-alt fa-2x"></i>
+                                </ListGroupItem>
+                                <ListGroupItem className="my-3 p-0 text-light text-center" onClick={() => this.linkTo(ROUTES.TICKETS, true)}>
+                                    <i className="fa fa-list-ul fa-2x"></i>
+                                </ListGroupItem>
+                                <ListGroupItem className="my-3 p-0 text-light text-center" onClick={() => this.linkTo(ROUTES.ANALYZE, true)}>
+                                    <i className="fa fa-chart-bar fa-2x"></i>
+                                </ListGroupItem>
+                                <ListGroupItem className="my-3 p-0 text-light text-center" onClick={this.putAwayControlPanel}>
+                                    <i className="fa fa-envelope fa-2x"></i>
+                                </ListGroupItem>
+                            </ListGroup>
                         </div>
                     </div>
                     <div className="swiper-pagination w-100"></div>
                 </div>
+                <EdgeToggle className={isPutAway ? 'put-away' : ''} onClick={this.putAwayControlPanel} />
                 <div className={'ctrl-panel-backdrop' + (shouldShowBackdrop ? '' : ' d-none')} onClick={() => this.linkTo()}></div>
             </Aux>
         );

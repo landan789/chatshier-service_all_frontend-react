@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateChatrooms } from '../../redux/actions/appsChatrooms';
+import { updateChatrooms } from '../../redux/actions/mainStore/appsChatrooms';
 
 class AppsChatrooms extends Core {
     constructor() {

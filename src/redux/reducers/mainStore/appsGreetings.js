@@ -1,4 +1,4 @@
-import { UPDATE_GREETINGS, DELETE_GREETING } from '../actions/appsGreetings';
+import { UPDATE_GREETINGS, DELETE_GREETING } from '../../actions/mainStore/appsGreetings';
 
 export const appsGreetingsReducer = (state = {}, action) => {
     switch (action.type) {

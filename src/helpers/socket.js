@@ -3,8 +3,8 @@ import SOCKET_EVENTS from '../config/socket-events';
 import urlConfig from '../config/url';
 
 import mainStore from '../redux/mainStore';
-import { updateChatroomsMessagers, updateChatroomsMessages } from '../redux/actions/appsChatrooms';
-import { updateConsumers } from '../redux/actions/consumers';
+import { updateChatroomsMessagers, updateChatroomsMessages } from '../redux/actions/mainStore/appsChatrooms';
+import { updateConsumers } from '../redux/actions/mainStore/consumers';
 
 const SOCKET_NAMESPACE = '/chatshier';
 

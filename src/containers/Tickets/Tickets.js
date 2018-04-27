@@ -11,7 +11,8 @@ import browserHelper from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import TicketInsertModal from '../../components/Modals/TicketInsert/TicketInsert';
 import TicketTable from './TicketTable';
 
@@ -101,8 +102,7 @@ class Tickets extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <div className="ml-auto w-100 page-wrapper">
-                    <Toolbar />
+                <PageWrapper>
                     <Fade in className="mt-5 container ticket-wrapper">
                         <div className="pb-5 chsr card">
                             <div className="mx-4 ticket-toolbar">
@@ -132,7 +132,7 @@ class Tickets extends React.Component {
                             </TicketTable>
                         </div>
                     </Fade>
-                </div>
+                </PageWrapper>
             </Aux>
         );
     }

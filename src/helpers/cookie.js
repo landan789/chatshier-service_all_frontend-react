@@ -35,7 +35,7 @@ class CookieHelper {
         expires = expires || new Date(Date.now() + YEAR).toUTCString();
         domain = domain || this.DEFAULT_DOMAIN;
 
-        document.cookie = name + '=' + unescape(val) + ';expires=' + expires + ';domain=' + domain;
+        document.cookie = name + '=' + encodeURIComponent(unescape(val)) + ';expires=' + expires + ';domain=' + domain;
         return true;
     }
 
@@ -50,7 +50,7 @@ class CookieHelper {
         let parts = cookieValues.split('; ' + name + '=');
 
         if (parts.length >= 2) {
-            return unescape(parts.pop().split(';').shift());
+            return unescape(decodeURIComponent(parts.pop().split(';').shift()));
         }
         return '';
     }

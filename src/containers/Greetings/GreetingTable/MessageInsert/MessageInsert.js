@@ -11,6 +11,12 @@ import { notify } from '../../../../components/Notify/Notify';
 import '../GreetingTable.css';
 
 class MessageInsert extends Component {
+    static propTypes = {
+        appId: PropTypes.string.isRequired,
+        message: PropTypes.object.isRequired,
+        delete: PropTypes.func.isRequired
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
         this.state = {
@@ -77,11 +83,5 @@ class MessageInsert extends Component {
         );
     }
 }
-
-MessageInsert.propTypes = {
-    appId: PropTypes.string.isRequired,
-    message: PropTypes.object.isRequired,
-    delete: PropTypes.func.isRequired
-};
 
 export default MessageInsert;

@@ -7,6 +7,12 @@ import authHelper from '../../../helpers/authentication';
 import apiDatabase from '../../../helpers/apiDatabase/index';
 
 class Group extends React.Component {
+    static propTypes = {
+        isOpen: PropTypes.bool.isRequired,
+        close: PropTypes.func.isRequired,
+        groups: PropTypes.object
+    }
+
     constructor(props) {
         super(props);
         this.state = { collapse: false };
@@ -54,12 +60,6 @@ class Group extends React.Component {
         );
     }
 }
-
-Group.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    close: PropTypes.func.isRequired,
-    groups: PropTypes.object
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     return {

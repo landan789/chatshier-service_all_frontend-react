@@ -8,7 +8,6 @@ import { Fade } from 'reactstrap';
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
-import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
@@ -19,6 +18,15 @@ import TicketTable from './TicketTable';
 import './Tickets.css';
 
 class Tickets extends React.Component {
+    static propTypes = {
+        apps: PropTypes.object,
+        appsTickets: PropTypes.object,
+        consumers: PropTypes.object,
+        groups: PropTypes.object,
+        users: PropTypes.object,
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props) {
         super(props);
 
@@ -129,15 +137,6 @@ class Tickets extends React.Component {
         );
     }
 }
-
-Tickets.propTypes = {
-    apps: PropTypes.object,
-    appsTickets: PropTypes.object,
-    consumers: PropTypes.object,
-    groups: PropTypes.object,
-    users: PropTypes.object,
-    history: PropTypes.object.isRequired
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中

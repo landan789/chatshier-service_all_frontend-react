@@ -7,7 +7,6 @@ import { Fade, Jumbotron } from 'reactstrap';
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
-import cookieHelper from '../../helpers/cookie';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
@@ -17,6 +16,10 @@ import GreetingTable from './GreetingTable/GreetingTable';
 import './Greetings.css';
 
 class Greetings extends React.Component {
+    static propTypes = {
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props, context) {
         super(props, context);
 
@@ -62,9 +65,5 @@ class Greetings extends React.Component {
         );
     }
 }
-
-Greetings.propTypes = {
-    history: PropTypes.object.isRequired
-};
 
 export default withRouter(Greetings);

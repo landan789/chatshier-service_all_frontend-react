@@ -5,6 +5,16 @@ import Aux from 'react-aux';
 import regex, { wechatEmojiTable } from '../../utils/regex';
 
 class Message extends React.Component {
+    static propTypes = {
+        shouldRightSide: PropTypes.bool.isRequired,
+        senderName: PropTypes.string.isRequired,
+        isMedia: PropTypes.bool.isRequired,
+        messageType: PropTypes.string.isRequired,
+        messageText: PropTypes.string.isRequired,
+        messageSrc: PropTypes.string.isRequired,
+        messageTime: PropTypes.number.isRequired
+    }
+
     render() {
         let props = this.props;
 
@@ -80,15 +90,5 @@ class Message extends React.Component {
         return dateStr;
     }
 }
-
-Message.propTypes = {
-    shouldRightSide: PropTypes.bool.isRequired,
-    senderName: PropTypes.string.isRequired,
-    isMedia: PropTypes.bool.isRequired,
-    messageType: PropTypes.string.isRequired,
-    messageText: PropTypes.string.isRequired,
-    messageSrc: PropTypes.string.isRequired,
-    messageTime: PropTypes.number.isRequired
-};
 
 export default Message;

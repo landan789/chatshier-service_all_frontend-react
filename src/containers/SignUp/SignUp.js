@@ -36,6 +36,10 @@ const PASSWORD_WAS_EMPTY = 'password was empty';
 const USER_EMAIL_HAD_BEEN_SIGNED_UP = 'user email had been signed up';
 
 class SignUp extends React.Component {
+    static propTypes = {
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props) {
         super(props);
 
@@ -283,9 +287,5 @@ class SignUp extends React.Component {
         );
     }
 }
-
-SignUp.propTypes = {
-    history: PropTypes.object.isRequired
-};
 
 export default withRouter(SignUp);

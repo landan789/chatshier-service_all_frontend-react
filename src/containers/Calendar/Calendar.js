@@ -8,7 +8,6 @@ import { Fade } from 'reactstrap';
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
-import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import { notify } from '../../components/Notify/Notify';
@@ -25,6 +24,15 @@ import 'fullcalendar/dist/fullcalendar.min.css';
 import './Calendar.css';
 
 class CalendarEventItem {
+    static propTypes = {
+        consumers: PropTypes.object,
+        appsTickets: PropTypes.object,
+        calendarsEvents: PropTypes.object,
+        groups: PropTypes.object,
+        users: PropTypes.object,
+        history: PropTypes.object.isRequired
+    }
+
     constructor(options) {
         options = options || {};
         // 目前只設定使用到的項目，並無全部都設定
@@ -436,15 +444,6 @@ class Calendar extends React.Component {
         );
     }
 }
-
-Calendar.propTypes = {
-    consumers: PropTypes.object,
-    appsTickets: PropTypes.object,
-    calendarsEvents: PropTypes.object,
-    groups: PropTypes.object,
-    users: PropTypes.object,
-    history: PropTypes.object.isRequired
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中

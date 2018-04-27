@@ -22,6 +22,17 @@ import TicketPanel from './TicketPanel';
 import './Chat.css';
 
 class Chat extends React.Component {
+    static propTypes = {
+        apps: PropTypes.object,
+        appsChatrooms: PropTypes.object,
+        appsFields: PropTypes.object,
+        appsTickets: PropTypes.object,
+        consumers: PropTypes.object,
+        groups: PropTypes.object,
+        users: PropTypes.object,
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props) {
         super(props);
 
@@ -100,17 +111,6 @@ class Chat extends React.Component {
         );
     }
 }
-
-Chat.propTypes = {
-    apps: PropTypes.object,
-    appsChatrooms: PropTypes.object,
-    appsFields: PropTypes.object,
-    appsTickets: PropTypes.object,
-    consumers: PropTypes.object,
-    groups: PropTypes.object,
-    users: PropTypes.object,
-    history: PropTypes.object.isRequired
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中

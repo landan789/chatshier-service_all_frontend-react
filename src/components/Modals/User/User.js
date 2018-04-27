@@ -10,6 +10,12 @@ import { notify } from '../../Notify/Notify';
 import './User.css';
 
 class User extends React.Component {
+    static propTypes = {
+        isOpen: PropTypes.bool.isRequired,
+        close: PropTypes.func.isRequired,
+        users: PropTypes.object
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -113,13 +119,7 @@ class User extends React.Component {
             </Modal>
         );
     }
-};
-
-User.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    close: PropTypes.func.isRequired,
-    users: PropTypes.object
-};
+}
 
 const mapStateToProps = (storeState, ownProps) => {
     return {

@@ -7,7 +7,6 @@ import { Fade } from 'reactstrap';
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
-import cookieHelper from '../../helpers/cookie';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
@@ -20,6 +19,11 @@ import UsersTabPane from './TabPanes/UsersTabPane';
 import './Settings.css';
 
 class Settings extends React.Component {
+    static propTypes = {
+        history: PropTypes.object.isRequired,
+        location: PropTypes.object.isRequired
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
 
@@ -63,10 +67,5 @@ class Settings extends React.Component {
         );
     }
 }
-
-Settings.propTypes = {
-    history: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired
-};
 
 export default withRouter(Settings);

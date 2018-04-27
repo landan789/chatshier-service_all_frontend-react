@@ -18,6 +18,17 @@ const SYSTEM = 'SYSTEM';
 const WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 class ChatroomPanel extends React.Component {
+    static propTypes = {
+        className: PropTypes.string,
+        isOpen: PropTypes.bool,
+        appId: PropTypes.string,
+        chatroomId: PropTypes.string,
+        apps: PropTypes.object,
+        appsChatrooms: PropTypes.object,
+        consumers: PropTypes.object,
+        users: PropTypes.object
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
 
@@ -270,17 +281,6 @@ class ChatroomPanel extends React.Component {
         return str;
     }
 }
-
-ChatroomPanel.propTypes = {
-    className: PropTypes.string,
-    isOpen: PropTypes.bool,
-    appId: PropTypes.string,
-    chatroomId: PropTypes.string,
-    apps: PropTypes.object,
-    appsChatrooms: PropTypes.object,
-    consumers: PropTypes.object,
-    users: PropTypes.object
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中

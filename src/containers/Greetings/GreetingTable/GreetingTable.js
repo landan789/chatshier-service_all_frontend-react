@@ -13,6 +13,11 @@ import MessageInsert from './MessageInsert/MessageInsert';
 import './GreetingTable.css';
 
 class GreetingTable extends React.Component {
+    static propTypes = {
+        appId: PropTypes.string,
+        appsGreetings: PropTypes.object.isRequired
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
 
@@ -98,11 +103,6 @@ class GreetingTable extends React.Component {
         );
     }
 }
-
-GreetingTable.propTypes = {
-    appId: PropTypes.string,
-    appsGreetings: PropTypes.object.isRequired
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中

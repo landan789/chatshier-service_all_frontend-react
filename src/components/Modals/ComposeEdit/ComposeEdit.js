@@ -9,6 +9,12 @@ import timeHelper from '../../../helpers/timer';
 import { notify } from '../../Notify/Notify';
 
 class ComposeEdit extends React.Component {
+    static propTypes = {
+        modalData: PropTypes.object,
+        isOpen: PropTypes.bool.isRequired,
+        close: PropTypes.func.isRequired
+    }
+
     constructor(props) {
         super(props);
 
@@ -215,11 +221,5 @@ class ComposeEdit extends React.Component {
         );
     }
 }
-
-ComposeEdit.propTypes = {
-    modalData: PropTypes.object,
-    isOpen: PropTypes.bool.isRequired,
-    close: PropTypes.func.isRequired
-};
 
 export default ComposeEdit;

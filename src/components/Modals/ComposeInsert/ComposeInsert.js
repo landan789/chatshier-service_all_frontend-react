@@ -9,6 +9,13 @@ import timeHelper from '../../../helpers/timer';
 import { notify } from '../../Notify/Notify';
 
 class ComposeInsert extends React.Component {
+    static propTypes = {
+        apps: PropTypes.object.isRequired,
+        appsFields: PropTypes.object,
+        isOpen: PropTypes.bool,
+        close: PropTypes.func.isRequired
+    }
+
     constructor(props) {
         super(props);
 
@@ -338,12 +345,5 @@ class ComposeInsert extends React.Component {
         );
     }
 }
-
-ComposeInsert.propTypes = {
-    apps: PropTypes.object.isRequired,
-    appsFields: PropTypes.object,
-    isOpen: PropTypes.bool,
-    close: PropTypes.func.isRequired
-};
 
 export default ComposeInsert;

@@ -8,7 +8,6 @@ import { Fade } from 'reactstrap';
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
-import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
@@ -18,6 +17,12 @@ import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import './Analyze.css';
 
 class Analyze extends React.Component {
+    static propTypes = {
+        apps: PropTypes.object,
+        appsChatrooms: PropTypes.object,
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
 
@@ -67,12 +72,6 @@ class Analyze extends React.Component {
         );
     }
 }
-
-Analyze.propTypes = {
-    apps: PropTypes.object,
-    appsChatrooms: PropTypes.object,
-    history: PropTypes.object.isRequired
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中

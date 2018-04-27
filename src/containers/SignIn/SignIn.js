@@ -23,6 +23,10 @@ const wwwUrl = URL.wwwUrl
     : window.location.protocol + '//' + document.domain.replace(regex.domainPrefix, 'www.');
 
 class SignIn extends React.Component {
+    static propTypes = {
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props, context) {
         super(props, context);
 
@@ -206,9 +210,5 @@ class SignIn extends React.Component {
         );
     }
 }
-
-SignIn.propTypes = {
-    history: PropTypes.object.isRequired
-};
 
 export default withRouter(SignIn);

@@ -8,7 +8,6 @@ import { Fade, Row, Col, Jumbotron, Button, Input, InputGroup } from 'reactstrap
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
-import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import AutoreplyTable from '../Autoreplies/AutoreplyTable.js';
@@ -20,6 +19,12 @@ import AutoreplyInsertModal from '../../components/Modals/AutoreplyInsert/Autore
 import './Autoreplies.css';
 
 class Autoreplies extends React.Component {
+    static propTypes = {
+        apps: PropTypes.object,
+        appsAutoreplies: PropTypes.object,
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props) {
         super(props);
 
@@ -113,12 +118,6 @@ class Autoreplies extends React.Component {
         );
     }
 }
-
-Autoreplies.propTypes = {
-    apps: PropTypes.object,
-    appsAutoreplies: PropTypes.object,
-    history: PropTypes.object.isRequired
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     return {

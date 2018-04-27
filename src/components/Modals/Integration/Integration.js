@@ -9,6 +9,11 @@ import './Integration.css';
 let isGoogleapiLoaded = false;
 
 class Integration extends React.Component {
+    static propTypes = {
+        isOpen: PropTypes.bool.isRequired,
+        close: PropTypes.func.isRequired
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -115,11 +120,6 @@ class Integration extends React.Component {
             </Modal>
         );
     }
-};
-
-Integration.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    close: PropTypes.func.isRequired
-};
+}
 
 export default Integration;

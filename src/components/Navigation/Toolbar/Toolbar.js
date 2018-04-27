@@ -40,6 +40,10 @@ const setNavTitle = (title) => {
 };
 
 class Toolbar extends React.Component {
+    static propTypes = {
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
 
@@ -149,10 +153,6 @@ class Toolbar extends React.Component {
         );
     }
 }
-
-Toolbar.propTypes = {
-    history: PropTypes.object.isRequired
-};
 
 export default withRouter(Toolbar);
 export { setNavTitle };

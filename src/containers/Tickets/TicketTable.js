@@ -8,6 +8,14 @@ import { toDueDateSpan, toLocalTimeString, toPriorityBorder,
 import TicketEditModal from '../../components/Modals/TicketEdit/TicketEdit';
 
 class TicketTable extends React.Component {
+    static propTypes = {
+        className: PropTypes.string,
+        searchKeyword: PropTypes.string,
+        appsAgents: PropTypes.object,
+        appsTickets: PropTypes.object.isRequired,
+        consumers: PropTypes.object.isRequired
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
 
@@ -141,14 +149,6 @@ class TicketTable extends React.Component {
         );
     }
 }
-
-TicketTable.propTypes = {
-    className: PropTypes.string,
-    searchKeyword: PropTypes.string,
-    appsAgents: PropTypes.object,
-    appsTickets: PropTypes.object.isRequired,
-    consumers: PropTypes.object.isRequired
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中

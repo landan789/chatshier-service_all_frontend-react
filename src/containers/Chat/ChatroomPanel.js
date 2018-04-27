@@ -53,7 +53,11 @@ class ChatroomPanel extends React.Component {
     }
 
     componentDidUpdate() {
-        this.scrollToBottom();
+        return new Promise((resolve) => {
+            window.setTimeout(resolve, 200);
+        }).then(() => {
+            this.scrollToBottom();
+        });
     }
 
     scrollToBottom() {

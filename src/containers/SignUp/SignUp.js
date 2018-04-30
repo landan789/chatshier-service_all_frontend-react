@@ -12,6 +12,7 @@ import apiSign from '../../helpers/apiSign/index';
 import regex from '../../utils/regex';
 import { notify } from '../../components/Notify/Notify';
 
+import logoPng from '../../image/logo.png';
 import './SignUp.css';
 
 const URL = window.urlConfig || urlConfig;
@@ -164,7 +165,7 @@ class SignUp extends React.Component {
             <Fade in className="signup-container w-100">
                 <div className="col-12 text-center logo-container">
                     <a className="chatshier-logo" href={wwwUrl}>
-                        <img alt="Chatshier-logo" src="image/logo.png" />
+                        <img alt="Chatshier-logo" src={logoPng} />
                     </a>
                 </div>
 

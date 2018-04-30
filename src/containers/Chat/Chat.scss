@@ -54,7 +54,7 @@ $watermark-text-color: #8e8e8e;
             height: 100%;
             opacity: .5;
             background-color: transparent;
-            background-image: url('/image/logo.png');
+            background-image: url('../../image/logo.png');
             background-position: center calc(50% - #{$watermark-size / 4});
             background-size: contain;
             background-repeat: no-repeat;

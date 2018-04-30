@@ -13,6 +13,7 @@ import regex from '../../utils/regex';
 
 import { notify } from '../../components/Notify/Notify';
 
+import logoPng from '../../image/logo.png';
 import './SignIn.css';
 
 const USER_FAILED_TO_FIND = 'user failed to find';
@@ -125,7 +126,7 @@ class SignIn extends React.Component {
             <Fade in className="signin-container w-100">
                 <div className="col-12 text-center logo-container">
                     <a className="chatshier-logo" href={wwwUrl}>
-                        <img alt="Chatshier-logo" src="image/logo.png" />
+                        <img alt="Chatshier-logo" src={logoPng} />
                     </a>
                 </div>
 

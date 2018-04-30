@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import Switch from 'react-switch';
 
 import { CLIENT_ID, SCOPES } from '../../../config/google-app';
+
+import googleCalendarPng from '../../../image/google-calendar.png';
 import './Integration.css';
 
 let isGoogleapiLoaded = false;
@@ -108,7 +110,7 @@ class Integration extends React.Component {
                     <div className="row">
                         <div className="col-2 content">
                             <div className="box-border">
-                                <img className="google-calendar" src="/image/google-calendar.png" />
+                                <img className="google-calendar" src={googleCalendarPng} alt="" />
                                 <br/>
                                 <span className="title">Google Calendar</span>
                                 <br/>

@@ -9,6 +9,7 @@ import { MINUTE } from '../../utils/unitTime';
 
 import Message from './Message';
 
+import sendBtnSvg from '../../image/send-btn.svg';
 import './ChatroomPanel.css';
 
 const LINE = 'LINE';
@@ -221,7 +222,7 @@ class ChatroomPanel extends React.Component {
                             value={this.state.messageText}
                             onChange={this.onMessageChange}
                             onKeyDown={(ev) => (13 === ev.keyCode) && this.sendMessage()} />
-                        <img className="submit-message-btn p-0 ml-2" src="/image/send-btn.svg" alt="" onClick={this.sendMessage} />
+                        <img className="submit-message-btn p-0 ml-2" src={sendBtnSvg} alt="" onClick={this.sendMessage} />
                     </div>
                 </div>
             </div>

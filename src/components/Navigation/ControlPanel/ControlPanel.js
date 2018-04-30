@@ -16,6 +16,9 @@ import { putAwayPanel } from '../../../redux/actions/controlPanelStore/isPutAway
 import { selectChatroom } from '../../../redux/actions/controlPanelStore/selectedChatroom';
 import EdgeToggle from '../EdgeToggle/EdgeToggle';
 
+import logoPng from '../../../image/logo-no-transparent.png';
+import logoSmallPng from '../../../image/logo-small.png';
+import groupPng from '../../../image/group.png';
 import './ControlPanel.css';
 
 const LINE = 'LINE';
@@ -26,7 +29,6 @@ const CHATSHIER = 'CHATSHIER';
 const LINE_LOGO = 'https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg';
 const FACEBOOK_LOGO = 'https://facebookbrand.com/wp-content/themes/fb-branding/prj-fb-branding/assets/images/fb-art.png';
 // const WECHAT_LOGO = 'https://cdn.worldvectorlogo.com/logos/wechat.svg';
-const CHATSHIER_LOGO = '/image/logo-no-transparent.png';
 
 const linkItems = [
     {
@@ -280,7 +282,7 @@ class ControlPanel extends React.Component {
                 if (CHATSHIER === app.type) {
                     messagerItems.push(
                         <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
-                            <img className="app-icon consumer-photo" src="/image/group.png" alt="無法顯示相片" />
+                            <img className="app-icon consumer-photo" src={groupPng} alt="無法顯示相片" />
                             <span className="app-name">群組聊天室</span>
                             <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messager.unRead ? ' d-none' : '')}>{unReadStr}</span>
                         </ListGroupItem>
@@ -359,7 +361,7 @@ class ControlPanel extends React.Component {
                 </ListGroupItem>
                 <Collapse isOpen={!itemCollapse['facebookCollapse']} className="nested app-types">{facebookItems}</Collapse>
                 <ListGroupItem className="text-light nested has-collapse" onClick={() => this.toggleItem('chatshierCollapse')}>
-                    <img className="app-icon" src={CHATSHIER_LOGO} alt="Chatshier"/>
+                    <img className="app-icon" src={logoPng} alt="Chatshier"/>
                     <span>CHATSHIER</span>
                     <i className={'ml-auto py-1 fas ' + (itemCollapse['chatshierCollapse'] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
                 </ListGroupItem>
@@ -455,7 +457,7 @@ class ControlPanel extends React.Component {
                             <ListGroup className={('detail-list ' + (isPutAway ? 'd-none' : '')).trim()}>
                                 <ListGroupItem className="text-light" onClick={() => this.linkTo()}>
                                     <div className="p-1 ctrl-panel-logo">
-                                        <img className="w-100 h-100" src="/image/logo-small.png" alt="" />
+                                        <img className="w-100 h-100" src={logoSmallPng} alt="" />
                                     </div>
                                     <span className="ctrl-panel-title">Chatshier</span>
                                     <i className={classes.menuToggle}></i>
@@ -481,7 +483,7 @@ class ControlPanel extends React.Component {
                                     <Collapse className="nested" isOpen={!itemCollapse['CHATBOT_' + FACEBOOK]}>{facebookApps}</Collapse>
 
                                     <ListGroupItem className="text-light" onClick={() => this.toggleItem('CHATBOT_' + CHATSHIER)}>
-                                        <img className="app-icon" src="/image/logo-no-transparent.png" alt="Chatshier" />
+                                        <img className="app-icon" src={logoPng} alt="Chatshier" />
                                         <span>{CHATSHIER}</span>
                                         <i className={'ml-auto fas ' + (itemCollapse['CHATBOT_' + CHATSHIER] ? 'fa-chevron-down' : 'fa-chevron-up')}></i>
                                     </ListGroupItem>
@@ -498,7 +500,7 @@ class ControlPanel extends React.Component {
                             <ListGroup className={('detail-list ' + (isPutAway ? 'd-none' : '')).trim()}>
                                 <ListGroupItem className="text-light" onClick={() => this.linkTo()}>
                                     <div className="p-1 ctrl-panel-logo">
-                                        <img className="w-100 h-100" src="/image/logo-small.png" alt="" />
+                                        <img className="w-100 h-100" src={logoSmallPng} alt="" />
                                     </div>
                                     <span className="ctrl-panel-title">Chatshier</span>
                                     <i className={classes.menuToggle}></i>
@@ -515,7 +517,7 @@ class ControlPanel extends React.Component {
                             <ListGroup className={('simple-list animated slideInRight ' + (isPutAway ? '' : 'd-none')).trim()}>
                                 <ListGroupItem className="mb-3 px-0 text-light">
                                     <div className="p-1 mx-auto ctrl-panel-logo">
-                                        <img className="w-100 h-100" src="/image/logo-small.png" alt="" />
+                                        <img className="w-100 h-100" src={logoSmallPng} alt="" />
                                     </div>
                                 </ListGroupItem>
                                 <ListGroupItem className="px-0 text-light text-center" onClick={this.putAwayControlPanel}>

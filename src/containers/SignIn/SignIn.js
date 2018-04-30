@@ -187,18 +187,16 @@ class SignIn extends React.Component {
                                 <div className="text-center signin-trouble">
                                     <Route render={(router) => (
                                         <p>
-                                            忘記密碼？請按
-                                            <span className="link-text" onClick={() => {}}>這裡</span>
-                                            重設密碼。
+                                            <span>忘記密碼？請按</span>
+                                            <span className="mx-1 link-text" onClick={() => {}}>重設密碼</span>
                                         </p>
                                     )}></Route>
                                     <Route render={(router) => (
                                         <p>
-                                            還沒有帳號嗎請按
-                                            <span className="link-text" onClick={() => {
+                                            <span>還沒有帳號嗎請按</span>
+                                            <span className="mx-1 link-text" onClick={() => {
                                                 router.history.push(ROUTES.SIGNUP);
-                                            }}>這裡</span>
-                                            註冊。
+                                            }}>註冊</span>
                                         </p>
                                     )}></Route>
                                 </div>

@@ -171,7 +171,7 @@ class SignUp extends React.Component {
                 <div className="mx-auto col-md-12 col-lg-6">
                     <div className="row justify-content-center">
                         <div className="form-container col-12 col-sm-10 col-md-8 col-lg-12">
-                            <h2 className="text-center signup-title">開始體驗您的Chatshier</h2>
+                            <h2 className="text-center signup-title">開始體驗您的 Chatshier</h2>
                             <p className="text-center lead">不需付費。馬上體驗聊天功能。</p>
                             <form className="signup-form" onSubmit={this.checkInputs}>
                                 <fieldset>
@@ -264,18 +264,17 @@ class SignUp extends React.Component {
                                 </fieldset>
                                 <div className="text-center signup-option">
                                     <p>
-                                        我同意 Chatshier
-                                        <a className="link-text" href="https://www.chatshier.com/terms.html" target="_blank" rel="noopener noreferrer">服務條款</a>
-                                            &amp;
-                                        <a className="link-text" href="https://www.chatshier.com/privacy.html" target="_blank" rel="noopener noreferrer">隱私權條款</a>
+                                        <span>我同意 Chatshier</span>
+                                        <a className="mx-1 link-text" href="https://www.chatshier.com/terms.html" target="_blank" rel="noopener noreferrer">服務條款</a>
+                                        <span>&amp;</span>
+                                        <a className="mx-1 link-text" href="https://www.chatshier.com/privacy.html" target="_blank" rel="noopener noreferrer">隱私權條款</a>
                                     </p>
                                     <Route render={(router) => (
                                         <p>
-                                            已經有帳號了嗎？請按
-                                            <span className="link-text" onClick={() => {
+                                            <span>已經有帳號了嗎？請按</span>
+                                            <span className="mx-1 link-text" onClick={() => {
                                                 router.history.push('/signin');
-                                            }}>這裡</span>
-                                            登入。
+                                            }}>登入</span>
                                         </p>
                                     )}></Route>
                                 </div>

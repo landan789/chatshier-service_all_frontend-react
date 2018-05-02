@@ -55,7 +55,7 @@ class ChatroomPanel extends React.Component {
 
     componentDidUpdate() {
         return new Promise((resolve) => {
-            window.setTimeout(resolve, 200);
+            window.setTimeout(resolve, 1);
         }).then(() => {
             this.scrollToBottom();
         });
@@ -126,8 +126,6 @@ class ChatroomPanel extends React.Component {
 
         let className = ((this.props.className || '') + ' chatroom-panel').trim();
         let messageIds = Object.keys(messages);
-
-        console.log(JSON.stringify(messages[messageIds[messageIds.length - 1]], void 0, 2));
 
         // 根據發送的時間從早到晚排序
         messageIds.sort((a, b) => new Date(messages[a].time).getTime() - new Date(messages[b].time).getTime());

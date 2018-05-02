@@ -26,9 +26,12 @@ const FACEBOOK = 'FACEBOOK';
 const WECHAT = 'WECHAT';
 const CHATSHIER = 'CHATSHIER';
 
-const LINE_LOGO = 'https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg';
-const FACEBOOK_LOGO = 'https://facebookbrand.com/wp-content/themes/fb-branding/prj-fb-branding/assets/images/fb-art.png';
-// const WECHAT_LOGO = 'https://cdn.worldvectorlogo.com/logos/wechat.svg';
+const logos = {
+    [LINE]: 'https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg',
+    [FACEBOOK]: 'https://facebookbrand.com/wp-content/themes/fb-branding/prj-fb-branding/assets/images/fb-art.png',
+    [WECHAT]: 'https://cdn.worldvectorlogo.com/logos/wechat.svg',
+    [CHATSHIER]: logoPng
+};
 
 const linkItems = [
     {
@@ -275,25 +278,28 @@ class ControlPanel extends React.Component {
 
             let messagerItems = [];
             for (let chatroomId in chatrooms) {
-                let messager = this._findChatroomMessager(appId, chatroomId, app.type);
-                let unReadStr = messager.unRead > 99 ? '99+' : ('' + messager.unRead);
-                let platformUid = messager.platformUid;
+                let chatroom = chatrooms[chatroomId];
+                let messagerSelf = this._findMessagerSelf(appId, chatroomId);
+                let unReadStr = messagerSelf.unRead > 99 ? '99+' : ('' + messagerSelf.unRead);
 
-                if (CHATSHIER === app.type) {
+                let isGroupChatroom = CHATSHIER === app.type || !!chatroom.platformGroupId;
+                if (isGroupChatroom) {
                     messagerItems.push(
                         <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
-                            <img className="app-icon consumer-photo" src={groupPng} alt="無法顯示相片" />
+                            <img className="app-icon consumer-photo" src={CHATSHIER === app.type ? groupPng : logos[app.type]} alt="無法顯示相片" />
                             <span className="app-name">群組聊天室</span>
-                            <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messager.unRead ? ' d-none' : '')}>{unReadStr}</span>
+                            <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')}>{unReadStr}</span>
                         </ListGroupItem>
                     );
                 } else {
+                    let messager = this._findChatroomMessager(appId, chatroomId, app.type);
+                    let platformUid = messager.platformUid;
                     let consumer = this.props.consumers[platformUid];
                     messagerItems.push(
                         <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
                             <img className="app-icon consumer-photo" src={consumer.photo} alt="無法顯示相片" />
                             <span className="app-name">{consumer.name}</span>
-                            <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messager.unRead ? ' d-none' : '')}>{unReadStr}</span>
+                            <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')}>{unReadStr}</span>
                         </ListGroupItem>
                     );
                 }
@@ -349,19 +355,19 @@ class ControlPanel extends React.Component {
                 </ListGroupItem>
                 <Collapse isOpen={itemCollapse['unassignedCollapse']} className="nested unassigned">{unassignedItems}</Collapse>
                 <ListGroupItem className="text-light nested has-collapse" onClick={() => this.toggleItem('lineCollapse')}>
-                    <img className="app-icon" src={LINE_LOGO} alt="LINE" />
+                    <img className="app-icon" src={logos[LINE]} alt="LINE" />
                     <span>LINE</span>
                     <i className={'ml-auto py-1 fas ' + (itemCollapse['lineCollapse'] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
                 </ListGroupItem>
                 <Collapse isOpen={!itemCollapse['lineCollapse']} className="nested app-types">{lineItems}</Collapse>
                 <ListGroupItem className="text-light nested has-collapse" onClick={() => this.toggleItem('facebookCollapse')}>
-                    <img className="app-icon" src={FACEBOOK_LOGO} alt="Facebook" />
+                    <img className="app-icon" src={logos[FACEBOOK]} alt="Facebook" />
                     <span>FACEBOOK</span>
                     <i className={'ml-auto py-1 fas ' + (itemCollapse['facebookCollapse'] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
                 </ListGroupItem>
                 <Collapse isOpen={!itemCollapse['facebookCollapse']} className="nested app-types">{facebookItems}</Collapse>
                 <ListGroupItem className="text-light nested has-collapse" onClick={() => this.toggleItem('chatshierCollapse')}>
-                    <img className="app-icon" src={logoPng} alt="Chatshier"/>
+                    <img className="app-icon" src={logos[CHATSHIER]} alt="Chatshier"/>
                     <span>CHATSHIER</span>
                     <i className={'ml-auto py-1 fas ' + (itemCollapse['chatshierCollapse'] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
                 </ListGroupItem>
@@ -546,6 +552,37 @@ class ControlPanel extends React.Component {
         );
     }
 
+    /**
+     * @param {string} appId
+     * @param {string} chatroomId
+     */
+    _findMessagerSelf(appId, chatroomId) {
+        let chatrooms = this.props.appsChatrooms[appId].chatrooms;
+        let messagers = chatrooms[chatroomId].messagers;
+        let userId = authHelper.userId;
+
+        for (let messagerId in messagers) {
+            let messager = messagers[messagerId];
+            if (userId === messager.platformUid) {
+                return messager;
+            }
+        }
+
+        // 前端暫時用的資料，不會儲存至資料庫
+        let _messagerSelf = {
+            type: CHATSHIER,
+            platformUid: userId,
+            unRead: 0
+        };
+        messagers[userId] = _messagerSelf;
+        return _messagerSelf;
+    }
+
+    /**
+     * @param {string} appId
+     * @param {string} chatroomId
+     * @param {string} appType
+     */
     _findChatroomMessager(appId, chatroomId, appType) {
         let chatroom = this.props.appsChatrooms[appId].chatrooms[chatroomId];
         let messagers = chatroom.messagers;

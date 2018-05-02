@@ -21,7 +21,17 @@ export const appsChatroomsReducer = (state = {}, action) => {
                     if (chatroom.isDeleted) {
                         continue;
                     }
-                    state[appId].chatrooms[chatroomId] = chatroom;
+
+                    let stateChatroom = state[appId].chatrooms[chatroomId] || {};
+                    for (let prop in chatroom) {
+                        if ('object' !== typeof chatroom[prop]) {
+                            stateChatroom[prop] = chatroom[prop];
+                        } else {
+                            stateChatroom[prop] = stateChatroom[prop] || {};
+                            Object.assign(stateChatroom[prop], chatroom[prop]);
+                        }
+                    }
+                    state[appId].chatrooms[chatroomId] = stateChatroom;
                 }
             }
             return Object.assign({}, state);
@@ -47,7 +57,6 @@ export const appsChatroomsReducer = (state = {}, action) => {
             for (let messageId in messages) {
                 let message = messages[messageId];
                 state[appId].chatrooms[chatroomId].messages[messageId] = message;
-                console.log(state[appId].chatrooms[chatroomId].messages[messageId]);
             }
             return Object.assign({}, state);
         default:

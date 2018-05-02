@@ -3,7 +3,7 @@ import SOCKET_EVENTS from '../config/socket-events';
 import urlConfig from '../config/url';
 
 import mainStore from '../redux/mainStore';
-import { updateChatroomsMessagers, updateChatroomsMessages } from '../redux/actions/mainStore/appsChatrooms';
+import { updateChatrooms, updateChatroomsMessagers, updateChatroomsMessages } from '../redux/actions/mainStore/appsChatrooms';
 import { updateConsumers } from '../redux/actions/mainStore/consumers';
 
 const SOCKET_NAMESPACE = '/chatshier';
@@ -90,9 +90,9 @@ class SocketHelper {
 
             let appId = socketBody.app_id;
             let chatroomId = socketBody.chatroom_id;
+            let chatroomFromSocket = socketBody.chatroom;
             /** @type {Chatshier.ChatroomMessage[]} */
             let messages = socketBody.messages;
-            let messagersFromSocket = socketBody.messagers;
             let consumersFromSocket = socketBody.consumers;
 
             // 根據發送的時間從早到晚排序
@@ -102,8 +102,15 @@ class SocketHelper {
                 mainStore.dispatch(updateConsumers(consumersFromSocket));
             }
 
-            if (messagersFromSocket) {
-                mainStore.dispatch(updateChatroomsMessagers(appId, chatroomId, messagersFromSocket));
+            if (chatroomFromSocket) {
+                let appsChatrooms = {
+                    [appId]: {
+                        chatrooms: {
+                            [chatroomId]: chatroomFromSocket
+                        }
+                    }
+                };
+                mainStore.dispatch(updateChatrooms(appsChatrooms));
             }
 
             let messagesFromSocket = messages.reduce((output, message) => {

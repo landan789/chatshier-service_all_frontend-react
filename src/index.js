@@ -17,6 +17,7 @@ import Chat from './containers/Chat/Chat';
 import Composes from './containers/Composes/Composes';
 import Greetings from './containers/Greetings/Greetings';
 import Keywordreplies from './containers/Keywordreplies/Keywordreplies';
+import ResetPassword from './containers/ResetPassword/ResetPassword';
 import Settings from './containers/Settings/Settings';
 import SignIn from './containers/SignIn/SignIn';
 import SignOut from './containers/SignOut/SignOut';
@@ -59,6 +60,10 @@ const routes = [
     }, {
         path: ROUTES.KEYWORDREPLIES,
         component: Keywordreplies,
+        exact: true
+    }, {
+        path: ROUTES.RESET_PASSWORD,
+        component: ResetPassword,
         exact: true
     }, {
         path: ROUTES.SETTINGS,

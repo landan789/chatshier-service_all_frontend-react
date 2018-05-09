@@ -109,7 +109,7 @@ class SignUp extends React.Component {
     signup(name, email, password) {
         this.setState({
             isSignUping: true,
-            signupBtnHtml: '<i class="fas fa-circle-notch fa-spin"></i> 註冊中...'
+            signupBtnHtml: '<i class="fas fa-circle-notch fa-fw fa-spin"></i>註冊中...'
         });
 
         let user = {
@@ -128,8 +128,8 @@ class SignUp extends React.Component {
             setJWT(jwt);
             authHelper.activateRefreshToken();
 
-            // this.props.history.replace(ROUTES.CHAT);
-            window.location.replace(ROUTES.CHAT);
+            // this.props.history.replace(ROUTES.SETTINGS);
+            window.location.replace(ROUTES.SETTINGS);
         }).catch((err) => {
             this.setState({
                 isSignUping: false,

@@ -6,6 +6,7 @@ const ROUTES = {
     COMPOSES: '/composes',
     GREETINGS: '/greetings',
     KEYWORDREPLIES: '/keywordreplies',
+    RESET_PASSWORD: '/reset-password',
     SIGNIN: '/signin',
     SIGNUP: '/signup',
     SIGNOUT: '/signout',

@@ -6,120 +6,121 @@ import { Fade } from 'reactstrap';
 import ROUTES from '../../config/route';
 import urlConfig from '../../config/url';
 import browserHelper from '../../helpers/browser';
-import authHelper from '../../helpers/authentication';
 import apiSign from '../../helpers/apiSign/index';
-import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
-import { setJWT } from '../../helpers/apiDatabase/index';
+import cookieHelper from '../../helpers/cookie';
 import regex from '../../utils/regex';
 
 import { notify } from '../../components/Notify/Notify';
+import GoogleRecaptcha from '../../components/GoogleRecaptcha/GoogleRecaptcha';
 
-import './SignIn.css';
+import './ResetPassword.css';
 
-const USER_FAILED_TO_FIND = 'user failed to find';
-const PASSWORD_WAS_INCORRECT = 'password was incorrect';
 const URL = window.urlConfig || urlConfig;
 const wwwUrl = URL.wwwUrl
     ? URL.wwwUrl + (80 !== URL.port ? ':' + URL.port : '')
     : window.location.protocol + '//' + document.domain.replace(regex.domainPrefix, 'www.');
 
-class SignIn extends React.Component {
+const PASSWORD_FAILED_TO_RESET = '2.3';
+const USER_FAILED_TO_FIND = '3.1';
+
+class ResetPassword extends React.Component {
+    static propTypes = {
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props, context) {
         super(props, context);
 
         this.state = {
-            isSignIning: false,
-            signInBtnHtml: '登入',
             email: '',
-            password: ''
+            recaptchaResponse: '',
+            isProcessing: false,
+            resetBtnHtml: '重設密碼'
         };
 
+        /** @type {GoogleRecaptcha} */
+        this.recaptchaCmp = null;
+
         this.emailChanged = this.emailChanged.bind(this);
-        this.pwChanged = this.pwChanged.bind(this);
+        this.recaptchaResponseChanged = this.recaptchaResponseChanged.bind(this);
         this.checkInputs = this.checkInputs.bind(this);
     }
 
     componentWillMount() {
-        browserHelper.setTitle('登入');
+        browserHelper.setTitle('重設密碼');
 
         if (cookieHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }
     }
-
     emailChanged(ev) {
         this.setState({ email: ev.target.value });
     }
 
-    pwChanged(ev) {
-        this.setState({ password: ev.target.value });
+    recaptchaResponseChanged(recaptchaResponse) {
+        this.setState({ recaptchaResponse: recaptchaResponse });
     }
 
     checkInputs(ev) {
         ev && ev.preventDefault();
-        if (this.state.isSignIning) {
+        if (this.state.isProcessing) {
             return;
         }
 
         let email = this.state.email;
-        let pw = this.state.password;
-
+        let recaptchaResponse = this.state.recaptchaResponse;
         if (!regex.emailStrict.test(email)) {
             return notify('無效電子郵件', { type: 'warning' });
-        } else if (!pw) {
-            return notify('請輸入密碼', { type: 'warning' });
+        } else if (!recaptchaResponse) {
+            return notify('請執行驗證動作', { type: 'warning' });
         }
 
-        return this.signIn(email, pw);
+        return this.forgetPassword(email, recaptchaResponse);
     }
 
-    signIn(email, password) {
+    /**
+     * @param {string} email
+     * @param {string} recaptchaResponse
+     */
+    forgetPassword(email, recaptchaResponse) {
         this.setState({
-            isSignIning: true,
-            signInBtnHtml: '<i class="fas fa-circle-notch fa-fw fa-spin"></i>登入中...'
+            isProcessing: true,
+            resetBtnHtml: '<i class="fas fa-circle-notch fa-fw fa-spin"></i>處理中...'
         });
 
         let user = {
             email: email,
-            password: password
+            recaptchaResponse: recaptchaResponse
         };
-
-        return apiSign.signIn.do(user).then((response) => {
-            let jwt = response.jwt;
-            let users = response.data;
-            let userId = Object.keys(users).shift();
-            let _user = users[userId];
-
-            cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
-            cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
-            setJWT(jwt);
-            authHelper.activateRefreshToken();
-
-            // this.props.history.replace(ROUTES.CHAT);
-            window.location.replace(ROUTES.CHAT);
+        return apiSign.resetPassword.do(user).then(() => {
+            this.setState({
+                isProcessing: false,
+                resetBtnHtml: '重設密碼'
+            });
+            return notify('已發送 email 至您的信箱', { type: 'success' });
+        }).then(() => {
+            this.props.history.replace(ROUTES.SIGNIN);
         }).catch((err) => {
             this.setState({
-                isSignIning: false,
-                signInBtnHtml: '登入'
+                isProcessing: false,
+                resetBtnHtml: '重設密碼'
             });
+            this.recaptchaCmp && this.recaptchaCmp.resetWidget();
 
-            switch (err.msg) {
+            switch (err.code) {
+                case PASSWORD_FAILED_TO_RESET:
+                    return notify('不合法的驗證碼，請重新進行驗證動作！', { type: 'danger' });
                 case USER_FAILED_TO_FIND:
-                    notify('找不到使用者', { type: 'danger' });
-                    break;
-                case PASSWORD_WAS_INCORRECT:
-                    notify('密碼錯誤！', { type: 'danger' });
-                    break;
+                    return notify('找不到使用者！', { type: 'danger' });
                 default:
-                    notify('錯誤！', { type: 'danger' });
-                    break;
+                    return notify('處理失敗！', { type: 'danger' });
             }
         });
     }
 
     render() {
         return (
-            <Fade in className="signin-container w-100">
+            <Fade in className="reset-container w-100">
                 <div className="col-12 text-center logo-container">
                     <a className="chatshier-logo" href={wwwUrl}>
                         <img alt="Chatshier-logo" src="image/logo.png" />
@@ -129,8 +130,8 @@ class SignIn extends React.Component {
                 <div className="mx-auto col-md-12 col-lg-6">
                     <div className="row justify-content-center">
                         <div className="form-container col-12 col-sm-10 col-md-8 col-lg-12">
-                            <h2 className="text-center signin-title">登入</h2>
-                            <form className="signin-form" onSubmit={this.checkInputs}>
+                            <h2 className="text-center reset-title">重設密碼</h2>
+                            <form className="reset-form" onSubmit={this.checkInputs}>
                                 <fieldset>
                                     <div className="form-group padding-left-right">
                                         <div className="input-group">
@@ -149,42 +150,22 @@ class SignIn extends React.Component {
                                                 required />
                                         </div>
                                     </div>
-                                    <div className="form-group padding-left-right">
-                                        <div className="input-group">
-                                            <div className="chsr input-group-prepend">
-                                                <span className="input-group-text w-100 justify-content-center">
-                                                    <i className="fas fa-lock"></i>
-                                                </span>
-                                            </div>
-                                            <input
-                                                type="password"
-                                                className="form-control"
-                                                placeholder="密碼"
-                                                value={this.state.password}
-                                                onChange={this.pwChanged}
-                                                required />
-                                        </div>
-                                    </div>
+                                    <GoogleRecaptcha className="padding-left-right"
+                                        onResponse={this.recaptchaResponseChanged}
+                                        ref={(cmp) => (this.recaptchaCmp = cmp)}>
+                                    </GoogleRecaptcha>
                                     <div className="form-group padding-left-right">
                                         <div className="controls">
                                             <button
                                                 type="submit"
                                                 className="btn btn-info"
-                                                disabled={this.state.isSignIning}
-                                                dangerouslySetInnerHTML={{__html: this.state.signInBtnHtml}}>
+                                                disabled={this.state.isProcessing}
+                                                dangerouslySetInnerHTML={{__html: this.state.resetBtnHtml}}>
                                             </button>
                                         </div>
                                     </div>
                                 </fieldset>
-                                <div className="text-center signin-trouble">
-                                    <Route render={(router) => (
-                                        <p>
-                                            <span>忘記密碼？請按</span>
-                                            <span className="mx-1 link-text" onClick={() => {
-                                                router.history.push(ROUTES.RESET_PASSWORD);
-                                            }}>重設密碼</span>
-                                        </p>
-                                    )}></Route>
+                                <div className="text-center reset-trouble">
                                     <Route render={(router) => (
                                         <p>
                                             <span>還沒有帳號嗎請按</span>
@@ -203,8 +184,4 @@ class SignIn extends React.Component {
     }
 }
 
-SignIn.propTypes = {
-    history: PropTypes.object.isRequired
-};
-
-export default withRouter(SignIn);
+export default withRouter(ResetPassword);

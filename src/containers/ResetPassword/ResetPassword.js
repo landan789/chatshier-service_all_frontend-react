@@ -4,21 +4,16 @@ import { Route, withRouter } from 'react-router-dom';
 import { Fade } from 'reactstrap';
 
 import ROUTES from '../../config/route';
-import urlConfig from '../../config/url';
 import browserHelper from '../../helpers/browser';
 import apiSign from '../../helpers/apiSign/index';
 import cookieHelper from '../../helpers/cookie';
 import regex from '../../utils/regex';
 
+import SignForm from '../../components/SignForm/SignForm';
 import { notify } from '../../components/Notify/Notify';
 import GoogleRecaptcha from '../../components/GoogleRecaptcha/GoogleRecaptcha';
 
 import './ResetPassword.css';
-
-const URL = window.urlConfig || urlConfig;
-const wwwUrl = URL.wwwUrl
-    ? URL.wwwUrl + (80 !== URL.port ? ':' + URL.port : '')
-    : window.location.protocol + '//' + document.domain.replace(regex.domainPrefix, 'www.');
 
 const PASSWORD_FAILED_TO_RESET = '2.3';
 const USER_FAILED_TO_FIND = '3.1';
@@ -99,7 +94,7 @@ class ResetPassword extends React.Component {
             });
             return notify('已發送 email 至您的信箱', { type: 'success' });
         }).then(() => {
-            this.props.history.replace(ROUTES.SIGNIN);
+            this.props.history.push(ROUTES.SIGNIN);
         }).catch((err) => {
             this.setState({
                 isProcessing: false,
@@ -121,64 +116,51 @@ class ResetPassword extends React.Component {
     render() {
         return (
             <Fade in className="reset-container w-100">
-                <div className="col-12 text-center logo-container">
-                    <a className="chatshier-logo" href={wwwUrl}>
-                        <img alt="Chatshier-logo" src="image/logo.png" />
-                    </a>
-                </div>
-
-                <div className="mx-auto col-md-12 col-lg-6">
-                    <div className="row justify-content-center">
-                        <div className="form-container col-12 col-sm-10 col-md-8 col-lg-12">
-                            <h2 className="text-center reset-title">重設密碼</h2>
-                            <form className="reset-form" onSubmit={this.checkInputs}>
-                                <fieldset>
-                                    <div className="form-group padding-left-right">
-                                        <div className="input-group">
-                                            <div className="chsr input-group-prepend">
-                                                <span className="input-group-text w-100 justify-content-center">
-                                                    <i className="fas fa-envelope"></i>
-                                                </span>
-                                            </div>
-                                            <input
-                                                type="email"
-                                                className="form-control"
-                                                pattern={regex.emailWeak.source}
-                                                placeholder="電子郵件"
-                                                value={this.state.email}
-                                                onChange={this.emailChanged}
-                                                required />
-                                        </div>
-                                    </div>
-                                    <GoogleRecaptcha className="padding-left-right"
-                                        onResponse={this.recaptchaResponseChanged}
-                                        ref={(cmp) => (this.recaptchaCmp = cmp)}>
-                                    </GoogleRecaptcha>
-                                    <div className="form-group padding-left-right">
-                                        <div className="controls">
-                                            <button
-                                                type="submit"
-                                                className="btn btn-info"
-                                                disabled={this.state.isProcessing}
-                                                dangerouslySetInnerHTML={{__html: this.state.resetBtnHtml}}>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                                <div className="text-center reset-trouble">
-                                    <Route render={(router) => (
-                                        <p>
-                                            <span>還沒有帳號嗎請按</span>
-                                            <span className="mx-1 link-text" onClick={() => {
-                                                router.history.push(ROUTES.SIGNUP);
-                                            }}>註冊</span>
-                                        </p>
-                                    )}></Route>
+                <SignForm title="重設密碼" onSubmit={this.checkInputs}>
+                    <fieldset>
+                        <div className="form-group">
+                            <div className="input-group">
+                                <div className="chsr input-group-prepend">
+                                    <span className="input-group-text w-100 justify-content-center">
+                                        <i className="fas fa-envelope"></i>
+                                    </span>
                                 </div>
-                            </form>
+                                <input
+                                    type="email"
+                                    className="form-control"
+                                    pattern={regex.emailWeak.source}
+                                    placeholder="電子郵件"
+                                    value={this.state.email}
+                                    onChange={this.emailChanged}
+                                    required />
+                            </div>
                         </div>
+                        <GoogleRecaptcha className="form-group"
+                            onResponse={this.recaptchaResponseChanged}
+                            ref={(cmp) => (this.recaptchaCmp = cmp)}>
+                        </GoogleRecaptcha>
+                        <div className="form-group">
+                            <div className="controls">
+                                <button
+                                    type="submit"
+                                    className="btn btn-info"
+                                    disabled={this.state.isProcessing}
+                                    dangerouslySetInnerHTML={{__html: this.state.resetBtnHtml}}>
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div className="my-4 text-center">
+                        <Route render={(router) => (
+                            <p>
+                                <span>還沒有帳號嗎？請按</span>
+                                <span className="mx-1 link-text" onClick={() => {
+                                    router.history.push(ROUTES.SIGNUP);
+                                }}>註冊</span>
+                            </p>
+                        )}></Route>
                     </div>
-                </div>
+                </SignForm>
             </Fade>
         );
     }

@@ -1,6 +1,7 @@
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import SignOut from './SignOut';
+import ChangePassword from './ChangePassword';
 import ResetPassword from './ResetPassword';
 import Refresh from './refresh';
 
@@ -11,6 +12,7 @@ const apiSign = {
     signIn: new SignIn(),
     signUp: new SignUp(),
     signOut: new SignOut(),
+    changePassword: new ChangePassword(),
     resetPassword: new ResetPassword(),
     refresh: new Refresh()
 };

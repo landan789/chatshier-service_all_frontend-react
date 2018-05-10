@@ -2,8 +2,6 @@
 @import '../../styles/_variables';
 
 $_signin-bg-color: $primary-color;
-$_signin-logo-width: 4rem;
-$_signin-logo-height: 4rem;
 
 .signin-container {
     height: 100%;
@@ -18,71 +16,16 @@ $_signin-logo-height: 4rem;
         height: 100%;
         background: linear-gradient($_signin-bg-color 40%, #fff 60%);
     }
-
-    .chsr.input-group-prepend {
-        width: 3rem;
-    }
-
-    .padding-left-right {
-        padding: 0 2.5rem;
-    }
-
-    .logo-container {
-        margin-bottom: 0;
-    }
-
-    .chatshier-logo img {
-        width: $_signin-logo-width;
-        height: $_signin-logo-height;
-    }
     
-    .form-container {
-        max-width: 40rem;
-        margin: 1rem 0 2rem;
-        border: 1px solid #e5e5e5;
-        background-color: #fff;
-        border-radius: 1rem;
-        box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    }
-    
-    .signin-title {
-        margin: 3rem 0;
-    }
-
-    .signin-trouble {
-        margin: 2rem 0;
-
-        .link-text {
-            color: $primary-color;
-            cursor: pointer;
-        }
-    }
-
     @include media-phone() {
         & {
             padding: 2rem 1rem 0;
-        }
-
-        .padding-left-right {
-            padding: 0 1rem;
-        }
-
-        .signin-logo {
-            margin-bottom: 1.5rem;
         }
     }
 
     @include media-pad() {
         & {
             padding: 5rem 3rem 0;
-        }
-
-        .padding-left-right {
-            padding: 0 2rem;
-        }
-
-        .signin-logo {
-            margin-bottom: 2.5rem;
         }
     }
 }

@@ -1,0 +1,69 @@
+@import '../../styles/mixins/_mixins';
+@import '../../styles/_variables';
+
+$_sign-bg-color: $primary-color;
+$_sign-logo-width: 4rem;
+$_sign-logo-height: 4rem;
+
+.sign-logo-container {
+    margin-bottom: 0;
+
+    .chatshier-logo img {
+        width: $_sign-logo-width;
+        height: $_sign-logo-height;
+    }
+
+    @include media-phone() {
+        & {
+            margin-bottom: 1.5rem;
+        }
+    }
+
+    @include media-pad() {
+        & {
+            margin-bottom: 2.5rem;
+        }
+    }
+}
+
+    
+.form-container {
+    max-width: 40rem;
+    margin: 1rem 0 2rem;
+    border: 1px solid #e5e5e5;
+    background-color: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+    .sign-title {
+        margin: 3rem 0 1.5rem;
+    }
+
+    .sign-form {
+        .form-group {
+            padding: 0 2.5rem;
+        }
+
+        .chsr.input-group-prepend {
+            width: 3rem;
+        }
+    
+        .link-text {
+            color: $primary-color;
+            cursor: pointer;
+        }
+    
+        @include media-phone() {
+            .form-padding {
+                padding: 0 1rem;
+            }
+        }
+    
+        @include media-pad() {
+            .form-padding {
+                padding: 0 2rem;
+            }
+        }
+    }
+}
+

@@ -13,6 +13,7 @@ import mainStore from './redux/mainStore';
 import Analyze from './containers/Analyze/Analyze';
 import Autoreplies from './containers/Autoreplies/Autoreplies';
 import Calendar from './containers/Calendar/Calendar';
+import ChangePassword from './containers/ChangePassword/ChangePassword';
 import Chat from './containers/Chat/Chat';
 import Composes from './containers/Composes/Composes';
 import Greetings from './containers/Greetings/Greetings';
@@ -45,6 +46,10 @@ const routes = [
         path: ROUTES.CALENDAR,
         component: Calendar,
         exact: true
+    }, {
+        path: ROUTES.CHANGE_PASSWORD,
+        component: ChangePassword,
+        exact: false
     }, {
         path: ROUTES.CHAT,
         component: Chat,

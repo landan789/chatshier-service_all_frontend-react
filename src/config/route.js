@@ -2,6 +2,7 @@ const ROUTES = {
     ANALYZE: '/analyze',
     AUTOREPLIES: '/autoreplies',
     CALENDAR: '/calendar',
+    CHANGE_PASSWORD: '/change-password',
     CHAT: '/chat',
     COMPOSES: '/composes',
     GREETINGS: '/greetings',

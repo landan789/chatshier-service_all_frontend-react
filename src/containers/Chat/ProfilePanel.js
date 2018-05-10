@@ -11,9 +11,7 @@ class ProfilePanel extends React.Component {
 
     render() {
         return (
-            <div className="profile-panel">
-                profilePanel
-            </div>
+            <div className="profile-panel"></div>
         );
     }
 }

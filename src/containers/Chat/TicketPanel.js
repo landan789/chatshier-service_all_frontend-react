@@ -11,9 +11,7 @@ class TicketPanel extends React.Component {
 
     render() {
         return (
-            <div className="ticket-panel">
-                ticketPanel
-            </div>
+            <div className="ticket-panel"></div>
         );
     }
 }

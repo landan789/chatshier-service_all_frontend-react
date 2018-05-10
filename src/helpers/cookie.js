@@ -24,9 +24,10 @@ class CookieHelper {
      * @param {string} [val] - cookie 欄位數值
      * @param {string} [expires] - cookie 過期時間，預設為 1 年
      * @param {string} [domain] - cookie 可動作的網域，預設為 origin 的子網域
+     * @param {string} [path] - 可動作的 url 路徑
      * @returns {boolean} - cookie 是否設定成功
      */
-    setCookie(name, val, expires, domain) {
+    setCookie(name, val, expires, domain, path) {
         if (!name) {
             return false;
         }
@@ -34,8 +35,9 @@ class CookieHelper {
         val = val || '';
         expires = expires || new Date(Date.now() + YEAR).toUTCString();
         domain = domain || this.DEFAULT_DOMAIN;
+        path = path || '/';
 
-        document.cookie = name + '=' + encodeURIComponent(unescape(val)) + ';expires=' + expires + ';domain=' + domain;
+        document.cookie = name + '=' + encodeURIComponent(unescape(val)) + ';expires=' + expires + ';domain=' + domain + ';path=' + path;
         return true;
     }
 
@@ -86,15 +88,6 @@ class CookieHelper {
             }
         }
         return true;
-    }
-
-    /**
-     * @returns {boolean}
-     */
-    hasSignedin() {
-        return !!(this.getCookie(CHSR_COOKIE.USER_NAME) &&
-            this.getCookie(CHSR_COOKIE.USER_EMAIL) &&
-            window.localStorage.getItem('jwt'));
     }
 }
 

@@ -1,4 +1,4 @@
-import { UPDATE_USERS } from '../actions/users';
+import { UPDATE_USERS } from '../../actions/mainStore/users';
 
 export const usersReducer = (state = {}, action) => {
     switch (action.type) {

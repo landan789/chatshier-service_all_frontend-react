@@ -7,6 +7,12 @@ import authHelper from '../../../helpers/authentication';
 import apiDatabase from '../../../helpers/apiDatabase/index';
 
 class Group extends React.Component {
+    static propTypes = {
+        isOpen: PropTypes.bool.isRequired,
+        close: PropTypes.func.isRequired,
+        groups: PropTypes.object
+    }
+
     constructor(props) {
         super(props);
         this.state = { collapse: false };
@@ -29,7 +35,7 @@ class Group extends React.Component {
 
     render() {
         return (
-            <Modal size="lg" isOpen={this.props.isOpen} toggle={this.props.close} className="user-modal-content">
+            <Modal className="user-modal" size="lg" isOpen={this.props.isOpen} toggle={this.props.close}>
                 <ModalHeader toggle={this.props.close}></ModalHeader>
                 <ModalBody>
                     <div className="row">
@@ -54,12 +60,6 @@ class Group extends React.Component {
         );
     }
 }
-
-Group.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    close: PropTypes.func.isRequired,
-    groups: PropTypes.object
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     return {

@@ -6,7 +6,7 @@ import { Fade } from 'reactstrap';
 import ROUTES from '../../config/route';
 import browserHelper from '../../helpers/browser';
 import apiSign from '../../helpers/apiSign/index';
-import cookieHelper from '../../helpers/cookie';
+import authHelper from '../../helpers/authentication';
 import regex from '../../utils/regex';
 
 import SignForm from '../../components/SignForm/SignForm';
@@ -44,7 +44,7 @@ class ResetPassword extends React.Component {
     componentWillMount() {
         browserHelper.setTitle('重設密碼');
 
-        if (cookieHelper.hasSignedin()) {
+        if (authHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }
     }

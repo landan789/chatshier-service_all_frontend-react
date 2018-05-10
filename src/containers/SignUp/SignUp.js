@@ -8,7 +8,6 @@ import browserHelper from '../../helpers/browser';
 import authHelper from '../../helpers/authentication';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
 import apiSign from '../../helpers/apiSign/index';
-import { setJWT } from '../../helpers/apiDatabase/index';
 import regex from '../../utils/regex';
 
 import SignForm from '../../components/SignForm/SignForm';
@@ -33,6 +32,10 @@ const PASSWORD_WAS_EMPTY = 'password was empty';
 const USER_EMAIL_HAD_BEEN_SIGNED_UP = 'user email had been signed up';
 
 class SignUp extends React.Component {
+    static propTypes = {
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props) {
         super(props);
 
@@ -55,7 +58,7 @@ class SignUp extends React.Component {
     componentWillMount() {
         browserHelper.setTitle('註冊');
 
-        if (cookieHelper.hasSignedin()) {
+        if (authHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }
     }
@@ -121,7 +124,7 @@ class SignUp extends React.Component {
             let _user = users[userId];
             cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
             cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
-            setJWT(jwt);
+            authHelper.jwt = jwt;
             authHelper.activateRefreshToken();
 
             // this.props.history.replace(ROUTES.SETTINGS);
@@ -259,9 +262,5 @@ class SignUp extends React.Component {
         );
     }
 }
-
-SignUp.propTypes = {
-    history: PropTypes.object.isRequired
-};
 
 export default withRouter(SignUp);

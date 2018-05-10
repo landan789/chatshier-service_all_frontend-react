@@ -11,6 +11,12 @@ import authHelper from '../../../helpers/authentication';
 import { notify } from '../../Notify/Notify';
 
 class CalendarInsertModal extends React.Component {
+    static propTypes = {
+        modalData: PropTypes.object,
+        isOpen: PropTypes.bool.isRequired,
+        close: PropTypes.func.isRequired
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
 
@@ -199,11 +205,5 @@ class CalendarInsertModal extends React.Component {
         );
     }
 }
-
-CalendarInsertModal.propTypes = {
-    modalData: PropTypes.object,
-    isOpen: PropTypes.bool.isRequired,
-    close: PropTypes.func.isRequired
-};
 
 export default CalendarInsertModal;

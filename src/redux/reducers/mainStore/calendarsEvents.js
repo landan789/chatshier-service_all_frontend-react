@@ -1,4 +1,4 @@
-import { UPDATE_CALENDARS_EVENTS, DELETE_CALENDAR_EVENT } from '../actions/calendarsEvents';
+import { UPDATE_CALENDARS_EVENTS, DELETE_CALENDAR_EVENT } from '../../actions/mainStore/calendarsEvents';
 
 export const calendarsEventsReducer = (state = {}, action) => {
     switch (action.type) {

@@ -8,6 +8,12 @@ import authHelper from '../../helpers/authentication';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 class AppsSelector extends React.Component {
+    static propTypes = {
+        showAll: PropTypes.bool,
+        apps: PropTypes.object.isRequired,
+        onChange: PropTypes.func.isRequired
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
 
@@ -84,12 +90,6 @@ class AppsSelector extends React.Component {
         );
     }
 }
-
-AppsSelector.propTypes = {
-    showAll: PropTypes.bool,
-    apps: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中

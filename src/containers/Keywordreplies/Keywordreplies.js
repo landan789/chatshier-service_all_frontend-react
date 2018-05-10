@@ -8,11 +8,11 @@ import { Fade, Jumbotron, Row, Col, InputGroup, Input, Button } from 'reactstrap
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
-import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import KeywordreplyTable from '../Keywordreplies/KeywordreplyTable';
 import KeywordreplyInsertModal from '../../components/Modals/KeywordreplyInsert/KeywordreplyInsert';
@@ -20,6 +20,12 @@ import KeywordreplyInsertModal from '../../components/Modals/KeywordreplyInsert/
 import './Keywordreplies.css';
 
 class Keywordreplies extends React.Component {
+    static propTypes = {
+        apps: PropTypes.object,
+        appsKeywordreplies: PropTypes.object,
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props) {
         super(props);
 
@@ -39,7 +45,7 @@ class Keywordreplies extends React.Component {
         browserHelper.setTitle('關鍵字回覆');
         setNavTitle('關鍵字回覆');
 
-        if (!cookieHelper.hasSignedin()) {
+        if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }
@@ -74,8 +80,7 @@ class Keywordreplies extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <div className="ml-auto w-100 page-wrapper">
-                    <Toolbar />
+                <PageWrapper>
                     <Fade in className="keywordreplies-wrapper">
                         <div className="keywordreplies">
                             <Jumbotron>
@@ -107,17 +112,11 @@ class Keywordreplies extends React.Component {
                             <KeywordreplyTable appId={this.state.appId} keyword={this.state.searchKeyword} />
                         </div>
                     </Fade>
-                </div>
+                </PageWrapper>
             </Aux>
         );
     }
 }
-
-Keywordreplies.propTypes = {
-    apps: PropTypes.object,
-    appsKeywordreplies: PropTypes.object,
-    history: PropTypes.object.isRequired
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中

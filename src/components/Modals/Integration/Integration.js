@@ -1,12 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import Switch from 'react-switch';
 
 import { CLIENT_ID, SCOPES } from '../../../config/google-app';
+
+import googleCalendarPng from '../../../image/google-calendar.png';
 import './Integration.css';
 
+let isGoogleapiLoaded = false;
+
 class Integration extends React.Component {
+    static propTypes = {
+        isOpen: PropTypes.bool.isRequired,
+        close: PropTypes.func.isRequired
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -18,33 +27,34 @@ class Integration extends React.Component {
     }
 
     componentDidMount() {
-        this.loadCalendarApi();
+        !isGoogleapiLoaded && this.loadCalendarApi();
     }
 
     loadCalendarApi() {
-        const script = document.createElement('script');
+        let script = document.createElement('script');
         script.src = 'https://apis.google.com/js/api.js';
         document.head.appendChild(script);
+        isGoogleapiLoaded = true;
 
-        script.onload = () => {
-            return new Promise((resolve, reject) => {
-                window.gapi.load('client:auth2', () => {
-                    resolve();
-                });
-            }).then(() => {
-                return window.gapi.client.init({
-                    clientId: CLIENT_ID,
-                    scope: SCOPES
-                });
-            }).then(() => {
-                return window.gapi.auth2.getAuthInstance();
-            }).then((auth) => {
-                this.setState({
-                    googleAuth: auth,
-                    google: auth.isSignedIn.get()
-                });
+        return new Promise((resolve) => {
+            script.onload = () => resolve();
+        }).then(() => {
+            return new Promise((resolve) => {
+                window.gapi.load('client:auth2', () => resolve());
             });
-        };
+        }).then(() => {
+            return window.gapi.client.init({
+                clientId: CLIENT_ID,
+                scope: SCOPES
+            });
+        }).then(() => {
+            return window.gapi.auth2.getAuthInstance();
+        }).then((auth) => {
+            this.setState({
+                googleAuth: auth,
+                google: auth.isSignedIn.get()
+            });
+        });
     }
 
     signIn() {
@@ -86,7 +96,7 @@ class Integration extends React.Component {
 
     render() {
         return (
-            <Modal size="lg" isOpen={this.props.isOpen} toggle={this.props.close} className="user-modal-content">
+            <Modal className="user-modal" size="lg" isOpen={this.props.isOpen} toggle={this.props.close}>
                 <ModalHeader toggle={this.props.close}></ModalHeader>
                 <ModalBody>
                     <div className="row">
@@ -100,7 +110,7 @@ class Integration extends React.Component {
                     <div className="row">
                         <div className="col-2 content">
                             <div className="box-border">
-                                <img className="google-calendar" src="https://firebasestorage.googleapis.com/v0/b/dev-chatshier.appspot.com/o/google_calendar.png?alt=media&token=e9402eeb-3cf9-4fc0-870d-25815b93b68a" />
+                                <img className="google-calendar" src={googleCalendarPng} alt="" />
                                 <br/>
                                 <span className="title">Google Calendar</span>
                                 <br/>
@@ -112,11 +122,6 @@ class Integration extends React.Component {
             </Modal>
         );
     }
-};
-
-Integration.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    close: PropTypes.func.isRequired
-};
+}
 
 export default Integration;

@@ -9,7 +9,9 @@ import ROUTES from '../../../config/route';
 import User from '../../Modals/User/User';
 import Group from '../../Modals/Group/Group';
 import Integration from '../../Modals/Integration/Integration';
-import { ctrlPanelStore } from '../ControlPanel/ControlPanel';
+
+import controlPanelStore from '../../../redux/controlPanelStore';
+import { togglePanel } from '../../../redux/actions/controlPanelStore/isOpen';
 
 import './Toolbar.css';
 
@@ -40,6 +42,10 @@ const setNavTitle = (title) => {
 };
 
 class Toolbar extends React.Component {
+    static propTypes = {
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
 
@@ -81,7 +87,7 @@ class Toolbar extends React.Component {
     }
 
     mobileToggleControlPanel() {
-        ctrlPanelStore.dispatch({ type: 'TOGGLE_MENU' });
+        controlPanelStore.dispatch(togglePanel());
     }
 
     linkTo(route, useReactRouter) {
@@ -149,10 +155,6 @@ class Toolbar extends React.Component {
         );
     }
 }
-
-Toolbar.propTypes = {
-    history: PropTypes.object.isRequired
-};
 
 export default withRouter(Toolbar);
 export { setNavTitle };

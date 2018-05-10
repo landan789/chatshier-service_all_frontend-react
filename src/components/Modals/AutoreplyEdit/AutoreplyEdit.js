@@ -9,6 +9,12 @@ import authHelper from '../../../helpers/authentication';
 import { notify } from '../../Notify/Notify';
 
 class AutoreplyEditModal extends React.Component {
+    static propTypes = {
+        modalData: PropTypes.object,
+        isOpen: PropTypes.bool.isRequired,
+        close: PropTypes.func.isRequired
+    }
+
     constructor(props) {
         super(props);
 
@@ -128,11 +134,5 @@ class AutoreplyEditModal extends React.Component {
         );
     }
 }
-
-AutoreplyEditModal.propTypes = {
-    modalData: PropTypes.object,
-    isOpen: PropTypes.bool.isRequired,
-    close: PropTypes.func.isRequired
-};
 
 export default AutoreplyEditModal;

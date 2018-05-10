@@ -38,6 +38,7 @@ namespace Chatshier {
     }
 
     interface ChatroomMessager {
+        _id: string;
         createdTime?: string;
         updatedTime?: string;
         type: 'CHATSHIER' | 'LINE' | 'FACEBOOK' | 'WECHAT';
@@ -45,10 +46,10 @@ namespace Chatshier {
         assigned_ids: string[];
         platformUid: string;
         isDeleted?: boolean;
-        _id: string;
     }
 
     interface ChatroomMessage {
+        _id: string;
         text: string;
         type: string;
         src: string;

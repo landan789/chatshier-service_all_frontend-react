@@ -1,4 +1,4 @@
-import { UPDATE_CONSUMERS } from '../actions/consumers';
+import { UPDATE_CONSUMERS } from '../../actions/mainStore/consumers';
 
 export const consumersReducer = (state = {}, action) => {
     switch (action.type) {

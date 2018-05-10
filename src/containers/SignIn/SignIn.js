@@ -8,7 +8,6 @@ import browserHelper from '../../helpers/browser';
 import authHelper from '../../helpers/authentication';
 import apiSign from '../../helpers/apiSign/index';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
-import { setJWT } from '../../helpers/apiDatabase/index';
 import regex from '../../utils/regex';
 
 import SignForm from '../../components/SignForm/SignForm';
@@ -20,6 +19,10 @@ const USER_FAILED_TO_FIND = 'user failed to find';
 const PASSWORD_WAS_INCORRECT = 'password was incorrect';
 
 class SignIn extends React.Component {
+    static propTypes = {
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props, context) {
         super(props, context);
 
@@ -38,7 +41,7 @@ class SignIn extends React.Component {
     componentWillMount() {
         browserHelper.setTitle('登入');
 
-        if (cookieHelper.hasSignedin()) {
+        if (authHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }
     }
@@ -88,7 +91,7 @@ class SignIn extends React.Component {
 
             cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
             cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
-            setJWT(jwt);
+            authHelper.jwt = jwt;
             authHelper.activateRefreshToken();
 
             // this.props.history.replace(ROUTES.CHAT);
@@ -185,9 +188,5 @@ class SignIn extends React.Component {
         );
     }
 }
-
-SignIn.propTypes = {
-    history: PropTypes.object.isRequired
-};
 
 export default withRouter(SignIn);

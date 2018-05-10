@@ -4,9 +4,11 @@
 html,
 body,
 .root {
+    position: fixed;
+    width: 100%;
     height: 100%;
-    z-index: 0;
-    overflow: auto;
+    background-color: #f8f8f8;
+    overflow: hidden;
 }
 
 .root {
@@ -15,16 +17,5 @@ body,
 
     .animated {
         animation-duration: 300ms;
-    }
-
-    .page-wrapper {
-        position: relative;
-        max-width: calc(100% - 16rem);
-
-        @media (max-width: 576px) {
-            & {
-                max-width: 100%;
-            }
-        }
     }
 }

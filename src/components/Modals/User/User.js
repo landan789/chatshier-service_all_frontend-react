@@ -10,6 +10,12 @@ import { notify } from '../../Notify/Notify';
 import './User.css';
 
 class User extends React.Component {
+    static propTypes = {
+        isOpen: PropTypes.bool.isRequired,
+        close: PropTypes.func.isRequired,
+        users: PropTypes.object
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -82,7 +88,7 @@ class User extends React.Component {
 
     render() {
         return (
-            <Modal size="lg" isOpen={this.props.isOpen} toggle={this.props.close} className="user-modal-content">
+            <Modal className="user-modal" size="lg" isOpen={this.props.isOpen} toggle={this.props.close}>
                 <ModalHeader toggle={this.props.close}></ModalHeader>
                 <ModalBody>
                     <FormGroup>
@@ -113,13 +119,7 @@ class User extends React.Component {
             </Modal>
         );
     }
-};
-
-User.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    close: PropTypes.func.isRequired,
-    users: PropTypes.object
-};
+}
 
 const mapStateToProps = (storeState, ownProps) => {
     return {

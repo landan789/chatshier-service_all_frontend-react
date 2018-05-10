@@ -1,4 +1,4 @@
-import { UPDATE_TICKETS, DELETE_TICKET } from '../actions/appsTickets';
+import { UPDATE_TICKETS, DELETE_TICKET } from '../../actions/mainStore/appsTickets';
 
 export const appsTicketsReducer = (state = {}, action) => {
     switch (action.type) {

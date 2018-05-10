@@ -1,4 +1,4 @@
-import { UPDATE_GROUPS, DELETE_GROUP } from '../actions/groups';
+import { UPDATE_GROUPS, DELETE_GROUP } from '../../actions/mainStore/groups';
 
 export const groupsReducer = (state = {}, action) => {
     switch (action.type) {

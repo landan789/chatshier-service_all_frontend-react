@@ -1,4 +1,4 @@
-import { UPDATE_COMPOSES, DELETE_COMPOSE } from '../actions/appsComposes';
+import { UPDATE_COMPOSES, DELETE_COMPOSE } from '../../actions/mainStore/appsComposes';
 
 export const appsComposesReducer = (state = {}, action) => {
     switch (action.type) {

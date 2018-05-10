@@ -2,14 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Aux from 'react-aux';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
+import { Fade } from 'reactstrap';
 
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
-import cookieHelper from '../../helpers/cookie';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import LinkTabs from './LinkTabs';
 import AppsTabPane from './TabPanes/AppsTabPane';
 import GroupsTabPane from './TabPanes/GroupsTabPane';
@@ -19,6 +20,11 @@ import UsersTabPane from './TabPanes/UsersTabPane';
 import './Settings.css';
 
 class Settings extends React.Component {
+    static propTypes = {
+        history: PropTypes.object.isRequired,
+        location: PropTypes.object.isRequired
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
 
@@ -29,7 +35,7 @@ class Settings extends React.Component {
         browserHelper.setTitle('設定');
         setNavTitle('設定');
 
-        if (!cookieHelper.hasSignedin()) {
+        if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }
@@ -45,9 +51,8 @@ class Settings extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <div className="ml-auto w-100 page-wrapper">
-                    <Toolbar />
-                    <div className="setting-wrapper">
+                <PageWrapper>
+                    <Fade in className="setting-wrapper">
                         <LinkTabs route={route} toggle={this.toggle} />
                         <Switch>
                             <Route path={ROUTES.SETTINGS_APPS} exact component={AppsTabPane} />
@@ -56,16 +61,11 @@ class Settings extends React.Component {
                             <Route path={ROUTES.SETTINGS_GROUPS} exact component={GroupsTabPane} />
                             <Redirect to={ROUTES.SETTINGS_APPS} />
                         </Switch>
-                    </div>
-                </div>
+                    </Fade>
+                </PageWrapper>
             </Aux>
         );
     }
 }
-
-Settings.propTypes = {
-    history: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired
-};
 
 export default withRouter(Settings);

@@ -12,39 +12,35 @@ import Groups from './Groups';
 import GroupsMembers from './GroupsMembers';
 import Users from './Users';
 
-import cookieHelper from '../cookie';
-
-let jwt = '';
 let reqHeaders = new Headers();
 reqHeaders.set('Accept', 'application/json');
 
-/**
- * 設定 API 驗證身份所需的 JSON Web Token
- *
- * @param {string} value
- */
-const setJWT = (value) => {
-    jwt = value;
-    window.localStorage.setItem('jwt', jwt);
-    reqHeaders.set('Authorization', jwt);
-};
-cookieHelper.hasSignedin() && setJWT(window.localStorage.getItem('jwt'));
+class APIDatabase {
+    constructor() {
+        this.apps = new Apps();
+        this.appsAutoreplies = new AppsAutoreplies();
+        this.appsChatrooms = new AppsChatrooms();
+        this.appsComposes = new AppsComposes();
+        this.appsFields = new AppsFields();
+        this.appsGreetings = new AppsGreetings();
+        this.appsKeywordreplies = new AppsKeywordreplies();
+        this.appsTickets = new AppsTickets();
+        this.calendarsEvents = new CalendarsEvents();
+        this.consumers = new Consumers();
+        this.groups = new Groups();
+        this.groupsMembers = new GroupsMembers();
+        this.users = new Users();
+    }
 
-const apiDatabase = {
-    apps: new Apps(),
-    appsAutoreplies: new AppsAutoreplies(),
-    appsChatrooms: new AppsChatrooms(),
-    appsComposes: new AppsComposes(),
-    appsFields: new AppsFields(),
-    appsGreetings: new AppsGreetings(),
-    appsKeywordreplies: new AppsKeywordreplies(),
-    appsTickets: new AppsTickets(),
-    calendarsEvents: new CalendarsEvents(),
-    consumers: new Consumers(),
-    groups: new Groups(),
-    groupsMembers: new GroupsMembers(),
-    users: new Users()
-};
+    /**
+     * 設定 API 驗證身份所需的 JSON Web Token
+     *
+     * @param {string} jwt
+     */
+    setJWT(jwt = '') {
+        reqHeaders.set('Authorization', jwt);
+    }
+}
 
-export default apiDatabase;
-export { apiDatabase, setJWT, jwt, reqHeaders };
+export default new APIDatabase();
+export { reqHeaders };

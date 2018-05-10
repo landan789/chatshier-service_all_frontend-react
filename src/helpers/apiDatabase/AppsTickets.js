@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateTickets, deleteTicket } from '../../redux/actions/appsTickets';
+import { updateTickets, deleteTicket } from '../../redux/actions/mainStore/appsTickets';
 
 class AppsTickets extends Core {
     constructor() {

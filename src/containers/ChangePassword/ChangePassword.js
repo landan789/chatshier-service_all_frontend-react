@@ -9,14 +9,12 @@ import browserHelper from '../../helpers/browser';
 import apiSign from '../../helpers/apiSign/index';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
 import authHelper from '../../helpers/authentication';
-import { setJWT } from '../../helpers/apiDatabase/index';
 
 import SignForm from '../../components/SignForm/SignForm';
 import { notify } from '../../components/Notify/Notify';
 
 import './ChangePassword.css';
 
-const USER_WAS_NOT_AUTHORIZED = '-1';
 const JWT_HAD_EXPIRED = '-2';
 const USER_FAILED_TO_FIND = '3.1';
 const NEW_PASSWORD_WAS_INCONSISTENT = '2.4';
@@ -58,7 +56,7 @@ class ChangePassword extends React.Component {
             }
         }
 
-        if (cookieHelper.hasSignedin()) {
+        if (authHelper.hasSignedin()) {
             return window.location.replace(ROUTES.CHAT);
         }
     }
@@ -95,7 +93,7 @@ class ChangePassword extends React.Component {
     changePassword(password, passwordCfm) {
         this.setState({
             isProcessing: true,
-            resetBtnHtml: '<i class="fas fa-circle-notch fa-fw fa-spin"></i>處理中...'
+            submitBtnHtml: '<i class="fas fa-circle-notch fa-fw fa-spin"></i>處理中...'
         });
 
         let userId = this.payload.uid;
@@ -110,22 +108,31 @@ class ChangePassword extends React.Component {
 
             cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
             cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
-            setJWT(jwt);
+            authHelper.jwt = jwt;
             authHelper.activateRefreshToken();
 
             return notify('密碼更新成功！', { type: 'success' });
         }).then(() => {
+            this.setState({
+                isProcessing: false,
+                submitBtnHtml: '確認'
+            });
             // this.props.history.replace(ROUTES.CHAT);
             window.location.replace(ROUTES.CHAT);
         }).catch((err) => {
-            if (NEW_PASSWORD_WAS_INCONSISTENT === err.code) {
-                return notify('輸入的新密碼不一致', { type: 'danger' });
-            } else if (USER_FAILED_TO_FIND === err.code) {
-                return notify('找不到使用者！', { type: 'danger' });
-            } else if (USER_WAS_NOT_AUTHORIZED === err.code) {
+            this.setState({
+                isProcessing: false,
+                submitBtnHtml: '確認'
+            });
+
+            if (0 === err.message.indexOf('401')) {
                 return notify('不合法的令牌，請重新進行重設密碼流程', { type: 'danger' }).then(() => {
                     return this.props.history.replace(ROUTES.RESET_PASSWORD);
                 });
+            } else if (NEW_PASSWORD_WAS_INCONSISTENT === err.code) {
+                return notify('輸入的新密碼不一致', { type: 'danger' });
+            } else if (USER_FAILED_TO_FIND === err.code) {
+                return notify('找不到使用者！', { type: 'danger' });
             } else if (JWT_HAD_EXPIRED === err.code) {
                 return notify('令牌已過期，請重新進行重設密碼流程', { type: 'danger' }).then(() => {
                     return this.props.history.replace(ROUTES.RESET_PASSWORD);

@@ -1,4 +1,4 @@
-import { UPDATE_APPS, DELETE_APP } from '../actions/apps';
+import { UPDATE_APPS, DELETE_APP } from '../../actions/mainStore/apps';
 
 export const appsReducer = (state = {}, action) => {
     switch (action.type) {

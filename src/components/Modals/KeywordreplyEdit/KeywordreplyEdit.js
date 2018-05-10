@@ -8,6 +8,12 @@ import authHelper from '../../../helpers/authentication';
 import { notify } from '../../Notify/Notify';
 
 class KeywordreplyEdit extends React.Component {
+    static propTypes = {
+        modalData: PropTypes.object,
+        isOpen: PropTypes.bool.isRequired,
+        close: PropTypes.func.isRequired
+    }
+
     constructor(props) {
         super(props);
 
@@ -105,11 +111,5 @@ class KeywordreplyEdit extends React.Component {
         );
     }
 }
-
-KeywordreplyEdit.propTypes = {
-    modalData: PropTypes.object,
-    isOpen: PropTypes.bool.isRequired,
-    close: PropTypes.func.isRequired
-};
 
 export default KeywordreplyEdit;

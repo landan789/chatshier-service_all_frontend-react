@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateCalendarsEvents, deleteCalendarEvent } from '../../redux/actions/calendarsEvents';
+import { updateCalendarsEvents, deleteCalendarEvent } from '../../redux/actions/mainStore/calendarsEvents';
 
 class CalendarsEvents extends Core {
     constructor() {

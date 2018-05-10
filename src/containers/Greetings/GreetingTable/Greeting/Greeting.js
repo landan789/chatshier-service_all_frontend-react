@@ -11,6 +11,13 @@ import { notify } from '../../../../components/Notify/Notify';
 import './Greeting.css';
 
 class Greeting extends Component {
+    static propTypes = {
+        appId: PropTypes.string.isRequired,
+        greetingId: PropTypes.string.isRequired,
+        text: PropTypes.string.isRequired,
+        time: PropTypes.number.isRequired
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
 
@@ -50,13 +57,6 @@ class Greeting extends Component {
         );
     }
 }
-
-Greeting.propTypes = {
-    appId: PropTypes.string.isRequired,
-    greetingId: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired,
-    time: PropTypes.number.isRequired
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中

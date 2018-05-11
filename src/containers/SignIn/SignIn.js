@@ -128,6 +128,7 @@ class SignIn extends React.Component {
                                 <input
                                     type="email"
                                     className="form-control"
+                                    name="email"
                                     pattern={regex.emailWeak.source}
                                     placeholder="電子郵件"
                                     value={this.state.email}
@@ -145,6 +146,7 @@ class SignIn extends React.Component {
                                 <input
                                     type="password"
                                     className="form-control"
+                                    name="password"
                                     placeholder="密碼"
                                     value={this.state.password}
                                     onChange={this.pwChanged}

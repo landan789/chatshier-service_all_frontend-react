@@ -38,28 +38,15 @@ class ChangePassword extends React.Component {
         this.passwordCfmChanged = this.passwordCfmChanged.bind(this);
         this.checkInputs = this.checkInputs.bind(this);
 
-        let errCode = this._getParameterByName('errcode');
-        if (errCode === JWT_HAD_EXPIRED) {
-            this.state.isProcessing = true;
-            this.props.history.replace(ROUTES.RESET_PASSWORD);
-            notify('令牌已過期，請重新進行重設密碼流程', { type: 'danger' });
-            return;
-        } else if (errCode) {
-            this.state.isProcessing = true;
-            this.props.history.replace(ROUTES.SIGNIN);
-            notify('發生錯誤！', { type: 'danger' });
-            return;
-        }
-
         // 只要 jwt 為空或者解譯錯誤都導回登入畫面
-        this.jwtFromUrl = window.location.href.split('/').pop();
-        if (!this.jwtFromUrl) {
+        this.jwt = window.location.href.split('/').pop();
+        if (!this.jwt) {
             this.props.history.replace(ROUTES.SIGNIN);
             return;
         }
 
         try {
-            this.payload = this.jwtFromUrl ? jwtDecode(this.jwtFromUrl) : {};
+            this.payload = this.jwt ? jwtDecode(this.jwt) : {};
             if (this.payload.exp < Date.now()) {
                 this.state.isProcessing = true;
                 notify('令牌已過期，請重新進行重設密碼流程', { type: 'danger' });
@@ -118,7 +105,7 @@ class ChangePassword extends React.Component {
             newPassword: password,
             newPasswordCfm: passwordCfm
         };
-        return apiSign.changePassword.put(userId, user, this.jwtFromUrl).then((resJson) => {
+        return apiSign.changePassword.put(userId, user, this.jwt).then((resJson) => {
             let jwt = resJson.jwt;
             let users = resJson.data;
             let _user = users[userId];
@@ -212,25 +199,6 @@ class ChangePassword extends React.Component {
                 </SignForm>
             </Fade>
         );
-    }
-
-    /**
-     * @param {string} name
-     * @param {string} [url]
-     */
-    _getParameterByName(name, url) {
-        url = url || window.location.href;
-        name = name.replace(/[[\]]/g, '\\$&');
-
-        let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
-        let results = regex.exec(url);
-
-        if (!results) {
-            return null;
-        } else if (!results[2]) {
-            return '';
-        }
-        return decodeURIComponent(results[2].replace(/\+/g, ' '));
     }
 }
 

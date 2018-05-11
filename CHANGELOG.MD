@@ -1,6 +1,8 @@
-  = Release 1.2.4 =
-Released: 2018-04-27
+  = Release 1.3.0 =
+Released: Not Ready
 == Features ==
+ * created: user can reset password now
 
 == Bug Fixes ==
+ * Fixed: signin form not auto complete email
  * Fixed: set cookie value is not ASCII (browser: safari)

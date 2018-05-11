@@ -17,6 +17,7 @@ const FACEBOOK = 'FACEBOOK';
 const WECHAT = 'WECHAT';
 const CHATSHIER = 'CHATSHIER';
 const SYSTEM = 'SYSTEM';
+const VENDOR = 'VENDOR';
 
 const WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -124,6 +125,7 @@ class ChatroomPanel extends React.Component {
         let messages = chatroom.messages;
         let userId = authHelper.userId;
 
+        let messagerSelf = this._findMessagerSelf(props.appId, props.chatroomId);
         let className = ((this.props.className || '') + ' chatroom-panel').trim();
         let messageIds = Object.keys(messages);
 
@@ -140,18 +142,28 @@ class ChatroomPanel extends React.Component {
                                 let message = messages[messageId];
                                 let messagerId = message.messager_id;
                                 let messager = messagers[messagerId];
+
                                 let platformUid = '';
                                 let sender = {};
-                                if (messagerId && SYSTEM !== message.from) {
+
+                                if (messagerId && messager && SYSTEM !== message.from) {
                                     platformUid = messager.platformUid;
                                     sender = CHATSHIER === messager.type ? props.users[platformUid] : props.consumers[platformUid];
                                 }
-                                let senderName = SYSTEM === message.from ? '由系統發送' : (sender.name || '');
+
+                                let senderName = (messagerSelf && messagerSelf.namings && messagerSelf.namings[platformUid]) || (sender && sender.name) || '';
+                                if (SYSTEM === message.from) {
+                                    senderName = '由系統發送';
+                                } else if (VENDOR === message.from) {
+                                    senderName = '經由平台軟體發送';
+                                }
+
                                 let isMedia = (
                                     'image' === message.type ||
                                     'audio' === message.type ||
                                     'video' === message.type ||
-                                    'sticker' === message.type
+                                    'sticker' === message.type ||
+                                    'template' === message.type
                                 );
 
                                 // 如果訊息是來自於 Chatshier 或 系統自動回覆 的話，訊息一律放在右邊
@@ -227,6 +239,10 @@ class ChatroomPanel extends React.Component {
         );
     }
 
+    /**
+     * @param {string} appId
+     * @param {string} chatroomId
+     */
     _findMessagerSelf(appId, chatroomId) {
         let chatrooms = this.props.appsChatrooms[appId].chatrooms;
         let messagers = chatrooms[chatroomId].messagers;

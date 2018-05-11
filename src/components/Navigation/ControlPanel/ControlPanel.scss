@@ -68,12 +68,24 @@ $ctrl-panel-active-color: rgb(46, 85, 95);
     }
 
     .list-group-item {  
+        padding-top: .5rem;
+        padding-bottom: .5rem;
         background-color: $ctrl-panel-bg-color;
         cursor: pointer;
         border: none;
+
+        &.logo-item {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: $toolbar-height;
+            z-index: 10;
+        }
     }
 
     .detail-list {
+        padding-top: $toolbar-height;
+
         .list-group-item {
             display: flex;
             align-items: center;

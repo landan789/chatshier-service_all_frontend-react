@@ -286,12 +286,13 @@ class ControlPanel extends React.Component {
                     messagerItems.push(
                         <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
                             <img className="app-icon consumer-photo" src={CHATSHIER === app.type ? groupPng : logos[app.type]} alt="無法顯示相片" />
-                            <span className="app-name">群組聊天室</span>
+                            <span className="app-name">{chatroom.name || '群組聊天室'}</span>
                             <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')}>{unReadStr}</span>
                         </ListGroupItem>
                     );
                 } else {
                     let messager = this._findChatroomMessager(appId, chatroomId, app.type);
+                    let messagerSelf = this._findMessagerSelf(appId, chatroomId);
                     let platformUid = messager.platformUid;
                     let consumer = this.props.consumers[platformUid];
                     if (!consumer) {
@@ -301,7 +302,7 @@ class ControlPanel extends React.Component {
                     messagerItems.push(
                         <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
                             <img className="app-icon consumer-photo" src={consumer.photo} alt="無法顯示相片" />
-                            <span className="app-name">{consumer.name}</span>
+                            <span className="app-name">{(messagerSelf && messagerSelf.namings[platformUid]) || consumer.name}</span>
                             <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')}>{unReadStr}</span>
                         </ListGroupItem>
                     );
@@ -340,19 +341,19 @@ class ControlPanel extends React.Component {
         return (
             <Aux>
                 <ListGroupItem className="text-light nested has-collapse unread" onClick={() => this.toggleItem('unreadCollapse')}>
-                    <i className="fas fa-user-times"></i>
+                    <i className="fas fa-user-times fa-fw fa-1p5x"></i>
                     <span>未讀</span>
                     <i className={'ml-auto py-1 fas ' + (itemCollapse['unreadCollapse'] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
                 </ListGroupItem>
                 <Collapse isOpen={!itemCollapse['unreadCollapse']} className="nested unread">{unreadItems}</Collapse>
                 <ListGroupItem className="text-light nested has-collapse assigned" onClick={() => this.toggleItem('assignedCollapse')}>
-                    <i className="fas fa-check-circle"></i>
+                    <i className="fas fa-check-circle fa-fw fa-1p5x"></i>
                     <span>已指派</span>
                     <i className={'ml-auto py-1 fas ' + (itemCollapse['assignedCollapse'] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
                 </ListGroupItem>
                 <Collapse isOpen={!itemCollapse['assignedCollapse']} className="nested assigned">{assignedItems}</Collapse>
                 <ListGroupItem className="text-light nested has-collapse unassigned" onClick={() => this.toggleItem('unassignedCollapse')}>
-                    <i className="fas fa-times-circle"></i>
+                    <i className="fas fa-times-circle fa-fw fa-1p5x"></i>
                     <span>未指派</span>
                     <i className={'ml-auto py-1 fas ' + (!itemCollapse['unassignedCollapse'] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
                 </ListGroupItem>
@@ -464,7 +465,7 @@ class ControlPanel extends React.Component {
                     <div className="swiper-wrapper">
                         <div className="swiper-slide">
                             <ListGroup className={('detail-list ' + (isPutAway ? 'd-none' : '')).trim()}>
-                                <ListGroupItem className="text-light" onClick={() => this.linkTo()}>
+                                <ListGroupItem className="text-light py-0 pl-2 logo-item" onClick={() => this.linkTo()}>
                                     <div className="p-1 ctrl-panel-logo">
                                         <img className="w-100 h-100" src={logoSmallPng} alt="" />
                                     </div>
@@ -507,7 +508,7 @@ class ControlPanel extends React.Component {
                         </div>
                         <div className="swiper-slide">
                             <ListGroup className={('detail-list ' + (isPutAway ? 'd-none' : '')).trim()}>
-                                <ListGroupItem className="text-light" onClick={() => this.linkTo()}>
+                                <ListGroupItem className="text-light py-0 pl-2 logo-item" onClick={() => this.linkTo()}>
                                     <div className="p-1 ctrl-panel-logo">
                                         <img className="w-100 h-100" src={logoSmallPng} alt="" />
                                     </div>

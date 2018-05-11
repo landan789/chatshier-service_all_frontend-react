@@ -15,7 +15,10 @@ class SocketHelper {
         this.connectionReady = new Promise((resolve) => {
             this._connectionReadyResolve = resolve;
         });
-        this.connect();
+    }
+
+    get isConnected() {
+        return !!this.socket;
     }
 
     connect() {
@@ -39,7 +42,7 @@ class SocketHelper {
     }
 
     disconnect() {
-        return new Promise((resolve) => this.server.close(resolve));
+        return new Promise((resolve) => this.socket.close(resolve));
     }
 
     sendMessageToServer(socketBody) {

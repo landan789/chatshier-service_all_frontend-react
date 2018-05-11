@@ -254,8 +254,7 @@ class ControlPanel extends React.Component {
         }
 
         if (0 === Object.keys(this.props.apps).length ||
-            0 === Object.keys(this.props.appsChatrooms).length ||
-            0 === Object.keys(this.props.consumers).length) {
+            0 === Object.keys(this.props.appsChatrooms).length) {
             // 如果資料尚未載入完成，顯示讀取圖示
             return (
                 <ListGroupItem className="text-light justify-content-center">
@@ -295,6 +294,10 @@ class ControlPanel extends React.Component {
                     let messager = this._findChatroomMessager(appId, chatroomId, app.type);
                     let platformUid = messager.platformUid;
                     let consumer = this.props.consumers[platformUid];
+                    if (!consumer) {
+                        continue;
+                    }
+
                     messagerItems.push(
                         <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
                             <img className="app-icon consumer-photo" src={consumer.photo} alt="無法顯示相片" />
@@ -417,10 +420,10 @@ class ControlPanel extends React.Component {
 
     render() {
         let isInChat = ROUTES.CHAT === this.props.history.location.pathname;
-
         let lineApps = [];
         let facebookApps = [];
         let chatshierApps = [];
+
         for (let appId in this.props.apps) {
             let app = this.props.apps[appId];
             let appIcon = '';

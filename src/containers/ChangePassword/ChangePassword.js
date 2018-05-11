@@ -34,27 +34,44 @@ class ChangePassword extends React.Component {
             submitBtnHtml: '確認'
         };
 
-        this.jwtFromUrl = '';
-
         this.passwordChanged = this.passwordChanged.bind(this);
         this.passwordCfmChanged = this.passwordCfmChanged.bind(this);
         this.checkInputs = this.checkInputs.bind(this);
+
+        let errCode = this._getParameterByName('errcode');
+        if (errCode === JWT_HAD_EXPIRED) {
+            this.state.isProcessing = true;
+            this.props.history.replace(ROUTES.RESET_PASSWORD);
+            notify('令牌已過期，請重新進行重設密碼流程', { type: 'danger' });
+            return;
+        } else if (errCode) {
+            this.state.isProcessing = true;
+            this.props.history.replace(ROUTES.SIGNIN);
+            notify('發生錯誤！', { type: 'danger' });
+            return;
+        }
+
+        // 只要 jwt 為空或者解譯錯誤都導回登入畫面
+        this.jwtFromUrl = window.location.href.split('/').pop();
+        if (!this.jwtFromUrl) {
+            this.props.history.replace(ROUTES.SIGNIN);
+            return;
+        }
+
+        try {
+            this.payload = this.jwtFromUrl ? jwtDecode(this.jwtFromUrl) : {};
+            if (this.payload.exp < Date.now()) {
+                this.state.isProcessing = true;
+                notify('令牌已過期，請重新進行重設密碼流程', { type: 'danger' });
+                this.props.history.replace(ROUTES.RESET_PASSWORD);
+            }
+        } catch (ex) {
+            this.props.history.replace(ROUTES.SIGNIN);
+        }
     }
 
     componentWillMount() {
         browserHelper.setTitle('設定密碼');
-        this.jwtFromUrl = window.location.href.split('/').pop();
-
-        // 只要 jwt 為空或者解譯錯誤都導回登入畫面
-        if (!this.jwtFromUrl) {
-            return this.props.history.replace(ROUTES.SIGNIN);
-        } else {
-            try {
-                this.payload = this.jwtFromUrl ? jwtDecode(this.jwtFromUrl) : {};
-            } catch (ex) {
-                return this.props.history.replace(ROUTES.SIGNIN);
-            }
-        }
 
         if (authHelper.hasSignedin()) {
             return window.location.replace(ROUTES.CHAT);
@@ -126,17 +143,19 @@ class ChangePassword extends React.Component {
             });
 
             if (0 === err.message.indexOf('401')) {
-                return notify('不合法的令牌，請重新進行重設密碼流程', { type: 'danger' }).then(() => {
-                    return this.props.history.replace(ROUTES.RESET_PASSWORD);
-                });
+                return Promise.all([
+                    notify('不合法的令牌，請重新進行重設密碼流程', { type: 'danger' }),
+                    this.props.history.replace(ROUTES.RESET_PASSWORD)
+                ]);
             } else if (NEW_PASSWORD_WAS_INCONSISTENT === err.code) {
                 return notify('輸入的新密碼不一致', { type: 'danger' });
             } else if (USER_FAILED_TO_FIND === err.code) {
                 return notify('找不到使用者！', { type: 'danger' });
             } else if (JWT_HAD_EXPIRED === err.code) {
-                return notify('令牌已過期，請重新進行重設密碼流程', { type: 'danger' }).then(() => {
-                    return this.props.history.replace(ROUTES.RESET_PASSWORD);
-                });
+                return Promise.all([
+                    notify('令牌已過期，請重新進行重設密碼流程', { type: 'danger' }),
+                    this.props.history.replace(ROUTES.RESET_PASSWORD)
+                ]);
             }
             return notify('設定新密碼失敗', { type: 'danger' });
         });
@@ -193,6 +212,25 @@ class ChangePassword extends React.Component {
                 </SignForm>
             </Fade>
         );
+    }
+
+    /**
+     * @param {string} name
+     * @param {string} [url]
+     */
+    _getParameterByName(name, url) {
+        url = url || window.location.href;
+        name = name.replace(/[[\]]/g, '\\$&');
+
+        let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+        let results = regex.exec(url);
+
+        if (!results) {
+            return null;
+        } else if (!results[2]) {
+            return '';
+        }
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
     }
 }
 

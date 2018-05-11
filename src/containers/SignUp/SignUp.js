@@ -137,20 +137,15 @@ class SignUp extends React.Component {
 
             switch (err.msg) {
                 case NAME_WAS_EMPTY:
-                    notify('姓名未填寫', { type: 'danger' });
-                    break;
+                    return notify('姓名未填寫', { type: 'danger' });
                 case EMAIL_WAS_EMPTY:
-                    notify('email 未填寫！', { type: 'danger' });
-                    break;
+                    return notify('email 未填寫！', { type: 'danger' });
                 case PASSWORD_WAS_EMPTY:
-                    notify('密碼未填寫！', { type: 'danger' });
-                    break;
+                    return notify('密碼未填寫！', { type: 'danger' });
                 case USER_EMAIL_HAD_BEEN_SIGNED_UP:
-                    notify('email 已被註冊！', { type: 'danger' });
-                    break;
+                    return notify('email 已被註冊！', { type: 'danger' });
                 default:
-                    notify('錯誤！', { type: 'danger' });
-                    break;
+                    return notify('發生錯誤！', { type: 'danger' });
             }
         });
     }
@@ -252,7 +247,7 @@ class SignUp extends React.Component {
                             <p>
                                 <span>已經有帳號了嗎？請按</span>
                                 <span className="mx-1 link-text" onClick={() => {
-                                    router.history.push('/signin');
+                                    router.history.push(ROUTES.SIGNIN);
                                 }}>登入</span>
                             </p>
                         )}></Route>

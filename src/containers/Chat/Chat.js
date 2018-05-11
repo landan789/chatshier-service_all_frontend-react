@@ -69,15 +69,13 @@ class Chat extends React.Component {
 
         let userId = authHelper.userId;
         return userId && Promise.all([
-            apiDatabase.apps.find(userId),
             apiDatabase.appsChatrooms.find(userId),
             apiDatabase.appsFields.find(userId),
             apiDatabase.appsTickets.find(null, userId),
-            apiDatabase.consumers.find(userId),
-            apiDatabase.groups.find(userId),
-            apiDatabase.users.find(userId),
-            socketHelper.connectionReady
-        ]);
+            apiDatabase.consumers.find(userId)
+        ]).then(() => {
+            return !socketHelper.isConnected && socketHelper.connect();
+        });
     }
 
     componentWillUnmount() {

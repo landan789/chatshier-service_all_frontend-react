@@ -104,14 +104,11 @@ class SignIn extends React.Component {
 
             switch (err.msg) {
                 case USER_FAILED_TO_FIND:
-                    notify('找不到使用者', { type: 'danger' });
-                    break;
+                    return notify('找不到使用者', { type: 'danger' });
                 case PASSWORD_WAS_INCORRECT:
-                    notify('密碼錯誤！', { type: 'danger' });
-                    break;
+                    return notify('密碼錯誤！', { type: 'danger' });
                 default:
-                    notify('錯誤！', { type: 'danger' });
-                    break;
+                    return notify('發生錯誤！', { type: 'danger' });
             }
         });
     }

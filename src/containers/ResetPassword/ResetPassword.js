@@ -16,6 +16,7 @@ import GoogleRecaptcha from '../../components/GoogleRecaptcha/GoogleRecaptcha';
 import './ResetPassword.css';
 
 const PASSWORD_FAILED_TO_RESET = '2.3';
+const EMAIL_FAILED_TO_SEND = '2.5';
 const USER_FAILED_TO_FIND = '3.1';
 
 class ResetPassword extends React.Component {
@@ -107,6 +108,8 @@ class ResetPassword extends React.Component {
                     return notify('不合法的驗證碼，請重新進行驗證動作！', { type: 'danger' });
                 case USER_FAILED_TO_FIND:
                     return notify('找不到使用者！', { type: 'danger' });
+                case EMAIL_FAILED_TO_SEND:
+                    return notify('很抱歉！無法發送 email 至您的信箱！', { type: 'danger' });
                 default:
                     return notify('處理失敗！', { type: 'danger' });
             }
@@ -153,10 +156,10 @@ class ResetPassword extends React.Component {
                     <div className="my-4 text-center">
                         <Route render={(router) => (
                             <p>
-                                <span>還沒有帳號嗎？請按</span>
+                                <span>已經有帳號了嗎？請按</span>
                                 <span className="mx-1 link-text" onClick={() => {
-                                    router.history.push(ROUTES.SIGNUP);
-                                }}>註冊</span>
+                                    router.history.push(ROUTES.SIGNIN);
+                                }}>登入</span>
                             </p>
                         )}></Route>
                     </div>

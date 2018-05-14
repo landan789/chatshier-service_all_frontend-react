@@ -1,10 +1,10 @@
 @import '../../../styles/_variables';
+@import '../../../styles/mixins/_mixins';
 
 .page-wrapper {
+    @include scrollable();
     position: relative;
     max-width: calc(100% - #{$ctrl-panel-width});
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
     transition: max-width,opacity $ctrl-panel-transition-duration;
 
     &.put-away  {

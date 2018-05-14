@@ -21,6 +21,12 @@ body,
     }
 }
 
+// 取消 bootstrap 引入 normalize.css 的 focus 邊框
+button:focus,
+input:focus {
+    outline: none !important;
+}
+
 // 自定義滑動軸的樣式
 div,
 section {

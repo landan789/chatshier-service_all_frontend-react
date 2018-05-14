@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import Aux from 'react-aux';
 import { connect } from 'react-redux';
 
+import chatshierCfg from '../../config/chatshier';
 import authHelper from '../../helpers/authentication';
 import socketHelper from '../../helpers/socket';
 import { MINUTE } from '../../utils/unitTime';
 
+import { notify } from '../../components/Notify/Notify';
 import { findChatroomMessager, findMessagerSelf } from './Chat';
 import Message from './Message';
 
@@ -37,14 +39,19 @@ class ChatroomPanel extends React.Component {
         this.nowDateStr = '';
 
         this.state = {
-            messageText: ''
+            messageText: '',
+            isProcessing: false
         };
+
+        /** @type {{[type: string]: HTMLInputElement}} */
+        this.fileSelectors = {};
 
         /** @type {HTMLElement} */
         this.messagePanelElem = null;
 
         this.onMessageChange = this.onMessageChange.bind(this);
         this.sendMessage = this.sendMessage.bind(this);
+        this.uploadFile = this.uploadFile.bind(this);
     }
 
     componentDidMount() {
@@ -85,7 +92,7 @@ class ChatroomPanel extends React.Component {
         let messagerSelf = findMessagerSelf(chatroom.messagers);
         let userId = authHelper.userId;
 
-        /** @type {ChatshierMessage} */
+        /** @type {Chatshier.SocketMessage} */
         let messageToSend = {
             from: CHATSHIER,
             time: Date.now(),
@@ -95,7 +102,7 @@ class ChatroomPanel extends React.Component {
             messager_id: messagerSelf._id
         };
 
-        /** @type {ChatshierChatSocketBody} */
+        /** @type {Chatshier.SocketMessageBody} */
         let socketBody = {
             app_id: appId,
             type: app.type,
@@ -105,8 +112,95 @@ class ChatroomPanel extends React.Component {
             messages: [messageToSend]
         };
 
-        this.setState({ messageText: '' });
-        return socketHelper.sendMessageToServer(socketBody);
+        this.setState({ messageText: '', isProcessing: true });
+        return socketHelper.sendMessageToServer(socketBody).then(() => {
+            this.setState({ isProcessing: false });
+        }).catch(() => {
+            this.setState({ isProcessing: false });
+            return notify('發送失敗', { type: 'danger' });
+        });
+    }
+
+    /**
+     * @param {Event} ev
+     */
+    uploadFile(ev, messageType) {
+        /** @type {HTMLInputElement} */
+        let fileInput = ev.target;
+        if (!fileInput.files.length) {
+            fileInput.value = '';
+            return;
+        }
+
+        /** @type {File} */
+        let file = fileInput.files[0];
+        fileInput.value = ''; // 把 input file 值清空，使 change 事件對同一檔案可重複觸發
+
+        let FILE_MAXSIZE = chatshierCfg.FILE_MAXSIZE;
+        let kiloByte = 1024;
+        let megaByte = kiloByte * 1024;
+
+        let isImage = file.type.indexOf('image') >= 0;
+        isImage && (messageType = 'image');
+        let isVideo = file.type.indexOf('video') >= 0;
+        isVideo && (messageType = 'video');
+        let isAudio = file.type.indexOf('audio') >= 0;
+        isAudio && (messageType = 'audio');
+
+        if (isImage && file.size > FILE_MAXSIZE.image) {
+            return notify('圖像檔案過大，檔案大小限制為: ' + Math.floor(FILE_MAXSIZE.image / megaByte) + ' MB', { type: 'warning' });
+        } else if (isVideo && file.size > FILE_MAXSIZE.video) {
+            return notify('影像檔案過大，檔案大小限制為: ' + Math.floor(FILE_MAXSIZE.video / megaByte) + ' MB', { type: 'warning' });
+        } else if (isAudio && file.size > FILE_MAXSIZE.audio) {
+            return notify('聲音檔案過大，檔案大小限制為: ' + Math.floor(FILE_MAXSIZE.audio / megaByte) + ' MB', { type: 'warning' });
+        } else if (file.size > FILE_MAXSIZE.other) {
+            return notify('檔案過大，檔案大小限制為: ' + Math.floor(FILE_MAXSIZE.other / megaByte) + ' MB', { type: 'warning' });
+        }
+
+        let fileSize = file.size / kiloByte;
+        if (fileSize >= 1000) {
+            fileSize /= kiloByte;
+            fileSize = fileSize.toFixed(1) + ' MB';
+        } else {
+            fileSize = fileSize.toFixed(1) + ' KB';
+        }
+
+        let appId = this.props.appId;
+        let chatroomId = this.props.chatroomId;
+        let userId = authHelper.userId;
+        let app = this.props.apps[appId];
+        let chatroom = this.props.appsChatrooms[appId].chatrooms[chatroomId];
+        let messagerSelf = findMessagerSelf(chatroom.messagers);
+        let platformMessager = findChatroomMessager(chatroom.messagers, app.type);
+
+        /** @type {Chatshier.SocketMessage} */
+        let messageToSend = {
+            text: '錢掌櫃傳送檔案給您:\n檔案大小: ' + fileSize + '\n',
+            src: file,
+            fileName: file.name,
+            type: messageType,
+            from: CHATSHIER,
+            time: Date.now(),
+            messager_id: messagerSelf._id
+        };
+
+        /** @type {Chatshier.SocketMessageBody} */
+        let socketBody = {
+            app_id: appId,
+            type: app.type,
+            chatroom_id: chatroomId,
+            senderUid: userId,
+            recipientUid: platformMessager.platformUid,
+            messages: [messageToSend]
+        };
+
+        this.setState({ isProcessing: true });
+        return socketHelper.sendMessageToServer(socketBody).then(() => {
+            this.setState({ isProcessing: false });
+        }).catch(() => {
+            this.setState({ isProcessing: false });
+            return notify('發送失敗', { type: 'danger' });
+        });
     }
 
     render() {
@@ -204,24 +298,52 @@ class ChatroomPanel extends React.Component {
                                     </Aux>
                                 );
                             })}
+                            {this.state.isProcessing &&
+                            <div className="mb-3 message">
+                                <div className="ml-auto loading-container">
+                                    <i className="fas fa-spinner fa-pulse fa-2x"></i>
+                                </div>
+                            </div>}
                         </div>
                     </div>
                 </div>
+
                 <div className="w-100 message-input-container">
                     <div className="d-flex align-items-center message-input form-upper">
                         <div className="media-container">
-                            <button className="p-0 media-btn">
+                            <button className="p-0 media-btn" onClick={() => this.fileSelectors.image.click()}>
                                 <i className="fas fa-image"></i>
                             </button>
-                            <button className="p-0 media-btn">
+                            <button className="p-0 media-btn" onClick={() => this.fileSelectors.video.click()}>
                                 <i className="fas fa-video"></i>
                             </button>
-                            <button className="p-0 media-btn">
+                            <button className="p-0 media-btn" onClick={() => this.fileSelectors.audio.click()}>
                                 <i className="fa fa-volume-up"></i>
                             </button>
-                            <input className="ghost-file d-none" type="file" accept="image/*" />
-                            <input className="ghost-file d-none" type="file" accept="video/mp4,video/mpeg4" />
-                            <input className="ghost-file d-none" type="file" accept="audio/mp3,video/mpeg3" />
+                            <button className="p-0 media-btn" onClick={() => this.fileSelectors.file.click()}>
+                                <i className="fas fa-file"></i>
+                            </button>
+
+                            <input className="ghost-file d-none"
+                                type="file"
+                                accept="image/*"
+                                ref={(elem) => (this.fileSelectors.image = elem)}
+                                onChange={(ev) => this.uploadFile(ev, 'image')} />
+                            <input className="ghost-file d-none"
+                                type="file"
+                                accept="video/mp4,video/mpeg4"
+                                ref={(elem) => (this.fileSelectors.video = elem)}
+                                onChange={(ev) => this.uploadFile(ev, 'video')} />
+                            <input className="ghost-file d-none"
+                                type="file"
+                                accept="audio/mp3,video/mpeg3"
+                                ref={(elem) => (this.fileSelectors.audio = elem)}
+                                onChange={(ev) => this.uploadFile(ev, 'audio')} />
+                            <input className="ghost-file d-none"
+                                type="file"
+                                accept="*/*"
+                                ref={(elem) => (this.fileSelectors.file = elem)}
+                                onChange={(ev) => this.uploadFile(ev, 'file')} />
                         </div>
                     </div>
                     <div className="message-input form-lower">

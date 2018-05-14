@@ -2,11 +2,11 @@
 
 @mixin scrollable($direct: '') {
     @if $direct == 'x' {
-        overflow-x: scroll;
+        overflow-x: auto;
     } @else if $direct == 'y' {
-        overflow-y: scroll;
+        overflow-y: auto;
     } @else {
-        overflow: scroll;
+        overflow: auto;
     }
     -webkit-overflow-scrolling: touch;
 }

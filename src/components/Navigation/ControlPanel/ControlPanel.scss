@@ -1,4 +1,5 @@
 @import '../../../styles/_variables';
+@import '../../../styles/mixins/_mixins';
 
 $ctrl-panel-bg-color: #4a8998;
 $ctrl-panel-active-color: rgb(46, 85, 95);
@@ -43,9 +44,8 @@ $ctrl-item-icon-size: 1.5rem;
     }
 
     .swiper-slide {
+        @include scrollable('y');
         font-size: .85rem;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
 
         &::-webkit-scrollbar {
             width: 0;

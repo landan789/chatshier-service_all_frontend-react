@@ -51,7 +51,15 @@ class SocketHelper {
                 reject(new Error('socket not connected'));
                 return;
             }
-            this.socket.emit(SOCKET_EVENTS.EMIT_MESSAGE_TO_SERVER, socketBody, resolve);
+
+            this.socket.emit(SOCKET_EVENTS.EMIT_MESSAGE_TO_SERVER, socketBody, (err) => {
+                if (err) {
+                    console.error(err);
+                    reject(err);
+                    return;
+                }
+                resolve();
+            });
         });
     }
 

@@ -1,4 +1,4 @@
-import { UPDATE_KEYWORDREPLIES, DELETE_KEYWORDREPLY } from '../actions/appsKeywordreplies';
+import { UPDATE_KEYWORDREPLIES, DELETE_KEYWORDREPLY } from '../../actions/mainStore/appsKeywordreplies';
 
 export const appsKeywordrepliesReducer = (state = {}, action) => {
     switch (action.type) {

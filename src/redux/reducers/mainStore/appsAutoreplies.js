@@ -1,4 +1,4 @@
-import { UPDATE_AUTOREPLIES, DELETE_AUTOREPLY } from '../actions/appsAutoreplies';
+import { UPDATE_AUTOREPLIES, DELETE_AUTOREPLY } from '../../actions/mainStore/appsAutoreplies';
 
 export const appsAutorepliesReducer = (state = {}, action) => {
     switch (action.type) {

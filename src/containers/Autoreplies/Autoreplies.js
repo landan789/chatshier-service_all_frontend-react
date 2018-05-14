@@ -8,18 +8,24 @@ import { Fade, Row, Col, Jumbotron, Button, Input, InputGroup } from 'reactstrap
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
-import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import AutoreplyTable from '../Autoreplies/AutoreplyTable.js';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import AutoreplyInsertModal from '../../components/Modals/AutoreplyInsert/AutoreplyInsert';
 
 import './Autoreplies.css';
 
 class Autoreplies extends React.Component {
+    static propTypes = {
+        apps: PropTypes.object,
+        appsAutoreplies: PropTypes.object,
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props) {
         super(props);
 
@@ -39,7 +45,7 @@ class Autoreplies extends React.Component {
         browserHelper.setTitle('自動回覆');
         setNavTitle('自動回覆');
 
-        if (!cookieHelper.hasSignedin()) {
+        if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }
@@ -75,8 +81,7 @@ class Autoreplies extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <div className="ml-auto w-100 page-wrapper">
-                    <Toolbar />
+                <PageWrapper>
                     <Fade in className="autoreplies-wrapper">
                         <div className="autoreplies">
                             <Jumbotron>
@@ -108,17 +113,11 @@ class Autoreplies extends React.Component {
                             <AutoreplyTable keyword={this.state.searchKeyword} appId={this.state.appId}></AutoreplyTable>
                         </div>
                     </Fade>
-                </div>
+                </PageWrapper>
             </Aux>
         );
     }
 }
-
-Autoreplies.propTypes = {
-    apps: PropTypes.object,
-    appsAutoreplies: PropTypes.object,
-    history: PropTypes.object.isRequired
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     return {

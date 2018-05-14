@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateGreetings, deleteGreeting } from '../../redux/actions/appsGreetings';
+import { updateGreetings, deleteGreeting } from '../../redux/actions/mainStore/appsGreetings';
 
 class AppsGreetings extends Core {
     constructor() {

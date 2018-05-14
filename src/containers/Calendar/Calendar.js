@@ -8,12 +8,12 @@ import { Fade } from 'reactstrap';
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
-import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import { notify } from '../../components/Notify/Notify';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import CalendarInsertModal from '../../components/Modals/CalendarInsert/CalendarInsert';
 import CalendarEditModal, { CalendarEventTypes } from '../../components/Modals/CalendarEdit/CalendarEdit';
 import TicketEditModal from '../../components/Modals/TicketEdit/TicketEdit';
@@ -68,6 +68,15 @@ class GoogleEventItem extends CalendarEventItem {
 }
 
 class Calendar extends React.Component {
+    static propTypes = {
+        consumers: PropTypes.object,
+        appsTickets: PropTypes.object,
+        calendarsEvents: PropTypes.object,
+        groups: PropTypes.object,
+        users: PropTypes.object,
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props) {
         super(props);
 
@@ -93,7 +102,7 @@ class Calendar extends React.Component {
         browserHelper.setTitle('行事曆');
         setNavTitle('行事曆');
 
-        if (!cookieHelper.hasSignedin()) {
+        if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }
@@ -409,10 +418,9 @@ class Calendar extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <div className="ml-auto w-100 page-wrapper">
-                    <Toolbar />
-                    <Fade in className="calendar-wrapper">
-                        <div className="chsr calendar" ref={this.initCalendar}></div>
+                <PageWrapper>
+                    <Fade in className="container mt-5 calendar-wrapper">
+                        <div className="mb-5 card chsr calendar" ref={this.initCalendar}></div>
                     </Fade>
                     <CalendarInsertModal
                         modalData={this.state.insertModalData}
@@ -431,20 +439,11 @@ class Calendar extends React.Component {
                         isOpen={!!this.state.editTicketData}
                         close={this.closeEditModal}>
                     </TicketEditModal>
-                </div>
+                </PageWrapper>
             </Aux>
         );
     }
 }
-
-Calendar.propTypes = {
-    consumers: PropTypes.object,
-    appsTickets: PropTypes.object,
-    calendarsEvents: PropTypes.object,
-    groups: PropTypes.object,
-    users: PropTypes.object,
-    history: PropTypes.object.isRequired
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中

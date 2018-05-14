@@ -12,6 +12,14 @@ import { notify } from '../../Notify/Notify';
 const appTypes = apiDatabase.apps.enums.type;
 
 class TicketInsertModal extends React.Component {
+    static propTypes = {
+        appsAgents: PropTypes.object,
+        apps: PropTypes.object,
+        consumers: PropTypes.object,
+        isOpen: PropTypes.bool,
+        close: PropTypes.func.isRequired
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
 
@@ -273,13 +281,5 @@ class TicketInsertModal extends React.Component {
         );
     }
 }
-
-TicketInsertModal.propTypes = {
-    appsAgents: PropTypes.object,
-    apps: PropTypes.object,
-    consumers: PropTypes.object,
-    isOpen: PropTypes.bool,
-    close: PropTypes.func.isRequired
-};
 
 export default TicketInsertModal;

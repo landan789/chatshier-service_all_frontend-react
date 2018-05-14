@@ -8,16 +8,22 @@ import { Fade } from 'reactstrap';
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
-import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 
 import './Analyze.css';
 
 class Analyze extends React.Component {
+    static propTypes = {
+        apps: PropTypes.object,
+        appsChatrooms: PropTypes.object,
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
 
@@ -31,7 +37,7 @@ class Analyze extends React.Component {
         browserHelper.setTitle('訊息分析');
         setNavTitle('訊息分析');
 
-        if (!cookieHelper.hasSignedin()) {
+        if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }
@@ -54,25 +60,18 @@ class Analyze extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <div className="ml-auto w-100 page-wrapper">
-                    <Toolbar />
+                <PageWrapper>
                     <Fade in className="analyze-wrapper">
                         <h2>分析頁面</h2>
                         <div className="analyze-container">
                             <AppsSelector showAll onChange={this.appChanged} />
                         </div>
                     </Fade>
-                </div>
+                </PageWrapper>
             </Aux>
         );
     }
 }
-
-Analyze.propTypes = {
-    apps: PropTypes.object,
-    appsChatrooms: PropTypes.object,
-    history: PropTypes.object.isRequired
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中

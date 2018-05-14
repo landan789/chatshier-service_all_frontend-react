@@ -16,6 +16,13 @@ export const CalendarEventTypes = Object.freeze({
 });
 
 class CalendarEditModal extends React.Component {
+    static propTypes = {
+        modalData: PropTypes.object,
+        isOpen: PropTypes.bool.isRequired,
+        updateHandle: PropTypes.func.isRequired,
+        close: PropTypes.func.isRequired
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
 
@@ -219,12 +226,5 @@ class CalendarEditModal extends React.Component {
         );
     }
 }
-
-CalendarEditModal.propTypes = {
-    modalData: PropTypes.object,
-    isOpen: PropTypes.bool.isRequired,
-    updateHandle: PropTypes.func.isRequired,
-    close: PropTypes.func.isRequired
-};
 
 export default CalendarEditModal;

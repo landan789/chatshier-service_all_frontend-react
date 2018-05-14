@@ -8,6 +8,13 @@ import './Notify.css';
 const DURATION = 3000;
 
 class Notify extends React.Component {
+    static propTypes = {
+        color: PropTypes.string,
+        text: PropTypes.string,
+        duration: PropTypes.number,
+        onDismiss: PropTypes.func
+    }
+
     constructor(props) {
         super(props);
 
@@ -36,13 +43,6 @@ class Notify extends React.Component {
         );
     }
 }
-
-Notify.propTypes = {
-    color: PropTypes.string,
-    text: PropTypes.string,
-    duration: PropTypes.number,
-    onDismiss: PropTypes.func
-};
 
 const notify = (text, options) => {
     options = options || {};

@@ -1,4 +1,4 @@
-import { UPDATE_FIELDS, DELETE_FIELD } from '../actions/appsFields';
+import { UPDATE_FIELDS, DELETE_FIELD } from '../../actions/mainStore/appsFields';
 
 export const appsFieldsReducer = (state = {}, action) => {
     switch (action.type) {

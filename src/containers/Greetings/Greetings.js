@@ -7,16 +7,20 @@ import { Fade, Jumbotron } from 'reactstrap';
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
-import cookieHelper from '../../helpers/cookie';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import GreetingTable from './GreetingTable/GreetingTable';
 
 import './Greetings.css';
 
 class Greetings extends React.Component {
+    static propTypes = {
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props, context) {
         super(props, context);
 
@@ -31,7 +35,7 @@ class Greetings extends React.Component {
         browserHelper.setTitle('加好友回覆');
         setNavTitle('加好友回覆');
 
-        if (!cookieHelper.hasSignedin()) {
+        if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }
@@ -45,9 +49,8 @@ class Greetings extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <div className="ml-auto w-100 page-wrapper">
-                    <Toolbar />
-                    <Fade className="greetings-wrapper">
+                <PageWrapper>
+                    <Fade in className="greetings-wrapper">
                         <div className="Greetings">
                             <Jumbotron>
                                 <h1 className="display-3">加好友回覆</h1>
@@ -57,14 +60,10 @@ class Greetings extends React.Component {
                             <GreetingTable appId={this.state.selectedAppId} />
                         </div>
                     </Fade>
-                </div>
+                </PageWrapper>
             </Aux>
         );
     }
 }
-
-Greetings.propTypes = {
-    history: PropTypes.object.isRequired
-};
 
 export default withRouter(Greetings);

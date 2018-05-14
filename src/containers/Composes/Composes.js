@@ -8,11 +8,11 @@ import { Fade, Jumbotron, Row, Col, InputGroup, Input, Button } from 'reactstrap
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
-import cookieHelper from '../../helpers/cookie';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import Toolbar, { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
+import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import ComposeInsertModal from '../../components/Modals/ComposeInsert/ComposeInsert';
 import ComposeTable from '../Composes/ComposeTable';
@@ -20,6 +20,13 @@ import ComposeTable from '../Composes/ComposeTable';
 import './Composes.css';
 
 class Composes extends React.Component {
+    static propTypes = {
+        apps: PropTypes.object,
+        appsFields: PropTypes.object,
+        appsComposes: PropTypes.object,
+        history: PropTypes.object.isRequired
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -38,7 +45,7 @@ class Composes extends React.Component {
         browserHelper.setTitle('群發');
         setNavTitle('群發');
 
-        if (!cookieHelper.hasSignedin()) {
+        if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }
@@ -76,8 +83,7 @@ class Composes extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <div className="ml-auto w-100 page-wrapper">
-                    <Toolbar />
+                <PageWrapper>
                     <Fade in className="composes-wrapper">
                         <div className="composes">
                             <Jumbotron>
@@ -110,18 +116,11 @@ class Composes extends React.Component {
                             <ComposeTable appId={this.state.appId} keyword={this.state.searchKeyword} />
                         </div>
                     </Fade>
-                </div>
+                </PageWrapper>
             </Aux>
         );
     }
 }
-
-Composes.propTypes = {
-    apps: PropTypes.object,
-    appsFields: PropTypes.object,
-    appsComposes: PropTypes.object,
-    history: PropTypes.object.isRequired
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中

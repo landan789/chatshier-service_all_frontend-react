@@ -14,6 +14,13 @@ import { notify } from '../../Notify/Notify';
 import './TicketEdit.css';
 
 class TicketEditModal extends React.Component {
+    static propTypes = {
+        appsAgents: PropTypes.object,
+        modalData: PropTypes.object,
+        isOpen: PropTypes.bool.isRequired,
+        close: PropTypes.func.isRequired
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
 
@@ -241,12 +248,5 @@ class TicketEditModal extends React.Component {
         );
     }
 }
-
-TicketEditModal.propTypes = {
-    appsAgents: PropTypes.object,
-    modalData: PropTypes.object,
-    isOpen: PropTypes.bool.isRequired,
-    close: PropTypes.func.isRequired
-};
 
 export default TicketEditModal;

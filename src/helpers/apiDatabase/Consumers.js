@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateConsumers } from '../../redux/actions/consumers';
+import { updateConsumers } from '../../redux/actions/mainStore/consumers';
 
 class Consumers extends Core {
     constructor() {

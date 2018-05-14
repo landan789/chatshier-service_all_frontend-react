@@ -9,6 +9,12 @@ import authHelper from '../../../helpers/authentication';
 import { notify } from '../../Notify/Notify';
 
 class AutoreplyInsert extends React.Component {
+    static propTypes = {
+        apps: PropTypes.object.isRequired,
+        isOpen: PropTypes.bool,
+        close: PropTypes.func.isRequired
+    }
+
     constructor(props) {
         super(props);
 
@@ -140,11 +146,5 @@ class AutoreplyInsert extends React.Component {
         );
     }
 }
-
-AutoreplyInsert.propTypes = {
-    apps: PropTypes.object.isRequired,
-    isOpen: PropTypes.bool,
-    close: PropTypes.func.isRequired
-};
 
 export default AutoreplyInsert;

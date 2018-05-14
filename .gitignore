@@ -9,7 +9,6 @@
 # production
 /build
 /src/**/*.css
-/src/config/firebase.js
 /src/config/url.js
 
 # misc

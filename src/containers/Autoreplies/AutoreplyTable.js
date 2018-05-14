@@ -11,6 +11,12 @@ import apiDatabase from '../../helpers/apiDatabase/index';
 import { notify } from '../../components/Notify/Notify';
 
 class AutoreplyTable extends React.Component {
+    static propTypes = {
+        appsAutoreplies: PropTypes.object,
+        appId: PropTypes.string,
+        keyword: PropTypes.string
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -115,12 +121,6 @@ class AutoreplyTable extends React.Component {
         );
     }
 }
-
-AutoreplyTable.propTypes = {
-    appsAutoreplies: PropTypes.object,
-    appId: PropTypes.string,
-    keyword: PropTypes.string
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     return {

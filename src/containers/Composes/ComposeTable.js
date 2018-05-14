@@ -11,6 +11,13 @@ import { notify } from '../../components/Notify/Notify';
 import timeHelper from '../../helpers/timer';
 
 class ComposeTable extends React.Component {
+    static propTypes = {
+        appsComposes: PropTypes.object,
+        appsFields: PropTypes.object,
+        appId: PropTypes.string,
+        keyword: PropTypes.string
+    }
+
     constructor(props) {
         super(props);
 
@@ -152,13 +159,6 @@ class ComposeTable extends React.Component {
         );
     }
 }
-
-ComposeTable.propTypes = {
-    appsComposes: PropTypes.object,
-    appsFields: PropTypes.object,
-    appId: PropTypes.string,
-    keyword: PropTypes.string
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     return {

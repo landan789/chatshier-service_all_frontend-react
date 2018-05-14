@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateGroups, deleteGroup } from '../../redux/actions/groups';
+import { updateGroups, deleteGroup } from '../../redux/actions/mainStore/groups';
 
 class Groups extends Core {
     constructor() {

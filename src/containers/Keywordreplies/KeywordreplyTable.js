@@ -10,6 +10,12 @@ import apiDatabase from '../../helpers/apiDatabase/index';
 import { notify } from '../../components/Notify/Notify';
 
 class KeywordreplyTable extends React.Component {
+    static propTypes = {
+        appsKeywordreplies: PropTypes.object,
+        appId: PropTypes.string,
+        keyword: PropTypes.string
+    }
+
     constructor(props) {
         super(props);
 
@@ -125,12 +131,6 @@ class KeywordreplyTable extends React.Component {
         );
     }
 }
-
-KeywordreplyTable.propTypes = {
-    appsKeywordreplies: PropTypes.object,
-    appId: PropTypes.string,
-    keyword: PropTypes.string
-};
 
 const mapStateToProps = (storeState, ownProps) => {
     return {

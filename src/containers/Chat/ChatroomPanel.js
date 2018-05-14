@@ -13,9 +13,6 @@ import Message from './Message';
 import sendBtnSvg from '../../image/send-btn.svg';
 import './ChatroomPanel.css';
 
-const LINE = 'LINE';
-const FACEBOOK = 'FACEBOOK';
-const WECHAT = 'WECHAT';
 const CHATSHIER = 'CHATSHIER';
 const SYSTEM = 'SYSTEM';
 const VENDOR = 'VENDOR';

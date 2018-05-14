@@ -367,36 +367,34 @@ class ProfilePanel extends React.Component {
         return (
             <div className="profile-panel col px-0 animated slideInRight">
                 <div className="profile-wrapper p-2">
-                    <div className="profile-group animated fadeIn">
-                        <div className="person-profile profile-content table-responsive">
-                            <div className="photo-container">
-                                <img className="consumer-avatar larger" src={fixHttpsResource(person.photo)} alt="無法顯示相片" />
-                            </div>
-                            {(() => {
-                                if (isGroupChatroom) {
-                                    return (
-                                        <Aux>
-                                            {this.renderChatroomProfile()}
-                                            <div className="p-2 leave-group-room text-right">
-                                                <button type="button" className="btn btn-danger">
-                                                    <i className="fas fa-sign-out-alt fa-fw"></i>
-                                                    <span>離開群組</span>
-                                                </button>
-                                            </div>
-                                        </Aux>
-                                    );
-                                }
-
+                    <div className="person-profile profile-content table-responsive profile-group animated fadeIn">
+                        <div className="photo-container">
+                            <img className="consumer-avatar larger" src={fixHttpsResource(person.photo)} alt="無法顯示相片" />
+                        </div>
+                        {(() => {
+                            if (isGroupChatroom) {
                                 return (
                                     <Aux>
-                                        {this.renderPersonProfile(platformUid, person)}
-                                        <div className="profile-confirm text-center">
-                                            <button type="button" className="btn btn-info">確認</button>
+                                        {this.renderChatroomProfile()}
+                                        <div className="p-2 leave-group-room text-right">
+                                            <button type="button" className="btn btn-danger">
+                                                <i className="fas fa-sign-out-alt fa-fw"></i>
+                                                <span>離開群組</span>
+                                            </button>
                                         </div>
                                     </Aux>
                                 );
-                            })()}
-                        </div>
+                            }
+
+                            return (
+                                <Aux>
+                                    {this.renderPersonProfile(platformUid, person)}
+                                    <div className="profile-confirm text-center">
+                                        <button type="button" className="btn btn-info">確認</button>
+                                    </div>
+                                </Aux>
+                            );
+                        })()}
                     </div>
                 </div>
             </div>

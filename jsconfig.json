@@ -3,10 +3,14 @@
         "baseUrl": ".",
         "lib": [ "dom", "es6" ],
         "target": "es6",
-        "module": "es6",
-        "checkJs": true,
+        "module": "commonjs",
+        "checkJs": false,
+        "allowSyntheticDefaultImports": true,
         "noEmit": true,
-        "jsx": "react"
+        "jsx": "react",
+        "paths": {
+            "*": ["*", "src/*"]
+        }
     },
     "exclude": [
         "node_modules",

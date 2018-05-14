@@ -57,12 +57,14 @@ class Toolbar extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
 
+        this.storeUnsubscribe = void 0;
         this.state = {
             isInChat: ROUTES.CHAT === this.props.history.location.pathname,
             isControlPanelOpen: false,
             isUserModalOpen: false,
             isGroupModalOpen: false,
             isIntegrationModalOpen: false,
+            hasSelectChatroom: false,
             dropdownOpen: false,
             toggleButtons: {
                 profile: false,
@@ -83,7 +85,17 @@ class Toolbar extends React.Component {
         window.addEventListener('resize', this.sizeChanged);
     }
 
+    componentDidMount() {
+        this.storeUnsubscribe && this.storeUnsubscribe();
+        this.storeUnsubscribe = controlPanelStore.subscribe(() => {
+            let selectedChatroom = controlPanelStore.getState().selectedChatroom;
+            this.setState({ hasSelectChatroom: !!(selectedChatroom.appId && selectedChatroom.chatroomId) });
+        });
+    }
+
     componentWillUnmount() {
+        this.storeUnsubscribe && this.storeUnsubscribe();
+        this.storeUnsubscribe = void 0;
         window.removeEventListener('resize', this.sizeChanged);
     }
 
@@ -168,15 +180,17 @@ class Toolbar extends React.Component {
 
                         <div className="nav-title text-nowrap text-light ml-2 mr-auto">{navTitle}</div>
 
-                        <button type="button" className={'btn mx-1 transparent' + (this.state.isInChat ? '' : ' d-none') + (this.state.toggleButtons.profile ? ' active' : '')}
+                        {this.state.isInChat && this.state.hasSelectChatroom &&
+                        <button type="button" className={'btn mx-1 transparent' + (this.state.toggleButtons.profile ? ' active' : '')}
                             onClick={this.toggleProfile}>
                             <i className="fas fa-id-badge"></i>
-                        </button>
+                        </button>}
 
-                        <button type="button" className={'btn mx-1 transparent' + (this.state.isInChat ? '' : ' d-none') + (this.state.toggleButtons.ticket ? ' active' : '')}
+                        {this.state.isInChat && this.state.hasSelectChatroom &&
+                        <button type="button" className={'btn mx-1 transparent' + (this.state.toggleButtons.ticket ? ' active' : '')}
                             onClick={this.toggleTicket}>
                             <i className="far fa-calendar-check"></i>
-                        </button>
+                        </button>}
 
                         <Dropdown isOpen={this.state.dropdownOpen} toggle={this.mobileToggleSetting}>
                             <DropdownToggle color="none" className="text-light transparent">

@@ -58,25 +58,26 @@ class ComposeInsert extends React.Component {
     }
     componentWillReceiveProps(nextProps) {
         let appId = Object.keys(nextProps.apps)[0];
-        let fields = {};
         let appsFields = nextProps.appsFields[appId] ? nextProps.appsFields[appId].fields : {};
-        Promise.resolve().then(() => {
-            return Object.keys(appsFields).filter((field) => 'Age' === appsFields[field].text || 'Gender' === appsFields[field].text || 'CUSTOM' === appsFields[field].type);
-        }).then((fieldArray) => {
-            fieldArray.map((field) => {
-                fields[field] = {
-                    id: appsFields[field]._id,
-                    name: appsFields[field].text,
-                    isSelected: false,
-                    value: ''
-                };
-            });
-            return fields;
-        }).then((fields) => {
-            this.setState({
-                appId,
-                fields
-            });
+        let appIds = Object.keys(appsFields).filter((appId) => {
+            return 'Age' === appsFields[appId].text ||
+                'Gender' === appsFields[appId].text ||
+                'CUSTOM' === appsFields[appId].type;
+        });
+
+        let _appsFields = appIds.reduce((output, appId) => {
+            output[appId] = {
+                id: appsFields[appId]._id,
+                name: appsFields[appId].text,
+                isSelected: false,
+                value: ''
+            };
+            return output;
+        }, {});
+
+        this.setState({
+            appId: appId,
+            fields: _appsFields
         });
     }
     selectedApp(event) {
@@ -183,7 +184,8 @@ class ComposeInsert extends React.Component {
         let ageRange = '';
         let gender = '';
         let time = Date.now() >= this.state.time ? Date.now() : this.state.time;
-        Object.values(this.state.fields).map((field) => {
+
+        Object.values(this.state.fields).forEach((field) => {
             switch (field.name) {
                 case 'Age':
                     ageRange = '' === this.state.fields[field.id].value ? '' : this.state.fields[field.id].value;
@@ -197,6 +199,7 @@ class ComposeInsert extends React.Component {
                     };
             }
         });
+
         let composes = texts.map((text) => {
             let compose = {
                 type: 'text',

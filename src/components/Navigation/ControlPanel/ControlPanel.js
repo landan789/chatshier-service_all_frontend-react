@@ -101,6 +101,7 @@ class ControlPanel extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
 
+        /** @type {Swiper} */
         this.swiper = null;
 
         this.state = {
@@ -266,10 +267,13 @@ class ControlPanel extends React.Component {
             );
         }
 
+        let userId = authHelper.userId;
         let itemCollapse = this.state.itemCollapse;
+
         let unreadItems = [];
         let assignedItems = [];
         let unassignedItems = [];
+
         let lineItems = [];
         let facebookItems = [];
         let chatshierItems = [];
@@ -278,15 +282,17 @@ class ControlPanel extends React.Component {
             let app = this.props.apps[appId];
             let chatrooms = this.props.appsChatrooms[appId].chatrooms;
 
-            let messagerItems = [];
+            let chatroomElems = [];
             for (let chatroomId in chatrooms) {
                 let chatroom = chatrooms[chatroomId];
+                let isGroupChatroom = CHATSHIER === app.type || !!chatroom.platformGroupId;
                 let messagerSelf = findMessagerSelf(chatroom.messagers);
                 let unReadStr = messagerSelf.unRead > 99 ? '99+' : ('' + messagerSelf.unRead);
+                let hasUnRead = !!messagerSelf.unRead;
 
-                let isGroupChatroom = CHATSHIER === app.type || !!chatroom.platformGroupId;
+                let itemElem = null;
                 if (isGroupChatroom) {
-                    messagerItems.push(
+                    itemElem = (
                         <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
                             <img className="app-icon consumer-photo" src={CHATSHIER === app.type ? groupPng : logos[app.type]} alt="無法顯示相片" />
                             <span className="app-name">{chatroom.name || '群組聊天室'}</span>
@@ -295,21 +301,28 @@ class ControlPanel extends React.Component {
                     );
                 } else {
                     let messager = findChatroomMessager(chatroom.messagers, app.type);
-                    let messagerSelf = findMessagerSelf(chatroom.messagers);
                     let platformUid = messager.platformUid;
                     let consumer = this.props.consumers[platformUid];
                     if (!consumer) {
                         continue;
                     }
 
-                    messagerItems.push(
+                    let assignedIds = messager.assigned_ids;
+                    let isAssigned = assignedIds.indexOf(userId) >= 0;
+
+                    itemElem = (
                         <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
                             <img className="app-icon consumer-photo" src={consumer.photo} alt="無法顯示相片" />
                             <span className="app-name">{(messagerSelf && messagerSelf.namings[platformUid]) || consumer.name}</span>
                             <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')}>{unReadStr}</span>
                         </ListGroupItem>
                     );
+
+                    isAssigned && assignedItems.push(itemElem);
+                    !isAssigned && unassignedItems.push(itemElem);
                 }
+                chatroomElems.push(itemElem);
+                hasUnRead && unreadItems.push(itemElem);
             }
 
             let appIcon = '';
@@ -326,19 +339,19 @@ class ControlPanel extends React.Component {
                     break;
             }
 
-            let chatroomSymbol = (
+            let chatroomItem = (
                 <Aux key={appId}>
                     <ListGroupItem className="text-light nested has-collapse" onClick={() => this.toggleItem(appId)}>
                         <i className={appIcon}></i>
                         <span>{app.name}</span>
                         <i className={'ml-auto py-1 fas ' + (itemCollapse[appId] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
                     </ListGroupItem>
-                    <Collapse isOpen={!itemCollapse[appId]} className="nested">{messagerItems}</Collapse>
+                    <Collapse isOpen={!itemCollapse[appId]} className="nested">{chatroomElems}</Collapse>
                 </Aux>
             );
-            (LINE === app.type) && lineItems.push(chatroomSymbol);
-            (FACEBOOK === app.type) && facebookItems.push(chatroomSymbol);
-            (CHATSHIER === app.type) && chatshierItems.push(chatroomSymbol);
+            (LINE === app.type) && lineItems.push(chatroomItem);
+            (FACEBOOK === app.type) && facebookItems.push(chatroomItem);
+            (CHATSHIER === app.type) && chatshierItems.push(chatroomItem);
         }
 
         return (
@@ -366,21 +379,21 @@ class ControlPanel extends React.Component {
                 <ListGroupItem className="text-light nested has-collapse" onClick={() => this.toggleItem('lineCollapse')}>
                     <img className="app-icon" src={logos[LINE]} alt="LINE" />
                     <span>LINE</span>
-                    <i className={'ml-auto py-1 fas ' + (itemCollapse['lineCollapse'] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
+                    <i className={'ml-auto py-1 fas ' + (!itemCollapse['lineCollapse'] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
                 </ListGroupItem>
-                <Collapse isOpen={!itemCollapse['lineCollapse']} className="nested app-types">{lineItems}</Collapse>
+                <Collapse isOpen={itemCollapse['lineCollapse']} className="nested app-types">{lineItems}</Collapse>
                 <ListGroupItem className="text-light nested has-collapse" onClick={() => this.toggleItem('facebookCollapse')}>
                     <img className="app-icon" src={logos[FACEBOOK]} alt="Facebook" />
                     <span>FACEBOOK</span>
-                    <i className={'ml-auto py-1 fas ' + (itemCollapse['facebookCollapse'] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
+                    <i className={'ml-auto py-1 fas ' + (!itemCollapse['facebookCollapse'] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
                 </ListGroupItem>
-                <Collapse isOpen={!itemCollapse['facebookCollapse']} className="nested app-types">{facebookItems}</Collapse>
+                <Collapse isOpen={itemCollapse['facebookCollapse']} className="nested app-types">{facebookItems}</Collapse>
                 <ListGroupItem className="text-light nested has-collapse" onClick={() => this.toggleItem('chatshierCollapse')}>
                     <img className="app-icon" src={logos[CHATSHIER]} alt="Chatshier"/>
                     <span>CHATSHIER</span>
-                    <i className={'ml-auto py-1 fas ' + (itemCollapse['chatshierCollapse'] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
+                    <i className={'ml-auto py-1 fas ' + (!itemCollapse['chatshierCollapse'] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
                 </ListGroupItem>
-                <Collapse isOpen={!itemCollapse['chatshierCollapse']} className="nested app-types">{chatshierItems}</Collapse>
+                <Collapse isOpen={itemCollapse['chatshierCollapse']} className="nested app-types">{chatshierItems}</Collapse>
             </Aux>
         );
     }

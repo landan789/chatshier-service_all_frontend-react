@@ -5,9 +5,26 @@ import mainStore from '../../redux/mainStore';
 import { updateFields, deleteField } from '../../redux/actions/mainStore/appsFields';
 
 class AppsFields extends Core {
+    static TYPES = Object.freeze({
+        SYSTEM: 'SYSTEM',
+        DEFAULT: 'DEFAULT',
+        CUSTOM: 'CUSTOM'
+    })
+
+    static SETS_TYPES = Object.freeze({
+        TEXT: 'TEXT',
+        NUMBER: 'NUMBER',
+        DATE: 'DATE',
+        SELECT: 'SELECT',
+        MULTI_SELECT: 'MULTI_SELECT',
+        CHECKBOX: 'CHECKBOX'
+    })
+
     constructor() {
         super();
         this.apiEndPoint += 'apps-fields/';
+        this.TYPES = AppsFields.TYPES;
+        this.SETS_TYPES = AppsFields.SETS_TYPES;
     }
 
     /**

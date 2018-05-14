@@ -37,33 +37,54 @@ const setingsItems = [
 ];
 
 let navTitle = 'Title';
-const setNavTitle = (title) => {
-    navTitle = title;
-};
+const setNavTitle = (title) => (navTitle = title);
+const BREAKPOINT_LG = 992;
 
 class Toolbar extends React.Component {
     static propTypes = {
+        onToggleChatroom: PropTypes.func,
+        onToggleProfle: PropTypes.func,
+        onToggleTicket: PropTypes.func,
         history: PropTypes.object.isRequired
+    }
+
+    static defaultProps = {
+        onToggleChatroom: () => void 0,
+        onToggleProfle: () => void 0,
+        onToggleTicket: () => void 0
     }
 
     constructor(props, ctx) {
         super(props, ctx);
 
         this.state = {
+            isInChat: ROUTES.CHAT === this.props.history.location.pathname,
+            isControlPanelOpen: false,
             isUserModalOpen: false,
             isGroupModalOpen: false,
             isIntegrationModalOpen: false,
-            isControlPanelOpen: false,
-            dropdownOpen: false
+            dropdownOpen: false,
+            toggleButtons: {
+                profile: false,
+                ticket: false
+            }
         };
+
         this.linkTo = this.linkTo.bind(this);
         this.mobileToggleControlPanel = this.mobileToggleControlPanel.bind(this);
         this.mobileToggleSetting = this.mobileToggleSetting.bind(this);
         this.closeUserModal = this.closeUserModal.bind(this);
         this.closeGroupModal = this.closeGroupModal.bind(this);
         this.closeIntegrationModal = this.closeIntegrationModal.bind(this);
+        this.sizeChanged = this.sizeChanged.bind(this);
+        this.toggleProfile = this.toggleProfile.bind(this);
+        this.toggleTicket = this.toggleTicket.bind(this);
 
         window.addEventListener('resize', this.sizeChanged);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.sizeChanged);
     }
 
     closeUserModal() {
@@ -78,8 +99,32 @@ class Toolbar extends React.Component {
         this.setState({ isIntegrationModalOpen: false });
     }
 
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.sizeChanged);
+    sizeChanged(ev) {
+        if (this.state.toggleButtons.profile || this.state.toggleButtons.ticket) {
+            if (ev.target.innerWidth < BREAKPOINT_LG) {
+                this.props.onToggleChatroom(false);
+            } else if (ev.target.innerWidth >= BREAKPOINT_LG) {
+                this.props.onToggleChatroom(true);
+            }
+        }
+    }
+
+    toggleProfile() {
+        let toggleButtons = this.state.toggleButtons;
+        toggleButtons.profile = !toggleButtons.profile;
+        toggleButtons.ticket = false;
+        this.setState({ toggleButtons: toggleButtons });
+        this.props.onToggleProfle(toggleButtons.profile);
+        this.props.onToggleTicket(toggleButtons.ticket);
+    }
+
+    toggleTicket() {
+        let toggleButtons = this.state.toggleButtons;
+        toggleButtons.ticket = !toggleButtons.ticket;
+        toggleButtons.profile = false;
+        this.setState({ toggleButtons: toggleButtons });
+        this.props.onToggleTicket(toggleButtons.ticket);
+        this.props.onToggleProfle(toggleButtons.profile);
     }
 
     mobileToggleSetting() {
@@ -105,7 +150,7 @@ class Toolbar extends React.Component {
                 if (useReactRouter) {
                     this.props.history.push(route);
                 } else {
-                    window.location.href = route;
+                    window.location.assign(route);
                 }
         }
     }
@@ -116,19 +161,20 @@ class Toolbar extends React.Component {
                 <header className="chsr toolbar">
                     <nav className="navbar px-1">
                         <button type="button"
-                            className="btn text-light transparent d-sm-none"
+                            className="btn text-light transparent ctrl-panel-toggle d-sm-none"
                             onClick={this.mobileToggleControlPanel}>
                             <i className="fas fa-bars"></i>
                         </button>
 
-                        <div className="nav-title text-nowrap text-light ml-2">
-                            {navTitle}
-                        </div>
+                        <div className="nav-title text-nowrap text-light ml-2 mr-auto">{navTitle}</div>
 
-                        <button type="button" className="btn mx-1 transparent d-none">
-                            <i className="far fa-file-alt"></i>
+                        <button type="button" className={'btn mx-1 transparent' + (this.state.isInChat ? '' : ' d-none') + (this.state.toggleButtons.profile ? ' active' : '')}
+                            onClick={this.toggleProfile}>
+                            <i className="fas fa-id-badge"></i>
                         </button>
-                        <button type="button" className="btn mx-1 transparent d-none">
+
+                        <button type="button" className={'btn mx-1 transparent' + (this.state.isInChat ? '' : ' d-none') + (this.state.toggleButtons.ticket ? ' active' : '')}
+                            onClick={this.toggleTicket}>
                             <i className="far fa-calendar-check"></i>
                         </button>
 
@@ -136,7 +182,7 @@ class Toolbar extends React.Component {
                             <DropdownToggle color="none" className="text-light transparent">
                                 <i className="fas fa-ellipsis-v"></i>
                             </DropdownToggle>
-                            <DropdownMenu>
+                            <DropdownMenu className="settings-menu">
                                 {setingsItems.map((item, i) => (
                                     <DropdownItem key={i} onClick={() => this.linkTo(item.link, item.useReactRouter)}>
                                         <i className={item.icon}></i>
@@ -146,9 +192,9 @@ class Toolbar extends React.Component {
                             </DropdownMenu>
                         </Dropdown>
 
-                        <User isOpen={this.state.isUserModalOpen} close={this.closeUserModal}/>
-                        <Group isOpen={this.state.isGroupModalOpen} close={this.closeGroupModal}/>
-                        <Integration isOpen={this.state.isIntegrationModalOpen} close={this.closeIntegrationModal}/>
+                        {this.state.isUserModalOpen && <User isOpen={this.state.isUserModalOpen} close={this.closeUserModal}/>}
+                        {this.state.isGroupModalOpen && <Group isOpen={this.state.isGroupModalOpen} close={this.closeGroupModal}/>}
+                        {this.state.isIntegrationModalOpen && <Integration isOpen={this.state.isIntegrationModalOpen} close={this.closeIntegrationModal}/>}
                     </nav>
                 </header>
             </Aux>

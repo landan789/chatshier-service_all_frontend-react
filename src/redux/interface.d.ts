@@ -63,6 +63,9 @@ namespace Chatshier {
         createdTime?: string;
         updatedTime?: string;
         isDeleted?: boolean;
+        name: string;
+        platformGroupId: string;
+        platformGroupType: string;
         messagers: {
             [messagerId: string]: ChatroomMessager
         };

@@ -7,6 +7,7 @@ import authHelper from '../../helpers/authentication';
 import socketHelper from '../../helpers/socket';
 import { MINUTE } from '../../utils/unitTime';
 
+import { findChatroomMessager, findMessagerSelf } from './Chat';
 import Message from './Message';
 
 import sendBtnSvg from '../../image/send-btn.svg';
@@ -24,7 +25,6 @@ const WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 class ChatroomPanel extends React.Component {
     static propTypes = {
         className: PropTypes.string,
-        isOpen: PropTypes.bool,
         appId: PropTypes.string,
         chatroomId: PropTypes.string,
         apps: PropTypes.object,
@@ -83,8 +83,9 @@ class ChatroomPanel extends React.Component {
         let app = this.props.apps[appId];
 
         let chatroomId = this.props.chatroomId;
-        let platformMessager = this._findChatroomMessager(appId, chatroomId, app.type);
-        let messagerSelf = this._findMessagerSelf(appId, chatroomId);
+        let chatroom = this.props.appsChatrooms[appId].chatrooms[chatroomId];
+        let platformMessager = findChatroomMessager(chatroom.messagers, app.type);
+        let messagerSelf = findMessagerSelf(chatroom.messagers);
         let userId = authHelper.userId;
 
         /** @type {ChatshierMessage} */
@@ -113,7 +114,7 @@ class ChatroomPanel extends React.Component {
 
     render() {
         let props = this.props;
-        if (!(props.isOpen && props.appId && props.chatroomId)) {
+        if (!(props.appId && props.chatroomId)) {
             return null;
         }
         this.prevTime = 0;
@@ -125,15 +126,15 @@ class ChatroomPanel extends React.Component {
         let messages = chatroom.messages;
         let userId = authHelper.userId;
 
-        let messagerSelf = this._findMessagerSelf(props.appId, props.chatroomId);
-        let className = ((this.props.className || '') + ' chatroom-panel').trim();
+        let messagerSelf = findMessagerSelf(messagers);
+        let className = (this.props.className || '') + ' chatroom-panel';
         let messageIds = Object.keys(messages);
 
         // 根據發送的時間從早到晚排序
         messageIds.sort((a, b) => new Date(messages[a].time).getTime() - new Date(messages[b].time).getTime());
 
         return (
-            <div className={className}>
+            <div className={className.trim()}>
                 <div className="w-100 chatroom-body">
                     <div className="chat-content">
                         <div className="h-100 d-flex flex-column message-panel" ref={(elem) => (this.messagePanelElem = elem)}>
@@ -237,61 +238,6 @@ class ChatroomPanel extends React.Component {
                 </div>
             </div>
         );
-    }
-
-    /**
-     * @param {string} appId
-     * @param {string} chatroomId
-     */
-    _findMessagerSelf(appId, chatroomId) {
-        let chatrooms = this.props.appsChatrooms[appId].chatrooms;
-        let messagers = chatrooms[chatroomId].messagers;
-        let userId = authHelper.userId;
-
-        for (let messagerId in messagers) {
-            let messager = messagers[messagerId];
-            if (userId === messager.platformUid) {
-                return messager;
-            }
-        }
-
-        // 前端暫時用的資料，不會儲存至資料庫
-        let _messagerSelf = {
-            type: CHATSHIER,
-            platformUid: userId,
-            unRead: 0
-        };
-        messagers[userId] = _messagerSelf;
-        return _messagerSelf;
-    }
-
-    _findChatroomMessager(appId, chatroomId, appType) {
-        let chatroom = this.props.appsChatrooms[appId].chatrooms[chatroomId];
-        let messagers = chatroom.messagers;
-        let userId = authHelper.userId;
-
-        // 從 chatroom 中找尋唯一的 consumer platformUid
-        for (let messagerId in messagers) {
-            let messager = messagers[messagerId];
-
-            switch (appType) {
-                case LINE:
-                case FACEBOOK:
-                case WECHAT:
-                    if (appType === messager.type) {
-                        return messager;
-                    }
-                    break;
-                case CHATSHIER:
-                default:
-                    if (CHATSHIER === messager.type &&
-                        userId === messager.platformUid) {
-                        return messager;
-                    }
-                    break;
-            }
-        }
-        return {};
     }
 
     /**

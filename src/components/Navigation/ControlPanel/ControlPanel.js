@@ -14,7 +14,9 @@ import controlPanelStore from '../../../redux/controlPanelStore';
 import { closePanel } from '../../../redux/actions/controlPanelStore/isOpen';
 import { putAwayPanel } from '../../../redux/actions/controlPanelStore/isPutAway';
 import { selectChatroom } from '../../../redux/actions/controlPanelStore/selectedChatroom';
+
 import EdgeToggle from '../EdgeToggle/EdgeToggle';
+import { findChatroomMessager, findMessagerSelf } from '../../../containers/Chat/Chat';
 
 import logoPng from '../../../image/logo-no-transparent.png';
 import logoSmallPng from '../../../image/logo-small.png';
@@ -102,6 +104,7 @@ class ControlPanel extends React.Component {
         this.swiper = null;
 
         this.state = {
+            isInChat: ROUTES.CHAT === this.props.history.location.pathname,
             gridState: this.getGridState(window.innerWidth),
             isOpen: false,
             isPutAway: controlPanelStore.getState().isPutAway,
@@ -278,7 +281,7 @@ class ControlPanel extends React.Component {
             let messagerItems = [];
             for (let chatroomId in chatrooms) {
                 let chatroom = chatrooms[chatroomId];
-                let messagerSelf = this._findMessagerSelf(appId, chatroomId);
+                let messagerSelf = findMessagerSelf(chatroom.messagers);
                 let unReadStr = messagerSelf.unRead > 99 ? '99+' : ('' + messagerSelf.unRead);
 
                 let isGroupChatroom = CHATSHIER === app.type || !!chatroom.platformGroupId;
@@ -291,8 +294,8 @@ class ControlPanel extends React.Component {
                         </ListGroupItem>
                     );
                 } else {
-                    let messager = this._findChatroomMessager(appId, chatroomId, app.type);
-                    let messagerSelf = this._findMessagerSelf(appId, chatroomId);
+                    let messager = findChatroomMessager(chatroom.messagers, app.type);
+                    let messagerSelf = findMessagerSelf(chatroom.messagers);
                     let platformUid = messager.platformUid;
                     let consumer = this.props.consumers[platformUid];
                     if (!consumer) {
@@ -341,7 +344,9 @@ class ControlPanel extends React.Component {
         return (
             <Aux>
                 <ListGroupItem className="text-light nested has-collapse unread" onClick={() => this.toggleItem('unreadCollapse')}>
-                    <i className="fas fa-user-times fa-fw fa-1p5x"></i>
+                    <svg className="custom-item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path fill="currentColor" d="M256 32C114.6 32 0 125.1 0 240c0 49.6 21.4 95 57 130.7C44.5 421.1 2.7 466 2.2 466.5c-2.2 2.3-2.8 5.7-1.5 8.7S4.8 480 8 480c66.3 0 116-31.8 140.6-51.4 32.7 12.3 69 19.4 107.4 19.4 141.4 0 256-93.1 256-208S397.4 32 256 32zm84.9 258.9c6.2 6.2 6.2 16.4 0 22.6l-11.3 11.3c-6.2 6.2-16.4 6.2-22.6 0l-51-50.9-50.9 50.9c-6.2 6.2-16.4 6.2-22.6 0l-11.3-11.3c-6.2-6.2-6.2-16.4 0-22.6l50.9-50.9-50.9-50.9c-6.2-6.2-6.2-16.4 0-22.6l11.3-11.3c6.2-6.2 16.4-6.2 22.6 0l50.9 50.9 50.9-50.9c6.2-6.2 16.4-6.2 22.6 0l11.3 11.3c6.2 6.2 6.2 16.4 0 22.6L289.9 240l51 50.9z"></path>
+                    </svg>
                     <span>未讀</span>
                     <i className={'ml-auto py-1 fas ' + (itemCollapse['unreadCollapse'] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
                 </ListGroupItem>
@@ -508,6 +513,18 @@ class ControlPanel extends React.Component {
                         </div>
                         <div className="swiper-slide">
                             <ListGroup className={('detail-list ' + (isPutAway ? 'd-none' : '')).trim()}>
+                                {this.state.isInChat && <ListGroupItem className="text-light px-1 search message-search">
+                                    <input type="text" className="mx-0 search-box" placeholder="搜尋文字訊息..." />
+                                    <div className="search-results d-none">
+                                        <div className="number">
+                                            <span className="current-number" id="currentNumber">0</span>
+                                            <span className="slash-number">/</span>
+                                            <span className="total-number" id="totalNumber">0</span>
+                                        </div>
+                                        <i className="fas fa-chevron-up grey" aria-hidden="true"></i>
+                                        <i className="fas fa-chevron-down grey" aria-hidden="true"></i>
+                                    </div>
+                                </ListGroupItem>}
                                 <ListGroupItem className="text-light py-0 pl-2 logo-item" onClick={() => this.linkTo()}>
                                     <div className="p-1 ctrl-panel-logo">
                                         <img className="w-100 h-100" src={logoSmallPng} alt="" />
@@ -554,66 +571,6 @@ class ControlPanel extends React.Component {
                 <div className={'ctrl-panel-backdrop' + (shouldShowBackdrop ? '' : ' d-none')} onClick={() => this.linkTo()}></div>
             </Aux>
         );
-    }
-
-    /**
-     * @param {string} appId
-     * @param {string} chatroomId
-     */
-    _findMessagerSelf(appId, chatroomId) {
-        let chatrooms = this.props.appsChatrooms[appId].chatrooms;
-        let messagers = chatrooms[chatroomId].messagers;
-        let userId = authHelper.userId;
-
-        for (let messagerId in messagers) {
-            let messager = messagers[messagerId];
-            if (userId === messager.platformUid) {
-                return messager;
-            }
-        }
-
-        // 前端暫時用的資料，不會儲存至資料庫
-        let _messagerSelf = {
-            type: CHATSHIER,
-            platformUid: userId,
-            unRead: 0
-        };
-        messagers[userId] = _messagerSelf;
-        return _messagerSelf;
-    }
-
-    /**
-     * @param {string} appId
-     * @param {string} chatroomId
-     * @param {string} appType
-     */
-    _findChatroomMessager(appId, chatroomId, appType) {
-        let chatroom = this.props.appsChatrooms[appId].chatrooms[chatroomId];
-        let messagers = chatroom.messagers;
-        let userId = authHelper.userId;
-
-        // 從 chatroom 中找尋唯一的 consumer platformUid
-        for (let messagerId in messagers) {
-            let messager = messagers[messagerId];
-
-            switch (appType) {
-                case LINE:
-                case FACEBOOK:
-                case WECHAT:
-                    if (appType === messager.type) {
-                        return messager;
-                    }
-                    break;
-                case CHATSHIER:
-                default:
-                    if (CHATSHIER === messager.type &&
-                        userId === messager.platformUid) {
-                        return messager;
-                    }
-                    break;
-            }
-        }
-        return {};
     }
 }
 

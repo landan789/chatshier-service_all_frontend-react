@@ -110,13 +110,15 @@ class Tickets extends React.Component {
                                     <span className="fas fa-plus fa-fw"></span>
                                     <span>新增待辦</span>
                                 </button>
+
+                                {this.state.isInsertModalOpen &&
                                 <TicketInsertModal
                                     apps={this.props.apps}
                                     appsAgents={this.state.appsAgents}
                                     consumers={this.props.consumers}
                                     isOpen={this.state.isInsertModalOpen}
                                     close={this.closeInsertModal}>
-                                </TicketInsertModal>
+                                </TicketInsertModal>}
 
                                 <input
                                     type="text"

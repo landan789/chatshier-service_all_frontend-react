@@ -26,6 +26,7 @@ class ChatroomPanel extends React.Component {
         className: PropTypes.string,
         appId: PropTypes.string,
         chatroomId: PropTypes.string,
+        searchKeyword: PropTypes.string,
         apps: PropTypes.object,
         appsChatrooms: PropTypes.object,
         consumers: PropTypes.object,
@@ -290,10 +291,9 @@ class ChatroomPanel extends React.Component {
                                             shouldRightSide={shouldRightSide}
                                             senderName={senderName}
                                             isMedia={isMedia}
-                                            messageType={message.type}
-                                            messageText={message.text}
-                                            messageSrc={message.src}
-                                            messageTime={messageDatetime.getTime()}>
+                                            message={message}
+                                            messageTime={messageDatetime.getTime()}
+                                            searchKeyword={this.props.searchKeyword}>
                                         </Message>
                                     </Aux>
                                 );

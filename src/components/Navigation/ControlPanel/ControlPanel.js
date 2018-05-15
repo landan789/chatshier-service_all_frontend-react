@@ -8,12 +8,17 @@ import { Collapse, ListGroup, ListGroupItem } from 'reactstrap';
 import Swiper from 'swiper/dist/js/swiper.js';
 
 import authHelper from '../../../helpers/authentication';
+import socketHelper from '../../../helpers/socket';
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import ROUTES from '../../../config/route';
+
+import mainStore from '../../../redux/mainStore';
+import { updateChatroomsMessagers } from '../../../redux/actions/mainStore/appsChatrooms';
 import controlPanelStore from '../../../redux/controlPanelStore';
 import { closePanel } from '../../../redux/actions/controlPanelStore/isOpen';
 import { putAwayPanel } from '../../../redux/actions/controlPanelStore/isPutAway';
 import { selectChatroom } from '../../../redux/actions/controlPanelStore/selectedChatroom';
+import { updateSearchKeyword } from '../../../redux/actions/controlPanelStore/searchKeyword';
 
 import EdgeToggle from '../EdgeToggle/EdgeToggle';
 import { findChatroomMessager, findMessagerSelf } from '../../../containers/Chat/Chat';
@@ -109,13 +114,17 @@ class ControlPanel extends React.Component {
             gridState: this.getGridState(window.innerWidth),
             isOpen: false,
             isPutAway: controlPanelStore.getState().isPutAway,
-            itemCollapse: {}
+            itemCollapse: {},
+            searchKeywordPrepare: '',
+            searchKeyword: ''
         };
 
         this.storeUnsubscribe = null;
         this.linkTo = this.linkTo.bind(this);
         this.initSwiper = this.initSwiper.bind(this);
         this.widthChanged = this.widthChanged.bind(this);
+        this.searchKeywordChanged = this.searchKeywordChanged.bind(this);
+        this.searchKeywordKeyUp = this.searchKeywordKeyUp.bind(this);
         this.startAnimating = this.startAnimating.bind(this);
         this.endAnimating = this.endAnimating.bind(this);
         this.putAwayControlPanel = this.putAwayControlPanel.bind(this);
@@ -159,6 +168,30 @@ class ControlPanel extends React.Component {
 
     widthChanged(ev) {
         this.setState({ gridState: this.getGridState(ev.target.innerWidth) });
+    }
+
+    searchKeywordChanged(ev) {
+        this.setState({ searchKeywordPrepare: ev.target.value });
+        if (!ev.target.value) {
+            this.setState({ searchKeyword: '' });
+            controlPanelStore.dispatch(updateSearchKeyword(''));
+        }
+    }
+
+    searchKeywordKeyUp(ev) {
+        let keyCode = ev.keyCode || ev.which;
+        switch (keyCode) {
+            case 38: // 向上鍵
+                return this.prevSearchMessage();
+            case 40: // 向下鍵
+                return this.nextSearchMessage();
+            case 13: // Enter 鍵
+                this.setState({ searchKeyword: this.state.searchKeywordPrepare });
+                controlPanelStore.dispatch(updateSearchKeyword(this.state.searchKeywordPrepare));
+                break;
+            default:
+                break;
+        }
     }
 
     linkTo(route, useReactRouter) {
@@ -212,6 +245,14 @@ class ControlPanel extends React.Component {
 
     selectChatroom(appId, chatroomId) {
         controlPanelStore.dispatch(selectChatroom(appId, chatroomId));
+
+        return socketHelper.readChatroomUnRead(appId, chatroomId).then(() => {
+            let chatroom = this.props.appsChatrooms[appId].chatrooms[chatroomId];
+            let messagerSelf = findMessagerSelf(chatroom.messagers);
+            messagerSelf.unRead = 0;
+            let updateMessagers = { [messagerSelf._id]: messagerSelf };
+            mainStore.dispatch(updateChatroomsMessagers(appId, chatroomId, updateMessagers));
+        });
     }
 
     /**
@@ -527,7 +568,12 @@ class ControlPanel extends React.Component {
                         <div className="swiper-slide">
                             <ListGroup className={('detail-list ' + (isPutAway ? 'd-none' : '')).trim()}>
                                 {this.state.isInChat && <ListGroupItem className="text-light px-1 search message-search">
-                                    <input type="text" className="mx-0 search-box" placeholder="搜尋文字訊息..." />
+                                    <input className="mx-0 search-box"
+                                        type="text"
+                                        placeholder="搜尋文字訊息..."
+                                        value={this.state.searchKeywordPrepare}
+                                        onChange={this.searchKeywordChanged}
+                                        onKeyUp={this.searchKeywordKeyUp} />
                                     <div className="search-results d-none">
                                         <div className="number">
                                             <span className="current-number" id="currentNumber">0</span>

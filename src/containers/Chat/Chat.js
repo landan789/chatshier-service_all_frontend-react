@@ -48,7 +48,8 @@ class Chat extends React.Component {
             isOpenProfile: false,
             isOpenTicket: false,
             selectedAppId: '',
-            selectedChatroomId: ''
+            selectedChatroomId: '',
+            searchKeyword: ''
         };
 
         this.toggleChatroom = this.toggleChatroom.bind(this);
@@ -69,8 +70,11 @@ class Chat extends React.Component {
     componentDidMount() {
         this.storeUnsubscribe && this.storeUnsubscribe();
         this.storeUnsubscribe = controlPanelStore.subscribe(() => {
-            let selectedChatroom = controlPanelStore.getState().selectedChatroom;
+            let storeState = controlPanelStore.getState();
+            let searchKeyword = storeState.searchKeyword;
+            let selectedChatroom = storeState.selectedChatroom;
             this.setState({
+                searchKeyword: searchKeyword,
                 selectedAppId: selectedChatroom.appId,
                 selectedChatroomId: selectedChatroom.chatroomId
             });
@@ -139,7 +143,8 @@ class Chat extends React.Component {
                             {this.state.isOpenChatroom && <ChatroomPanel
                                 className="position-relative h-100 col px-0 animated slideInLeft"
                                 appId={this.state.selectedAppId}
-                                chatroomId={this.state.selectedChatroomId}>
+                                chatroomId={this.state.selectedChatroomId}
+                                searchKeyword={this.state.searchKeyword}>
                             </ChatroomPanel>}
 
                             {this.state.isOpenProfile && <ProfilePanel

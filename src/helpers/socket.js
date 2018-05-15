@@ -2,12 +2,13 @@ import socketClient from 'socket.io-client';
 import SOCKET_EVENTS from '../config/socket-events';
 import urlConfig from '../config/url';
 
+import authHelper from './authentication';
 import mainStore from '../redux/mainStore';
 import { updateChatrooms, updateChatroomsMessagers, updateChatroomsMessages } from '../redux/actions/mainStore/appsChatrooms';
 import { updateConsumers } from '../redux/actions/mainStore/consumers';
 
 const SOCKET_NAMESPACE = '/chatshier';
-const WAIT_TIMEOUT = 5000;
+const WAIT_TIMEOUT = 3000;
 
 class SocketHelper {
     constructor() {
@@ -47,11 +48,26 @@ class SocketHelper {
     }
 
     sendMessageToServer(socketBody) {
+        socketBody = socketBody || {};
         return this._send(SOCKET_EVENTS.EMIT_MESSAGE_TO_SERVER, socketBody);
     }
 
     updateMessagerToServer(socketBody) {
+        socketBody = socketBody || {};
         return this._send(SOCKET_EVENTS.UPDATE_MESSAGER_TO_SERVER, socketBody);
+    }
+
+    /**
+     * @param {string} appId
+     * @param {string} chatroomId
+     */
+    readChatroomUnRead(appId, chatroomId) {
+        let socketBody = {
+            appId: appId,
+            chatroomId: chatroomId,
+            userId: authHelper.userId
+        };
+        return this._send(SOCKET_EVENTS.READ_CHATROOM_MESSAGES, socketBody);
     }
 
     appsRegistration() {

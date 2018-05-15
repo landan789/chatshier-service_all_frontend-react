@@ -98,9 +98,13 @@
 }
 
 .multi-select-wrapper {
+    .btn {
+        white-space: normal;
+    }
+
     .dropdown-menu input[type="checkbox"] {
         width: auto;
-        margin-right: 4px;
+        margin-right: .25rem;
     }
 
     .dropdown-toggle {

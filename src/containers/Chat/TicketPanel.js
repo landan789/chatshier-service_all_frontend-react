@@ -2,6 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { toPriorityBorder, toStatusText } from '../../utils/ticket';
+import { formatDate } from '../../utils/unitTime';
+
+import { findChatroomMessager } from './Chat';
+
 import './TicketPanel.css';
 
 const CHATSHIER = 'CHATSHIER';
@@ -43,8 +48,21 @@ class TicketPanel extends React.Component {
         // 屬於群組聊天室的話，沒有待辦事項的功能
         let isGroupChatroom = CHATSHIER === this.app.type || !!this.chatroom.platformGroupId;
         if (isGroupChatroom) {
-            return;
+            return null;
         }
+
+        let platformMessager = findChatroomMessager(this.chatroom.messagers, this.app.type);
+        let platformUid = platformMessager.platformUid;
+        let tickets = this.props.appsTickets[appId].tickets;
+        let ticketIds = Object.keys(tickets).filter((ticketId) => {
+            // 只顯示未刪除、對象是此客戶以及有被指派的待辦事項
+            return !!(
+                !tickets[ticketId].isDeleted &&
+                platformUid === tickets[ticketId].platformUid &&
+                tickets[ticketId].assigned_id
+            );
+        });
+
         return (
             <div className="ticket-panel col px-0 animated slideInRight">
                 <div className="ticket-wrapper p-2">
@@ -65,7 +83,18 @@ class TicketPanel extends React.Component {
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody className="ticket-body"></tbody>
+                            <tbody className="ticket-body">
+                                {ticketIds.map((ticketId) => (
+                                    <tr key={ticketId} className="ticket-row">
+                                        <td className="status" style={toPriorityBorder(tickets[ticketId].priority)}>
+                                            {toStatusText(tickets[ticketId].status)}
+                                        </td>
+                                        <td>{formatDate(new Date(tickets[ticketId].dueTime))}</td>
+                                        <td className="ticket-description">{tickets[ticketId].description}</td>
+                                        <td></td>
+                                    </tr>
+                                ))}
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -79,6 +108,7 @@ const mapStateToProps = (storeState, ownProps) => {
     return {
         apps: storeState.apps,
         appsChatrooms: storeState.appsChatrooms,
+        appsTickets: storeState.appsTickets,
         consumers: storeState.consumers,
         groups: storeState.groups,
         users: storeState.users

@@ -2,10 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Aux from 'react-aux';
 import { connect } from 'react-redux';
+import { Dropdown, DropdownItem, DropdownMenu,
+    DropdownToggle } from 'reactstrap';
 
 import authHelper from '../../helpers/authentication';
+import socketHelper from '../../helpers/socket';
 import apiDatabase from '../../helpers/apiDatabase/index';
+import regex from '../../utils/regex';
 import { fixHttpsResource, logos } from '../../utils/common';
+
+import { notify } from '../../components/Notify/Notify';
 import { findChatroomMessager, findMessagerSelf } from './Chat';
 
 import defaultAvatarPng from '../../image/defautlt-avatar.png';
@@ -38,6 +44,9 @@ class ProfilePanel extends React.Component {
         this.chatroom = void 0;
 
         this.state = {
+            multiSelectTexts: [],
+            multiSelectOpenStates: {},
+            fieldValues: {},
             chatroomNames: {}
         };
         this.appsAgents = {};
@@ -82,10 +91,139 @@ class ProfilePanel extends React.Component {
         ev.target.src = defaultAvatarPng;
     }
 
-    onChatroomChanged(ev, chatroomId) {
+    onChatroomNameChanged(ev, chatroomId) {
         let chatroomNames = this.state.chatroomNames;
         chatroomNames[chatroomId] = ev.target.value;
         this.setState({ chatroomNames: chatroomNames });
+    }
+
+    onFieldValueChanged(ev, fieldId, opts) {
+        let appId = this.props.appId;
+        let field = this.props.appsFields[appId].fields[fieldId];
+        let fieldValues = this.state.fieldValues;
+
+        if (apiDatabase.appsFields.SETS_TYPES.MULTI_SELECT === field.setsType) {
+            fieldValues[fieldId] = fieldValues[fieldId] || opts.initData.slice();
+            fieldValues[fieldId][opts.idx] = !fieldValues[fieldId][opts.idx];
+
+            let multiSelectTexts = this.state.multiSelectTexts;
+            let textArray = fieldValues[fieldId].reduce((output, value, i) => {
+                if (!value) {
+                    return output;
+                }
+                output.push('assigned' === field.alias ? field.sets[i].agentName : field.sets[i]);
+                return output;
+            }, []);
+
+            multiSelectTexts[fieldId] = textArray.join(',');
+            if (textArray.length > 1) {
+                multiSelectTexts[fieldId] = textArray[0] + ' 及其他 ' + (textArray.length - 1) + ' 項';
+            }
+
+            this.setState({
+                fieldValues: fieldValues,
+                multiSelectTexts: multiSelectTexts
+            });
+        } else {
+            fieldValues[fieldId] = ev.target.value;
+            this.setState({ fieldValues: fieldValues });
+        }
+    }
+
+    toggleMultiSelect(ev, fieldId) {
+        let multiSelectOpenStates = this.state.multiSelectOpenStates;
+        multiSelectOpenStates[fieldId] = !multiSelectOpenStates[fieldId];
+        this.setState({ multiSelectOpenStates: multiSelectOpenStates });
+    }
+
+    updateProfile(ev, platformUid) {
+        let fields = this.props.appsFields[this.props.appId].fields;
+        let putField = {};
+
+        for (let fieldId in fields) {
+            /** @type {Chatshier.Field} */
+            let field = fields[fieldId];
+            if (undefined === this.state.fieldValues[fieldId]) {
+                continue;
+            }
+
+            if (field.type === apiDatabase.appsFields.TYPES.CUSTOM) {
+                putField.custom_fields = putField.custom_fields || {};
+                putField.custom_fields[fieldId] = putField.custom_fields[fieldId] || {};
+
+                if (field.setsType === apiDatabase.appsFields.SETS_TYPES.MULTI_SELECT) {
+                    putField.custom_fields[fieldId].value = this.state.fieldValues[fieldId].reduce((output, value, i) => {
+                        if (!value) {
+                            return output;
+                        }
+                        output.push(field.sets[i]);
+                        return output;
+                    }, []);
+                    return;
+                }
+
+                putField.custom_fields[fieldId].value = this.state.fieldValues[fieldId];
+                if (field.setsType === apiDatabase.appsFields.SETS_TYPES.NUMBER) {
+                    putField.custom_fields[fieldId].value = parseInt(putField.custom_fields[fieldId], 10);
+                } else if (field.setsType === apiDatabase.appsFields.SETS_TYPES.DATE) {
+                    putField.custom_fields[fieldId].value = new Date(putField.custom_fields[fieldId]).getTime();
+                }
+            } else {
+                let alias = field.alias;
+                if ('assigned' === alias) {
+                    alias = 'assigned_ids';
+                    let agents = this.appsAgents[this.props.appId].agents;
+                    let agentUserIds = Object.keys(agents);
+                    putField[alias] = this.state.fieldValues[fieldId].reduce((output, value, i) => {
+                        if (!value) {
+                            return output;
+                        }
+                        output.push(agentUserIds[i]);
+                        return output;
+                    }, []);
+                    return;
+                }
+
+                putField[alias] = this.state.fieldValues[fieldId];
+                if (field.setsType === apiDatabase.appsFields.SETS_TYPES.NUMBER) {
+                    putField[alias] = parseInt(putField[alias], 10);
+                } else if (field.setsType === apiDatabase.appsFields.SETS_TYPES.DATE) {
+                    putField[alias] = new Date(putField[alias]).getTime();
+                }
+            }
+        }
+
+        if ('number' === typeof putField.age && !(putField.age >= 0 && putField.age <= 150)) {
+            return notify('年齡限制 0 ~ 150 歲', { type: 'warning' });
+        } else if (putField.email && !regex.emailStrict.test(putField.email)) {
+            return notify('電子郵件不符合格式', { type: 'warning' });
+        } else if (putField.phone && !regex.phone.test(putField.phone)) {
+            return notify('電話號碼不符合格式, ex: 0912XXXXXX', { type: 'warning' });
+        }
+
+        if (0 === Object.keys(putField).length) {
+            return;
+        }
+
+        if (!window.confirm('確定要更新對象用戶的個人資料嗎？')) {
+            return;
+        }
+
+        let socketBody = {
+            params: {
+                userid: authHelper.userId,
+                appid: this.props.appId,
+                chatroomid: this.props.chatroomId,
+                platformuid: platformUid
+            },
+            body: putField
+        };
+
+        return socketHelper.updateMessagerToServer(socketBody).then(() => {
+            return notify('用戶資料更新成功', { type: 'success' });
+        }).catch(() => {
+            return notify('用戶資料更新失敗', { type: 'danger' });
+        });
     }
 
     renderChatroomProfile(appId, chatroomId) {
@@ -107,7 +245,7 @@ class ProfilePanel extends React.Component {
                                 type="text"
                                 value={this.state.chatroomNames[chatroomId] || this.chatroom.name}
                                 placeholder={DEFAULT_CHATROOM_NAME}
-                                onChange={(ev) => this.onChatroomChanged(ev, chatroomId)} />
+                                onChange={(ev) => this.onChatroomNameChanged(ev, chatroomId)} />
                             <button className="ml-2 btn btn-primary btn-update-chatroom">更新</button>
                         </td>
                     </tr>
@@ -122,7 +260,7 @@ class ProfilePanel extends React.Component {
                                         let memberUser = this.props.users[memberUserId];
                                         memberUser && elems.push(
                                             <div className="person-chip">
-                                                <img className="person-avatar" src={fixHttpsResource(memberUser.photo || 'image/avatar-default.png')} alt="" />
+                                                <img className="person-avatar" src={fixHttpsResource(memberUser.photo || defaultAvatarPng)} alt="" />
                                                 <span>{memberUser.name}</span>
                                             </div>
                                         );
@@ -138,7 +276,7 @@ class ProfilePanel extends React.Component {
                                         let consumer = this.props.consumers[messager.platformUid];
                                         consumer && elems.push(
                                             <div key={messagerId} className="person-chip">
-                                                <img className="person-avatar" src={fixHttpsResource(consumer.photo || 'image/avatar-default.png')} alt="" onError={this.onPhotoLoadError} />
+                                                <img className="person-avatar" src={fixHttpsResource(consumer.photo || defaultAvatarPng)} alt="" onError={this.onPhotoLoadError} />
                                                 <span>{consumer.name}</span>
                                             </div>
                                         );
@@ -188,30 +326,14 @@ class ProfilePanel extends React.Component {
                 }
             }
 
-            // 在 html append 到 dom 上後，抓取資料找到指派人的欄位把資料填入
-            if ('assigned' === field.alias) {
-                // 指派人存放的位置在每個 chatroom 的 messager 裡
-                // 取得 chatroom messager 的 assigned_ids 來確認有指派給 chatshier 那些 users
-                let agents = this.appsAgents[appId].agents;
-                let assignedIds = messager.assigned_ids;
-                field.sets = [];
-                fieldValue = [];
-
-                for (let agentUserId in agents) {
-                    field.sets.push({
-                        agentUserId: agentUserId,
-                        agentName: agents[agentUserId].name
-                    });
-                    fieldValue.push(0 <= assignedIds.indexOf(agentUserId));
-                }
-            }
-
             let SETS_TYPES = apiDatabase.appsFields.SETS_TYPES;
             switch (field.setsType) {
                 case SETS_TYPES.SELECT:
                     return (
                         <td className="profile-content user-info-td">
-                            <select className="form-control td-inner" value={fieldValue}>
+                            <select className="form-control td-inner"
+                                value={undefined !== this.state.fieldValues[fieldId] ? this.state.fieldValues[fieldId] : fieldValue}
+                                onChange={(ev) => this.onFieldValueChanged(ev, fieldId)}>
                                 <option value="">未選擇</option>
                                 {field.sets.map((set, i) => (
                                     <option key={i} value={set}>{set}</option>
@@ -220,55 +342,70 @@ class ProfilePanel extends React.Component {
                         </td>
                     );
                 case SETS_TYPES.MULTI_SELECT:
-                    let selectValues = fieldValue instanceof Array ? fieldValue : [];
+                    let selectValues = [];
+                    if ('assigned' === field.alias) {
+                        // 指派人存放的位置在每個 chatroom 的 messager 裡
+                        // 取得 chatroom messager 的 assigned_ids 來確認有指派給 chatshier 那些 users
+                        let agents = this.appsAgents[appId].agents;
+                        let assignedIds = messager.assigned_ids;
+                        field.sets = [];
+
+                        for (let agentUserId in agents) {
+                            field.sets.push({
+                                agentUserId: agentUserId,
+                                agentName: agents[agentUserId].name
+                            });
+                            selectValues.push(0 <= assignedIds.indexOf(agentUserId));
+                        }
+                    } else {
+                        for (let i in field.sets) {
+                            selectValues[i] = 0 <= fieldValue.indexOf(field.sets[i]);
+                        }
+                    }
                     let multiSelectText = selectValues.reduce((output, value, i) => {
                         if (!value) {
                             return output;
                         }
-
                         output.push('assigned' === field.alias ? field.sets[i].agentName : field.sets[i]);
                         return output;
                     }, []).join(',');
 
                     return (
                         <td className="user-info-td">
-                            <div className="btn-group btn-block td-inner multi-select-wrapper">
-                                <button className="btn btn-light btn-border btn-block dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                    <span className="multi-select-values">{multiSelectText}</span>
-                                    <span className="caret"></span>
-                                </button>
-                                <div className="multi-select-container dropdown-menu">
+                            <Dropdown className="btn-group btn-block td-inner multi-select-wrapper"
+                                toggle={(ev) => this.toggleMultiSelect(ev, fieldId)}
+                                isOpen={this.state.multiSelectOpenStates[fieldId]}>
+                                <DropdownToggle color="none" className="btn btn-light btn-border btn-block">
+                                    <span className="multi-select-values">{undefined !== this.state.multiSelectTexts[fieldId] ? this.state.multiSelectTexts[fieldId] : multiSelectText}</span>
+                                    <i className="pl-1 fas fa-caret-down"></i>
+                                </DropdownToggle>
+                                <DropdownMenu className="multi-select-container">
                                     {field.sets.map((set, i) => {
+                                        let setsValue = set;
+                                        let labelName = set;
+
                                         if ('assigned' === field.alias) {
-                                            return (
-                                                <div key={i} className="dropdown-item">
-                                                    <div className="form-check form-check-inline">
-                                                        <label className="form-check-label">
-                                                            <input className="form-check-input"
-                                                                type="checkbox"
-                                                                value={set.agentUserId}
-                                                                checked={!!selectValues[i]}
-                                                                onChange={() => {}} />
-                                                            {set.agentName}
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            );
+                                            setsValue = set.agentUserId;
+                                            labelName = set.agentName;
                                         }
 
                                         return (
-                                            <div key={i} className="dropdown-item">
+                                            <DropdownItem key={i}>
                                                 <div className="form-check form-check-inline">
                                                     <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value={set} checked={!!selectValues[i]} />
-                                                        {set}
+                                                        <input className="form-check-input"
+                                                            type="checkbox"
+                                                            value={setsValue}
+                                                            checked={this.state.fieldValues[fieldId] ? this.state.fieldValues[fieldId][i] : !!selectValues[i]}
+                                                            onChange={(ev) => this.onFieldValueChanged(ev, fieldId, { idx: i, initData: selectValues })} />
+                                                        {labelName}
                                                     </label>
                                                 </div>
-                                            </div>
+                                            </DropdownItem>
                                         );
                                     })}
-                                </div>
-                            </div>
+                                </DropdownMenu>
+                            </Dropdown>
                         </td>
                     );
                 case SETS_TYPES.CHECKBOX:
@@ -278,7 +415,8 @@ class ProfilePanel extends React.Component {
                                 type="checkbox"
                                 checked={!!fieldValue}
                                 readOnly={readonly}
-                                disabled={readonly} />
+                                disabled={readonly}
+                                onChange={(ev) => this.onFieldValueChanged(ev, fieldId)} />
                         </td>
                     );
                 case SETS_TYPES.DATE:
@@ -290,7 +428,8 @@ class ProfilePanel extends React.Component {
                                 type="datetime-local"
                                 value={fieldDateStr}
                                 readOnly={readonly}
-                                disabled={readonly} />
+                                disabled={readonly}
+                                onChange={(ev) => this.onFieldValueChanged(ev, fieldId)} />
                         </td>
                     );
                 case SETS_TYPES.TEXT:
@@ -304,10 +443,11 @@ class ProfilePanel extends React.Component {
                             <input className="form-control td-inner"
                                 type={inputType}
                                 placeholder={placeholder}
-                                value={fieldValue}
+                                value={undefined !== this.state.fieldValues[fieldId] ? this.state.fieldValues[fieldId] : fieldValue || ''}
                                 readOnly={readonly}
                                 disabled={readonly}
-                                autoCapitalize="none" />
+                                autoCapitalize="none"
+                                onChange={(ev) => this.onFieldValueChanged(ev, fieldId)} />
                         </td>
                     );
             }
@@ -365,8 +505,8 @@ class ProfilePanel extends React.Component {
         }
 
         return (
-            <div className="profile-panel col px-0 animated slideInRight">
-                <div className="profile-wrapper p-2">
+            <div className="px-0 profile-panel col animated slideInRight">
+                <div className="px-2 py-3 profile-wrapper">
                     <div className="person-profile profile-content table-responsive profile-group animated fadeIn">
                         <div className="photo-container">
                             <img className="consumer-avatar larger" src={fixHttpsResource(person.photo)} alt="無法顯示相片" />
@@ -390,7 +530,7 @@ class ProfilePanel extends React.Component {
                                 <Aux>
                                     {this.renderPersonProfile(platformUid, person)}
                                     <div className="profile-confirm text-center">
-                                        <button type="button" className="btn btn-info">確認</button>
+                                        <button className="btn btn-info" type="button" onClick={(ev) => this.updateProfile(ev, platformUid)}>確認</button>
                                     </div>
                                 </Aux>
                             );

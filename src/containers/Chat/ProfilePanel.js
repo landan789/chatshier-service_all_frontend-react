@@ -4,6 +4,7 @@ import Aux from 'react-aux';
 import { connect } from 'react-redux';
 import { Dropdown, DropdownItem, DropdownMenu,
     DropdownToggle } from 'reactstrap';
+import { translate, Trans } from 'react-i18next';
 
 import authHelper from '../../helpers/authentication';
 import socketHelper from '../../helpers/socket';
@@ -336,7 +337,9 @@ class ProfilePanel extends React.Component {
                                 onChange={(ev) => this.onFieldValueChanged(ev, fieldId)}>
                                 <option value="">未選擇</option>
                                 {field.sets.map((set, i) => (
-                                    <option key={i} value={set}>{set}</option>
+                                    <option key={i} value={set}>
+                                        <Trans i18nKey={set}>{set}</Trans>
+                                    </option>
                                 ))}
                             </select>
                         </td>
@@ -460,7 +463,9 @@ class ProfilePanel extends React.Component {
                         let field = appsFields[appId].fields[fieldId];
                         return (
                             <tr key={fieldId}>
-                                <th className="profile-label user-info-th">{field.text}</th>
+                                <th className="profile-label user-info-th">
+                                    <Trans i18nKey={field.text}>{field.text}</Trans>
+                                </th>
                                 {renderField(fieldId, field)}
                             </tr>
                         );
@@ -554,4 +559,4 @@ const mapStateToProps = (storeState, ownProps) => {
     };
 };
 
-export default connect(mapStateToProps)(ProfilePanel);
+export default connect(mapStateToProps)(translate()(ProfilePanel));

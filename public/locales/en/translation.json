@@ -1,0 +1,16 @@
+{
+    "Name": "Name",
+    "Age": "Age",
+    "Gender": "Gender",
+    "MALE": "MALE",
+    "Male": "Male",
+    "FEMALE": "FEMALE",
+    "Female": "Female",
+    "Email": "Email",
+    "Phone": "Phone",
+    "Assigned": "Assigned",
+    "First chat date": "First chat date",
+    "Recent chat date": "Recent chat date",
+    "Chat time(s)": "Chat time(s)",
+    "Remark": "Remark"
+}

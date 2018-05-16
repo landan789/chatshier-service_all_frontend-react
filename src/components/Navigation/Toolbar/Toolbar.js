@@ -4,6 +4,8 @@ import Aux from 'react-aux';
 import { withRouter } from 'react-router-dom';
 import { Dropdown, DropdownItem, DropdownMenu,
     DropdownToggle } from 'reactstrap';
+import { Trans } from 'react-i18next';
+import { withTranslate } from '../../../i18n';
 
 import ROUTES from '../../../config/route';
 import User from '../../Modals/User/User';
@@ -20,19 +22,19 @@ const setingsItems = [
     {
         link: ROUTES.SETTINGS_USERS,
         icon: 'fa fa-user',
-        text: '基本設定'
+        text: 'Settings'
     }, {
         link: ROUTES.SETTINGS_GROUPS,
         icon: 'fas fa-object-group',
-        text: '內部群組'
+        text: 'Groups'
     }, {
         link: ROUTES.SETTINGS_APPS,
         icon: 'fab fa-android',
-        text: '系統整合'
+        text: 'Integration'
     }, {
         link: ROUTES.SIGNOUT,
         icon: 'fa fa-sign-out-alt',
-        text: '登出',
+        text: 'Sign out',
         useReactRouter: true
     }
 ];
@@ -46,6 +48,7 @@ const BREAKPOINT_LG = 992;
 
 class Toolbar extends React.Component {
     static propTypes = {
+        t: PropTypes.func.isRequired,
         onToggleChatroom: PropTypes.func,
         onToggleProfle: PropTypes.func,
         onToggleTicket: PropTypes.func,
@@ -217,7 +220,7 @@ class Toolbar extends React.Component {
                                 {setingsItems.map((item, i) => (
                                     <DropdownItem key={i} onClick={() => this.linkTo(item.link, item.useReactRouter)}>
                                         <i className={item.icon}></i>
-                                        <span>{item.text}</span>
+                                        <span><Trans i18nKey={item.text} /></span>
                                     </DropdownItem>
                                 ))}
                             </DropdownMenu>
@@ -233,5 +236,5 @@ class Toolbar extends React.Component {
     }
 }
 
-export default withRouter(Toolbar);
+export default withRouter(withTranslate(Toolbar));
 export { setNavTitle };

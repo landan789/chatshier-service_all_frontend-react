@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, withRouter } from 'react-router-dom';
 import { Fade } from 'reactstrap';
+import { Trans } from 'react-i18next';
+import { withTranslate } from '../../i18n';
 
 import ROUTES from '../../config/route';
 import browserHelper from '../../helpers/browser';
@@ -20,6 +22,7 @@ const PASSWORD_WAS_INCORRECT = 'password was incorrect';
 
 class SignIn extends React.Component {
     static propTypes = {
+        t: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
     }
 
@@ -28,7 +31,7 @@ class SignIn extends React.Component {
 
         this.state = {
             isSignIning: false,
-            signInBtnHtml: '登入',
+            signInBtnHtml: this.props.t('Sign in'),
             email: '',
             password: ''
         };
@@ -39,7 +42,7 @@ class SignIn extends React.Component {
     }
 
     componentWillMount() {
-        browserHelper.setTitle('登入');
+        browserHelper.setTitle(this.props.t('Sign in'));
 
         if (authHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
@@ -64,9 +67,9 @@ class SignIn extends React.Component {
         let pw = this.state.password;
 
         if (!regex.emailStrict.test(email)) {
-            return notify('無效電子郵件', { type: 'warning' });
+            return notify(this.props.t('Invalid email'), { type: 'warning' });
         } else if (!pw) {
-            return notify('請輸入密碼', { type: 'warning' });
+            return notify(this.props.t('Enter your password'), { type: 'warning' });
         }
 
         return this.signIn(email, pw);
@@ -75,7 +78,7 @@ class SignIn extends React.Component {
     signIn(email, password) {
         this.setState({
             isSignIning: true,
-            signInBtnHtml: '<i class="fas fa-circle-notch fa-fw fa-spin"></i>登入中...'
+            signInBtnHtml: '<i class="fas fa-circle-notch fa-fw fa-spin"></i>' + this.props.t('Signing in') + '...'
         });
 
         let user = {
@@ -99,16 +102,16 @@ class SignIn extends React.Component {
         }).catch((err) => {
             this.setState({
                 isSignIning: false,
-                signInBtnHtml: '登入'
+                signInBtnHtml: this.props.t('Sign in')
             });
 
             switch (err.msg) {
                 case USER_FAILED_TO_FIND:
-                    return notify('找不到使用者', { type: 'danger' });
+                    return notify(this.props.t('No user found'), { type: 'danger' });
                 case PASSWORD_WAS_INCORRECT:
-                    return notify('密碼錯誤！', { type: 'danger' });
+                    return notify(this.props.t('Wrong password!'), { type: 'danger' });
                 default:
-                    return notify('發生錯誤！', { type: 'danger' });
+                    return notify(this.props.t('An error occurred!'), { type: 'danger' });
             }
         });
     }
@@ -116,7 +119,7 @@ class SignIn extends React.Component {
     render() {
         return (
             <Fade in className="signin-container w-100">
-                <SignForm title="登入" onSubmit={this.checkInputs}>
+                <SignForm title={this.props.t('Sign in')} onSubmit={this.checkInputs}>
                     <fieldset>
                         <div className="form-group">
                             <div className="input-group">
@@ -130,7 +133,7 @@ class SignIn extends React.Component {
                                     className="form-control"
                                     name="email"
                                     pattern={regex.emailWeak.source}
-                                    placeholder="電子郵件"
+                                    placeholder={this.props.t('Email')}
                                     value={this.state.email}
                                     onChange={this.emailChanged}
                                     required />
@@ -147,7 +150,7 @@ class SignIn extends React.Component {
                                     type="password"
                                     className="form-control"
                                     name="password"
-                                    placeholder="密碼"
+                                    placeholder={this.props.t('Password')}
                                     value={this.state.password}
                                     onChange={this.pwChanged}
                                     required />
@@ -167,18 +170,18 @@ class SignIn extends React.Component {
                     <div className="my-4 text-center">
                         <Route render={(router) => (
                             <p>
-                                <span>忘記密碼？請按</span>
+                                <span><Trans i18nKey={'Forgot password?'} /></span>
                                 <span className="mx-1 link-text" onClick={() => {
                                     router.history.push(ROUTES.RESET_PASSWORD);
-                                }}>重設密碼</span>
+                                }}><Trans i18nKey={'Reset password'} /></span>
                             </p>
                         )}></Route>
                         <Route render={(router) => (
                             <p>
-                                <span>還沒有帳號嗎？請按</span>
+                                <span><Trans i18nKey={'Don\'t have an account yet?'} /></span>
                                 <span className="mx-1 link-text" onClick={() => {
                                     router.history.push(ROUTES.SIGNUP);
-                                }}>註冊</span>
+                                }}><Trans i18nKey={'Sign up'} /></span>
                             </p>
                         )}></Route>
                     </div>
@@ -188,4 +191,4 @@ class SignIn extends React.Component {
     }
 }
 
-export default withRouter(SignIn);
+export default withRouter(withTranslate(SignIn));

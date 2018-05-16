@@ -9,13 +9,13 @@ export const appsChatroomsReducer = (state = {}, action) => {
 
     switch (action.type) {
         case UPDATE_CHATROOMS:
-            for (let appId in action.appsChatrooms) {
+            for (appId in action.appsChatrooms) {
                 /** @type {Chatshier.AppsChatrooms} */
                 let app = action.appsChatrooms[appId];
                 state[appId] = state[appId] || { chatrooms: {} };
 
                 let chatrooms = app.chatrooms;
-                for (let chatroomId in chatrooms) {
+                for (chatroomId in chatrooms) {
                     /** @type {Chatshier.Chatroom} */
                     let chatroom = chatrooms[chatroomId];
                     if (chatroom.isDeleted) {
@@ -36,8 +36,8 @@ export const appsChatroomsReducer = (state = {}, action) => {
             }
             return Object.assign({}, state);
         case DELETE_CHATROOM:
-            let appId = action.appId;
-            let chatroomId = action.chatroomId;
+            appId = action.appId;
+            chatroomId = action.chatroomId;
 
             delete state[appId].chatrooms[chatroomId];
             if (0 === Object.keys(state[appId].chatrooms).length) {

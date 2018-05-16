@@ -39,6 +39,7 @@ class SignForm extends React.Component {
                         <div className="form-container col-12 col-sm-10 col-md-8 col-lg-12">
                             <h2 className="text-center sign-title">{this.props.title}</h2>
                             {this.props.subTitle && <p className="text-center lead">{this.props.subTitle}</p>}
+
                             <form className="sign-form" onSubmit={this.props.onSubmit}>
                                 {this.props.children}
                             </form>

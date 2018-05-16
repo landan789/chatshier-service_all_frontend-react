@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, withRouter } from 'react-router-dom';
 import { Fade } from 'reactstrap';
+import { Trans } from 'react-i18next';
+import { withTranslate } from '../../i18n';
 
 import ROUTES from '../../config/route';
 import browserHelper from '../../helpers/browser';
@@ -15,17 +17,6 @@ import { notify } from '../../components/Notify/Notify';
 
 import './SignUp.css';
 
-const TOOLTIP = {
-    'SIGNUP_NAME': '請輸入姓名',
-    'SIGNUP_EMAIL': '請輸入電子郵件',
-    'SIGNUP_PASSWORD': '請輸入密碼',
-    'SIGNUP_PASSWORD_CONFIRM': '與密碼不相符',
-    'EMAIL_ALREADY_IN_USE': '此電子郵件已註冊',
-    'INVALID_EMAIL': '無效電子郵件',
-    'OPERATION_NOT_ALLOWED': '操作不允許',
-    'WEAK_PASSWORD': '密碼強度低'
-};
-
 const NAME_WAS_EMPTY = 'name was empty';
 const EMAIL_WAS_EMPTY = 'EMAIL was empty';
 const PASSWORD_WAS_EMPTY = 'password was empty';
@@ -33,6 +24,7 @@ const USER_EMAIL_HAD_BEEN_SIGNED_UP = 'user email had been signed up';
 
 class SignUp extends React.Component {
     static propTypes = {
+        t: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
     }
 
@@ -41,7 +33,7 @@ class SignUp extends React.Component {
 
         this.state = {
             isSignUping: false,
-            signupBtnHtml: '註冊',
+            signupBtnHtml: this.props.t('Sign up'),
             name: '',
             email: '',
             password: '',
@@ -56,7 +48,7 @@ class SignUp extends React.Component {
     }
 
     componentWillMount() {
-        browserHelper.setTitle('註冊');
+        browserHelper.setTitle(this.props.t('Sign up'));
 
         if (authHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
@@ -91,15 +83,15 @@ class SignUp extends React.Component {
         let pwConfirm = this.state.passwordConfirm;
 
         if (!name) {
-            return notify(TOOLTIP.SIGNUP_NAME, { type: 'warning' });
+            return notify(this.props.t('Enter your name'), { type: 'warning' });
         } else if (!email) {
-            return notify(TOOLTIP.SIGNUP_EMAIL, { type: 'warning' });
+            return notify(this.props.t('Enter your email'), { type: 'warning' });
         } else if (!regex.emailStrict.test(email)) {
-            return notify(TOOLTIP.INVALID_EMAIL, { type: 'warning' });
+            return notify(this.props.t('Invalid email'), { type: 'warning' });
         } else if (!pw) {
-            return notify(TOOLTIP.SIGNUP_PASSWORD, { type: 'warning' });
+            return notify(this.props.t('Enter your password'), { type: 'warning' });
         } else if (pw !== pwConfirm) {
-            return notify(TOOLTIP.SIGNUP_PASSWORD_CONFIRM, { type: 'warning' });
+            return notify(this.props.t('Password does not match'), { type: 'warning' });
         }
 
         return this.signup(name, email, pw);
@@ -108,7 +100,7 @@ class SignUp extends React.Component {
     signup(name, email, password) {
         this.setState({
             isSignUping: true,
-            signupBtnHtml: '<i class="fas fa-circle-notch fa-fw fa-spin"></i>註冊中...'
+            signupBtnHtml: '<i class="fas fa-circle-notch fa-fw fa-spin"></i>' + this.props.t('Signing up') + '...'
         });
 
         let user = {
@@ -132,20 +124,20 @@ class SignUp extends React.Component {
         }).catch((err) => {
             this.setState({
                 isSignUping: false,
-                signupBtnHtml: '註冊'
+                signupBtnHtml: this.props.t('Sign up')
             });
 
             switch (err.msg) {
                 case NAME_WAS_EMPTY:
-                    return notify('姓名未填寫', { type: 'danger' });
+                    return notify(this.props.t('Name was empty!'), { type: 'danger' });
                 case EMAIL_WAS_EMPTY:
-                    return notify('email 未填寫！', { type: 'danger' });
+                    return notify(this.props.t('Email was empty!'), { type: 'danger' });
                 case PASSWORD_WAS_EMPTY:
-                    return notify('密碼未填寫！', { type: 'danger' });
+                    return notify(this.props.t('Password was empty!'), { type: 'danger' });
                 case USER_EMAIL_HAD_BEEN_SIGNED_UP:
-                    return notify('email 已被註冊！', { type: 'danger' });
+                    return notify(this.props.t('User email had been signed up!'), { type: 'danger' });
                 default:
-                    return notify('發生錯誤！', { type: 'danger' });
+                    return notify(this.props.t('An error occurred!'), { type: 'danger' });
             }
         });
     }
@@ -153,7 +145,7 @@ class SignUp extends React.Component {
     render() {
         return (
             <Fade in className="signup-container w-100">
-                <SignForm title="不需付費。馬上體驗聊天功能。" subTitle="不需付費。馬上體驗聊天功能。" onSubmit={this.checkInputs}>
+                <SignForm title={this.props.t('Sign up')} subTitle={this.props.t('No fee. Experience chat now.')} onSubmit={this.checkInputs}>
                     <fieldset>
                         <div className="form-group">
                             <div className="input-group">
@@ -166,7 +158,7 @@ class SignUp extends React.Component {
                                 <input
                                     type="text"
                                     className="form-control"
-                                    placeholder="姓名"
+                                    placeholder={this.props.t('Name')}
                                     value={this.state.name}
                                     onChange={this.nameChanged}
                                     required />
@@ -184,7 +176,7 @@ class SignUp extends React.Component {
                                     type="email"
                                     className="form-control"
                                     pattern={regex.emailWeak.source}
-                                    placeholder="電子郵件"
+                                    placeholder={this.props.t('Email')}
                                     value={this.state.email}
                                     onChange={this.emailChanged}
                                     required />
@@ -201,7 +193,7 @@ class SignUp extends React.Component {
                                 <input
                                     type="password"
                                     className="form-control"
-                                    placeholder="密碼"
+                                    placeholder={this.props.t('Password')}
                                     value={this.state.password}
                                     onChange={this.pwChanged}
                                     required />
@@ -218,7 +210,7 @@ class SignUp extends React.Component {
                                 <input
                                     type="password"
                                     className="form-control"
-                                    placeholder="確認密碼"
+                                    placeholder={this.props.t('Confirm password')}
                                     value={this.state.passwordConfirm}
                                     onChange={this.pwConfirmChanged}
                                     required />
@@ -238,17 +230,17 @@ class SignUp extends React.Component {
                     </fieldset>
                     <div className="my-4 text-center">
                         <p>
-                            <span>我同意 Chatshier</span>
-                            <a className="mx-1 link-text" href="https://www.chatshier.com/terms.html" target="_blank" rel="noopener noreferrer">服務條款</a>
+                            <span><Trans i18nKey={'I agree Chatshier'} /></span>
+                            <a className="mx-1 link-text" href="https://www.chatshier.com/terms.html" target="_blank" rel="noopener noreferrer"><Trans i18nKey={'Terms'} /></a>
                             <span>&amp;</span>
-                            <a className="mx-1 link-text" href="https://www.chatshier.com/privacy.html" target="_blank" rel="noopener noreferrer">隱私權條款</a>
+                            <a className="mx-1 link-text" href="https://www.chatshier.com/privacy.html" target="_blank" rel="noopener noreferrer"><Trans i18nKey={'Privacy'} /></a>
                         </p>
                         <Route render={(router) => (
                             <p>
-                                <span>已經有帳號了嗎？請按</span>
+                                <span><Trans i18nKey={'Already have an account?'} /></span>
                                 <span className="mx-1 link-text" onClick={() => {
                                     router.history.push(ROUTES.SIGNIN);
-                                }}>登入</span>
+                                }}><Trans i18nKey={'Sign in'} /></span>
                             </p>
                         )}></Route>
                     </div>
@@ -258,4 +250,4 @@ class SignUp extends React.Component {
     }
 }
 
-export default withRouter(SignUp);
+export default withRouter(withTranslate(SignUp));

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Aux from 'react-aux';
 import { withRouter } from 'react-router-dom';
+import { Trans } from 'react-i18next';
+import { withTranslate } from '../../../i18n';
 
 import { Collapse, ListGroup, ListGroupItem } from 'reactstrap';
 import Swiper from 'swiper/dist/js/swiper.js';
@@ -44,41 +46,41 @@ const linkItems = [
     {
         link: ROUTES.CALENDAR,
         icon: 'far fa-calendar-alt fa-fw',
-        text: '行事曆',
+        text: 'Calendar',
         useReactRouter: true
     }, {
         link: ROUTES.TICKETS,
         icon: 'fa fa-list-ul fa-fw',
-        text: '待辦事項',
+        text: 'To-Do Items',
         useReactRouter: true
     }, {
         link: ROUTES.ANALYZE,
         icon: 'fa fa-chart-bar fa-fw',
-        text: '訊息分析',
+        text: 'Analyze',
         useReactRouter: true
     }, {
         icon: 'fa fa-envelope fa-fw',
-        text: '訊息',
+        text: 'Messages',
         dropdownItems: [
             {
                 link: ROUTES.COMPOSES,
                 icon: 'fa fa-comments',
-                text: '群發',
+                text: 'Composes',
                 useReactRouter: true
             }, {
                 link: ROUTES.AUTOREPLIES,
                 icon: 'fa fa-comments',
-                text: '自動回覆',
+                text: 'Auto Replies',
                 useReactRouter: true
             }, {
                 link: ROUTES.KEYWORDREPLIES,
                 icon: 'fa fa-comments',
-                text: '關鍵字回覆',
+                text: 'Keyword Replies',
                 useReactRouter: true
             }, {
                 link: ROUTES.GREETINGS,
                 icon: 'fa fa-comments',
-                text: '加好友回覆',
+                text: 'Greetings',
                 useReactRouter: true
             }
         ]
@@ -97,6 +99,7 @@ const TRANSITION_DURATION = 300;
 
 class ControlPanel extends React.Component {
     static propTypes = {
+        t: PropTypes.func.isRequired,
         apps: PropTypes.object.isRequired,
         appsChatrooms: PropTypes.object.isRequired,
         consumers: PropTypes.object.isRequired,
@@ -453,14 +456,14 @@ class ControlPanel extends React.Component {
                     <Aux key={i} >
                         <ListGroupItem className="text-light" onClick={() => this.toggleItem(i)}>
                             <i className={item.icon}></i>
-                            <span>{item.text}</span>
+                            <span><Trans i18nKey={item.text} /></span>
                             <i className={'ml-auto fas ' + (itemCollapse[i] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
                         </ListGroupItem>
                         <Collapse isOpen={!itemCollapse[i]}>
                             {item.dropdownItems.map((dropdownItem, j) => (
                                 <ListGroupItem className="text-light nested" key={j} onClick={() => this.linkTo(dropdownItem.link, dropdownItem.useReactRouter)}>
                                     <i className={dropdownItem.icon}></i>
-                                    <span>{dropdownItem.text}</span>
+                                    <span><Trans i18nKey={dropdownItem.text} /></span>
                                 </ListGroupItem>
                             ))}
                         </Collapse>
@@ -476,7 +479,7 @@ class ControlPanel extends React.Component {
                     this.linkTo(item.link, item.useReactRouter);
                 }}>
                     <i className={item.icon}></i>
-                    <span>{item.text}</span>
+                    <span><Trans i18nKey={item.text} /></span>
                 </ListGroupItem>
             );
         });
@@ -565,7 +568,7 @@ class ControlPanel extends React.Component {
 
                                 <ListGroupItem className="text-light">
                                     <i className="fas fa-plus"></i>
-                                    <span>新增</span>
+                                    <span><Trans i18nKey={'Add'} /></span>
                                 </ListGroupItem>
                             </ListGroup>
                         </div>
@@ -574,18 +577,18 @@ class ControlPanel extends React.Component {
                                 {this.state.isInChat && <ListGroupItem className="text-light px-1 search message-search">
                                     <input className="mx-0 search-box"
                                         type="text"
-                                        placeholder="搜尋文字訊息..."
+                                        placeholder={this.props.t('Search messages of text...')}
                                         value={this.state.searchKeywordPrepare}
                                         onChange={this.searchKeywordChanged}
                                         onKeyUp={this.searchKeywordKeyUp} />
                                     <div className="search-results d-none">
                                         <div className="number">
-                                            <span className="current-number" id="currentNumber">0</span>
+                                            <span className="current-number">0</span>
                                             <span className="slash-number">/</span>
-                                            <span className="total-number" id="totalNumber">0</span>
+                                            <span className="total-number">0</span>
                                         </div>
-                                        <i className="fas fa-chevron-up grey" aria-hidden="true"></i>
-                                        <i className="fas fa-chevron-down grey" aria-hidden="true"></i>
+                                        <i className="fas fa-chevron-up grey"></i>
+                                        <i className="fas fa-chevron-down grey"></i>
                                     </div>
                                 </ListGroupItem>}
                                 <ListGroupItem className="text-light py-0 pl-2 logo-item" onClick={() => this.linkTo()}>
@@ -597,7 +600,7 @@ class ControlPanel extends React.Component {
                                 </ListGroupItem>
                                 <ListGroupItem className="text-light" onClick={() => isInChat ? this.toggleItem(ROUTES.CHAT) : this.linkTo(ROUTES.CHAT, true)}>
                                     <i className="fas fa-comment-dots fa-fw"></i>
-                                    <span>聊天室</span>
+                                    <span><Trans i18nKey="Chatroom" /></span>
                                     {isInChat && <i className={'ml-auto fas ' + (itemCollapse[ROUTES.CHAT] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>}
                                 </ListGroupItem>
                                 <Collapse isOpen={!itemCollapse[ROUTES.CHAT]}>{this.renderChatroomList()}</Collapse>
@@ -646,4 +649,4 @@ const mapStateToProps = (storeState, ownProps) => {
     };
 };
 
-export default connect(mapStateToProps)(withRouter(ControlPanel));
+export default connect(mapStateToProps)(withRouter(withTranslate(ControlPanel)));

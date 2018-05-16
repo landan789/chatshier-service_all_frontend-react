@@ -28,7 +28,7 @@ const urlConfig = {
     /**
      * 指向 service.chatshier 專案的 API 伺服器位址
      */
-    apiUrl: 'https://api.chatshier.com/'
+    apiUrl: '//api.chatshier.com/'
 };
 
 export default urlConfig;

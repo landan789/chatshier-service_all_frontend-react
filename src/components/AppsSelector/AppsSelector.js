@@ -9,10 +9,16 @@ import apiDatabase from '../../helpers/apiDatabase/index';
 
 class AppsSelector extends React.Component {
     static propTypes = {
+        className: PropTypes.string,
         showAll: PropTypes.bool,
         apps: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired
     }
+
+    static defaultProps = {
+        className: '',
+        showAll: false
+    };
 
     constructor(props, ctx) {
         super(props, ctx);
@@ -47,9 +53,7 @@ class AppsSelector extends React.Component {
     }
 
     toggle() {
-        this.setState({
-            dropdownOpen: !this.state.dropdownOpen
-        });
+        this.setState({ dropdownOpen: !this.state.dropdownOpen });
     }
 
     selectedApp(appId, appName) {
@@ -79,7 +83,7 @@ class AppsSelector extends React.Component {
 
     render() {
         return (
-            <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+            <ButtonDropdown className={this.props.className} isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                 <DropdownToggle caret color="primary">
                     {this.state.selectedAppName || '選擇應用程序'}&nbsp;
                 </DropdownToggle>

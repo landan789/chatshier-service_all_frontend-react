@@ -1,5 +1,5 @@
 const ROUTES = {
-    ANALYZE: '/analyze',
+    ANALYSIS: '/analysis',
     AUTOREPLIES: '/autoreplies',
     CALENDAR: '/calendar',
     CHANGE_PASSWORD: '/change-password',

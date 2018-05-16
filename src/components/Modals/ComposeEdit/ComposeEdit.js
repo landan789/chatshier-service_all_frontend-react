@@ -41,7 +41,7 @@ class ComposeEdit extends React.Component {
     componentWillReceiveProps(nextProps) {
         let compose = nextProps.modalData ? nextProps.modalData.compose : {};
         let composeLength = Object.keys(compose).length;
-        let fields = {};
+
         let appsFields = nextProps.modalData ? nextProps.modalData.appsFields.fields : {};
         if (0 < composeLength) {
             this.setState({
@@ -54,42 +54,43 @@ class ComposeEdit extends React.Component {
                 status: compose.status
             });
         }
-        Promise.resolve().then(() => {
-            return Object.keys(appsFields).filter((field) => 'Age' === appsFields[field].text || 'Gender' === appsFields[field].text || 'CUSTOM' === appsFields[field].type);
-        }).then((fieldArray) => {
-            fieldArray.map((field) => {
-                switch (appsFields[field].text) {
-                    case 'Age':
-                        fields[field] = {
-                            id: appsFields[field]._id,
-                            name: appsFields[field].text,
-                            isSelected: false,
-                            value: compose.ageRange[0] || ''
-                        };
-                        break;
-                    case 'Gender':
-                        fields[field] = {
-                            id: appsFields[field]._id,
-                            name: appsFields[field].text,
-                            isSelected: false,
-                            value: compose.gender
-                        };
-                        break;
-                    default:
-                        fields[field] = {
-                            id: appsFields[field]._id,
-                            name: appsFields[field].text,
-                            isSelected: false,
-                            value: compose.field_ids[field] ? compose.field_ids[field].value : ''
-                        };
-                }
-            });
-            return fields;
-        }).then((fields) => {
-            this.setState({
-                fields
-            });
+
+        let appIds = Object.keys(appsFields).filter((appId) => {
+            return 'Age' === appsFields[appId].text ||
+                'Gender' === appsFields[appId].text ||
+                'CUSTOM' === appsFields[appId].type;
         });
+
+        let _appsFields = appIds.reduce((output, appId) => {
+            switch (appsFields[appId].text) {
+                case 'Age':
+                    output[appId] = {
+                        id: appsFields[appId]._id,
+                        name: appsFields[appId].text,
+                        isSelected: false,
+                        value: compose.ageRange[0] || ''
+                    };
+                    break;
+                case 'Gender':
+                    output[appId] = {
+                        id: appsFields[appId]._id,
+                        name: appsFields[appId].text,
+                        isSelected: false,
+                        value: compose.gender
+                    };
+                    break;
+                default:
+                    output[appId] = {
+                        id: appsFields[appId]._id,
+                        name: appsFields[appId].text,
+                        isSelected: false,
+                        value: compose.field_ids[appId] ? compose.field_ids[appId].value : ''
+                    };
+                    break;
+            }
+            return output;
+        }, {});
+        this.setState({ fields: _appsFields });
     }
     handleDatetimeChange(time) {
         let datetime = new Date(time);
@@ -135,7 +136,8 @@ class ComposeEdit extends React.Component {
         let userId = authHelper.userId;
         let field_ids = {};
         let age, gender;
-        Object.values(this.state.fields).map((field) => {
+
+        Object.values(this.state.fields).forEach((field) => {
             if (!field.value) {
                 return;
             }
@@ -145,6 +147,7 @@ class ComposeEdit extends React.Component {
             age = 'Age' === field.name ? field.value : '';
             gender = 'Gender' === field.name ? field.value : '';
         });
+
         let compose = {
             type: 'text',
             text: this.state.text,

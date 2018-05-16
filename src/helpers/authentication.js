@@ -3,6 +3,7 @@ import cookieHelper, { CHSR_COOKIE } from './cookie';
 import { MINUTE } from '../utils/unitTime';
 
 import ROUTES from '../config/route';
+import apiBot from './apiBot/index';
 import apiDatabase from './apiDatabase/index';
 import apiSign from './apiSign/index';
 
@@ -48,6 +49,7 @@ class AuthenticationHelper {
             this.payload = {};
             window.localStorage.removeItem('jwt');
         }
+        apiBot.setJWT(this._jwt);
         apiDatabase.setJWT(this._jwt);
         apiSign.setJWT(this._jwt);
     }

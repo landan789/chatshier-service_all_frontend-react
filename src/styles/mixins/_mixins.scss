@@ -1,1 +1,12 @@
 @import './_rwd';
+
+@mixin scrollable($direct: '') {
+    @if $direct == 'x' {
+        overflow-x: auto;
+    } @else if $direct == 'y' {
+        overflow-y: auto;
+    } @else {
+        overflow: auto;
+    }
+    -webkit-overflow-scrolling: touch;
+}

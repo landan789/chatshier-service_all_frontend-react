@@ -26,7 +26,7 @@ export function toPriorityBorder(priority) {
     let style = {};
     let color = priorityColors[priority] ? priorityColors[priority] : '';
     if (color) {
-        style.borderLeft = '5px solid ' + color;
+        style.borderLeft = '.3rem solid ' + color;
     }
     return style;
 }

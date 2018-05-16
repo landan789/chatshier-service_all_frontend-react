@@ -3,29 +3,30 @@ import PropTypes from 'prop-types';
 import Aux from 'react-aux';
 import { connect } from 'react-redux';
 
+import chatshierCfg from '../../config/chatshier';
 import authHelper from '../../helpers/authentication';
 import socketHelper from '../../helpers/socket';
 import { MINUTE } from '../../utils/unitTime';
 
+import { notify } from '../../components/Notify/Notify';
+import { findChatroomMessager, findMessagerSelf } from './Chat';
 import Message from './Message';
 
 import sendBtnSvg from '../../image/send-btn.svg';
 import './ChatroomPanel.css';
 
-const LINE = 'LINE';
-const FACEBOOK = 'FACEBOOK';
-const WECHAT = 'WECHAT';
 const CHATSHIER = 'CHATSHIER';
 const SYSTEM = 'SYSTEM';
+const VENDOR = 'VENDOR';
 
 const WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 class ChatroomPanel extends React.Component {
     static propTypes = {
         className: PropTypes.string,
-        isOpen: PropTypes.bool,
         appId: PropTypes.string,
         chatroomId: PropTypes.string,
+        searchKeyword: PropTypes.string,
         apps: PropTypes.object,
         appsChatrooms: PropTypes.object,
         consumers: PropTypes.object,
@@ -39,14 +40,19 @@ class ChatroomPanel extends React.Component {
         this.nowDateStr = '';
 
         this.state = {
-            messageText: ''
+            messageText: '',
+            isProcessing: false
         };
+
+        /** @type {{[type: string]: HTMLInputElement}} */
+        this.fileSelectors = {};
 
         /** @type {HTMLElement} */
         this.messagePanelElem = null;
 
         this.onMessageChange = this.onMessageChange.bind(this);
         this.sendMessage = this.sendMessage.bind(this);
+        this.uploadFile = this.uploadFile.bind(this);
     }
 
     componentDidMount() {
@@ -82,11 +88,12 @@ class ChatroomPanel extends React.Component {
         let app = this.props.apps[appId];
 
         let chatroomId = this.props.chatroomId;
-        let platformMessager = this._findChatroomMessager(appId, chatroomId, app.type);
-        let messagerSelf = this._findMessagerSelf(appId, chatroomId);
+        let chatroom = this.props.appsChatrooms[appId].chatrooms[chatroomId];
+        let platformMessager = findChatroomMessager(chatroom.messagers, app.type);
+        let messagerSelf = findMessagerSelf(chatroom.messagers);
         let userId = authHelper.userId;
 
-        /** @type {ChatshierMessage} */
+        /** @type {Chatshier.SocketMessage} */
         let messageToSend = {
             from: CHATSHIER,
             time: Date.now(),
@@ -96,7 +103,7 @@ class ChatroomPanel extends React.Component {
             messager_id: messagerSelf._id
         };
 
-        /** @type {ChatshierChatSocketBody} */
+        /** @type {Chatshier.SocketMessageBody} */
         let socketBody = {
             app_id: appId,
             type: app.type,
@@ -106,32 +113,129 @@ class ChatroomPanel extends React.Component {
             messages: [messageToSend]
         };
 
-        this.setState({ messageText: '' });
-        return socketHelper.sendMessageToServer(socketBody);
+        this.setState({ messageText: '', isProcessing: true });
+        return socketHelper.sendMessageToServer(socketBody).then(() => {
+            this.setState({ isProcessing: false });
+        }).catch(() => {
+            this.setState({ isProcessing: false });
+            return notify('發送失敗', { type: 'danger' });
+        });
+    }
+
+    /**
+     * @param {Event} ev
+     */
+    uploadFile(ev, messageType) {
+        /** @type {HTMLInputElement} */
+        let fileInput = ev.target;
+        if (!fileInput.files.length) {
+            fileInput.value = '';
+            return;
+        }
+
+        /** @type {File} */
+        let file = fileInput.files[0];
+        fileInput.value = ''; // 把 input file 值清空，使 change 事件對同一檔案可重複觸發
+
+        let FILE_MAXSIZE = chatshierCfg.FILE_MAXSIZE;
+        let kiloByte = 1024;
+        let megaByte = kiloByte * 1024;
+
+        let isImage = file.type.indexOf('image') >= 0;
+        isImage && (messageType = 'image');
+        let isVideo = file.type.indexOf('video') >= 0;
+        isVideo && (messageType = 'video');
+        let isAudio = file.type.indexOf('audio') >= 0;
+        isAudio && (messageType = 'audio');
+
+        if (isImage && file.size > FILE_MAXSIZE.image) {
+            return notify('圖像檔案過大，檔案大小限制為: ' + Math.floor(FILE_MAXSIZE.image / megaByte) + ' MB', { type: 'warning' });
+        } else if (isVideo && file.size > FILE_MAXSIZE.video) {
+            return notify('影像檔案過大，檔案大小限制為: ' + Math.floor(FILE_MAXSIZE.video / megaByte) + ' MB', { type: 'warning' });
+        } else if (isAudio && file.size > FILE_MAXSIZE.audio) {
+            return notify('聲音檔案過大，檔案大小限制為: ' + Math.floor(FILE_MAXSIZE.audio / megaByte) + ' MB', { type: 'warning' });
+        } else if (file.size > FILE_MAXSIZE.other) {
+            return notify('檔案過大，檔案大小限制為: ' + Math.floor(FILE_MAXSIZE.other / megaByte) + ' MB', { type: 'warning' });
+        }
+
+        let fileSize = file.size / kiloByte;
+        if (fileSize >= 1000) {
+            fileSize /= kiloByte;
+            fileSize = fileSize.toFixed(1) + ' MB';
+        } else {
+            fileSize = fileSize.toFixed(1) + ' KB';
+        }
+
+        let appId = this.props.appId;
+        let chatroomId = this.props.chatroomId;
+        let userId = authHelper.userId;
+        let app = this.props.apps[appId];
+        let chatroom = this.props.appsChatrooms[appId].chatrooms[chatroomId];
+        let messagerSelf = findMessagerSelf(chatroom.messagers);
+        let platformMessager = findChatroomMessager(chatroom.messagers, app.type);
+
+        /** @type {Chatshier.SocketMessage} */
+        let messageToSend = {
+            text: '錢掌櫃傳送檔案給您:\n檔案大小: ' + fileSize + '\n',
+            src: file,
+            fileName: file.name,
+            type: messageType,
+            from: CHATSHIER,
+            time: Date.now(),
+            messager_id: messagerSelf._id
+        };
+
+        /** @type {Chatshier.SocketMessageBody} */
+        let socketBody = {
+            app_id: appId,
+            type: app.type,
+            chatroom_id: chatroomId,
+            senderUid: userId,
+            recipientUid: platformMessager.platformUid,
+            messages: [messageToSend]
+        };
+
+        this.setState({ isProcessing: true });
+        return socketHelper.sendMessageToServer(socketBody).then(() => {
+            this.setState({ isProcessing: false });
+        }).catch(() => {
+            this.setState({ isProcessing: false });
+            return notify('發送失敗', { type: 'danger' });
+        });
     }
 
     render() {
         let props = this.props;
-        if (!(props.isOpen && props.appId && props.chatroomId)) {
+        if (!(props.appId && props.chatroomId)) {
             return null;
         }
+
+        let app = props.apps[props.appId];
+        if (!app) {
+            return null;
+        }
+
+        let chatroom = props.appsChatrooms[props.appId].chatrooms[props.chatroomId];
+        if (!chatroom) {
+            return null;
+        }
+
         this.prevTime = 0;
         this.nowDateStr = '';
 
-        let app = props.apps[props.appId];
-        let chatroom = props.appsChatrooms[props.appId].chatrooms[props.chatroomId];
         let messagers = chatroom.messagers;
         let messages = chatroom.messages;
         let userId = authHelper.userId;
 
-        let className = ((this.props.className || '') + ' chatroom-panel').trim();
+        let messagerSelf = findMessagerSelf(messagers);
+        let className = (this.props.className || '') + ' chatroom-panel';
         let messageIds = Object.keys(messages);
 
         // 根據發送的時間從早到晚排序
         messageIds.sort((a, b) => new Date(messages[a].time).getTime() - new Date(messages[b].time).getTime());
 
         return (
-            <div className={className}>
+            <div className={className.trim()}>
                 <div className="w-100 chatroom-body">
                     <div className="chat-content">
                         <div className="h-100 d-flex flex-column message-panel" ref={(elem) => (this.messagePanelElem = elem)}>
@@ -140,18 +244,28 @@ class ChatroomPanel extends React.Component {
                                 let message = messages[messageId];
                                 let messagerId = message.messager_id;
                                 let messager = messagers[messagerId];
+
                                 let platformUid = '';
                                 let sender = {};
-                                if (messagerId && SYSTEM !== message.from) {
+
+                                if (messagerId && messager && SYSTEM !== message.from) {
                                     platformUid = messager.platformUid;
                                     sender = CHATSHIER === messager.type ? props.users[platformUid] : props.consumers[platformUid];
                                 }
-                                let senderName = SYSTEM === message.from ? '由系統發送' : (sender.name || '');
+
+                                let senderName = (messagerSelf && messagerSelf.namings && messagerSelf.namings[platformUid]) || (sender && sender.name) || '';
+                                if (SYSTEM === message.from) {
+                                    senderName = '由系統發送';
+                                } else if (VENDOR === message.from) {
+                                    senderName = '經由平台軟體發送';
+                                }
+
                                 let isMedia = (
                                     'image' === message.type ||
                                     'audio' === message.type ||
                                     'video' === message.type ||
-                                    'sticker' === message.type
+                                    'sticker' === message.type ||
+                                    'template' === message.type
                                 );
 
                                 // 如果訊息是來自於 Chatshier 或 系統自動回覆 的話，訊息一律放在右邊
@@ -186,32 +300,59 @@ class ChatroomPanel extends React.Component {
                                             shouldRightSide={shouldRightSide}
                                             senderName={senderName}
                                             isMedia={isMedia}
-                                            messageType={message.type}
-                                            messageText={message.text}
-                                            messageSrc={message.src}
-                                            messageTime={messageDatetime.getTime()}>
+                                            message={message}
+                                            messageTime={messageDatetime.getTime()}
+                                            searchKeyword={this.props.searchKeyword}>
                                         </Message>
                                     </Aux>
                                 );
                             })}
+                            {this.state.isProcessing &&
+                            <div className="mb-3 message">
+                                <div className="ml-auto loading-container">
+                                    <i className="fas fa-spinner fa-pulse fa-2x"></i>
+                                </div>
+                            </div>}
                         </div>
                     </div>
                 </div>
+
                 <div className="w-100 message-input-container">
                     <div className="d-flex align-items-center message-input form-upper">
                         <div className="media-container">
-                            <button className="p-0 media-btn">
+                            <button className="p-0 media-btn" onClick={() => this.fileSelectors.image.click()}>
                                 <i className="fas fa-image"></i>
                             </button>
-                            <button className="p-0 media-btn">
+                            <button className="p-0 media-btn" onClick={() => this.fileSelectors.video.click()}>
                                 <i className="fas fa-video"></i>
                             </button>
-                            <button className="p-0 media-btn">
+                            <button className="p-0 media-btn" onClick={() => this.fileSelectors.audio.click()}>
                                 <i className="fa fa-volume-up"></i>
                             </button>
-                            <input className="ghost-file d-none" type="file" accept="image/*" />
-                            <input className="ghost-file d-none" type="file" accept="video/mp4,video/mpeg4" />
-                            <input className="ghost-file d-none" type="file" accept="audio/mp3,video/mpeg3" />
+                            <button className="p-0 media-btn" onClick={() => this.fileSelectors.file.click()}>
+                                <i className="fas fa-file"></i>
+                            </button>
+
+                            <input className="ghost-file d-none"
+                                type="file"
+                                accept="image/*"
+                                ref={(elem) => (this.fileSelectors.image = elem)}
+                                onChange={(ev) => this.uploadFile(ev, 'image')} />
+                            <input className="ghost-file d-none"
+                                type="file"
+                                accept="video/mp4,video/mpeg4"
+                                ref={(elem) => (this.fileSelectors.video = elem)}
+                                onChange={(ev) => this.uploadFile(ev, 'video')} />
+                            <input className="ghost-file d-none"
+                                type="file"
+                                accept="audio/mp3,video/mpeg3"
+                                ref={(elem) => (this.fileSelectors.audio = elem)}
+                                onChange={(ev) => this.uploadFile(ev, 'audio')} />
+                            <input className="ghost-file d-none"
+                                type="file"
+                                accept="*/*"
+                                ref={(elem) => (this.fileSelectors.file = elem)}
+                                onChange={(ev) => this.uploadFile(ev, 'file')} />
                         </div>
                     </div>
                     <div className="message-input form-lower">
@@ -225,57 +366,6 @@ class ChatroomPanel extends React.Component {
                 </div>
             </div>
         );
-    }
-
-    _findMessagerSelf(appId, chatroomId) {
-        let chatrooms = this.props.appsChatrooms[appId].chatrooms;
-        let messagers = chatrooms[chatroomId].messagers;
-        let userId = authHelper.userId;
-
-        for (let messagerId in messagers) {
-            let messager = messagers[messagerId];
-            if (userId === messager.platformUid) {
-                return messager;
-            }
-        }
-
-        // 前端暫時用的資料，不會儲存至資料庫
-        let _messagerSelf = {
-            type: CHATSHIER,
-            platformUid: userId,
-            unRead: 0
-        };
-        messagers[userId] = _messagerSelf;
-        return _messagerSelf;
-    }
-
-    _findChatroomMessager(appId, chatroomId, appType) {
-        let chatroom = this.props.appsChatrooms[appId].chatrooms[chatroomId];
-        let messagers = chatroom.messagers;
-        let userId = authHelper.userId;
-
-        // 從 chatroom 中找尋唯一的 consumer platformUid
-        for (let messagerId in messagers) {
-            let messager = messagers[messagerId];
-
-            switch (appType) {
-                case LINE:
-                case FACEBOOK:
-                case WECHAT:
-                    if (appType === messager.type) {
-                        return messager;
-                    }
-                    break;
-                case CHATSHIER:
-                default:
-                    if (CHATSHIER === messager.type &&
-                        userId === messager.platformUid) {
-                        return messager;
-                    }
-                    break;
-            }
-        }
-        return {};
     }
 
     /**

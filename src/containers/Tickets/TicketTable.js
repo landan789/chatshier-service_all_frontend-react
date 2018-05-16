@@ -139,12 +139,12 @@ class TicketTable extends React.Component {
                     {this.renderTickets()}
                 </div>
 
-                <TicketEditModal
+                {!!this.state.editModalData && <TicketEditModal
                     appsAgents={this.props.appsAgents}
                     modalData={this.state.editModalData}
                     isOpen={!!this.state.editModalData}
                     close={this.closeEditModal}>
-                </TicketEditModal>
+                </TicketEditModal>}
             </Aux>
         );
     }

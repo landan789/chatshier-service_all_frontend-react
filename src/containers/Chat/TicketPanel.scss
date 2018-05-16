@@ -1,0 +1,71 @@
+
+.ticket-panel {
+    .ticket-group {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        border: 1px solid rgb(5, 82, 87);
+        border-radius: .25rem;
+        font-size: .75rem;
+    }
+
+    table {
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    thead {
+        border-bottom: 1px solid rgb(5, 82, 87);
+        border-radius: .25rem;
+    }
+
+    td,
+    th {
+        text-align: left;
+        padding: .25rem;
+        margin: 2px 0;
+        max-height: 24px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #33ccff;
+        color: white;
+    }
+
+    th.chsr .ticket-add {
+        clear: both;
+        float:right;
+        cursor: pointer;
+        color: #33ccff;
+    }
+
+    .ticket-search-bar {
+        border-radius: 5px;
+    }
+
+    .ticket-description { 
+        max-width: 50px; 
+        overflow: hidden; 
+        text-overflow: ellipsis; 
+        white-space: nowrap;
+    }
+
+    .ticket-row {
+        cursor: pointer;
+    }
+}
+
+.due-time-text {
+    .overdue {
+        padding: 1px 10px;
+        margin: 1px;
+        border-radius: 8px;
+        background-color: rgb(227, 79, 79);
+        color: white;
+        font-weight: bold;
+    }
+
+    .non {
+        background-color: rgb(91, 195, 92);
+    }
+}

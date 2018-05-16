@@ -21,33 +21,15 @@ class TicketEditModal extends React.Component {
         close: PropTypes.func.isRequired
     }
 
+    static defaultProps = {
+        isOpen: true
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
 
-        this.state = {
-            isAsyncWorking: false,
-            dueTime: new Date(),
-            agentUserId: '',
-            agentOptions: [],
-            status: 0,
-            priority: 0,
-            description: ''
-        };
-
-        this.statusChanged = this.statusChanged.bind(this);
-        this.agentChanged = this.agentChanged.bind(this);
-        this.priorityChanged = this.priorityChanged.bind(this);
-        this.descriptionChanged = this.descriptionChanged.bind(this);
-        this.dueTimeChanged = this.dueTimeChanged.bind(this);
-        this.updateTicket = this.updateTicket.bind(this);
-        this.deleteTicket = this.deleteTicket.bind(this);
-    }
-
-    componentWillReceiveProps(props) {
-        if (!props.modalData) {
-            return;
-        }
-
+        /** @type {Chatshier.Ticket} */
+        let ticket = props.modalData ? props.modalData.ticket : {};
         let agentOptions = [];
         if (Object.keys(props.appsAgents).length > 0) {
             let appId = props.modalData.appId;
@@ -62,16 +44,24 @@ class TicketEditModal extends React.Component {
             }
         }
 
-        /** @type {Chatshier.Ticket} */
-        let ticket = props.modalData ? props.modalData.ticket : {};
-        this.setState({
+        this.state = {
+            isOpen: this.props.isOpen,
+            isProcessing: false,
+            dueTime: ticket.dueTime || new Date(),
             agentUserId: ticket.assigned_id,
             agentOptions: agentOptions,
-            dueTime: ticket.dueTime,
-            status: ticket.status,
-            priority: ticket.priority,
-            description: ticket.description
-        });
+            status: ticket.status || 0,
+            priority: ticket.priority || 0,
+            description: ticket.description || ''
+        };
+
+        this.statusChanged = this.statusChanged.bind(this);
+        this.agentChanged = this.agentChanged.bind(this);
+        this.priorityChanged = this.priorityChanged.bind(this);
+        this.descriptionChanged = this.descriptionChanged.bind(this);
+        this.dueTimeChanged = this.dueTimeChanged.bind(this);
+        this.updateTicket = this.updateTicket.bind(this);
+        this.deleteTicket = this.deleteTicket.bind(this);
     }
 
     agentChanged(ev) {
@@ -126,32 +116,45 @@ class TicketEditModal extends React.Component {
             return this.props.close(ev);
         }
 
-        this.setState({ isAsyncWorking: true });
+        this.setState({ isProcessing: true });
         return apiDatabase.appsTickets.update(appId, ticketId, userId, ticket).then(() => {
-            this.props.close(ev);
+            this.setState({
+                isOpen: false,
+                isProcessing: false
+            });
 
             let agent = this.props.appsAgents[appId].agents[ticket.assigned_id];
-            return notify('待辦事項已更新，指派人: ' + agent.name, { type: 'success' });
+            return notify('待辦事項已更新，指派人: ' + agent.name, { type: 'success' }).then(() => {
+                return this.props.close(ev);
+            });
         }).catch(() => {
+            this.setState({ isProcessing: false });
             return notify('待辦事項更新失敗', { type: 'danger' });
-        }).then(() => {
-            this.setState({ isAsyncWorking: false });
         });
     }
 
     deleteTicket(ev) {
+        if (!window.confirm('確定要刪除嗎？')) {
+            return;
+        }
+
         let appId = this.props.modalData.appId;
         let ticketId = this.props.modalData.ticketId;
         let userId = authHelper.userId;
 
-        this.setState({ isAsyncWorking: true });
+        this.setState({ isProcessing: true });
         return apiDatabase.appsTickets.delete(appId, ticketId, userId).then(() => {
-            this.props.close(ev);
-            return notify('刪除成功', { type: 'success' });
+            this.setState({
+                isOpen: false,
+                isProcessing: false
+            });
+
+            return notify('刪除成功', { type: 'success' }).then(() => {
+                return this.props.close(ev);
+            });
         }).catch(() => {
+            this.setState({ isProcessing: false });
             return notify('刪除失敗', { type: 'danger' });
-        }).then(() => {
-            this.setState({ isAsyncWorking: false });
         });
     }
 
@@ -160,7 +163,7 @@ class TicketEditModal extends React.Component {
         let consumer = this.props.modalData ? this.props.modalData.consumer : {};
 
         return (
-            <Modal size="lg" className="ticket-edit-modal" isOpen={this.props.isOpen} toggle={this.props.close}>
+            <Modal className="ticket-edit-modal" isOpen={this.state.isOpen} toggle={this.props.close}>
                 <ModalHeader toggle={this.props.close}>
                     {consumer.name || ''}
                 </ModalHeader>
@@ -240,8 +243,8 @@ class TicketEditModal extends React.Component {
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button color="primary" onClick={this.updateTicket} disabled={this.state.isAsyncWorking}>更新</Button>
-                    <Button color="danger" onClick={this.deleteTicket} disabled={this.state.isAsyncWorking}>刪除</Button>
+                    <Button color="primary" onClick={this.updateTicket} disabled={this.state.isProcessing}>更新</Button>
+                    <Button color="danger" onClick={this.deleteTicket} disabled={this.state.isProcessing}>刪除</Button>
                     <Button color="secondary" onClick={this.props.close}>取消</Button>
                 </ModalFooter>
             </Modal>

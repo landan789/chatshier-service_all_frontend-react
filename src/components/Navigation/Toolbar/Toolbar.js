@@ -10,6 +10,7 @@ import User from '../../Modals/User/User';
 import Group from '../../Modals/Group/Group';
 import Integration from '../../Modals/Integration/Integration';
 
+import mainStore from '../../../redux/mainStore';
 import controlPanelStore from '../../../redux/controlPanelStore';
 import { togglePanel } from '../../../redux/actions/controlPanelStore/isOpen';
 
@@ -38,32 +39,81 @@ const setingsItems = [
 
 let navTitle = 'Title';
 const setNavTitle = (title) => {
+    title = title || document.title.replace(' | Chatshier', '');
     navTitle = title;
 };
+const BREAKPOINT_LG = 992;
 
 class Toolbar extends React.Component {
     static propTypes = {
+        onToggleChatroom: PropTypes.func,
+        onToggleProfle: PropTypes.func,
+        onToggleTicket: PropTypes.func,
         history: PropTypes.object.isRequired
+    }
+
+    static defaultProps = {
+        onToggleChatroom: () => void 0,
+        onToggleProfle: () => void 0,
+        onToggleTicket: () => void 0
     }
 
     constructor(props, ctx) {
         super(props, ctx);
 
+        this.storeUnsubscribe = void 0;
         this.state = {
+            isInChat: ROUTES.CHAT === this.props.history.location.pathname,
+            isControlPanelOpen: false,
             isUserModalOpen: false,
             isGroupModalOpen: false,
             isIntegrationModalOpen: false,
-            isControlPanelOpen: false,
-            dropdownOpen: false
+            hasSelectChatroom: false,
+            isGroupChatroom: false,
+            dropdownOpen: false,
+            toggleButtons: {
+                profile: false,
+                ticket: false
+            }
         };
+
         this.linkTo = this.linkTo.bind(this);
         this.mobileToggleControlPanel = this.mobileToggleControlPanel.bind(this);
         this.mobileToggleSetting = this.mobileToggleSetting.bind(this);
         this.closeUserModal = this.closeUserModal.bind(this);
         this.closeGroupModal = this.closeGroupModal.bind(this);
         this.closeIntegrationModal = this.closeIntegrationModal.bind(this);
+        this.sizeChanged = this.sizeChanged.bind(this);
+        this.toggleProfile = this.toggleProfile.bind(this);
+        this.toggleTicket = this.toggleTicket.bind(this);
 
         window.addEventListener('resize', this.sizeChanged);
+    }
+
+    componentDidMount() {
+        this.storeUnsubscribe && this.storeUnsubscribe();
+        this.storeUnsubscribe = controlPanelStore.subscribe(() => {
+            let selectedChatroom = controlPanelStore.getState().selectedChatroom;
+            let newState = {
+                hasSelectChatroom: !!(selectedChatroom.appId && selectedChatroom.chatroomId)
+            };
+
+            if (!newState.hasSelectChatroom) {
+                this.setState(newState);
+                return;
+            }
+
+            let appsChatrooms = mainStore.getState().appsChatrooms;
+            let chatroom = appsChatrooms[selectedChatroom.appId].chatrooms[selectedChatroom.chatroomId];
+            newState.isGroupChatroom = !!chatroom.platformGroupId;
+            this.setState(newState);
+        });
+    }
+
+    componentWillUnmount() {
+        this.storeUnsubscribe && this.storeUnsubscribe();
+        this.storeUnsubscribe = void 0;
+        window.removeEventListener('resize', this.sizeChanged);
     }
 
     closeUserModal() {
@@ -78,8 +128,32 @@ class Toolbar extends React.Component {
         this.setState({ isIntegrationModalOpen: false });
     }
 
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.sizeChanged);
+    sizeChanged(ev) {
+        if (this.state.toggleButtons.profile || this.state.toggleButtons.ticket) {
+            if (ev.target.innerWidth < BREAKPOINT_LG) {
+                this.props.onToggleChatroom(false);
+            } else if (ev.target.innerWidth >= BREAKPOINT_LG) {
+                this.props.onToggleChatroom(true);
+            }
+        }
+    }
+
+    toggleProfile() {
+        let toggleButtons = this.state.toggleButtons;
+        toggleButtons.profile = !toggleButtons.profile;
+        toggleButtons.ticket = false;
+        this.setState({ toggleButtons: toggleButtons });
+        this.props.onToggleProfle(toggleButtons.profile);
+        this.props.onToggleTicket(toggleButtons.ticket);
+    }
+
+    toggleTicket() {
+        let toggleButtons = this.state.toggleButtons;
+        toggleButtons.ticket = !toggleButtons.ticket;
+        toggleButtons.profile = false;
+        this.setState({ toggleButtons: toggleButtons });
+        this.props.onToggleTicket(toggleButtons.ticket);
+        this.props.onToggleProfle(toggleButtons.profile);
     }
 
     mobileToggleSetting() {
@@ -105,7 +179,7 @@ class Toolbar extends React.Component {
                 if (useReactRouter) {
                     this.props.history.push(route);
                 } else {
-                    window.location.href = route;
+                    window.location.assign(route);
                 }
         }
     }
@@ -116,27 +190,30 @@ class Toolbar extends React.Component {
                 <header className="chsr toolbar">
                     <nav className="navbar px-1">
                         <button type="button"
-                            className="btn text-light transparent d-sm-none"
+                            className="btn text-light transparent ctrl-panel-toggle d-sm-none"
                             onClick={this.mobileToggleControlPanel}>
                             <i className="fas fa-bars"></i>
                         </button>
 
-                        <div className="nav-title text-nowrap text-light ml-2">
-                            {navTitle}
-                        </div>
+                        <div className="nav-title text-nowrap text-light ml-2 mr-auto">{navTitle}</div>
 
-                        <button type="button" className="btn mx-1 transparent d-none">
-                            <i className="far fa-file-alt"></i>
-                        </button>
-                        <button type="button" className="btn mx-1 transparent d-none">
+                        {this.state.isInChat && this.state.hasSelectChatroom &&
+                        <button type="button" className={'btn mx-1 transparent' + (this.state.toggleButtons.profile ? ' active' : '')}
+                            onClick={this.toggleProfile}>
+                            <i className="fas fa-id-badge"></i>
+                        </button>}
+
+                        {this.state.isInChat && this.state.hasSelectChatroom && !this.state.isGroupChatroom &&
+                        <button type="button" className={'btn mx-1 transparent' + (this.state.toggleButtons.ticket ? ' active' : '')}
+                            onClick={this.toggleTicket}>
                             <i className="far fa-calendar-check"></i>
-                        </button>
+                        </button>}
 
                         <Dropdown isOpen={this.state.dropdownOpen} toggle={this.mobileToggleSetting}>
                             <DropdownToggle color="none" className="text-light transparent">
                                 <i className="fas fa-ellipsis-v"></i>
                             </DropdownToggle>
-                            <DropdownMenu>
+                            <DropdownMenu className="settings-menu">
                                 {setingsItems.map((item, i) => (
                                     <DropdownItem key={i} onClick={() => this.linkTo(item.link, item.useReactRouter)}>
                                         <i className={item.icon}></i>
@@ -146,9 +223,9 @@ class Toolbar extends React.Component {
                             </DropdownMenu>
                         </Dropdown>
 
-                        <User isOpen={this.state.isUserModalOpen} close={this.closeUserModal}/>
-                        <Group isOpen={this.state.isGroupModalOpen} close={this.closeGroupModal}/>
-                        <Integration isOpen={this.state.isIntegrationModalOpen} close={this.closeIntegrationModal}/>
+                        {this.state.isUserModalOpen && <User isOpen={this.state.isUserModalOpen} close={this.closeUserModal}/>}
+                        {this.state.isGroupModalOpen && <Group isOpen={this.state.isGroupModalOpen} close={this.closeGroupModal}/>}
+                        {this.state.isIntegrationModalOpen && <Integration isOpen={this.state.isIntegrationModalOpen} close={this.closeIntegrationModal}/>}
                     </nav>
                 </header>
             </Aux>

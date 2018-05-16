@@ -1,3 +1,5 @@
+@import '../../../styles/mixins/_mixins';
+
 .user-modal {
     width: 100% !important;
     max-width: 100% !important;
@@ -19,7 +21,6 @@
     }
 
     .modal-body {
-        overflow: auto;
-        -webkit-overflow-scrolling: touch;
+        @include scrollable('y');
     }
 }

@@ -63,6 +63,9 @@ namespace Chatshier {
         createdTime?: string;
         updatedTime?: string;
         isDeleted?: boolean;
+        name: string;
+        platformGroupId: string;
+        platformGroupType: string;
         messagers: {
             [messagerId: string]: ChatroomMessager
         };
@@ -103,7 +106,7 @@ namespace Chatshier {
     interface Field {
         text: string;
         alias: string;
-        type: 'SYSTEM' | 'DEFAULT' | 'DEFAULT';
+        type: 'SYSTEM' | 'DEFAULT' | 'CUSTOM';
         sets: string[] | number[];
         setsType: 'TEXT' | 'NUMBER' | 'DATE' | 'SELECT' | 'MULTI_SELECT' | 'CHECKBOX';
         order: number;

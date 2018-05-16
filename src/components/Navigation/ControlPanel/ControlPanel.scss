@@ -1,7 +1,9 @@
 @import '../../../styles/_variables';
+@import '../../../styles/mixins/_mixins';
 
 $ctrl-panel-bg-color: #4a8998;
 $ctrl-panel-active-color: rgb(46, 85, 95);
+$ctrl-item-icon-size: 1.5rem;
 
 .ctrl-panel {
     display: none;
@@ -38,13 +40,12 @@ $ctrl-panel-active-color: rgb(46, 85, 95);
     }
 
     .swiper-wrapper {
-        height: calc(100% - 2rem);
+        height: calc(100% - 3rem);
     }
 
     .swiper-slide {
+        @include scrollable('y');
         font-size: .85rem;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
 
         &::-webkit-scrollbar {
             width: 0;
@@ -68,12 +69,35 @@ $ctrl-panel-active-color: rgb(46, 85, 95);
     }
 
     .list-group-item {  
+        padding-top: .5rem;
+        padding-bottom: .5rem;
         background-color: $ctrl-panel-bg-color;
         cursor: pointer;
         border: none;
+
+        &.logo-item {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: $toolbar-height;
+            z-index: 10;
+        }
+
+        .custom-item-icon {
+            width: $ctrl-item-icon-size;
+            height: $ctrl-item-icon-size;
+            padding-left: 1.5px; // 與 font-awesome icon 對齊
+            color: inherit;
+
+            &.svg path {
+                fill: #f8f9fa;
+            }
+        }
     }
 
     .detail-list {
+        padding-top: $toolbar-height;
+
         .list-group-item {
             display: flex;
             align-items: center;

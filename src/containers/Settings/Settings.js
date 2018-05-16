@@ -9,7 +9,6 @@ import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import LinkTabs from './LinkTabs';
 import AppsTabPane from './TabPanes/AppsTabPane';
@@ -33,7 +32,6 @@ class Settings extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('設定');
-        setNavTitle('設定');
 
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
@@ -51,7 +49,7 @@ class Settings extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <PageWrapper>
+                <PageWrapper toolbarTitle="設定">
                     <Fade in className="setting-wrapper">
                         <LinkTabs route={route} toggle={this.toggle} />
                         <Switch>

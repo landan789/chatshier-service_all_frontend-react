@@ -11,7 +11,6 @@ import browserHelper from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 
@@ -35,7 +34,6 @@ class Analyze extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('訊息分析');
-        setNavTitle('訊息分析');
 
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
@@ -60,7 +58,7 @@ class Analyze extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <PageWrapper>
+                <PageWrapper toolbarTitle="訊息分析">
                     <Fade in className="analyze-wrapper">
                         <h2>分析頁面</h2>
                         <div className="analyze-container">

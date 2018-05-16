@@ -39,11 +39,6 @@ const setingsItems = [
     }
 ];
 
-let navTitle = 'Title';
-const setNavTitle = (title) => {
-    title = title || document.title.replace(' | Chatshier', '');
-    navTitle = title;
-};
 const BREAKPOINT_LG = 992;
 
 class Toolbar extends React.Component {
@@ -52,10 +47,12 @@ class Toolbar extends React.Component {
         onToggleChatroom: PropTypes.func,
         onToggleProfle: PropTypes.func,
         onToggleTicket: PropTypes.func,
-        history: PropTypes.object.isRequired
+        history: PropTypes.object.isRequired,
+        title: PropTypes.string
     }
 
     static defaultProps = {
+        title: '',
         onToggleChatroom: () => void 0,
         onToggleProfle: () => void 0,
         onToggleTicket: () => void 0
@@ -198,7 +195,7 @@ class Toolbar extends React.Component {
                             <i className="fas fa-bars"></i>
                         </button>
 
-                        <div className="nav-title text-nowrap text-light ml-2 mr-auto">{navTitle}</div>
+                        <div className="nav-title text-nowrap text-light ml-2 mr-auto">{this.props.title}</div>
 
                         {this.state.isInChat && this.state.hasSelectChatroom &&
                         <button type="button" className={'btn mx-1 transparent' + (this.state.toggleButtons.profile ? ' active' : '')}
@@ -237,4 +234,3 @@ class Toolbar extends React.Component {
 }
 
 export default withRouter(withTranslate(Toolbar));
-export { setNavTitle };

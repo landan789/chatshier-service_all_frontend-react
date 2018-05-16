@@ -8,6 +8,7 @@ import './PageWrapper.css';
 
 class PageWrapper extends React.Component {
     static propTypes = {
+        toolbarTitle: PropTypes.string,
         onToggleChatroom: PropTypes.func,
         onToggleProfle: PropTypes.func,
         onToggleTicket: PropTypes.func,
@@ -40,7 +41,7 @@ class PageWrapper extends React.Component {
     render() {
         return (
             <div className={('ml-auto w-100 page-wrapper ' + (this.state.isPutAway ? 'put-away' : '')).trim()}>
-                <Toolbar
+                <Toolbar title={this.props.toolbarTitle}
                     onToggleChatroom={this.props.onToggleChatroom}
                     onToggleProfle={this.props.onToggleProfle}
                     onToggleTicket={this.props.onToggleTicket} />

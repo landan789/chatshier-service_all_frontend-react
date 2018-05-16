@@ -13,7 +13,6 @@ import apiDatabase from '../../helpers/apiDatabase/index';
 import controlPanelStore from '../../redux/controlPanelStore';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 
 import ChatroomPanel from './ChatroomPanel';
@@ -47,6 +46,7 @@ class Chat extends React.Component {
             isOpenChatroom: true,
             isOpenProfile: false,
             isOpenTicket: false,
+            chatroomTitle: '聊天室',
             selectedAppId: '',
             selectedChatroomId: '',
             searchKeyword: ''
@@ -59,7 +59,6 @@ class Chat extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('聊天室');
-        setNavTitle('聊天室');
 
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
@@ -73,11 +72,39 @@ class Chat extends React.Component {
             let storeState = controlPanelStore.getState();
             let searchKeyword = storeState.searchKeyword;
             let selectedChatroom = storeState.selectedChatroom;
-            this.setState({
+            let hasSelectChatroom = !!(selectedChatroom.appId && selectedChatroom.chatroomId);
+
+            let newState = {
+                chatroomTitle: '聊天室',
                 searchKeyword: searchKeyword,
                 selectedAppId: selectedChatroom.appId,
                 selectedChatroomId: selectedChatroom.chatroomId
-            });
+            };
+
+            if (hasSelectChatroom) {
+                let apps = this.props.apps;
+                let appsChatrooms = this.props.appsChatrooms;
+                let app = apps[selectedChatroom.appId];
+                let chatroom = appsChatrooms[selectedChatroom.appId].chatrooms[selectedChatroom.chatroomId];
+                let messagers = chatroom.messagers;
+                let messagerSelf = findMessagerSelf(messagers);
+
+                let messagerNameList = [];
+                for (let messagerId in messagers) {
+                    let messager = messagers[messagerId];
+                    if (app.type === messager.type) {
+                        if (app.type !== CHATSHIER) {
+                            let displayName = (messagerSelf.namings && messagerSelf.namings[messager.platformUid]) || this.props.consumers[messager.platformUid].name;
+                            messagerNameList.push(displayName);
+                        } else if (app.type === CHATSHIER) {
+                            messagerNameList.push(this.props.users[messager.platformUid].name);
+                        }
+                    }
+                }
+                newState.chatroomTitle += ' #' + app.name + ' (' + messagerNameList.join(',') + ')';
+            }
+
+            this.setState(newState);
         });
 
         let userId = authHelper.userId;
@@ -136,7 +163,7 @@ class Chat extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <PageWrapper onToggleChatroom={this.toggleChatroom} onToggleProfle={this.toggleProfle} onToggleTicket={this.toggleTicket}>
+                <PageWrapper toolbarTitle={this.state.chatroomTitle} onToggleChatroom={this.toggleChatroom} onToggleProfle={this.toggleProfle} onToggleTicket={this.toggleTicket}>
                     <Fade in className="chat-wrapper">
                         <div className={'d-flex position-relative w-100 h-100 chatroom-container' + (shouldContainerOpen ? ' open' : '')}>
                             <span className="position-absolute text-center watermark-text">歡迎使用 錢掌櫃 整合平台</span>

@@ -10,6 +10,7 @@ import User from '../../Modals/User/User';
 import Group from '../../Modals/Group/Group';
 import Integration from '../../Modals/Integration/Integration';
 
+import mainStore from '../../../redux/mainStore';
 import controlPanelStore from '../../../redux/controlPanelStore';
 import { togglePanel } from '../../../redux/actions/controlPanelStore/isOpen';
 
@@ -37,7 +38,10 @@ const setingsItems = [
 ];
 
 let navTitle = 'Title';
-const setNavTitle = (title) => (navTitle = title);
+const setNavTitle = (title) => {
+    title = title || document.title.replace(' | Chatshier', '');
+    navTitle = title;
+};
 const BREAKPOINT_LG = 992;
 
 class Toolbar extends React.Component {
@@ -65,6 +69,7 @@ class Toolbar extends React.Component {
             isGroupModalOpen: false,
             isIntegrationModalOpen: false,
             hasSelectChatroom: false,
+            isGroupChatroom: false,
             dropdownOpen: false,
             toggleButtons: {
                 profile: false,
@@ -89,7 +94,19 @@ class Toolbar extends React.Component {
         this.storeUnsubscribe && this.storeUnsubscribe();
         this.storeUnsubscribe = controlPanelStore.subscribe(() => {
             let selectedChatroom = controlPanelStore.getState().selectedChatroom;
-            this.setState({ hasSelectChatroom: !!(selectedChatroom.appId && selectedChatroom.chatroomId) });
+            let newState = {
+                hasSelectChatroom: !!(selectedChatroom.appId && selectedChatroom.chatroomId)
+            };
+
+            if (!newState.hasSelectChatroom) {
+                this.setState(newState);
+                return;
+            }
+
+            let appsChatrooms = mainStore.getState().appsChatrooms;
+            let chatroom = appsChatrooms[selectedChatroom.appId].chatrooms[selectedChatroom.chatroomId];
+            newState.isGroupChatroom = !!chatroom.platformGroupId;
+            this.setState(newState);
         });
     }
 
@@ -186,7 +203,7 @@ class Toolbar extends React.Component {
                             <i className="fas fa-id-badge"></i>
                         </button>}
 
-                        {this.state.isInChat && this.state.hasSelectChatroom &&
+                        {this.state.isInChat && this.state.hasSelectChatroom && !this.state.isGroupChatroom &&
                         <button type="button" className={'btn mx-1 transparent' + (this.state.toggleButtons.ticket ? ' active' : '')}
                             onClick={this.toggleTicket}>
                             <i className="far fa-calendar-check"></i>

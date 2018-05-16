@@ -9,10 +9,14 @@ import { translate, Trans } from 'react-i18next';
 import authHelper from '../../helpers/authentication';
 import socketHelper from '../../helpers/socket';
 import apiDatabase from '../../helpers/apiDatabase/index';
+import apiBot from '../../helpers/apiBot/index';
 import regex from '../../utils/regex';
 import { fixHttpsResource, logos } from '../../utils/common';
 
+import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import { notify } from '../../components/Notify/Notify';
+import controlPanelStore from '../../redux/controlPanelStore';
+import { selectChatroom } from '../../redux/actions/controlPanelStore/selectedChatroom';
 import { findChatroomMessager, findMessagerSelf } from './Chat';
 
 import defaultAvatarPng from '../../image/defautlt-avatar.png';
@@ -54,6 +58,9 @@ class ProfilePanel extends React.Component {
         this.createAppsAgents(this.props);
 
         this.onPhotoLoadError = this.onPhotoLoadError.bind(this);
+        this.onChatroomNameChanged = this.onChatroomNameChanged.bind(this);
+        this.updateChatroomName = this.updateChatroomName.bind(this);
+        this.leavePlatformGroup = this.leavePlatformGroup.bind(this);
     }
 
     componentWillReceiveProps(props) {
@@ -92,7 +99,8 @@ class ProfilePanel extends React.Component {
         ev.target.src = defaultAvatarPng;
     }
 
-    onChatroomNameChanged(ev, chatroomId) {
+    onChatroomNameChanged(ev) {
+        let chatroomId = this.props.chatroomId;
         let chatroomNames = this.state.chatroomNames;
         chatroomNames[chatroomId] = ev.target.value;
         this.setState({ chatroomNames: chatroomNames });
@@ -227,7 +235,47 @@ class ProfilePanel extends React.Component {
         });
     }
 
-    renderChatroomProfile(appId, chatroomId) {
+    updateChatroomName(ev) {
+        let appId = this.props.appId;
+        let chatroomId = this.props.chatroomId;
+        let userId = authHelper.userId;
+        let putChatroom = {
+            name: this.state.chatroomNames[chatroomId]
+        };
+
+        return Promise.resolve().then(() => {
+            let oldName = this.props.appsChatrooms[appId].chatrooms[chatroomId].name;
+            if (!putChatroom.name || putChatroom.name === oldName) {
+                return;
+            }
+            return apiDatabase.appsChatrooms.update(appId, chatroomId, putChatroom, userId).then(() => {
+                return notify('更新成功', { type: 'success' });
+            });
+        }).catch(() => {
+            return notify('更新失敗', { type: 'danger' });
+        });
+    }
+
+    leavePlatformGroup(ev) {
+        if (!window.confirm('確定要離開嗎？此聊天室將會刪除但資料將會保留。')) {
+            return;
+        }
+
+        let appId = this.props.appId;
+        let chatroomId = this.props.chatroomId;
+        let userId = authHelper.userId;
+
+        return apiBot.chatrooms.leaveGroupRoom(appId, chatroomId, userId).then((resJson) => {
+            setNavTitle();
+            controlPanelStore.dispatch(selectChatroom('', ''));
+            return notify('已成功離開群組', { type: 'success' });
+        }).catch(() => {
+            return notify('執行失敗', { type: 'danger' });
+        });
+    }
+
+    renderChatroomProfile() {
+        let chatroomId = this.props.chatroomId;
         let groupId = this.app.group_id;
         /** @type {Chatshier.Group} */
         let group = this.props.groups[groupId];
@@ -247,7 +295,9 @@ class ProfilePanel extends React.Component {
                                 value={this.state.chatroomNames[chatroomId] || this.chatroom.name}
                                 placeholder={DEFAULT_CHATROOM_NAME}
                                 onChange={(ev) => this.onChatroomNameChanged(ev, chatroomId)} />
-                            <button className="ml-2 btn btn-primary btn-update-chatroom">更新</button>
+                            <button className="ml-2 btn btn-primary btn-update-chatroom" onClick={this.updateChatroomName}>
+                                <span>更新</span>
+                            </button>
                         </td>
                     </tr>
                     <tr>
@@ -522,7 +572,7 @@ class ProfilePanel extends React.Component {
                                     <Aux>
                                         {this.renderChatroomProfile()}
                                         <div className="p-2 leave-group-room text-right">
-                                            <button type="button" className="btn btn-danger">
+                                            <button type="button" className="btn btn-danger" onClick={this.leavePlatformGroup}>
                                                 <i className="fas fa-sign-out-alt fa-fw"></i>
                                                 <span>離開群組</span>
                                             </button>

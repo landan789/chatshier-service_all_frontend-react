@@ -129,7 +129,7 @@ class ChangePassword extends React.Component {
                 submitBtnHtml: '確認'
             });
 
-            if (0 === err.message.indexOf('401')) {
+            if (401 === err.status) {
                 return Promise.all([
                     notify('不合法的令牌，請重新進行重設密碼流程', { type: 'danger' }),
                     this.props.history.replace(ROUTES.RESET_PASSWORD)

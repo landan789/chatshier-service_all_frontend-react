@@ -209,11 +209,20 @@ class ChatroomPanel extends React.Component {
         if (!(props.appId && props.chatroomId)) {
             return null;
         }
+
+        let app = props.apps[props.appId];
+        if (!app) {
+            return null;
+        }
+
+        let chatroom = props.appsChatrooms[props.appId].chatrooms[props.chatroomId];
+        if (!chatroom) {
+            return null;
+        }
+
         this.prevTime = 0;
         this.nowDateStr = '';
 
-        let app = props.apps[props.appId];
-        let chatroom = props.appsChatrooms[props.appId].chatrooms[props.chatroomId];
         let messagers = chatroom.messagers;
         let messages = chatroom.messages;
         let userId = authHelper.userId;

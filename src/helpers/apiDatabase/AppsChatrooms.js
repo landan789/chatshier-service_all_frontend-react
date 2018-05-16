@@ -33,7 +33,26 @@ class AppsChatrooms extends Core {
             mainStore.dispatch(updateChatrooms(resJson.data));
             return resJson;
         });
-    };
+    }
+
+    /**
+     * @param {string} appId
+     * @param {string} chatroomId
+     * @param {any} putChatroom
+     * @param {string} userId
+     */
+    update(appId, chatroomId, putChatroom, userId) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/chatrooms/' + chatroomId + '/users/' + userId;
+        let reqInit = {
+            method: 'PUT',
+            headers: reqHeaders,
+            body: JSON.stringify(putChatroom)
+        };
+        return this.sendRequest(destUrl, reqInit).then((resJson) => {
+            mainStore.dispatch(updateChatrooms(resJson.data));
+            return resJson;
+        });
+    }
 }
 
 export default AppsChatrooms;

@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, withRouter } from 'react-router-dom';
 import { Fade } from 'reactstrap';
+import { Trans } from 'react-i18next';
+import { withTranslate } from '../../i18n';
 
 import ROUTES from '../../config/route';
 import browserHelper from '../../helpers/browser';
@@ -21,6 +23,7 @@ const USER_FAILED_TO_FIND = '3.1';
 
 class ResetPassword extends React.Component {
     static propTypes = {
+        t: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
     }
 
@@ -30,8 +33,9 @@ class ResetPassword extends React.Component {
         this.state = {
             email: '',
             recaptchaResponse: '',
+            isInputReady: false,
             isProcessing: false,
-            resetBtnHtml: '重設密碼'
+            resetBtnHtml: this.props.t('Reset password')
         };
 
         /** @type {GoogleRecaptcha} */
@@ -43,18 +47,24 @@ class ResetPassword extends React.Component {
     }
 
     componentWillMount() {
-        browserHelper.setTitle('重設密碼');
+        browserHelper.setTitle(this.props.t('Reset password'));
 
         if (authHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }
     }
     emailChanged(ev) {
-        this.setState({ email: ev.target.value });
+        this.setState({
+            email: ev.target.value,
+            isInputReady: !!(ev.target.value && this.state.recaptchaResponse)
+        });
     }
 
     recaptchaResponseChanged(recaptchaResponse) {
-        this.setState({ recaptchaResponse: recaptchaResponse });
+        this.setState({
+            recaptchaResponse: recaptchaResponse,
+            isInputReady: !!(this.state.email && recaptchaResponse)
+        });
     }
 
     checkInputs(ev) {
@@ -66,9 +76,9 @@ class ResetPassword extends React.Component {
         let email = this.state.email;
         let recaptchaResponse = this.state.recaptchaResponse;
         if (!regex.emailStrict.test(email)) {
-            return notify('無效電子郵件', { type: 'warning' });
+            return notify(this.props.t('Invalid email'), { type: 'warning' });
         } else if (!recaptchaResponse) {
-            return notify('請執行驗證動作', { type: 'warning' });
+            return notify(this.props.t('Please perform the verification'), { type: 'warning' });
         }
 
         return this.forgetPassword(email, recaptchaResponse);
@@ -81,7 +91,7 @@ class ResetPassword extends React.Component {
     forgetPassword(email, recaptchaResponse) {
         this.setState({
             isProcessing: true,
-            resetBtnHtml: '<i class="fas fa-circle-notch fa-fw fa-spin"></i>處理中...'
+            resetBtnHtml: '<i class="fas fa-circle-notch fa-fw fa-spin"></i>' + this.props.t('Processing') + '...'
         });
 
         let user = {
@@ -91,27 +101,29 @@ class ResetPassword extends React.Component {
         return apiSign.resetPassword.do(user).then(() => {
             this.setState({
                 isProcessing: false,
-                resetBtnHtml: '重設密碼'
+                resetBtnHtml: this.props.t('Reset password'),
+                recaptchaResponse: ''
             });
-            return notify('已發送 email 至您的信箱', { type: 'success' });
+            return notify(this.props.t('Sent email to your mailbox'), { type: 'success' });
         }).then(() => {
             this.props.history.push(ROUTES.SIGNIN);
         }).catch((err) => {
+            this.recaptchaCmp && this.recaptchaCmp.resetWidget();
             this.setState({
                 isProcessing: false,
-                resetBtnHtml: '重設密碼'
+                resetBtnHtml: this.props.t('Reset password'),
+                recaptchaResponse: ''
             });
-            this.recaptchaCmp && this.recaptchaCmp.resetWidget();
 
             switch (err.code) {
                 case PASSWORD_FAILED_TO_RESET:
-                    return notify('不合法的驗證碼，請重新進行驗證動作！', { type: 'danger' });
+                    return notify(this.props.t('Invalid verification code, Please verify again!'), { type: 'danger' });
                 case USER_FAILED_TO_FIND:
-                    return notify('找不到使用者！', { type: 'danger' });
+                    return notify(this.props.t('No user found'), { type: 'danger' });
                 case EMAIL_FAILED_TO_SEND:
-                    return notify('很抱歉！無法發送 email 至您的信箱！', { type: 'danger' });
+                    return notify(this.props.t('Sorry, unable to send email to your mailbox!'), { type: 'danger' });
                 default:
-                    return notify('處理失敗！', { type: 'danger' });
+                    return notify(this.props.t('An error occurred!'), { type: 'danger' });
             }
         });
     }
@@ -119,7 +131,7 @@ class ResetPassword extends React.Component {
     render() {
         return (
             <Fade in className="reset-container w-100">
-                <SignForm title="重設密碼" onSubmit={this.checkInputs}>
+                <SignForm title={this.props.t('Reset password')} onSubmit={this.checkInputs}>
                     <fieldset>
                         <div className="form-group">
                             <div className="input-group">
@@ -132,7 +144,7 @@ class ResetPassword extends React.Component {
                                     type="email"
                                     className="form-control"
                                     pattern={regex.emailWeak.source}
-                                    placeholder="電子郵件"
+                                    placeholder={this.props.t('Email')}
                                     value={this.state.email}
                                     onChange={this.emailChanged}
                                     required />
@@ -147,7 +159,7 @@ class ResetPassword extends React.Component {
                                 <button
                                     type="submit"
                                     className="btn btn-info"
-                                    disabled={this.state.isProcessing}
+                                    disabled={!this.state.isInputReady || this.state.isProcessing}
                                     dangerouslySetInnerHTML={{__html: this.state.resetBtnHtml}}>
                                 </button>
                             </div>
@@ -156,10 +168,10 @@ class ResetPassword extends React.Component {
                     <div className="my-4 text-center">
                         <Route render={(router) => (
                             <p>
-                                <span>已經有帳號了嗎？請按</span>
+                                <span><Trans i18nKey="Already have an account?" /></span>
                                 <span className="mx-1 link-text" onClick={() => {
                                     router.history.push(ROUTES.SIGNIN);
-                                }}>登入</span>
+                                }}><Trans i18nKey="Sign in" /></span>
                             </p>
                         )}></Route>
                     </div>
@@ -169,4 +181,4 @@ class ResetPassword extends React.Component {
     }
 }
 
-export default withRouter(ResetPassword);
+export default withRouter(withTranslate(ResetPassword));

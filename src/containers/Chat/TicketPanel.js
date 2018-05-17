@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Aux from 'react-aux';
 
-import { toPriorityBorder, toStatusText } from '../../utils/ticket';
+import { toPriorityColor, toStatusText } from '../../utils/ticket';
 import { formatDate } from '../../utils/unitTime';
 
 import TicketInsertModal from '../../components/Modals/TicketInsert/TicketInsert';
@@ -159,7 +159,7 @@ class TicketPanel extends React.Component {
                                 <tbody className="ticket-body">
                                     {ticketIds.map((ticketId) => (
                                         <tr key={ticketId} className="ticket-row" onClick={(ev) => this.openEditModal(ev, appId, ticketId)}>
-                                            <td className="status" style={toPriorityBorder(tickets[ticketId].priority)}>
+                                            <td className="status" style={{ borderLeft: '.3rem solid ' + toPriorityColor(tickets[ticketId].priority) }}>
                                                 {toStatusText(tickets[ticketId].status)}
                                             </td>
                                             <td>{formatDate(new Date(tickets[ticketId].dueTime))}</td>

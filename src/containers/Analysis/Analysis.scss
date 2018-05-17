@@ -6,13 +6,14 @@
 
     .date-wrapper {
         display: inherit;
+
+        .rw-datetime-picker {
+            max-width: calc(50% - 1rem);
+        }
     }
     
     .chart-container {
         height: 25rem;
-
-        .chart-body {
-            border: 1px solid #ddd;
-        }
+        border: 1px solid #ddd;
     }
 }

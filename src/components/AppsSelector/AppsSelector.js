@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withTranslate } from '../../i18n';
 
 import PropTypes from 'prop-types';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
@@ -9,6 +10,7 @@ import apiDatabase from '../../helpers/apiDatabase/index';
 
 class AppsSelector extends React.Component {
     static propTypes = {
+        t: PropTypes.func.isRequired,
         className: PropTypes.string,
         showAll: PropTypes.bool,
         apps: PropTypes.object.isRequired,
@@ -57,38 +59,30 @@ class AppsSelector extends React.Component {
     }
 
     selectedApp(appId, appName) {
-        this.setState({
-            selectedAppName: appName
-        });
+        this.setState({ selectedAppName: appName });
         this.props.onChange(appId);
-    }
-
-    renderApps() {
-        let apps = this.props.apps || {};
-        let appIds = Object.keys(apps);
-
-        return appIds.map((appId) => {
-            let app = apps[appId];
-            if (!this.props.showAll && 'CHATSHIER' === app.type) {
-                return null;
-            }
-
-            return (
-                <DropdownItem key={appId}
-                    onClick={() => this.selectedApp(appId, apps[appId].name)}>{apps[appId].name}
-                </DropdownItem>
-            );
-        });
     }
 
     render() {
         return (
             <ButtonDropdown className={this.props.className} isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                 <DropdownToggle caret color="primary">
-                    {this.state.selectedAppName || '選擇應用程序'}&nbsp;
+                    {this.state.selectedAppName || this.props.t('Select a bot')}
                 </DropdownToggle>
                 <DropdownMenu>
-                    {this.renderApps()}
+                    {Object.keys(this.props.apps).map((appId) => {
+                        let app = this.props.apps[appId];
+                        if (!this.props.showAll && 'CHATSHIER' === app.type) {
+                            return null;
+                        }
+
+                        return (
+                            <DropdownItem key={appId}
+                                onClick={() => this.selectedApp(appId, this.props.apps[appId].name)}>
+                                {this.props.apps[appId].name}
+                            </DropdownItem>
+                        );
+                    })}
                 </DropdownMenu>
             </ButtonDropdown>
         );
@@ -102,4 +96,4 @@ const mapStateToProps = (storeState, ownProps) => {
     };
 };
 
-export default connect(mapStateToProps)(AppsSelector);
+export default withTranslate(connect(mapStateToProps)(AppsSelector));

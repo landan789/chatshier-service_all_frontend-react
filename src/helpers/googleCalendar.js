@@ -4,7 +4,6 @@ const GOOGLE_CLIENT_NOT_SIGNEDIN = 'GOOGLE_CLIENT_NOT_SIGNEDIN';
 const GOOGLE_API_ENDPOINT = 'https://apis.google.com/js/api.js';
 
 let isGoogleapiLoaded = false;
-let isGoogleapiReady = false;
 
 class GoogleCalendarHelper {
     constructor() {
@@ -12,19 +11,8 @@ class GoogleCalendarHelper {
             this.googleReadyResolve = resolve;
         });
 
-        console.log('isGoogleapiReady: ' + isGoogleapiReady);
-        console.log('isGoogleapiLoaded: ' + isGoogleapiLoaded);
-        if (isGoogleapiReady) {
-            window.gapi.auth2.getAuthInstance().then((auth) => {
-                this.googleAuth = auth;
-                this.googleReadyResolve();
-                this.googleReadyResolve = void 0;
-            });
-        } else {
-            this.loadCalendarApi();
-        }
-
         this._mapRes = this._mapRes.bind(this);
+        this.loadCalendarApi();
     }
 
     get isSignedIn() {
@@ -33,7 +21,7 @@ class GoogleCalendarHelper {
 
     loadCalendarApi() {
         if (isGoogleapiLoaded) {
-            return Promise.resolve(this.googleAuth);
+            return Promise.resolve();
         }
 
         let script = document.createElement('script');
@@ -54,16 +42,11 @@ class GoogleCalendarHelper {
             return window.gapi.auth2.getAuthInstance();
         }).then((auth) => {
             this.googleAuth = auth;
-
             this.googleReadyResolve && this.googleReadyResolve();
             this.googleReadyResolve = void 0;
-            isGoogleapiReady = true;
-            return auth;
         }).catch((err) => {
             console.error(err);
-            this.googleReadyResolve && this.googleReadyResolve();
-            this.googleReadyResolve = void 0;
-            isGoogleapiReady = false;
+            return Promise.reject(err);
         });
     }
 

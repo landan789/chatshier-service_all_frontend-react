@@ -21,7 +21,7 @@ i18next.use(XHR).init({
     preload: ['en-us'],
     lng: currentLanguage,
     ns: ['en-us', 'zh-tw'], // 可載入的檔名，有哪些語系則設定哪些語系
-    debug: true,
+    debug: false,
     keySeparator: false, // 允許 i18nKey 中有逗號
     interpolation: {
         escapeValue: false

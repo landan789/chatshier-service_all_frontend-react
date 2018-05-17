@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { Fade } from 'reactstrap';
+import { withTranslate } from '../../i18n';
 import jwtDecode from 'jwt-decode';
 
 import ROUTES from '../../config/route';
@@ -21,6 +22,7 @@ const NEW_PASSWORD_WAS_INCONSISTENT = '2.4';
 
 class ChangePassword extends React.Component {
     static propTypes = {
+        t: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
     }
 
@@ -30,8 +32,9 @@ class ChangePassword extends React.Component {
         this.state = {
             password: '',
             passwordCfm: '',
+            isInputReady: false,
             isProcessing: false,
-            submitBtnHtml: '確認'
+            submitBtnHtml: this.props.t('Confirm')
         };
 
         this.passwordChanged = this.passwordChanged.bind(this);
@@ -39,7 +42,7 @@ class ChangePassword extends React.Component {
         this.checkInputs = this.checkInputs.bind(this);
 
         // 只要 jwt 為空或者解譯錯誤都導回登入畫面
-        this.jwt = window.location.href.split('/').pop();
+        this.jwt = this._getUrlQueryByName('j');
         if (!this.jwt) {
             this.props.history.replace(ROUTES.SIGNIN);
             return;
@@ -49,7 +52,7 @@ class ChangePassword extends React.Component {
             this.payload = this.jwt ? jwtDecode(this.jwt) : {};
             if (this.payload.exp < Date.now()) {
                 this.state.isProcessing = true;
-                notify('令牌已過期，請重新進行重設密碼流程', { type: 'danger' });
+                notify(this.props.t('Token expired, please perform the reset password procedure again!'), { type: 'danger' });
                 this.props.history.replace(ROUTES.RESET_PASSWORD);
             }
         } catch (ex) {
@@ -58,7 +61,7 @@ class ChangePassword extends React.Component {
     }
 
     componentWillMount() {
-        browserHelper.setTitle('設定密碼');
+        browserHelper.setTitle(this.props.t('Change password'));
 
         if (authHelper.hasSignedin()) {
             return window.location.replace(ROUTES.CHAT);
@@ -66,11 +69,17 @@ class ChangePassword extends React.Component {
     }
 
     passwordChanged(ev) {
-        this.setState({ password: ev.target.value });
+        this.setState({
+            password: ev.target.value,
+            isInputReady: !!(ev.target.value && this.state.passwordCfm)
+        });
     }
 
     passwordCfmChanged(ev) {
-        this.setState({ passwordCfm: ev.target.value });
+        this.setState({
+            passwordCfm: ev.target.value,
+            isInputReady: !!(ev.target.value && this.state.password)
+        });
     }
 
     checkInputs(ev) {
@@ -82,9 +91,9 @@ class ChangePassword extends React.Component {
         let password = this.state.password;
         let passwordCfm = this.state.passwordCfm;
         if (!password) {
-            return notify('新密碼不能為空', { type: 'warning' });
+            return notify(this.props.t('New password can\'t be empty'), { type: 'warning' });
         } else if (!passwordCfm || password !== passwordCfm) {
-            return notify('輸入的新密碼不一致', { type: 'warning' });
+            return notify(this.props.t('The entered new password is inconsistent'), { type: 'warning' });
         }
 
         return this.changePassword(password, passwordCfm);
@@ -97,7 +106,7 @@ class ChangePassword extends React.Component {
     changePassword(password, passwordCfm) {
         this.setState({
             isProcessing: true,
-            submitBtnHtml: '<i class="fas fa-circle-notch fa-fw fa-spin"></i>處理中...'
+            submitBtnHtml: '<i class="fas fa-circle-notch fa-fw fa-spin"></i>' + this.props.t('Processing') + '...'
         });
 
         let userId = this.payload.uid;
@@ -115,43 +124,43 @@ class ChangePassword extends React.Component {
             authHelper.jwt = jwt;
             authHelper.activateRefreshToken();
 
-            return notify('密碼更新成功！', { type: 'success' });
+            return notify(this.props.t('Password update successful!'), { type: 'success' });
         }).then(() => {
             this.setState({
                 isProcessing: false,
-                submitBtnHtml: '確認'
+                submitBtnHtml: this.props.t('Confirm')
             });
             // this.props.history.replace(ROUTES.CHAT);
             window.location.replace(ROUTES.CHAT);
         }).catch((err) => {
             this.setState({
                 isProcessing: false,
-                submitBtnHtml: '確認'
+                submitBtnHtml: this.props.t('Confirm')
             });
 
             if (401 === err.status) {
                 return Promise.all([
-                    notify('不合法的令牌，請重新進行重設密碼流程', { type: 'danger' }),
+                    notify(this.props.t('Invalid token, please perform the reset password procedure again!'), { type: 'danger' }),
                     this.props.history.replace(ROUTES.RESET_PASSWORD)
                 ]);
             } else if (NEW_PASSWORD_WAS_INCONSISTENT === err.code) {
-                return notify('輸入的新密碼不一致', { type: 'danger' });
+                return notify(this.props.t('New password was inconsistent'), { type: 'danger' });
             } else if (USER_FAILED_TO_FIND === err.code) {
-                return notify('找不到使用者！', { type: 'danger' });
+                return notify(this.props.t('No user found'), { type: 'danger' });
             } else if (JWT_HAD_EXPIRED === err.code) {
                 return Promise.all([
-                    notify('令牌已過期，請重新進行重設密碼流程', { type: 'danger' }),
+                    notify(this.props.t('Token expired, please perform the reset password procedure again!'), { type: 'danger' }),
                     this.props.history.replace(ROUTES.RESET_PASSWORD)
                 ]);
             }
-            return notify('設定新密碼失敗', { type: 'danger' });
+            return notify(this.props.t('An error occurred!'), { type: 'danger' });
         });
     }
 
     render() {
         return (
             <Fade in className="reset-container w-100">
-                <SignForm title="設定您的新密碼" onSubmit={this.checkInputs}>
+                <SignForm title={this.props.t('Set your new password')} onSubmit={this.checkInputs}>
                     <fieldset className="mb-4">
                         <div className="form-group">
                             <div className="input-group">
@@ -163,7 +172,7 @@ class ChangePassword extends React.Component {
                                 <input
                                     type="password"
                                     className="form-control"
-                                    placeholder="新密碼"
+                                    placeholder={this.props.t('New password')}
                                     value={this.state.password}
                                     onChange={this.passwordChanged}
                                     required />
@@ -179,7 +188,7 @@ class ChangePassword extends React.Component {
                                 <input
                                     type="password"
                                     className="form-control"
-                                    placeholder="確認新密碼"
+                                    placeholder={this.props.t('Confirm new password')}
                                     value={this.state.passwordCfm}
                                     onChange={this.passwordCfmChanged}
                                     required />
@@ -190,7 +199,7 @@ class ChangePassword extends React.Component {
                                 <button
                                     type="submit"
                                     className="btn btn-info"
-                                    disabled={this.state.isProcessing}
+                                    disabled={!this.state.isInputReady || this.state.isProcessing}
                                     dangerouslySetInnerHTML={{__html: this.state.submitBtnHtml}}>
                                 </button>
                             </div>
@@ -200,6 +209,25 @@ class ChangePassword extends React.Component {
             </Fade>
         );
     }
+
+    /**
+     * @param {string} name
+     * @param {string} [url]
+     */
+    _getUrlQueryByName(name, url) {
+        name = name.replace(/[[\]]/g, '\\$&');
+        url = url || window.location.href;
+        let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+        let results = regex.exec(url);
+
+        if (!results) {
+            return;
+        } else if (!results[2]) {
+            return '';
+        }
+
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
 }
 
-export default withRouter(ChangePassword);
+export default withRouter(withTranslate(ChangePassword));

@@ -54,9 +54,9 @@ const linkItems = [
         text: 'To-Do Items',
         useReactRouter: true
     }, {
-        link: ROUTES.ANALYZE,
+        link: ROUTES.ANALYSIS,
         icon: 'fa fa-chart-bar fa-fw',
-        text: 'Analyze',
+        text: 'Analysis',
         useReactRouter: true
     }, {
         icon: 'fa fa-envelope fa-fw',
@@ -568,7 +568,7 @@ class ControlPanel extends React.Component {
 
                                 <ListGroupItem className="text-light">
                                     <i className="fas fa-plus"></i>
-                                    <span><Trans i18nKey={'Add'} /></span>
+                                    <span><Trans i18nKey="Add" /></span>
                                 </ListGroupItem>
                             </ListGroup>
                         </div>
@@ -622,7 +622,7 @@ class ControlPanel extends React.Component {
                                 <ListGroupItem className="mt-3 px-0 text-light text-center" onClick={() => this.linkTo(ROUTES.TICKETS, true)}>
                                     <i className="fa fa-list-ul fa-2x"></i>
                                 </ListGroupItem>
-                                <ListGroupItem className="mt-3 px-0 text-light text-center" onClick={() => this.linkTo(ROUTES.ANALYZE, true)}>
+                                <ListGroupItem className="mt-3 px-0 text-light text-center" onClick={() => this.linkTo(ROUTES.ANALYSIS, true)}>
                                     <i className="fa fa-chart-bar fa-2x"></i>
                                 </ListGroupItem>
                                 <ListGroupItem className="mt-3 px-0 text-light text-center" onClick={this.putAwayControlPanel}>

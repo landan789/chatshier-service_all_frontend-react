@@ -17,25 +17,26 @@ export const formatTo2Digit = (n) => {
  * 將日期或 unit time 轉換為 YYYY-MM-DD 格式
  *
  * @param {Date|number} date
+ * @param {boolean} [shouldIncludeYear=true]
  */
-export const formatDate = (date) => {
+export const formatDate = (date, shouldIncludeYear = true) => {
     if (!date) {
         return '';
     } else if ('number' === typeof date || 'string' === typeof date) {
         date = new Date(date);
     }
-    return date.getFullYear() +
-        '-' + formatTo2Digit(date.getMonth() + 1) +
-        '-' + formatTo2Digit(date.getDate());
+    return (shouldIncludeYear ? date.getFullYear() + '-' : '') +
+        formatTo2Digit(date.getMonth() + 1) + '-' +
+        formatTo2Digit(date.getDate());
 };
 
 /**
  * 將日期或 unit time 轉換為 hh:mm:ss 格式
  *
  * @param {Date|number} time
- * @param {boolean} [includeSec=true]
+ * @param {boolean} [shouldIncludeSec=true]
  */
-export const formatTime = (time, includeSec = true) => {
+export const formatTime = (time, shouldIncludeSec = true) => {
     if (!time) {
         return '';
     } else if ('number' === typeof time || 'string' === typeof time) {
@@ -43,5 +44,5 @@ export const formatTime = (time, includeSec = true) => {
     }
     return formatTo2Digit(time.getHours()) +
         ':' + formatTo2Digit(time.getMinutes()) +
-        (includeSec ? ':' + formatTo2Digit(time.getSeconds()) : '');
+        (shouldIncludeSec ? ':' + formatTo2Digit(time.getSeconds()) : '');
 };

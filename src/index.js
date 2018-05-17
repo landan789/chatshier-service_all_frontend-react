@@ -12,7 +12,7 @@ import ROUTES from './config/route';
 import mainStore from './redux/mainStore';
 
 import i18n from './i18n';
-import Analyze from './containers/Analyze/Analyze';
+import Analysis from './containers/Analysis/Analysis';
 import Autoreplies from './containers/Autoreplies/Autoreplies';
 import Calendar from './containers/Calendar/Calendar';
 import ChangePassword from './containers/ChangePassword/ChangePassword';
@@ -37,8 +37,8 @@ import './index.css';
 
 const routes = [
     {
-        path: ROUTES.ANALYZE,
-        component: Analyze,
+        path: ROUTES.ANALYSIS,
+        component: Analysis,
         exact: true
     }, {
         path: ROUTES.AUTOREPLIES,

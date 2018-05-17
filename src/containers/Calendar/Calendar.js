@@ -12,7 +12,6 @@ import apiDatabase from '../../helpers/apiDatabase/index';
 
 import { notify } from '../../components/Notify/Notify';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import CalendarInsertModal from '../../components/Modals/CalendarInsert/CalendarInsert';
 import CalendarEditModal, { CalendarEventTypes } from '../../components/Modals/CalendarEdit/CalendarEdit';
@@ -100,7 +99,6 @@ class Calendar extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('行事曆');
-        setNavTitle('行事曆');
 
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
@@ -418,7 +416,7 @@ class Calendar extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <PageWrapper>
+                <PageWrapper toolbarTitle="行事曆">
                     <Fade in className="container mt-5 calendar-wrapper">
                         <div className="mb-5 card chsr calendar" ref={this.initCalendar}></div>
                     </Fade>

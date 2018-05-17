@@ -9,7 +9,6 @@ import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import GreetingTable from './GreetingTable/GreetingTable';
@@ -33,7 +32,6 @@ class Greetings extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('加好友回覆');
-        setNavTitle('加好友回覆');
 
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
@@ -49,7 +47,7 @@ class Greetings extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <PageWrapper>
+                <PageWrapper toolbarTitle="加好友回覆">
                     <Fade in className="greetings-wrapper">
                         <div className="Greetings">
                             <Jumbotron>

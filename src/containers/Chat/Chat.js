@@ -4,6 +4,8 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Aux from 'react-aux';
 import { Fade } from 'reactstrap';
+import { Trans } from 'react-i18next';
+import { withTranslate } from '../../i18n';
 
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
@@ -13,7 +15,6 @@ import apiDatabase from '../../helpers/apiDatabase/index';
 import controlPanelStore from '../../redux/controlPanelStore';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 
 import ChatroomPanel from './ChatroomPanel';
@@ -29,6 +30,7 @@ const CHATSHIER = 'CHATSHIER';
 
 class Chat extends React.Component {
     static propTypes = {
+        t: PropTypes.func.isRequired,
         apps: PropTypes.object,
         appsChatrooms: PropTypes.object,
         appsFields: PropTypes.object,
@@ -47,19 +49,20 @@ class Chat extends React.Component {
             isOpenChatroom: true,
             isOpenProfile: false,
             isOpenTicket: false,
+            chatroomTitle: this.props.t('Chatroom'),
             selectedAppId: '',
             selectedChatroomId: '',
             searchKeyword: ''
         };
 
+        this.onSelectChatroomChanged = this.onSelectChatroomChanged.bind(this);
         this.toggleChatroom = this.toggleChatroom.bind(this);
         this.toggleProfle = this.toggleProfle.bind(this);
         this.toggleTicket = this.toggleTicket.bind(this);
     }
 
     componentWillMount() {
-        browserHelper.setTitle('聊天室');
-        setNavTitle('聊天室');
+        browserHelper.setTitle(this.props.t('Chatroom'));
 
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
@@ -69,16 +72,7 @@ class Chat extends React.Component {
 
     componentDidMount() {
         this.storeUnsubscribe && this.storeUnsubscribe();
-        this.storeUnsubscribe = controlPanelStore.subscribe(() => {
-            let storeState = controlPanelStore.getState();
-            let searchKeyword = storeState.searchKeyword;
-            let selectedChatroom = storeState.selectedChatroom;
-            this.setState({
-                searchKeyword: searchKeyword,
-                selectedAppId: selectedChatroom.appId,
-                selectedChatroomId: selectedChatroom.chatroomId
-            });
-        });
+        this.storeUnsubscribe = controlPanelStore.subscribe(this.onSelectChatroomChanged);
 
         let userId = authHelper.userId;
         return userId && Promise.all([
@@ -96,6 +90,45 @@ class Chat extends React.Component {
     componentWillUnmount() {
         this.storeUnsubscribe && this.storeUnsubscribe();
         this.storeUnsubscribe = void 0;
+    }
+
+    onSelectChatroomChanged() {
+        let storeState = controlPanelStore.getState();
+        let searchKeyword = storeState.searchKeyword;
+        let selectedChatroom = storeState.selectedChatroom;
+
+        let hasSelectChatroom = !!(selectedChatroom.appId && selectedChatroom.chatroomId);
+        let newState = {
+            chatroomTitle: this.props.t('Chatroom'),
+            searchKeyword: searchKeyword,
+            selectedAppId: selectedChatroom.appId,
+            selectedChatroomId: selectedChatroom.chatroomId
+        };
+
+        if (hasSelectChatroom) {
+            let apps = this.props.apps;
+            let appsChatrooms = this.props.appsChatrooms;
+            let app = apps[selectedChatroom.appId];
+            let chatroom = appsChatrooms[selectedChatroom.appId].chatrooms[selectedChatroom.chatroomId];
+            let messagers = chatroom.messagers;
+            let messagerSelf = findMessagerSelf(messagers);
+
+            let messagerNameList = [];
+            for (let messagerId in messagers) {
+                let messager = messagers[messagerId];
+                if (app.type === messager.type) {
+                    if (app.type !== CHATSHIER) {
+                        let displayName = (messagerSelf.namings && messagerSelf.namings[messager.platformUid]) || this.props.consumers[messager.platformUid].name;
+                        messagerNameList.push(displayName);
+                    } else if (app.type === CHATSHIER) {
+                        messagerNameList.push(this.props.users[messager.platformUid].name);
+                    }
+                }
+            }
+            newState.chatroomTitle += ' #' + app.name + ' (' + messagerNameList.join(',') + ')';
+        }
+
+        this.setState(newState);
     }
 
     toggleChatroom(shouleOpen) {
@@ -136,10 +169,13 @@ class Chat extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <PageWrapper onToggleChatroom={this.toggleChatroom} onToggleProfle={this.toggleProfle} onToggleTicket={this.toggleTicket}>
+                <PageWrapper toolbarTitle={this.state.chatroomTitle} onToggleChatroom={this.toggleChatroom} onToggleProfle={this.toggleProfle} onToggleTicket={this.toggleTicket}>
                     <Fade in className="chat-wrapper">
                         <div className={'d-flex position-relative w-100 h-100 chatroom-container' + (shouldContainerOpen ? ' open' : '')}>
-                            <span className="position-absolute text-center watermark-text">歡迎使用 錢掌櫃 整合平台</span>
+                            <span className="position-absolute text-center watermark-text">
+                                <Trans i18nKey="Welcome to Chatshier integration platform" />
+                            </span>
+
                             {this.state.isOpenChatroom && <ChatroomPanel
                                 className="position-relative h-100 col px-0 animated slideInLeft"
                                 appId={this.state.selectedAppId}
@@ -179,7 +215,7 @@ const mapStateToProps = (storeState, ownProps) => {
     };
 };
 
-export default withRouter(connect(mapStateToProps)(Chat));
+export default withRouter(withTranslate(connect(mapStateToProps)(Chat)));
 
 /**
  * @param {{[messagerId: string]: Chatshier.ChatroomMessager }} messagers

@@ -12,7 +12,6 @@ import apiDatabase from '../../helpers/apiDatabase/index';
 
 import AutoreplyTable from '../Autoreplies/AutoreplyTable.js';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import AutoreplyInsertModal from '../../components/Modals/AutoreplyInsert/AutoreplyInsert';
@@ -43,7 +42,6 @@ class Autoreplies extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('自動回覆');
-        setNavTitle('自動回覆');
 
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
@@ -81,7 +79,7 @@ class Autoreplies extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <PageWrapper>
+                <PageWrapper toolbarTitle="自動回覆">
                     <Fade in className="autoreplies-wrapper">
                         <div className="autoreplies">
                             <Jumbotron>

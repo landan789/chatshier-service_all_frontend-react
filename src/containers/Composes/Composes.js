@@ -11,7 +11,6 @@ import browserHelper from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import ComposeInsertModal from '../../components/Modals/ComposeInsert/ComposeInsert';
@@ -43,7 +42,6 @@ class Composes extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('群發');
-        setNavTitle('群發');
 
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
@@ -83,7 +81,7 @@ class Composes extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <PageWrapper>
+                <PageWrapper toolbarTitle="群發">
                     <Fade in className="composes-wrapper">
                         <div className="composes">
                             <Jumbotron>

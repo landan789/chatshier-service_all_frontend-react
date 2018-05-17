@@ -30,6 +30,7 @@ class SignIn extends React.Component {
         super(props, context);
 
         this.state = {
+            isInputReady: false,
             isSignIning: false,
             signInBtnHtml: this.props.t('Sign in'),
             email: '',
@@ -50,11 +51,17 @@ class SignIn extends React.Component {
     }
 
     emailChanged(ev) {
-        this.setState({ email: ev.target.value });
+        this.setState({
+            email: ev.target.value,
+            isInputReady: !!(ev.target.value && this.state.password)
+        });
     }
 
     pwChanged(ev) {
-        this.setState({ password: ev.target.value });
+        this.setState({
+            password: ev.target.value,
+            isInputReady: !!(ev.target.value && this.state.email)
+        });
     }
 
     checkInputs(ev) {
@@ -161,7 +168,7 @@ class SignIn extends React.Component {
                                 <button
                                     type="submit"
                                     className="btn btn-info"
-                                    disabled={this.state.isSignIning}
+                                    disabled={!this.state.isInputReady || this.state.isSignIning}
                                     dangerouslySetInnerHTML={{__html: this.state.signInBtnHtml}}>
                                 </button>
                             </div>
@@ -170,18 +177,18 @@ class SignIn extends React.Component {
                     <div className="my-4 text-center">
                         <Route render={(router) => (
                             <p>
-                                <span><Trans i18nKey={'Forgot password?'} /></span>
+                                <span><Trans i18nKey="Forgot password?" /></span>
                                 <span className="mx-1 link-text" onClick={() => {
                                     router.history.push(ROUTES.RESET_PASSWORD);
-                                }}><Trans i18nKey={'Reset password'} /></span>
+                                }}><Trans i18nKey="Reset password" /></span>
                             </p>
                         )}></Route>
                         <Route render={(router) => (
                             <p>
-                                <span><Trans i18nKey={'Don\'t have an account yet?'} /></span>
+                                <span><Trans i18nKey="Don't have an account yet?" /></span>
                                 <span className="mx-1 link-text" onClick={() => {
                                     router.history.push(ROUTES.SIGNUP);
-                                }}><Trans i18nKey={'Sign up'} /></span>
+                                }}><Trans i18nKey="Sign up" /></span>
                             </p>
                         )}></Route>
                     </div>

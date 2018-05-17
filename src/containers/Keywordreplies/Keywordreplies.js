@@ -11,7 +11,6 @@ import browserHelper from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
-import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import KeywordreplyTable from '../Keywordreplies/KeywordreplyTable';
@@ -43,7 +42,6 @@ class Keywordreplies extends React.Component {
 
     componentWillMount() {
         browserHelper.setTitle('關鍵字回覆');
-        setNavTitle('關鍵字回覆');
 
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
@@ -80,7 +78,7 @@ class Keywordreplies extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <PageWrapper>
+                <PageWrapper toolbarTitle="關鍵字回覆">
                     <Fade in className="keywordreplies-wrapper">
                         <div className="keywordreplies">
                             <Jumbotron>

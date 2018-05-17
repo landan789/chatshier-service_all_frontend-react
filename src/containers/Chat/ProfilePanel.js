@@ -14,7 +14,6 @@ import apiBot from '../../helpers/apiBot/index';
 import regex from '../../utils/regex';
 import { fixHttpsResource, logos } from '../../utils/common';
 
-import { setNavTitle } from '../../components/Navigation/Toolbar/Toolbar';
 import { notify } from '../../components/Notify/Notify';
 import controlPanelStore from '../../redux/controlPanelStore';
 import { selectChatroom } from '../../redux/actions/controlPanelStore/selectedChatroom';
@@ -267,7 +266,6 @@ class ProfilePanel extends React.Component {
         let userId = authHelper.userId;
 
         return apiBot.chatrooms.leaveGroupRoom(appId, chatroomId, userId).then((resJson) => {
-            setNavTitle();
             controlPanelStore.dispatch(selectChatroom('', ''));
             return notify('已成功離開群組', { type: 'success' });
         }).catch(() => {

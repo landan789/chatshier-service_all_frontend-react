@@ -1,0 +1,19 @@
+.analysis-wrapper {
+    .page-title,
+    .analysis-body {
+        margin: 2.5%;
+    }
+
+    .date-wrapper {
+        display: inherit;
+
+        .rw-datetime-picker {
+            max-width: calc(50% - 1rem);
+        }
+    }
+    
+    .chart-container {
+        height: 25rem;
+        border: 1px solid #ddd;
+    }
+}

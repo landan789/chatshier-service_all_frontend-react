@@ -32,6 +32,7 @@ class SignUp extends React.Component {
         super(props);
 
         this.state = {
+            isInputReady: false,
             isSignUping: false,
             signupBtnHtml: this.props.t('Sign up'),
             name: '',
@@ -56,19 +57,31 @@ class SignUp extends React.Component {
     }
 
     nameChanged(ev) {
-        this.setState({ name: ev.target.value });
+        this.setState({
+            name: ev.target.value,
+            isInputReady: !!(ev.target.value && this.state.email && this.state.password && this.state.passwordConfirm)
+        });
     }
 
     emailChanged(ev) {
-        this.setState({ email: ev.target.value });
+        this.setState({
+            email: ev.target.value,
+            isInputReady: !!(ev.target.value && this.state.name && this.state.password && this.state.passwordConfirm)
+        });
     }
 
     pwChanged(ev) {
-        this.setState({ password: ev.target.value });
+        this.setState({
+            password: ev.target.value,
+            isInputReady: !!(ev.target.value && this.state.name && this.state.email && this.state.passwordConfirm)
+        });
     }
 
     pwConfirmChanged(ev) {
-        this.setState({ passwordConfirm: ev.target.value });
+        this.setState({
+            passwordConfirm: ev.target.value,
+            isInputReady: !!(ev.target.value && this.state.name && this.state.email && this.state.password)
+        });
     }
 
     checkInputs(ev) {
@@ -222,7 +235,7 @@ class SignUp extends React.Component {
                                 <button
                                     type="submit"
                                     className="btn btn-info"
-                                    disabled={this.state.isSignuping}
+                                    disabled={!this.state.isInputReady || this.state.isSignuping}
                                     dangerouslySetInnerHTML={{__html: this.state.signupBtnHtml}}>
                                 </button>
                             </div>
@@ -230,17 +243,17 @@ class SignUp extends React.Component {
                     </fieldset>
                     <div className="my-4 text-center">
                         <p>
-                            <span><Trans i18nKey={'I agree Chatshier'} /></span>
-                            <a className="mx-1 link-text" href="https://www.chatshier.com/terms.html" target="_blank" rel="noopener noreferrer"><Trans i18nKey={'Terms'} /></a>
+                            <span><Trans i18nKey="I agree Chatshier" /></span>
+                            <a className="mx-1 link-text" href="https://www.chatshier.com/terms.html" target="_blank" rel="noopener noreferrer"><Trans i18nKey="Terms" /></a>
                             <span>&amp;</span>
-                            <a className="mx-1 link-text" href="https://www.chatshier.com/privacy.html" target="_blank" rel="noopener noreferrer"><Trans i18nKey={'Privacy'} /></a>
+                            <a className="mx-1 link-text" href="https://www.chatshier.com/privacy.html" target="_blank" rel="noopener noreferrer"><Trans i18nKey="Privacy" /></a>
                         </p>
                         <Route render={(router) => (
                             <p>
-                                <span><Trans i18nKey={'Already have an account?'} /></span>
+                                <span><Trans i18nKey="Already have an account?" /></span>
                                 <span className="mx-1 link-text" onClick={() => {
                                     router.history.push(ROUTES.SIGNIN);
-                                }}><Trans i18nKey={'Sign in'} /></span>
+                                }}><Trans i18nKey="Sign in" /></span>
                             </p>
                         )}></Route>
                     </div>

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader,
     ModalBody, ModalFooter } from 'reactstrap';
 import { DateTimePicker } from 'react-widgets';
+import { currentLanguage } from '../../../i18n';
 
 import { toDueDateSpan } from '../../../utils/ticket';
 import { formatDate, formatTime } from '../../../utils/unitTime';
@@ -218,9 +219,9 @@ class TicketEditModal extends React.Component {
                             </select>
                         </div>
                         <div className="form-group row">
-                            <span className="col-12 col-form-label ticket-col">到期時間 {toDueDateSpan(ticket.dueTime)}</span>
+                            <label className="col-12 col-form-label ticket-col">到期時間 {toDueDateSpan(ticket.dueTime)}</label>
                             <DateTimePicker
-                                culture="zh-TW"
+                                culture={currentLanguage}
                                 format={(datetime) => formatDate(datetime) + ' ' + formatTime(datetime, false)}
                                 timeFormat={(time) => formatTime(time, false)}
                                 value={new Date(this.state.dueTime)}

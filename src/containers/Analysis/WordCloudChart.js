@@ -67,7 +67,7 @@ class WordCloudChart extends React.Component {
 
         this.wordFreq && this.wordFreq.stop() && this.wordFreq.empty();
         this.wordFreq = new WordFreq({
-            workerUrl: '/lib/js/wordfreq.worker.js',
+            workerUrl: '/lib/js/wordfreq.worker.min.js',
             minimumCount: 1 // 過濾文字出現的最小次數最小
         });
 

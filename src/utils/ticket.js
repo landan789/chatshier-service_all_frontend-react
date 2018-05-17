@@ -22,13 +22,8 @@ const priorityColors = {
     4: 'rgb(230, 100, 100)'
 };
 
-export function toPriorityBorder(priority) {
-    let style = {};
-    let color = priorityColors[priority] ? priorityColors[priority] : '';
-    if (color) {
-        style.borderLeft = '.3rem solid ' + color;
-    }
-    return style;
+export function toPriorityColor(priority) {
+    return priorityColors[priority] ? priorityColors[priority] : priorityColors[1];
 }
 
 export function toStatusText(status) {
@@ -37,14 +32,6 @@ export function toStatusText(status) {
 
 export function toPriorityText(priority) {
     return priorityText[priority] ? priorityText[priority] : '無';
-}
-
-export function toLocalTimeString(millisecond) {
-    let date = new Date(millisecond);
-    let localDate = date.toLocaleDateString();
-    let localTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    let localTimeString = localDate + localTime;
-    return localTimeString;
 }
 
 export function toDueDateSpan(dueTime) {
@@ -56,12 +43,9 @@ export function toDueDateSpan(dueTime) {
         padding: '1px .75rem',
         margin: '1px',
         borderRadius: '1rem',
-        backgroundColor: hr < 0 ? 'rgb(227, 79, 79)' : 'rgb(91, 195, 92)',
-        color: '#fff',
-        fontWeight: 'bold',
-        whiteSpace: 'nowrap'
+        backgroundColor: hr < 0 ? 'rgb(227, 79, 79)' : 'rgb(91, 195, 92)'
     };
 
     let text = hr < 0 ? '過期' : '即期';
-    return <span style={style}>{text}</span>;
+    return <span className="text-light text-nowrap font-weight-bold due-date-text" style={style}>{text}</span>;
 }

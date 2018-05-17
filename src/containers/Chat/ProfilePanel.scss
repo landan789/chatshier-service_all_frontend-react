@@ -91,7 +91,12 @@
     height: 4rem;
     border-radius: 1rem;
 
-    &.larger {
+    &.small {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    &.large {
         width: 8rem;
         height: 8rem;
     }

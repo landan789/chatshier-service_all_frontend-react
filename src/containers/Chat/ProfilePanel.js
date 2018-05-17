@@ -563,7 +563,7 @@ class ProfilePanel extends React.Component {
                 <div className="px-2 py-3 profile-wrapper">
                     <div className="person-profile profile-content table-responsive profile-group animated fadeIn">
                         <div className="photo-container">
-                            <img className="consumer-avatar larger" src={fixHttpsResource(person.photo)} alt="無法顯示相片" />
+                            <img className="consumer-avatar large" src={fixHttpsResource(person.photo)} alt="無法顯示相片" />
                         </div>
                         {(() => {
                             if (isGroupChatroom) {

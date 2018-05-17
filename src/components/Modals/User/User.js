@@ -19,6 +19,7 @@ class User extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isOpen: this.props.isOpen,
             isAsyncWorking: false,
             id: '',
             email: '',
@@ -26,17 +27,17 @@ class User extends React.Component {
             phone: '',
             address: ''
         };
+
         this.updateUser = this.updateUser.bind(this);
         this.handleCompanyChange = this.handleCompanyChange.bind(this);
         this.handlePhoneChange = this.handlePhoneChange.bind(this);
         this.handleAddressChange = this.handleAddressChange.bind(this);
+        this.closeModal = this.closeModal.bind(this);
     }
 
     componentDidMount() {
         let userId = authHelper.userId;
-        return Promise.all([
-            apiDatabase.users.find(userId)
-        ]);
+        return userId && apiDatabase.users.find(userId);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -65,12 +66,13 @@ class User extends React.Component {
         };
 
         return apiDatabase.users.update(userId, user).then(() => {
-            this.props.close(event);
-            return notify('修改成功', { type: 'success' });
-        }).catch(() => {
-            return notify('修改失敗', { type: 'danger' });
-        }).then(() => {
             this.setState({ isAsyncWorking: false });
+            return notify('修改成功', { type: 'success' }).then(() => {
+                this.props.close(event);
+            });
+        }).catch(() => {
+            this.setState({ isAsyncWorking: false });
+            return notify('修改失敗', { type: 'danger' });
         });
     }
 
@@ -79,42 +81,47 @@ class User extends React.Component {
     }
 
     handlePhoneChange(event) {
-        this.setState({phone: event.target.value});
+        this.setState({ phone: event.target.value });
     }
 
     handleAddressChange(event) {
-        this.setState({address: event.target.value});
+        this.setState({ address: event.target.value });
+    }
+
+    closeModal(ev) {
+        this.setState({ isOpen: false });
+        window.setTimeout(() => this.props.close(ev), 300);
     }
 
     render() {
         return (
-            <Modal className="user-modal" size="lg" isOpen={this.props.isOpen} toggle={this.props.close}>
-                <ModalHeader toggle={this.props.close}></ModalHeader>
+            <Modal className="user-modal" size="lg" isOpen={this.state.isOpen} toggle={this.closeModal}>
+                <ModalHeader toggle={this.closeModal}></ModalHeader>
                 <ModalBody>
                     <FormGroup>
-                        <Label>ID: </Label>
+                        <Label>ID:</Label>
                         <Input type="text" value={this.state.id} disabled={true}/>
                     </FormGroup>
                     <FormGroup>
-                        <Label>公司: </Label>
+                        <Label>公司:</Label>
                         <Input type="text" value={this.state.company} onChange={this.handleCompanyChange}/>
                     </FormGroup>
                     <FormGroup>
-                        <Label>電話: </Label>
+                        <Label>電話:</Label>
                         <Input type="text" value={this.state.phone} onChange={this.handlePhoneChange}/>
                     </FormGroup>
                     <FormGroup>
-                        <Label>郵件: </Label>
+                        <Label>郵件:</Label>
                         <Input type="text" value={this.state.email} disabled={true}/>
                     </FormGroup>
                     <FormGroup>
-                        <Label>地址: </Label>
+                        <Label>地址:</Label>
                         <Input type="text" value={this.state.address} onChange={this.handleAddressChange}/>
                     </FormGroup>
                 </ModalBody>
                 <ModalFooter>
-                    <Button outline color="success" onClick={this.updateUser} disabled={this.state.isAsyncWorking}>修改</Button>{' '}
-                    <Button outline color="danger" onClick={this.props.close}>取消</Button>
+                    <Button outline color="success" onClick={this.updateUser} disabled={this.state.isAsyncWorking}>修改</Button>
+                    <Button outline color="danger" onClick={this.closeModal}>取消</Button>
                 </ModalFooter>
             </Modal>
         );

@@ -9,6 +9,7 @@ import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
+import gCalendarHelper from '../../helpers/googleCalendar';
 
 import { notify } from '../../components/Notify/Notify';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
@@ -55,16 +56,16 @@ class TicketEventItem extends CalendarEventItem {
     }
 }
 
-// class GoogleEventItem extends CalendarEventItem {
-//     constructor(options) {
-//         options = options || {};
-//         super(options);
-//         this.eventType = CalendarEventTypes.GOOGLE;
-//         this.backgroundColor = '#468af5';
-//         this.borderColor = '#468af5';
-//         this.textColor = '#efeff0';
-//     }
-// }
+class GoogleEventItem extends CalendarEventItem {
+    constructor(options) {
+        options = options || {};
+        super(options);
+        this.eventType = CalendarEventTypes.GOOGLE;
+        this.backgroundColor = '#468af5';
+        this.borderColor = '#468af5';
+        this.textColor = '#efeff0';
+    }
+}
 
 class Calendar extends React.Component {
     static propTypes = {
@@ -113,8 +114,16 @@ class Calendar extends React.Component {
             apiDatabase.appsTickets.find(null, userId),
             apiDatabase.consumers.find(userId),
             apiDatabase.groups.find(userId),
-            apiDatabase.users.find(userId)
-        ]);
+            apiDatabase.users.find(userId),
+            gCalendarHelper.loadCalendarApi()
+        ]).then(() => {
+            return gCalendarHelper.findEvents().catch((err) => {
+                console.error(err);
+                return { items: [] };
+            });
+        }).then((resJson) => {
+            this.reloadGoogleCalendar(resJson.items);
+        });
     }
 
     componentWillReceiveProps(props) {
@@ -212,6 +221,36 @@ class Calendar extends React.Component {
                 });
                 calendarEventList.push(eventItem);
             }
+        }
+
+        if (calendarEventList.length > 0) {
+            this.$calendar.fullCalendar('renderEvents', calendarEventList, true);
+        }
+    }
+
+    reloadGoogleCalendar(gCalendarItems) {
+        let calendarEventList = [];
+
+        for (let gEventIdx in gCalendarItems) {
+            let googleEvent = gCalendarItems[gEventIdx];
+            let isAllDay = !!(googleEvent.start.date && googleEvent.end.date);
+            let startDate = isAllDay ? new Date(googleEvent.start.date) : new Date(googleEvent.start.dateTime);
+            isAllDay && startDate.setHours(0, 0, 0, 0);
+            let endDate = isAllDay ? new Date(googleEvent.end.date) : new Date(googleEvent.end.dateTime);
+            isAllDay && endDate.setHours(0, 0, 0, 0);
+
+            let gEventItem = new GoogleEventItem({
+                // calendarId: googleEvent.iCalUID,
+                calendarId: 'primary',
+                id: googleEvent.id,
+                title: googleEvent.summary,
+                description: googleEvent.description,
+                isAllDay: isAllDay,
+                start: startDate,
+                end: endDate,
+                backup: googleEvent
+            });
+            calendarEventList.push(gEventItem);
         }
 
         if (calendarEventList.length > 0) {

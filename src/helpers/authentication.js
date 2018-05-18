@@ -72,6 +72,9 @@ class AuthenticationHelper {
      * 清空登入使用的 cookie 及 localStorage 項目，執行登出
      */
     signOut() {
+        if (!this.hasSignedin()) {
+            return Promise.resolve();
+        }
         cookieHelper.deleteCookie(CHSR_COOKIE.USER_NAME);
         cookieHelper.deleteCookie(CHSR_COOKIE.USER_EMAIL);
         this.jwt = '';

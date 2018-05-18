@@ -5,3 +5,15 @@
         padding: 5%;
     }
 }
+
+.calendar-edit-modal {
+    .modal-title {
+        display: flex;
+        align-items: center;
+    }
+
+    .google-calendar-logo {
+        width: 2rem;
+        height: 2rem;
+    }
+}

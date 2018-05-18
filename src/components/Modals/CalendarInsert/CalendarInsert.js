@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Trans } from 'react-i18next';
+import { withTranslate, currentLanguage } from '../../../i18n';
 
 import { Button, Modal, ModalHeader,
-    ModalBody, ModalFooter } from 'reactstrap';
+    ModalBody, ModalFooter, FormGroup } from 'reactstrap';
 import { DateTimePicker } from 'react-widgets';
 
 import { formatDate, formatTime } from '../../../utils/unitTime';
@@ -12,6 +14,7 @@ import { notify } from '../../Notify/Notify';
 
 class CalendarInsertModal extends React.Component {
     static propTypes = {
+        t: PropTypes.func.isRequired,
         modalData: PropTypes.object,
         isOpen: PropTypes.bool.isRequired,
         close: PropTypes.func.isRequired
@@ -21,40 +24,26 @@ class CalendarInsertModal extends React.Component {
         super(props, ctx);
 
         this.state = {
+            isOpen: this.props.isOpen,
             isAsyncWorking: false,
             isAllDay: false,
             title: '',
             description: '',
             /** @type {Date} */
-            startDateTime: null,
+            startDatetime: this.props.modalData.startDatetime,
             /** @type {Date} */
-            endDateTime: null
+            endDatetime: this.props.modalData.endDatetime
         };
 
-        this.prevStartDateTime = this.state.startDateTime;
-        this.prevEndDateTime = this.state.endDateTime;
+        this.prevStartDatetime = this.state.startDatetime;
+        this.prevEndDatetime = this.state.endDatetime;
 
         this.titleChanged = this.titleChanged.bind(this);
         this.descriptionChanged = this.descriptionChanged.bind(this);
-        this.startDateTimeChanged = this.startDateTimeChanged.bind(this);
-        this.endDateTimeChanged = this.endDateTimeChanged.bind(this);
+        this.startDatetimeChanged = this.startDatetimeChanged.bind(this);
+        this.endDatetimeChanged = this.endDatetimeChanged.bind(this);
         this.allDayChanged = this.allDayChanged.bind(this);
         this.insertEvent = this.insertEvent.bind(this);
-    }
-
-    componentWillReceiveProps(props) {
-        if (!props.modalData) {
-            return;
-        }
-
-        this.setState({
-            isAsyncWorking: false,
-            isAllDay: false,
-            title: '',
-            description: '',
-            startDateTime: props.modalData.startDateTime,
-            endDateTime: props.modalData.endDateTime
-        });
     }
 
     titleChanged(ev) {
@@ -65,14 +54,14 @@ class CalendarInsertModal extends React.Component {
         this.setState({ description: ev.target.value });
     }
 
-    startDateTimeChanged(dateTime) {
-        this.prevStartDateTime = this.state.startDateTime;
-        this.setState({ startDateTime: dateTime });
+    startDatetimeChanged(dateTime) {
+        this.prevStartDatetime = this.state.startDatetime;
+        this.setState({ startDatetime: dateTime });
     }
 
-    endDateTimeChanged(dateTime) {
-        this.prevEndDateTime = this.state.endDateTime;
-        this.setState({ endDateTime: dateTime });
+    endDatetimeChanged(dateTime) {
+        this.prevEndDatetime = this.state.endDatetime;
+        this.setState({ endDatetime: dateTime });
     }
 
     allDayChanged(ev) {
@@ -84,48 +73,52 @@ class CalendarInsertModal extends React.Component {
         let dayEnd;
 
         if (ev.target.checked) {
-            this.prevStartDateTime = this.state.startDateTime;
-            this.prevEndDateTime = this.state.endDateTime;
-            dayStart = new Date(this.state.startDateTime);
+            this.prevStartDatetime = this.state.startDatetime;
+            this.prevEndDatetime = this.state.endDatetime;
+            dayStart = new Date(this.state.startDatetime);
             dayStart.setHours(0, 0, 0, 0);
             dayEnd = new Date(dayStart);
             dayEnd.setDate(dayEnd.getDate() + 1);
         } else {
-            dayStart = this.prevStartDateTime;
-            dayEnd = this.prevEndDateTime;
+            dayStart = this.prevStartDatetime;
+            dayEnd = this.prevEndDatetime;
         }
 
         this.setState({
             isAllDay: ev.target.checked,
-            startDateTime: dayStart,
-            endDateTime: dayEnd
+            startDatetime: dayStart,
+            endDatetime: dayEnd
         });
     }
 
     insertEvent(ev) {
         let event = {
             title: this.state.title,
-            startedTime: this.state.startDateTime.getTime(),
-            endedTime: this.state.endDateTime.getTime(),
+            startedTime: this.state.startDatetime.getTime(),
+            endedTime: this.state.endDatetime.getTime(),
             description: this.state.description,
             isAllDay: this.state.isAllDay ? 1 : 0
         };
 
         if (!event.title) {
-            return notify('請輸入事件標題名稱', { type: 'warning' });
+            return notify(this.props.t('Please fill the event title'), { type: 'warning' });
         } else if (event.startedTime > event.endedTime) {
-            return notify('開始時間需早於結束時間', { type: 'warning' });
+            return notify(this.props.t('Start datetime must be earlier than end datetime'), { type: 'warning' });
         }
 
         let userId = authHelper.userId;
         this.setState({ isAsyncWorking: true });
         return apiDatabase.calendarsEvents.insert(userId, event).then(() => {
-            this.props.close(ev);
-            return notify('新增成功', { type: 'success' });
-        }).catch(() => {
-            return notify('新增失敗', { type: 'danger' });
+            this.setState({
+                isOpen: false,
+                isAsyncWorking: false
+            });
+            return notify(this.props.t('Add successful!'), { type: 'success' });
         }).then(() => {
+            return this.props.close(ev);
+        }).catch(() => {
             this.setState({ isAsyncWorking: false });
+            return notify(this.props.t('Failed to add!'), { type: 'danger' });
         });
     }
 
@@ -135,75 +128,80 @@ class CalendarInsertModal extends React.Component {
         }
 
         return (
-            <Modal className="calendar-insert-modal" isOpen={this.props.isOpen} toggle={this.props.close}>
+            <Modal className="calendar-insert-modal" isOpen={this.state.isOpen} toggle={this.props.close}>
                 <ModalHeader toggle={this.props.close}>
-                    新增行事曆事件
+                    <Trans i18nKey="Add calendar event" />
                 </ModalHeader>
 
                 <ModalBody>
                     <div className="event-content">
-                        <div className="form-group">
+                        <FormGroup>
                             <input className="form-control event-title"
                                 type="text"
-                                placeholder="標題"
+                                placeholder={this.props.t('Title')}
                                 value={this.state.title}
                                 onChange={this.titleChanged} />
-                        </div>
+                        </FormGroup>
 
-                        <div className="form-group">
-                            <p>開始時間</p>
+                        <FormGroup>
+                            <p><Trans i18nKey="Start datetime" /></p>
                             <DateTimePicker
-                                culture="zh-TW"
+                                culture={currentLanguage}
                                 format={(datetime) => formatDate(datetime) + ' ' + formatTime(datetime, false)}
                                 timeFormat={(time) => formatTime(time, false)}
-                                max={this.state.endDateTime}
-                                value={this.state.startDateTime}
-                                onChange={this.startDateTimeChanged}>
+                                max={this.state.endDatetime}
+                                value={this.state.startDatetime}
+                                onChange={this.startDatetimeChanged}>
                             </DateTimePicker>
-                        </div>
+                        </FormGroup>
 
-                        <div className="form-group">
-                            <p>結束時間</p>
+                        <FormGroup>
+                            <p><Trans i18nKey="End datetime" /></p>
                             <DateTimePicker
-                                culture="zh-TW"
+                                culture={currentLanguage}
                                 format={(datetime) => formatDate(datetime) + ' ' + formatTime(datetime, false)}
                                 timeFormat={(time) => formatTime(time, false)}
-                                min={this.state.startDateTime}
-                                value={this.state.endDateTime}
-                                onChange={this.endDateTimeChanged}>
+                                min={this.state.startDatetime}
+                                value={this.state.endDatetime}
+                                onChange={this.endDatetimeChanged}>
                             </DateTimePicker>
-                        </div>
+                        </FormGroup>
 
-                        <div className="form-group">
+                        <FormGroup>
                             <div className="form-check">
                                 <label className="form-check-label">
                                     <input className="form-check-input"
                                         type="checkbox"
                                         checked={this.state.isAllDay}
                                         onChange={this.allDayChanged} />
-                                    是否為全天？
+                                    <Trans i18nKey="Is it all day?" />
                                 </label>
                             </div>
-                        </div>
+                        </FormGroup>
 
-                        <div className="form-group">
+                        <FormGroup>
                             <textarea className="form-control event-content"
                                 type="text"
-                                placeholder="描述" rows="6"
+                                placeholder={this.props.t('Description')}
+                                rows="6"
                                 value={this.state.description}
                                 onChange={this.descriptionChanged}>
                             </textarea>
-                        </div>
+                        </FormGroup>
                     </div>
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button color="primary" onClick={this.insertEvent} disabled={this.state.isAsyncWorking}>新增</Button>
-                    <Button color="secondary" onClick={this.props.close}>取消</Button>
+                    <Button color="primary" onClick={this.insertEvent} disabled={this.state.isAsyncWorking}>
+                        <Trans i18nKey="Add" />
+                    </Button>
+                    <Button color="secondary" onClick={this.props.close}>
+                        <Trans i18nKey="Cancel" />
+                    </Button>
                 </ModalFooter>
             </Modal>
         );
     }
 }
 
-export default CalendarInsertModal;
+export default withTranslate(CalendarInsertModal);

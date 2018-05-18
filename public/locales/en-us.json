@@ -1,5 +1,7 @@
 {
     "Add": "Add",
+    "Add calendar event": "Add calendar event",
+    "Add successful!": "Add successful!",
     "Age": "Age",
     "Already have an account?": "Already have an account?",
     "Analysis": "Analysis",
@@ -8,7 +10,9 @@
     "Assigned": "Assigned",
     "August": "August",
     "Auto Replies": "Auto Replies",
+
     "Calendar": "Calendar",
+    "Cancel": "Cancel",
     "Change password": "Change password",
     "Chat time(s)": "Chat time(s)",
     "Chatroom": "Chatroom",
@@ -16,33 +20,51 @@
     "Confirm": "Confirm",
     "Confirm password": "Confirm password",
     "Confirm new password": "Confirm new password",
+
     "Day": "Day",
     "December": "December",
+    "Delete": "Delete",
+    "Delete successful!": "Delete successful!",
+    "Description": "Description",
     "Don't have an account yet?": "Don't have an account yet?",
+
+    "Edit calendar event": "Edit calendar event",
     "Email": "Email",
     "Email was empty!": "Email was empty!",
-    "Enter your email": "Enter your email",
-    "Enter your name": "Enter your name",
-    "Enter your password": "Enter your password",
+    "End datetime": "End datetime",
+
+    "Failed to add!": "Failed to add!",
+    "Failed to delete!": "Failed to delete!",
+    "Failed to update!": "Failed to update!",
     "February": "February",
     "FEMALE": "FEMALE",
     "Female": "Female",
+    "Fill your email": "Fill your email",
+    "Fill your name": "Fill your name",
+    "Fill your password": "Fill your password",
     "First chat date": "First chat date",
     "Forgot password?": "Forgot password?",
     "Frequency of word": "Frequency of word",
+
     "Gender": "Gender",
     "Greetings": "Greetings",
     "Groups": "Groups",
+
     "Hour": "Hour",
+
     "I agree Chatshier": "I agree Chatshier",
     "Integration": "Integration",
     "Invalid email": "Invalid email",
     "Invalid verification code, Please verify again!": "Invalid verification code, Please verify again!",
     "Invalid token, please perform the reset password procedure again!": "Invalid token, please perform the reset password procedure again!",
+    "Is it all day?": "Is it all day?",
+
     "January": "January",
     "July": "July",
     "June": "June",
+
     "Keyword Replies": "Keyword Replies",
+
     "MALE": "MALE",
     "Male": "Male",
     "March": "March",
@@ -50,6 +72,7 @@
     "Messages": "Messages",
     "Message analysis": "Message analysis",
     "Month": "Month",
+
     "Name": "Name",
     "Name was empty!": "Name was empty!",
     "New password": "New password",
@@ -58,18 +81,23 @@
     "No fee. Experience chat now.": "No fee. Experience chat now.",
     "No user found": "No user found",
     "November": "November",
+
     "October": "October",
+
     "Password": "Password",
     "Password does not match": "Password does not match",
     "Password update successful!": "Password update successful!",
     "Password was empty!": "Password was empty!",
     "Phone": "Phone",
+    "Please fill the event title": "Please fill the event title",
     "Please perform the verification": "Please perform the verification",
     "Privacy": "Privacy",
     "Processing": "Processing",
+
     "Recent chat date": "Recent chat date",
     "Remark": "Remark",
     "Reset password": "Reset password",
+
     "Sent email to your mailbox": "Sent email to your mailbox",
     "Sign in": "Sign in",
     "Signing in": "Signing in",
@@ -83,13 +111,23 @@
     "Set your new password": "Set your new password",
     "Settings": "Settings",
     "Sorry, unable to send email to your mailbox!": "Sorry, unable to send email to your mailbox!",
+    "Start datetime": "Start datetime",
+    "Start datetime must be earlier than end datetime": "Start datetime must be earlier than end datetime",
+
     "Terms": "Terms",
     "The entered new password is inconsistent": "The entered new password is inconsistent",
+    "Title": "Title",
     "To-Do Items": "To-Do Items",
     "Token expired, please perform the reset password procedure again!": "Token expired, please perform the reset password procedure again!",
     "Total count of messages per hour": "Total count of messages per hour",
+
     "Unit": "Unit",
+    "Update": "Update",
+    "Update successful!": "Update successful!",
     "User email had been signed up!": "User email had been signed up!",
+
     "Welcome to Chatshier integration platform": "Welcome to Chatshier integration platform",
-    "Wrong password!": "Wrong password!"
+    "Wrong password!": "Wrong password!",
+
+    "Are you sure want to delete it?": "Are you sure want to delete it?"
 }

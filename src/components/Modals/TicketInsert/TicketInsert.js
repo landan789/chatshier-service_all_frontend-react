@@ -232,11 +232,11 @@ class TicketInsertModal extends React.Component {
                 isOpen: false,
                 isProcessing: false
             });
-            let agent = this.props.appsAgents[appId].agents[ticket.assigned_id];
 
-            return notify('待辦事項已新增，指派人: ' + agent.name, { type: 'success' }).then(() => {
-                return this.props.close(ev);
-            });
+            let agent = this.props.appsAgents[appId].agents[ticket.assigned_id];
+            return notify('待辦事項已新增，指派人: ' + agent.name, { type: 'success' });
+        }).then(() => {
+            return this.props.close(ev);
         }).catch(() => {
             this.setState({ isProcessing: false });
             return notify('待辦事項新增失敗', { type: 'danger' });

@@ -1,24 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import { withTranslate } from '../../i18n';
 
 import ROUTES from '../../config/route';
 import browserHelper from '../../helpers/browser';
 import authHelper from '../../helpers/authentication';
+import gCalendarHelper from '../../helpers/googleCalendar';
 
 class SignOut extends React.Component {
     static propTypes = {
+        t: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
     }
 
     componentWillMount() {
-        browserHelper.setTitle('登出');
+        browserHelper.setTitle(this.props.t('Sign out'));
 
-        if (authHelper.hasSignedin()) {
-            authHelper.signOut();
+        return authHelper.signOut().then(() => {
+            return gCalendarHelper.signOut();
+        }).then(() => {
             this.props.history.replace(ROUTES.SIGNIN);
-        };
-        this.props.history.replace(ROUTES.SIGNIN);
+        });
     }
 
     render() {
@@ -26,4 +29,4 @@ class SignOut extends React.Component {
     }
 }
 
-export default withRouter(SignOut);
+export default withRouter(withTranslate(SignOut));

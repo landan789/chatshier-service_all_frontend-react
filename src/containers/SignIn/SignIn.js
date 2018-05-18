@@ -76,7 +76,7 @@ class SignIn extends React.Component {
         if (!regex.emailStrict.test(email)) {
             return notify(this.props.t('Invalid email'), { type: 'warning' });
         } else if (!pw) {
-            return notify(this.props.t('Enter your password'), { type: 'warning' });
+            return notify(this.props.t('Fill your password'), { type: 'warning' });
         }
 
         return this.signIn(email, pw);

@@ -33,7 +33,64 @@ class AnalysisChart extends React.Component {
         super(props, ctx);
 
         this.state = {
-            dataProvider: []
+            dataProvider: [],
+            chartOptions: {
+                type: 'serial',
+                theme: 'light',
+                language: currentLanguage,
+                path: '//www.amcharts.com/lib/3/',
+                zoomOutButton: {
+                    backgroundColor: '#000',
+                    backgroundAlpha: 0.15
+                },
+                dataProvider: [],
+                categoryField: 'time',
+                categoryAxis: {
+                    markPeriodChange: false,
+                    dashLength: 1,
+                    gridAlpha: 0.15,
+                    axisColor: '#dadada',
+                    autoWrap: true,
+                    fontSize: 10
+                },
+                valueAxes: [{
+                    title: '訊息數',
+                    labelFrequency: 1,
+                    minimum: 0,
+                    baseValue: 999,
+                    includeAllValues: true
+                }],
+                graphs: [{
+                    id: 'g1',
+                    valueField: 'messages',
+                    bullet: 'round',
+                    bulletBorderColor: '#fff',
+                    bulletBorderThickness: 2,
+                    lineThickness: 2,
+                    lineColor: '#b5030d',
+                    negativeLineColor: '#0352b5',
+                    hideBulletsCount: 50
+                }],
+                chartCursor: {
+                    cursorPosition: 'mouse',
+                    categoryBalloonEnabled: true
+                },
+                chartScrollbar: {
+                    graph: 'g1',
+                    scrollbarHeight: 40,
+                    color: '#fff',
+                    autoGridCount: true
+                },
+                listeners: [{
+                    event: 'drawn',
+                    method: () => {
+                        // 每繪製一次 chart 完後，移除 AmCharts 的廣告文字
+                        let amChartsAdText = document.querySelector('a[href="http://www.amcharts.com"]');
+                        amChartsAdText && amChartsAdText.parentElement.removeChild(amChartsAdText);
+                        amChartsAdText = void 0;
+                    }
+                }]
+            }
         };
 
         /** @type {{[appId: string]: Array}} */
@@ -84,69 +141,18 @@ class AnalysisChart extends React.Component {
 
         let timelineData = this._retrieveTimelineData(this.messagesData[appId], props);
         let chartData = this._retrieveChartData(timelineData, props);
-        this.setState({ dataProvider: chartData });
+
+        let chartOptions = Object.assign({}, this.state.chartOptions);
+        chartOptions.dataProvider = chartData;
+        this.setState({
+            dataProvider: chartData,
+            chartOptions: chartOptions
+        });
     }
 
     render() {
-        let chartOptions = {
-            type: 'serial',
-            theme: 'light',
-            language: currentLanguage,
-            path: '//www.amcharts.com/lib/3/',
-            zoomOutButton: {
-                backgroundColor: '#000',
-                backgroundAlpha: 0.15
-            },
-            dataProvider: this.state.dataProvider,
-            categoryField: 'time',
-            categoryAxis: {
-                markPeriodChange: false,
-                dashLength: 1,
-                gridAlpha: 0.15,
-                axisColor: '#dadada',
-                autoWrap: true,
-                fontSize: 10
-            },
-            valueAxes: [{
-                title: '訊息數',
-                labelFrequency: 1,
-                minimum: 0,
-                baseValue: 999,
-                includeAllValues: true
-            }],
-            graphs: [{
-                id: 'g1',
-                valueField: 'messages',
-                bullet: 'round',
-                bulletBorderColor: '#fff',
-                bulletBorderThickness: 2,
-                lineThickness: 2,
-                lineColor: '#b5030d',
-                negativeLineColor: '#0352b5',
-                hideBulletsCount: 50
-            }],
-            chartCursor: {
-                cursorPosition: 'mouse',
-                categoryBalloonEnabled: true
-            },
-            chartScrollbar: {
-                graph: 'g1',
-                scrollbarHeight: 40,
-                color: '#fff',
-                autoGridCount: true
-            },
-            listeners: [{
-                event: 'drawn',
-                method: () => {
-                    // 每繪製一次 chart 完後，移除 AmCharts 的廣告文字
-                    let dummyText = document.querySelector('a[href="http://www.amcharts.com"]');
-                    dummyText && dummyText.parentElement.removeChild(dummyText);
-                }
-            }]
-        };
-
         return (
-            <AmCharts.React className={this.props.className} options={chartOptions} />
+            <AmCharts.React className={this.props.className} options={this.state.chartOptions} />
         );
     }
 

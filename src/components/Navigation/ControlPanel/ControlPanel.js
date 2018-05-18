@@ -51,7 +51,7 @@ const linkItems = [
     }, {
         link: ROUTES.TICKETS,
         icon: 'fa fa-list-ul fa-fw',
-        text: 'To-Do Items',
+        text: 'To-Do items',
         useReactRouter: true
     }, {
         link: ROUTES.ANALYSIS,

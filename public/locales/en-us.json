@@ -1,12 +1,14 @@
 {
     "Add": "Add",
     "Add calendar event": "Add calendar event",
+    "Add To-Do item": "Add To-Do item",
     "Add successful!": "Add successful!",
     "Age": "Age",
     "Already have an account?": "Already have an account?",
     "Analysis": "Analysis",
     "An error occurred!": "An error occurred!",
     "April": "April",
+    "Are you sure want to delete it?": "Are you sure want to delete it?",
     "Assigned": "Assigned",
     "August": "August",
     "Auto Replies": "Auto Replies",
@@ -117,7 +119,7 @@
     "Terms": "Terms",
     "The entered new password is inconsistent": "The entered new password is inconsistent",
     "Title": "Title",
-    "To-Do Items": "To-Do Items",
+    "To-Do items": "To-Do items",
     "Token expired, please perform the reset password procedure again!": "Token expired, please perform the reset password procedure again!",
     "Total count of messages per hour": "Total count of messages per hour",
 
@@ -127,7 +129,5 @@
     "User email had been signed up!": "User email had been signed up!",
 
     "Welcome to Chatshier integration platform": "Welcome to Chatshier integration platform",
-    "Wrong password!": "Wrong password!",
-
-    "Are you sure want to delete it?": "Are you sure want to delete it?"
+    "Wrong password!": "Wrong password!"
 }

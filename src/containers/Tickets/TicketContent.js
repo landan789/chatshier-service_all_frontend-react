@@ -14,13 +14,15 @@ class TicketContent extends React.Component {
     static propTypes = {
         className: PropTypes.string,
         searchKeyword: PropTypes.string,
+        statusFilter: PropTypes.number,
         appsAgents: PropTypes.object,
         appsTickets: PropTypes.object.isRequired,
         consumers: PropTypes.object.isRequired
     }
 
     static defaultProps = {
-        className: ''
+        className: '',
+        searchKeyword: ''
     }
 
     constructor(props, ctx) {
@@ -64,6 +66,7 @@ class TicketContent extends React.Component {
         let appsAgents = this.props.appsAgents;
 
         let ticketElems = [];
+        let dateNow = Date.now();
         for (let appId in appsTickets) {
             if (!(appsTickets[appId] && appsAgents[appId])) {
                 continue;
@@ -71,10 +74,28 @@ class TicketContent extends React.Component {
 
             let agents = appsAgents[appId].agents;
             let tickets = appsTickets[appId].tickets;
-            for (let ticketId in tickets) {
+
+            // 根據優先度排序待辦事項，由高至低
+            // 過期的優先拉致前頭
+            let ticketIds = Object.keys(tickets).sort((a, b) => {
+                let isDueA = (new Date(tickets[a].dueTime).getTime() > dateNow);
+                let isDueB = (new Date(tickets[b].dueTime).getTime() > dateNow);
+                let isPriorityHigh = tickets[a].priority < tickets[b].priority;
+                if (isDueA && !isDueB) {
+                    return true;
+                } else if (isDueB && !isDueA) {
+                    return false;
+                }
+                return isPriorityHigh;
+            });
+
+            for (let i in ticketIds) {
+                let ticketId = ticketIds[i];
                 let ticket = tickets[ticketId];
                 let platformUid = ticket.platformUid;
-                if (!(platformUid && consumers[platformUid])) {
+
+                if (!(platformUid && consumers[platformUid]) ||
+                    (this.props.statusFilter && ticket.status !== this.props.statusFilter)) {
                     continue;
                 }
 
@@ -102,7 +123,7 @@ class TicketContent extends React.Component {
 
                 shouldShow && ticketElems.push(
                     <Col key={ticketId} className="my-2" md="12" lg="4">
-                        <Card className="ticket-card" body style={{ border: '.3rem solid ' + toPriorityColor(ticket.priority) }}>
+                        <Card className="ticket-card animated fadeIn" body>
                             <CardTitle>{dueDateElem}</CardTitle>
                             <CardSubtitle>
                                 <div className="my-2 d-flex align-items-center">
@@ -117,6 +138,7 @@ class TicketContent extends React.Component {
                                 <div className="my-2 d-flex align-items-center">
                                     <div className="mr-1 card-label">優先度:</div>
                                     <span className="ticket-value">{priorityText}</span>
+                                    <span className="ml-1 priority-circle" style={{ backgroundColor: toPriorityColor(ticket.priority) }}></span>
                                 </div>
                                 <div className="my-2 d-flex align-items-center">
                                     <div className="mr-1 card-label">到期時間:</div>

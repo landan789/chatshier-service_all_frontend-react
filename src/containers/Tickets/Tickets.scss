@@ -14,17 +14,21 @@
             border-color: #adadad;
         }
     }
-
-    .ticket-search-bar {
-        width: 25%;
-    }
 }
 
 .ticket-wrapper {
     padding: 1rem 10% 3rem;
 
+    .search {
+      background-color: #ddd;
+      padding: .5rem;
+      border-radius: 1rem;
+    }
+
     .consumer-avatar:hover {
+        transition: transform 200ms;
         transform: scale(2);
+        transition-timing-function: cubic-bezier(0.785, 0.135, 0.15, 0.86);
     }
 
     .card-label {
@@ -33,6 +37,12 @@
 
     .ticket-value {
         max-width: 60%;
+
+        + .priority-circle {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+        }
     }
 
     .due-date-text {

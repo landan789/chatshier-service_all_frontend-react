@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Aux from 'react-aux';
-import { Fade, Card } from 'reactstrap';
+import { Fade, Card, ButtonGroup, Button } from 'reactstrap';
+import { Trans } from 'react-i18next';
+import { withTranslate } from '../../i18n';
 
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
@@ -17,8 +19,35 @@ import TicketContent from './TicketContent';
 
 import './Tickets.css';
 
+export const PRIORITY_TYPES = Object.freeze({
+    0: 'NONE',
+    1: 'LOW',
+    2: 'MEDIUM',
+    3: 'HIGH',
+    4: 'URGENT',
+    NONE: 0,
+    LOW: 1,
+    MEDIUM: 2,
+    HIGH: 3,
+    URGENT: 4
+});
+
+export const STATUS_TYPES = Object.freeze({
+    0: 'NONE',
+    2: 'PENDING',
+    3: 'PROCESSING',
+    4: 'RESOLVED',
+    5: 'CLOSED',
+    NONE: 0,
+    PENDING: 2,
+    PROCESSING: 3,
+    RESOLVED: 4,
+    CLOSED: 5
+});
+
 class Tickets extends React.Component {
     static propTypes = {
+        t: PropTypes.func.isRequired,
         apps: PropTypes.object.isRequired,
         appsChatrooms: PropTypes.object.isRequired,
         appsTickets: PropTypes.object.isRequired,
@@ -32,6 +61,7 @@ class Tickets extends React.Component {
         super(props);
 
         this.state = {
+            statusFilter: STATUS_TYPES.NONE,
             isInsertModalOpen: false,
             searchKeyword: '',
             appsAgents: {}
@@ -43,7 +73,7 @@ class Tickets extends React.Component {
     }
 
     componentWillMount() {
-        browserHelper.setTitle('待辦事項');
+        browserHelper.setTitle(this.props.t('To-Do items'));
 
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
@@ -102,25 +132,56 @@ class Tickets extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <PageWrapper toolbarTitle="待辦事項">
+                <PageWrapper toolbarTitle={this.props.t('To-Do items')}>
                     <Fade in className="mt-5 container ticket-wrapper">
                         <Card className="pb-5 chsr">
-                            <div className="mx-4 ticket-toolbar">
-                                <button type="button" className="btn btn-light ticket-insert" onClick={this.openInsertModal}>
-                                    <span className="fas fa-plus fa-fw"></span>
-                                    <span>新增待辦</span>
-                                </button>
+                            <div className="mx-4 px-3 ticket-toolbar">
+                                <ButtonGroup className="mr-auto">
+                                    <Button color="info"
+                                        className={this.state.statusFilter === STATUS_TYPES.NONE ? 'active' : ''}
+                                        onClick={() => this.setState({ statusFilter: STATUS_TYPES.NONE })}>
+                                        <i className="fas fa-list-alt fa-1p5x"></i>
+                                    </Button>
+                                    <Button color="info"
+                                        className={this.state.statusFilter === STATUS_TYPES.PENDING ? 'active' : ''}
+                                        onClick={() => this.setState({ statusFilter: STATUS_TYPES.PENDING })}>
+                                        <i className="fas fa-times-circle fa-1p5x"></i>
+                                    </Button>
+                                    <Button color="info"
+                                        className={this.state.statusFilter === STATUS_TYPES.PROCESSING ? 'active' : ''}
+                                        onClick={() => this.setState({ statusFilter: STATUS_TYPES.PROCESSING })}>
+                                        <i className="fas fa-play-circle fa-1p5x"></i>
+                                    </Button>
+                                    <Button color="info"
+                                        className={this.state.statusFilter === STATUS_TYPES.RESOLVED ? 'active' : ''}
+                                        onClick={() => this.setState({ statusFilter: STATUS_TYPES.RESOLVED })}>
+                                        <i className="fas fa-minus-circle fa-1p5x"></i>
+                                    </Button>
+                                    <Button color="info"
+                                        className={this.state.statusFilter === STATUS_TYPES.CLOSED ? 'active' : ''}
+                                        onClick={() => this.setState({ statusFilter: STATUS_TYPES.CLOSED })}>
+                                        <i className="fas fa-check-circle fa-1p5x"></i>
+                                    </Button>
+                                </ButtonGroup>
 
-                                <input className="ticket-search-bar"
-                                    type="text"
-                                    placeholder="搜尋"
-                                    value={this.state.searchKeyword}
-                                    onChange={this.keywordChanged} />
+                                <Button className="ticket-insert" color="light" onClick={this.openInsertModal}>
+                                    <span className="fas fa-plus fa-fw"></span>
+                                    <span><Trans i18nKey="Add To-Do item" /></span>
+                                </Button>
+
+                                <div className="d-flex align-items-center w-25 mx-0 search">
+                                    <input className="search-box"
+                                        type="text"
+                                        placeholder={this.props.t('Search')}
+                                        value={this.state.searchKeyword}
+                                        onChange={this.keywordChanged} />
+                                </div>
                             </div>
 
                             <TicketContent className="mx-4"
                                 appsAgents={this.state.appsAgents}
-                                searchKeyword={this.state.searchKeyword}>
+                                searchKeyword={this.state.searchKeyword}
+                                statusFilter={this.state.statusFilter}>
                             </TicketContent>
                         </Card>
                     </Fade>
@@ -152,4 +213,4 @@ const mapStateToProps = (storeState, ownProps) => {
     };
 };
 
-export default withRouter(connect(mapStateToProps)(Tickets));
+export default withRouter(withTranslate(connect(mapStateToProps)(Tickets)));

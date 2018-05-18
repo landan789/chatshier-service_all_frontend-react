@@ -17,7 +17,7 @@ const priorityText = {
 
 const priorityColors = {
     1: '#33ccff',
-    2: 'rgb(113, 180, 209)',
+    2: 'rgb(103, 210, 40)',
     3: 'rgb(233, 198, 13)',
     4: 'rgb(230, 100, 100)'
 };

@@ -27,8 +27,6 @@ import SignOut from './containers/SignOut/SignOut';
 import SignUp from './containers/SignUp/SignUp';
 import Tickets from './containers/Tickets/Tickets';
 
-// https://getbootstrap.com/docs/4.0/getting-started/introduction/
-import 'bootstrap/dist/css/bootstrap.min.css';
 // https://jquense.github.io/react-widgets/
 import 'react-widgets/dist/css/react-widgets.css';
 // http://idangero.us/swiper/

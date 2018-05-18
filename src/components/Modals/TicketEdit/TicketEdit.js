@@ -125,9 +125,9 @@ class TicketEditModal extends React.Component {
             });
 
             let agent = this.props.appsAgents[appId].agents[ticket.assigned_id];
-            return notify('待辦事項已更新，指派人: ' + agent.name, { type: 'success' }).then(() => {
-                return this.props.close(ev);
-            });
+            return notify('待辦事項已更新，指派人: ' + agent.name, { type: 'success' });
+        }).then(() => {
+            return this.props.close(ev);
         }).catch(() => {
             this.setState({ isProcessing: false });
             return notify('待辦事項更新失敗', { type: 'danger' });

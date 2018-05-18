@@ -4,18 +4,21 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Aux from 'react-aux';
 import { Fade } from 'reactstrap';
+import { Trans } from 'react-i18next';
+import { withTranslate, currentLanguage } from '../../i18n';
 
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 import gCalendarHelper from '../../helpers/googleCalendar';
+import { formatDate } from '../../utils/unitTime';
 
 import { notify } from '../../components/Notify/Notify';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import CalendarInsertModal from '../../components/Modals/CalendarInsert/CalendarInsert';
-import CalendarEditModal, { CalendarEventTypes } from '../../components/Modals/CalendarEdit/CalendarEdit';
+import CalendarEditModal from '../../components/Modals/CalendarEdit/CalendarEdit';
 import TicketEditModal from '../../components/Modals/TicketEdit/TicketEdit';
 
 import $ from 'jquery';
@@ -24,51 +27,15 @@ import 'fullcalendar/dist/locale/zh-tw';
 import 'fullcalendar/dist/fullcalendar.min.css';
 import './Calendar.css';
 
-class CalendarEventItem {
-    constructor(options) {
-        options = options || {};
-        // 目前只設定使用到的項目，並無全部都設定
-        // 參考: https://fullcalendar.io/docs/event_data/Event_Object/
-        this.calendarId = options.calendarId || '';
-        this.id = options.id || '';
-        this.eventType = CalendarEventTypes.CALENDAR;
-        this.title = options.title || '';
-        this.description = options.description || '';
-        this.isAllDay = !!options.isAllDay;
-        this.start = options.start || null;
-        this.end = options.end || null;
-        this.origin = options.origin || {};
-
-        this.backgroundColor = '#90b5c7';
-        this.borderColor = '#90b5c7';
-        this.textColor = '#efefef';
-    }
-}
-
-class TicketEventItem extends CalendarEventItem {
-    constructor(options) {
-        options = options || {};
-        super(options);
-        this.eventType = CalendarEventTypes.TICKET;
-        this.backgroundColor = '#c7e6c7';
-        this.borderColor = '#c7e6c7';
-        this.textColor = '#6e6e6e';
-    }
-}
-
-class GoogleEventItem extends CalendarEventItem {
-    constructor(options) {
-        options = options || {};
-        super(options);
-        this.eventType = CalendarEventTypes.GOOGLE;
-        this.backgroundColor = '#468af5';
-        this.borderColor = '#468af5';
-        this.textColor = '#efeff0';
-    }
-}
+export const CALENDAR_EVENT_TYPES = Object.freeze({
+    CALENDAR: 'CALENDAR',
+    GOOGLE: 'GOOGLE',
+    TICKET: 'TICKET'
+});
 
 class Calendar extends React.Component {
     static propTypes = {
+        t: PropTypes.func.isRequired,
         consumers: PropTypes.object,
         appsTickets: PropTypes.object,
         calendarsEvents: PropTypes.object,
@@ -94,12 +61,13 @@ class Calendar extends React.Component {
         this.onEventClick = this.onEventClick.bind(this);
         this.onEventDrop = this.onEventDrop.bind(this);
         this.updateCalendarEvent = this.updateCalendarEvent.bind(this);
+        this.deleteCalendarEvent = this.deleteCalendarEvent.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
         this.closeEditModal = this.closeEditModal.bind(this);
     }
 
     componentWillMount() {
-        browserHelper.setTitle('行事曆');
+        browserHelper.setTitle(this.props.t('Calendar'));
 
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
@@ -117,12 +85,11 @@ class Calendar extends React.Component {
             apiDatabase.users.find(userId),
             gCalendarHelper.loadCalendarApi()
         ]).then(() => {
-            return gCalendarHelper.findEvents().catch((err) => {
-                console.error(err);
-                return { items: [] };
+            return gCalendarHelper.findEvents().catch(() => {
+                return gCalendarHelper.eventCaches;
             });
         }).then((resJson) => {
-            this.reloadGoogleCalendar(resJson.items);
+            this.$calendar && this.reloadGoogleCalendar(resJson.items);
         });
     }
 
@@ -160,9 +127,13 @@ class Calendar extends React.Component {
     }
 
     reload(props) {
+        if (!this.$calendar) {
+            return;
+        }
         this.$calendar.fullCalendar('removeEvents');
         this.reloadCalendarEvents(props.calendarsEvents);
         this.reloadAppsTickets(props.appsTickets);
+        this.reloadGoogleCalendar(gCalendarHelper.eventCaches.items);
     }
 
     reloadCalendarEvents(calendars) {
@@ -229,17 +200,14 @@ class Calendar extends React.Component {
     }
 
     reloadGoogleCalendar(gCalendarItems) {
-        let calendarEventList = [];
-
-        for (let gEventIdx in gCalendarItems) {
-            let googleEvent = gCalendarItems[gEventIdx];
+        let calendarEventList = gCalendarItems.map((googleEvent) => {
             let isAllDay = !!(googleEvent.start.date && googleEvent.end.date);
             let startDate = isAllDay ? new Date(googleEvent.start.date) : new Date(googleEvent.start.dateTime);
             isAllDay && startDate.setHours(0, 0, 0, 0);
             let endDate = isAllDay ? new Date(googleEvent.end.date) : new Date(googleEvent.end.dateTime);
             isAllDay && endDate.setHours(0, 0, 0, 0);
 
-            let gEventItem = new GoogleEventItem({
+            return new GoogleEventItem({
                 // calendarId: googleEvent.iCalUID,
                 calendarId: 'primary',
                 id: googleEvent.id,
@@ -248,10 +216,9 @@ class Calendar extends React.Component {
                 isAllDay: isAllDay,
                 start: startDate,
                 end: endDate,
-                backup: googleEvent
+                origin: googleEvent
             });
-            calendarEventList.push(gEventItem);
-        }
+        });
 
         if (calendarEventList.length > 0) {
             this.$calendar.fullCalendar('renderEvents', calendarEventList, true);
@@ -259,14 +226,14 @@ class Calendar extends React.Component {
     }
 
     onSelectDate(start, end) {
-        let startDateTime = start.toDate();
-        startDateTime.setHours(0, 0, 0, 0);
-        let endDateTime = new Date(startDateTime);
-        endDateTime.setDate(endDateTime.getDate() + 1);
+        let startDatetime = start.toDate();
+        startDatetime.setHours(0, 0, 0, 0);
+        let endDatetime = new Date(startDatetime);
+        endDatetime.setDate(endDatetime.getDate() + 1);
 
         let modalData = {
-            startDateTime: startDateTime,
-            endDateTime: endDateTime
+            startDatetime: startDatetime,
+            endDatetime: endDatetime
         };
         this.setState({ insertModalData: modalData });
     }
@@ -274,7 +241,7 @@ class Calendar extends React.Component {
     onEventClick(calendarEvent) {
         let origin = calendarEvent.origin;
 
-        if (CalendarEventTypes.TICKET === calendarEvent.eventType) {
+        if (CALENDAR_EVENT_TYPES.TICKET === calendarEvent.eventType) {
             let appId = calendarEvent.calendarId;
             let ticketId = calendarEvent.id;
             /** @type {Chatshier.Ticket} */
@@ -290,24 +257,26 @@ class Calendar extends React.Component {
                 consumer: consumer
             };
             this.setState({ editTicketData: modalData });
-        } else {
-            /** @type {Chatshier.CalendarEvent} */
-            let event = {
-                title: calendarEvent.title,
-                description: calendarEvent.description,
-                isAllDay: calendarEvent.isAllDay,
-                startedTime: origin.startedTime,
-                endedTime: origin.endedTime
-            };
-
-            let modalData = {
-                calendarId: calendarEvent.calendarId,
-                eventId: calendarEvent.id,
-                eventType: calendarEvent.eventType,
-                event: event
-            };
-            this.setState({ editModalData: modalData });
+            return;
         }
+
+        /** @type {Chatshier.CalendarEvent} */
+        let event = {
+            title: calendarEvent.title,
+            description: calendarEvent.description,
+            isAllDay: calendarEvent.isAllDay,
+            startedTime: origin.startedTime || calendarEvent.start.toDate(),
+            endedTime: origin.endedTime || calendarEvent.end.toDate()
+        };
+
+        let modalData = {
+            calendarId: calendarEvent.calendarId,
+            eventId: calendarEvent.id,
+            eventType: calendarEvent.eventType,
+            event: event,
+            origin: origin
+        };
+        this.setState({ editModalData: modalData });
     }
 
     onEventDrop(calendarEvent, delta, revertFunc) {
@@ -345,54 +314,65 @@ class Calendar extends React.Component {
         // 根據事件型態來判斷發送不同 API 進行資料更新動作
         let userId = authHelper.userId;
         switch (eventType) {
-            case CalendarEventTypes.CALENDAR:
+            case CALENDAR_EVENT_TYPES.CALENDAR:
                 return apiDatabase.calendarsEvents.update(calendarId, eventId, userId, event);
-            case CalendarEventTypes.TICKET:
+            case CALENDAR_EVENT_TYPES.TICKET:
                 /** @type {Chatshier.Ticket} */
                 let ticket = {
                     description: event.description,
                     dueTime: event.endedTime
                 };
                 return apiDatabase.appsTickets.update(calendarId, eventId, userId, ticket);
-            case CalendarEventTypes.GOOGLE:
-                // let dateFormatOpts = {
-                //     year: 'numeric',
-                //     month: '2-digit',
-                //     day: '2-digit'
-                // };
+            case CALENDAR_EVENT_TYPES.GOOGLE:
+                let gEvent = {
+                    summary: event.title,
+                    description: event.description,
+                    start: {
+                        date: event.isAllDay ? formatDate(event.startedTime) : void 0,
+                        dateTime: !event.isAllDay ? new Date(event.startedTime).toJSON() : void 0
+                    },
+                    end: {
+                        date: event.isAllDay ? formatDate(event.endedTime) : void 0,
+                        dateTime: !event.isAllDay ? new Date(event.endedTime).toJSON() : void 0
+                    }
+                };
 
-                // let gEvent = {
-                //     summary: event.title,
-                //     description: event.description,
-                //     start: {
-                //         date: event.isAllDay ? new Date(event.startedTime).toLocaleDateString('zh', dateFormatOpts).replace(/\//g, '-') : void 0,
-                //         dateTime: !event.isAllDay ? new Date(event.startedTime).toJSON() : void 0
-                //     },
-                //     end: {
-                //         date: event.isAllDay ? new Date(event.endedTime).toLocaleDateString('zh', dateFormatOpts).replace(/\//g, '-') : void 0,
-                //         dateTime: !event.isAllDay ? new Date(event.endedTime).toJSON() : void 0
-                //     }
-                // };
+                return gCalendarHelper.updateEvent('primary', eventId, gEvent).then((googleEvent) => {
+                    let isAllDay = !!(googleEvent.start.date && googleEvent.end.date);
+                    let startDate = isAllDay ? new Date(googleEvent.start.date) : new Date(googleEvent.start.dateTime);
+                    isAllDay && startDate.setHours(0, 0, 0, 0);
+                    let endDate = isAllDay ? new Date(googleEvent.end.date) : new Date(googleEvent.end.dateTime);
+                    isAllDay && endDate.setHours(0, 0, 0, 0);
 
-                // return window.googleCalendarHelper.updateEvent('primary', eventId, gEvent).then((googleEvent) => {
-                //     let isAllDay = !!(googleEvent.start.date && googleEvent.end.date);
-                //     let startDate = isAllDay ? new Date(googleEvent.start.date) : new Date(googleEvent.start.dateTime);
-                //     isAllDay && startDate.setHours(0, 0, 0, 0);
-                //     let endDate = isAllDay ? new Date(googleEvent.end.date) : new Date(googleEvent.end.dateTime);
-                //     isAllDay && endDate.setHours(0, 0, 0, 0);
+                    let eventItem = new GoogleEventItem({
+                        calendarId: googleEvent.iCalUID,
+                        id: eventId,
+                        title: googleEvent.summary,
+                        description: googleEvent.description,
+                        start: startDate,
+                        end: endDate,
+                        origin: googleEvent
+                    });
+                    this.$calendar.fullCalendar('updateEvent', eventItem, true);
+                });
+            default:
+                return Promise.reject(new Error('UNKNOWN_EVENT_TYPE'));
+        }
+    }
 
-                //     let eventItem = new GoogleEventItem({
-                //         calendarId: googleEvent.iCalUID,
-                //         id: eventId,
-                //         title: googleEvent.summary,
-                //         description: googleEvent.description,
-                //         start: startDate,
-                //         end: endDate,
-                //         origin: googleEvent
-                //     });
-                //     this.$calendar.fullCalendar('updateEvent', eventItem, true);
-                // });
-                return;
+    deleteCalendarEvent(calendarId, eventId, eventType) {
+        let userId = authHelper.userId;
+
+        // 根據事件型態來判斷發送不同 API 進行資料更新動作
+        switch (eventType) {
+            case CALENDAR_EVENT_TYPES.CALENDAR:
+                return apiDatabase.calendarsEvents.delete(calendarId, eventId, userId);
+            case CALENDAR_EVENT_TYPES.TICKET:
+                return apiDatabase.appsTickets.delete(calendarId, eventId, userId);
+            case CALENDAR_EVENT_TYPES.GOOGLE:
+                return gCalendarHelper.deleteEvent(calendarId, eventId).then(() => {
+                    this.reload(this.props);
+                });
             default:
                 return Promise.reject(new Error('UNKNOWN_EVENT_TYPE'));
         }
@@ -418,7 +398,7 @@ class Calendar extends React.Component {
 
         this.$calendar = $(refElem);
         this.$calendar.fullCalendar({
-            locale: 'zh-tw',
+            locale: currentLanguage,
             timezone: 'local',
             themeSystem: 'bootstrap4',
             bootstrapFontAwesome: {
@@ -459,24 +439,31 @@ class Calendar extends React.Component {
                     <Fade in className="container mt-5 calendar-wrapper">
                         <div className="mb-5 card chsr calendar" ref={this.initCalendar}></div>
                     </Fade>
-                    <CalendarInsertModal
-                        modalData={this.state.insertModalData}
-                        isOpen={!!this.state.insertModalData}
-                        close={this.closeInsertModal}>
-                    </CalendarInsertModal>
-                    <CalendarEditModal
-                        modalData={this.state.editModalData}
-                        isOpen={!!this.state.editModalData}
-                        updateHandle={this.updateCalendarEvent}
-                        close={this.closeEditModal}>
-                    </CalendarEditModal>
-                    <TicketEditModal
-                        appsAgents={this.appsAgents}
-                        modalData={this.state.editTicketData}
-                        isOpen={!!this.state.editTicketData}
-                        close={this.closeEditModal}>
-                    </TicketEditModal>
                 </PageWrapper>
+
+                {!!this.state.insertModalData &&
+                <CalendarInsertModal
+                    modalData={this.state.insertModalData}
+                    isOpen={!!this.state.insertModalData}
+                    close={this.closeInsertModal}>
+                </CalendarInsertModal>}
+
+                {!!this.state.editModalData &&
+                <CalendarEditModal
+                    modalData={this.state.editModalData}
+                    isOpen={!!this.state.editModalData}
+                    updateHandle={this.updateCalendarEvent}
+                    deleteHandle={this.deleteCalendarEvent}
+                    close={this.closeEditModal}>
+                </CalendarEditModal>}
+
+                {!!this.state.editTicketData &&
+                <TicketEditModal
+                    appsAgents={this.appsAgents}
+                    modalData={this.state.editTicketData}
+                    isOpen={!!this.state.editTicketData}
+                    close={this.closeEditModal}>
+                </TicketEditModal>}
             </Aux>
         );
     }
@@ -493,4 +480,47 @@ const mapStateToProps = (storeState, ownProps) => {
     };
 };
 
-export default withRouter(connect(mapStateToProps)(Calendar));
+export default withRouter(withTranslate(connect(mapStateToProps)(Calendar)));
+
+class CalendarEventItem {
+    constructor(options) {
+        options = options || {};
+        // 目前只設定使用到的項目，並無全部都設定
+        // 參考: https://fullcalendar.io/docs/event_data/Event_Object/
+        this.calendarId = options.calendarId || '';
+        this.id = options.id || '';
+        this.eventType = CALENDAR_EVENT_TYPES.CALENDAR;
+        this.title = options.title || '';
+        this.description = options.description || '';
+        this.isAllDay = !!options.isAllDay;
+        this.start = options.start || null;
+        this.end = options.end || null;
+        this.origin = options.origin || {};
+
+        this.backgroundColor = '#90b5c7';
+        this.borderColor = '#90b5c7';
+        this.textColor = '#efefef';
+    }
+}
+
+class TicketEventItem extends CalendarEventItem {
+    constructor(options) {
+        options = options || {};
+        super(options);
+        this.eventType = CALENDAR_EVENT_TYPES.TICKET;
+        this.backgroundColor = '#c7e6c7';
+        this.borderColor = '#c7e6c7';
+        this.textColor = '#6e6e6e';
+    }
+}
+
+class GoogleEventItem extends CalendarEventItem {
+    constructor(options) {
+        options = options || {};
+        super(options);
+        this.eventType = CALENDAR_EVENT_TYPES.GOOGLE;
+        this.backgroundColor = '#468af5';
+        this.borderColor = '#468af5';
+        this.textColor = '#efeff0';
+    }
+}

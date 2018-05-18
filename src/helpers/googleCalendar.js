@@ -11,6 +11,8 @@ class GoogleCalendarHelper {
             this.googleReadyResolve = resolve;
         });
 
+        this.eventCaches = { items: [] };
+
         this._mapRes = this._mapRes.bind(this);
         this.loadCalendarApi();
     }
@@ -91,6 +93,11 @@ class GoogleCalendarHelper {
      */
     findEvents(calendarId) {
         calendarId = calendarId || 'primary';
+
+        if (this.eventCaches.items.length > 0) {
+            return Promise.resolve(this.eventCaches);
+        }
+
         return this.googleReady.then(() => {
             if (!this.isSignedIn) {
                 return Promise.reject(new Error(GOOGLE_CLIENT_NOT_SIGNEDIN));
@@ -99,7 +106,10 @@ class GoogleCalendarHelper {
             return window.gapi.client.calendar.events.list({
                 calendarId: calendarId,
                 showDeleted: false
-            }).then(this._mapRes);
+            }).then(this._mapRes).then((resJson) => {
+                this.eventCaches = resJson;
+                return resJson;
+            });
         });
     }
 
@@ -118,7 +128,27 @@ class GoogleCalendarHelper {
                 calendarId: calendarId,
                 eventId: eventId,
                 resource: event
-            }).then(this._mapRes);
+            }).then(this._mapRes).then((resJson) => {
+                let ti = -1;
+                for (let i in this.eventCaches.items) {
+                    if (this.eventCaches.items[i].id === eventId) {
+                        ti = i;
+                        break;
+                    }
+                }
+
+                if (ti >= 0) {
+                    let gEvent = this.eventCaches.items[ti];
+                    gEvent.updated = resJson.updated;
+                    gEvent.summary = resJson.summary;
+                    gEvent.description = resJson.description;
+                    gEvent.sequence = resJson.sequence;
+                    gEvent.start = resJson.start;
+                    gEvent.end = resJson.end;
+                    this.eventCaches.items[ti] = gEvent;
+                }
+                return resJson;
+            });
         });
     }
 
@@ -135,7 +165,20 @@ class GoogleCalendarHelper {
             return window.gapi.client.calendar.events.delete({
                 calendarId: calendarId,
                 eventId: eventId
-            }).then(this._mapRes);
+            }).then(this._mapRes).then((resJson) => {
+                let ti = -1;
+                for (let i in this.eventCaches.items) {
+                    if (this.eventCaches.items[i].id === eventId) {
+                        ti = i;
+                        break;
+                    }
+                }
+
+                if (ti >= 0) {
+                    this.eventCaches.items.splice(ti, 1);
+                }
+                return resJson;
+            });
         });
     }
 

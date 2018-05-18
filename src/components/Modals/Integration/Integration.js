@@ -31,8 +31,7 @@ class Integration extends React.Component {
 
         return gCalendarHelper.signIn().then(() => {
             this.setState({ googleSignedIn: gCalendarHelper.isSignedIn });
-        }).catch((err) => {
-            console.log(err);
+        }).catch(() => {
             this.setState({ googleSignedIn: false });
         });
     }

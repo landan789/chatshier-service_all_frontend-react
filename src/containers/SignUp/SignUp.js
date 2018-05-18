@@ -96,13 +96,13 @@ class SignUp extends React.Component {
         let pwConfirm = this.state.passwordConfirm;
 
         if (!name) {
-            return notify(this.props.t('Enter your name'), { type: 'warning' });
+            return notify(this.props.t('Fill your name'), { type: 'warning' });
         } else if (!email) {
-            return notify(this.props.t('Enter your email'), { type: 'warning' });
+            return notify(this.props.t('Fill your email'), { type: 'warning' });
         } else if (!regex.emailStrict.test(email)) {
             return notify(this.props.t('Invalid email'), { type: 'warning' });
         } else if (!pw) {
-            return notify(this.props.t('Enter your password'), { type: 'warning' });
+            return notify(this.props.t('Fill your password'), { type: 'warning' });
         } else if (pw !== pwConfirm) {
             return notify(this.props.t('Password does not match'), { type: 'warning' });
         }

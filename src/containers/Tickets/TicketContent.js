@@ -2,18 +2,25 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Aux from 'react-aux';
+import { Col, CardGroup, Card, CardText,
+    CardTitle, CardSubtitle, Button } from 'reactstrap';
 
-import { toDueDateSpan, toLocalTimeString, toPriorityBorder,
+import { toDueDateSpan, toPriorityColor,
     toPriorityText, toStatusText } from '../../utils/ticket';
+import { formatDate, formatTime } from '../../utils/unitTime';
 import TicketEditModal from '../../components/Modals/TicketEdit/TicketEdit';
 
-class TicketTable extends React.Component {
+class TicketContent extends React.Component {
     static propTypes = {
         className: PropTypes.string,
         searchKeyword: PropTypes.string,
         appsAgents: PropTypes.object,
         appsTickets: PropTypes.object.isRequired,
         consumers: PropTypes.object.isRequired
+    }
+
+    static defaultProps = {
+        className: ''
     }
 
     constructor(props, ctx) {
@@ -49,18 +56,14 @@ class TicketTable extends React.Component {
         this.setState({ editModalData: null });
     }
 
-    renderTickets() {
+    render() {
         /** @type {Chatshier.AppsTickets} */
         let appsTickets = this.props.appsTickets;
         /** @type {Chatshier.Consumers} */
         let consumers = this.props.consumers;
         let appsAgents = this.props.appsAgents;
 
-        if (!(appsTickets && consumers && appsAgents)) {
-            return;
-        }
-
-        let ticketCmps = [];
+        let ticketElems = [];
         for (let appId in appsTickets) {
             if (!(appsTickets[appId] && appsAgents[appId])) {
                 continue;
@@ -79,7 +82,7 @@ class TicketTable extends React.Component {
                 let description = ticket.description;
                 let statusText = toStatusText(ticket.status);
                 let priorityText = toPriorityText(ticket.priority);
-                let localTimeStr = toLocalTimeString(ticket.dueTime);
+                let dueTimeStr = formatDate(ticket.dueTime) + ' ' + formatTime(ticket.dueTime, false);
                 let dueDateElem = toDueDateSpan(ticket.dueTime);
                 let agentName = ticket.assigned_id ? agents[ticket.assigned_id].name : '';
 
@@ -92,54 +95,55 @@ class TicketTable extends React.Component {
                         description.includes(searchKeyword) ||
                         statusText.includes(searchKeyword) ||
                         priorityText.includes(searchKeyword) ||
-                        localTimeStr.includes(searchKeyword) ||
+                        dueTimeStr.includes(searchKeyword) ||
                         dueDateElem.props.children.includes(searchKeyword)
                     );
                 }
 
-                shouldShow && ticketCmps.push(
-                    <div key={ticketId} className="ticket-row d-flex"
-                        style={toPriorityBorder(ticket.priority)}
-                        onClick={() => this.openEditModal(appId, ticketId)}>
-                        <div className="ticket-col">{consumer.name || ''}</div>
-                        <div className="ticket-col">{description}</div>
-                        <div className="ticket-col">{statusText}</div>
-                        <div className="ticket-col">{priorityText}</div>
-                        <div className="ticket-col">{localTimeStr}</div>
-                        <div className="ticket-col">{agentName || '無'}</div>
-                        <div className="ticket-col">{dueDateElem}</div>
-                    </div>
+                shouldShow && ticketElems.push(
+                    <Col key={ticketId} className="my-2" md="12" lg="4">
+                        <Card className="ticket-card" body style={{ border: '.3rem solid ' + toPriorityColor(ticket.priority) }}>
+                            <CardTitle>{dueDateElem}</CardTitle>
+                            <CardSubtitle>
+                                <div className="my-2 d-flex align-items-center">
+                                    <div className="mr-1 card-label">客戶姓名:</div>
+                                    <img className="m-2 consumer-avatar small" src={consumer.photo} alt="" />
+                                    <span className="ticket-value">{consumer.name || ''}</span>
+                                </div>
+                                <div className="my-2 d-flex align-items-center">
+                                    <div className="mr-1 card-label">狀態:</div>
+                                    <span className="ticket-value">{statusText}</span>
+                                </div>
+                                <div className="my-2 d-flex align-items-center">
+                                    <div className="mr-1 card-label">優先度:</div>
+                                    <span className="ticket-value">{priorityText}</span>
+                                </div>
+                                <div className="my-2 d-flex align-items-center">
+                                    <div className="mr-1 card-label">到期時間:</div>
+                                    <span className="ticket-value">{dueTimeStr}</span>
+                                </div>
+                                <div className="my-2 d-flex align-items-center">
+                                    <div className="mr-1 card-label">指派人:</div>
+                                    <span className="ticket-value">{agentName || '無'}</span>
+                                </div>
+                            </CardSubtitle>
+                            <CardText className="d-flex align-items-center">
+                                <span className="mr-1 card-label">內容:</span>
+                                <span className="ticket-value">{description}</span>
+                            </CardText>
+                            <Button onClick={() => this.openEditModal(appId, ticketId)}>編輯</Button>
+                        </Card>
+                    </Col>
                 );
             }
         }
 
-        if (ticketCmps.length <= 0) {
-            return ticketCmps;
-        }
-        return <div className="ticket-body">{ticketCmps}</div>;
-    };
-
-    render() {
-        let className = ((this.props.className || '') + ' ticket-grid').trim();
-
         return (
             <Aux>
-                <div className={className}>
-                    <div className="ticket-head">
-                        <div className="ticket-row d-flex">
-                            <div className="ticket-col">客戶姓名</div>
-                            <div className="ticket-col">內容</div>
-                            <div className="ticket-col">狀態</div>
-                            <div className="ticket-col">優先</div>
-                            <div className="ticket-col">到期時間</div>
-                            <div className="ticket-col">指派人</div>
-                            <div className="ticket-col">&nbsp;</div>
-                        </div>
-                    </div>
-                    {this.renderTickets()}
-                </div>
+                <CardGroup className={this.props.className.trim()}>{ticketElems}</CardGroup>
 
-                {!!this.state.editModalData && <TicketEditModal
+                {!!this.state.editModalData &&
+                <TicketEditModal
                     appsAgents={this.props.appsAgents}
                     modalData={this.state.editModalData}
                     isOpen={!!this.state.editModalData}
@@ -158,4 +162,4 @@ const mapStateToProps = (storeState, ownProps) => {
     };
 };
 
-export default connect(mapStateToProps)(TicketTable);
+export default connect(mapStateToProps)(TicketContent);

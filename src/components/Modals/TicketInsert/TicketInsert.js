@@ -298,7 +298,7 @@ class TicketInsertModal extends React.Component {
                             </select>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="description">說明</label>
+                            <label htmlFor="description">內容</label>
                             <textarea
                                 className="form-control"
                                 rows="3"

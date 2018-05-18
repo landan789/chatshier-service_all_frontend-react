@@ -1,5 +1,6 @@
 {
     "Add": "Add",
+    "Add bot": "Add bot",
     "Add calendar event": "Add calendar event",
     "Add To-Do item": "Add To-Do item",
     "Add successful!": "Add successful!",
@@ -10,8 +11,12 @@
     "April": "April",
     "Are you sure want to delete it?": "Are you sure want to delete it?",
     "Assigned": "Assigned",
+    "Assigner": "Assigner",
     "August": "August",
     "Auto Replies": "Auto Replies",
+
+    "Bot": "Bot",
+    "Bot name": "Bot name",
 
     "Calendar": "Calendar",
     "Cancel": "Cancel",
@@ -25,8 +30,6 @@
 
     "Day": "Day",
     "December": "December",
-    "Delete": "Delete",
-    "Delete successful!": "Delete successful!",
     "Description": "Description",
     "Don't have an account yet?": "Don't have an account yet?",
 
@@ -41,6 +44,7 @@
     "February": "February",
     "FEMALE": "FEMALE",
     "Female": "Female",
+    "Fill bot name": "Fill bot name",
     "Fill your email": "Fill your email",
     "Fill your name": "Fill your name",
     "Fill your password": "Fill your password",
@@ -67,6 +71,8 @@
 
     "Keyword Replies": "Keyword Replies",
 
+    "Link pages with Facebook": "Link pages with Facebook",
+
     "MALE": "MALE",
     "Male": "Male",
     "March": "March",
@@ -91,13 +97,19 @@
     "Password update successful!": "Password update successful!",
     "Password was empty!": "Password was empty!",
     "Phone": "Phone",
+    "Platform of chat bot": "Platform of chat bot",
     "Please fill the event title": "Please fill the event title",
+    "Please go to LINE Developers": "Please go to LINE Developers",
+    "Please go to LINE Developers enable webhook": "Please go to LINE Developers enable webhook",
+    "Please go to LINE Developers paste the webhook URL": "Please go to LINE Developers paste the webhook URL",
     "Please perform the verification": "Please perform the verification",
     "Privacy": "Privacy",
     "Processing": "Processing",
 
     "Recent chat date": "Recent chat date",
     "Remark": "Remark",
+    "Remove": "Remove",
+    "Remove successful!": "Remove successful!",
     "Reset password": "Reset password",
 
     "Sent email to your mailbox": "Sent email to your mailbox",
@@ -123,7 +135,9 @@
     "Token expired, please perform the reset password procedure again!": "Token expired, please perform the reset password procedure again!",
     "Total count of messages per hour": "Total count of messages per hour",
 
+    "Unassigned": "Unassigned",
     "Unit": "Unit",
+    "Unread": "Unread",
     "Update": "Update",
     "Update successful!": "Update successful!",
     "User email had been signed up!": "User email had been signed up!",

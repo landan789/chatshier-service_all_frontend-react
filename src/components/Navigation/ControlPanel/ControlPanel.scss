@@ -170,6 +170,34 @@ $ctrl-item-icon-size: 1.5rem;
     background-color: transparent;
 }
 
+.line-dev-link {
+    background-color: $line-dev-color;
+    border-radius: .5rem;
+
+    .line-dev-logo {
+        width: 12.5rem;
+        height: 1.5rem;
+    }
+}
+
+.fb-fanpage-picture {
+    width: 2rem;
+    height: 2rem;
+}
+
+.fb-sdk-item {
+    .fb-import-button {
+        border-radius: .5rem;
+        background-color: $facebook-color;
+        color: white;
+        cursor: pointer;
+    
+        &:focus {
+            outline: none;
+        }
+    }
+}
+
 @keyframes controlPanelSlideIn {
     from { transform: translate3d(-100%, 0, 0); }
     to { transform: translate3d(0, 0, 0); }

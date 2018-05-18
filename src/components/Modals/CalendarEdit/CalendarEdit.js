@@ -142,7 +142,7 @@ class CalendarEditModal extends React.Component {
                 isOpen: false,
                 isAsyncWorking: false
             });
-            return notify(this.props.t('Delete successful!'), { type: 'success' });
+            return notify(this.props.t('Remove successful!'), { type: 'success' });
         }).then(() => {
             return this.props.close(ev);
         }).catch(() => {
@@ -234,7 +234,7 @@ class CalendarEditModal extends React.Component {
                     <Button color="danger"
                         onClick={this.deleteEvent}
                         disabled={this.state.isAsyncWorking}>
-                        <Trans i18nKey="Delete" />
+                        <Trans i18nKey="Remove" />
                     </Button>
                     <Button color="secondary"
                         onClick={this.props.close}>

@@ -1,5 +1,6 @@
 {
     "Add": "新增",
+    "Add bot": "Add bot",
     "Add calendar event": "新增行事曆事件",
     "Add To-Do item": "新增待辦",
     "Add successful!": "新增成功！",
@@ -9,9 +10,13 @@
     "An error occurred!": "發生錯誤！",
     "April": "四月",
     "Are you sure want to delete it?": "確定要刪除嗎？",
-    "Assigned": "指派人",
+    "Assigned": "已指派",
+    "Assigner": "指派人",
     "August": "八月",
     "Auto Replies": "自動回覆",
+
+    "Bot": "機器人",
+    "Bot name": "機器人名稱",
 
     "Calendar": "行事曆",
     "Cancel": "取消",
@@ -25,8 +30,6 @@
 
     "Day": "日",
     "December": "十二月",
-    "Delete": "刪除",
-    "Delete successful!": "刪除成功！",
     "Description": "描述",
     "Don't have an account yet?": "還沒有帳號嗎？請按",
 
@@ -41,6 +44,7 @@
     "February": "二月",
     "FEMALE": "女",
     "Female": "女",
+    "Fill bot name": "請輸入機器人名稱",
     "Fill your email": "請輸入電子郵件",
     "Fill your name": "請輸入姓名",
     "Fill your password": "請輸入密碼",
@@ -67,6 +71,8 @@
 
     "Keyword Replies": "關鍵字回覆",
 
+    "Link pages with Facebook": "連結粉絲專頁",
+
     "MALE": "男",
     "Male": "男",
     "March": "三月",
@@ -91,13 +97,19 @@
     "Password update successful!": "密碼更新成功！",
     "Password was empty!": "密碼未填寫！",
     "Phone": "電話",
+    "Platform of chat bot": "聊天機器人平台",
     "Please fill the event title": "請填入事件標題",
+    "Please go to LINE Developers": "請至 LINE Developers 查詢",
+    "Please go to LINE Developers enable webhook": "請至 Line Developer 啟用 webhook",
+    "Please go to LINE Developers paste the webhook URL": "請至 Line Developer 貼上 webhook URL",
     "Please perform the verification": "請執行驗證操作",
     "Privacy": "隱私權條款",
     "Processing": "處理中",
 
     "Recent chat date": "最近聊天時間",
     "Remark": "備註",
+    "Remove": "刪除",
+    "Remove successful!": "刪除成功！",
     "Reset password": "重設密碼",
 
     "Sent email to your mailbox": "已發送電子郵件至您的信箱",
@@ -123,7 +135,9 @@
     "Token expired, please perform the reset password procedure again!": "令牌已過期，請重新執行重設密碼流程！",
     "Total count of messages per hour": "每時段總訊息數",
 
+    "Unassigned": "未指派",
     "Unit": "單位",
+    "Unread": "未讀",
     "Update": "更新",
     "Update successful!": "更新成功！",
     "User email had been signed up!": "電子郵件已被註冊！",

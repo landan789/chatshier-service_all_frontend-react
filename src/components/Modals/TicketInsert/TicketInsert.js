@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Button, Modal, ModalHeader,
-    ModalBody, ModalFooter } from 'reactstrap';
+    ModalBody, ModalFooter, FormGroup } from 'reactstrap';
 
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
@@ -249,37 +249,37 @@ class TicketInsertModal extends React.Component {
                 <ModalHeader toggle={this.props.close}>新增待辦事項</ModalHeader>
                 <ModalBody>
                     <div className="ticket-content">
-                        <div className="form-group">
-                            <label htmlFor="app">App</label>
+                        <FormGroup>
+                            <label>App</label>
                             <select className="form-control" onChange={this.appChanged}>
                                 {this.appOptions}
                             </select>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="name" className="col-form-label">客戶姓名</label>
+                        </FormGroup>
+                        <FormGroup>
+                            <label className="col-form-label">客戶姓名</label>
                             <select className="form-control" onChange={this.consumerChanged}>
                                 {this.state.consumerOptions}
                             </select>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="subject" className="col-form-label">客戶ID</label>
+                        </FormGroup>
+                        <FormGroup>
+                            <label className="col-form-label">客戶ID</label>
                             <input type="text" className="form-control" value={this.state.platformUid} readOnly />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="email" className="col-form-label">電子郵件</label>
+                        </FormGroup>
+                        <FormGroup>
+                            <label className="col-form-label">電子郵件</label>
                             <input type="text" className="form-control" value={this.state.messagerEmail} readOnly />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="phone" className="col-form-label">手機</label>
+                        </FormGroup>
+                        <FormGroup>
+                            <label className="col-form-label">手機</label>
                             <input type="text" className="form-control" value={this.state.messagerPhone} readOnly />
-                        </div>
-                        <div className="form-group">
+                        </FormGroup>
+                        <FormGroup>
                             <label className="col-form-label">指派人</label>
                             <select className="form-control" onChange={this.agentChanged}>
                                 {this.state.agentOptions}
                             </select>
-                        </div>
-                        <div className="form-group">
+                        </FormGroup>
+                        <FormGroup>
                             <label>優先</label>
                             <select className="form-control" onChange={this.priorityChanged}>
                                 <option value="1">低</option>
@@ -287,8 +287,8 @@ class TicketInsertModal extends React.Component {
                                 <option value="3">高</option>
                                 <option value="4">急</option>
                             </select>
-                        </div>
-                        <div className="form-group">
+                        </FormGroup>
+                        <FormGroup>
                             <label>狀態</label>
                             <select className="form-control" onChange={this.statusChanged}>
                                 <option value="2">未處理</option>
@@ -296,8 +296,8 @@ class TicketInsertModal extends React.Component {
                                 <option value="4">已解決</option>
                                 <option value="5">已關閉</option>
                             </select>
-                        </div>
-                        <div className="form-group">
+                        </FormGroup>
+                        <FormGroup>
                             <label htmlFor="description">內容</label>
                             <textarea
                                 className="form-control"
@@ -305,7 +305,7 @@ class TicketInsertModal extends React.Component {
                                 value={this.ticketDescription}
                                 onChange={this.descriptionChanged}>
                             </textarea>
-                        </div>
+                        </FormGroup>
                     </div>
                 </ModalBody>
 

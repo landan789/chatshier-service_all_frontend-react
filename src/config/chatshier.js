@@ -6,7 +6,8 @@ const chatshierConfig = {
         other: 100 * 1024 * 1024 // 100 MB
     },
     FACEBOOK: {
-        appId: '178381762879392',
+        // appId: '178381762879392',
+        appId: '198604877447165',
         cookie: true,
         xfbml: true,
         version: 'v3.0'

@@ -12,6 +12,7 @@ class GoogleCalendarHelper {
         });
 
         this.eventCaches = { items: [] };
+        this.onSignChangeListeners = {};
 
         this._mapRes = this._mapRes.bind(this);
         this.loadCalendarApi();
@@ -71,6 +72,11 @@ class GoogleCalendarHelper {
                     return;
                 }
                 return currentUser.getBasicProfile();
+            }).then((profile) => {
+                for (let listenerId in this.onSignChangeListeners) {
+                    this.onSignChangeListeners[listenerId](this.isSignedIn);
+                }
+                return profile;
             });
         });
     }
@@ -85,7 +91,37 @@ class GoogleCalendarHelper {
 
         return this.googleReady.then(() => {
             return this.googleAuth.signOut();
+        }).then(() => {
+            this.eventCaches = { items: [] };
+            for (let listenerId in this.onSignChangeListeners) {
+                this.onSignChangeListeners[listenerId](false);
+            }
         });
+    }
+
+    /**
+     * @param {() => any} callback
+     * @returns {number}
+     */
+    addSignChangeListener(callback) {
+        let listenerId = Date.now();
+        this.onSignChangeListeners[listenerId] = callback;
+        return listenerId;
+    }
+
+    /**
+     * @param {string} [listenerId]
+     */
+    removeSignChangeListener(listenerId) {
+        if (!listenerId) {
+            for (let listenerId in this.onSignChangeListeners) {
+                delete this.onSignChangeListeners[listenerId];
+            }
+            return true;
+        } else if (this.onSignChangeListeners[listenerId]) {
+            return delete this.onSignChangeListeners[listenerId];
+        }
+        return false;
     }
 
     /**

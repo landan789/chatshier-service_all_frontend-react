@@ -48,15 +48,18 @@ class Calendar extends React.Component {
         super(props);
 
         this.state = {
-            insertModalData: null,
-            editModalData: null
+            insertModalData: void 0,
+            editModalData: void 0
         };
 
         this.appsAgents = {};
         /** @type {JQuery<HTMLElement>} */
-        this.$calendar = null;
+        this.$calendar = void 0;
+
+        this.gSignListenerId = void 0;
 
         this.initCalendar = this.initCalendar.bind(this);
+        this.onGoogleSignChange = this.onGoogleSignChange.bind(this);
         this.onSelectDate = this.onSelectDate.bind(this);
         this.onEventClick = this.onEventClick.bind(this);
         this.onEventDrop = this.onEventDrop.bind(this);
@@ -77,6 +80,8 @@ class Calendar extends React.Component {
 
     componentDidMount() {
         let userId = authHelper.userId;
+        this.gSignListenerId = gCalendarHelper.addSignChangeListener(this.onGoogleSignChange);
+
         return userId && Promise.all([
             apiDatabase.calendarsEvents.find(userId),
             apiDatabase.appsTickets.find(null, userId),
@@ -85,11 +90,9 @@ class Calendar extends React.Component {
             apiDatabase.users.find(userId),
             gCalendarHelper.loadCalendarApi()
         ]).then(() => {
-            return gCalendarHelper.findEvents().catch(() => {
-                return gCalendarHelper.eventCaches;
-            });
-        }).then((resJson) => {
-            this.$calendar && this.reloadGoogleCalendar(resJson.items);
+            return gCalendarHelper.findEvents().then(() => {
+                return this.reload(this.props);
+            }).catch(() => {});
         });
     }
 
@@ -124,6 +127,11 @@ class Calendar extends React.Component {
                 }
             }
         }
+    }
+
+    componentWillUnmount() {
+        gCalendarHelper.removeSignChangeListener(this.gSignListenerId);
+        this.gSignListenerId = void 0;
     }
 
     reload(props) {
@@ -223,6 +231,18 @@ class Calendar extends React.Component {
         if (calendarEventList.length > 0) {
             this.$calendar.fullCalendar('renderEvents', calendarEventList, true);
         }
+    }
+
+    onGoogleSignChange(isSignedIn) {
+        if (!isSignedIn) {
+            return this.reload(this.props);
+        }
+
+        return gCalendarHelper.findEvents().catch(() => {
+            return gCalendarHelper.eventCaches;
+        }).then((resJson) => {
+            this.reload(this.props);
+        });
     }
 
     onSelectDate(start, end) {

@@ -274,14 +274,14 @@ class TicketInsertModal extends React.Component {
                             <input type="text" className="form-control" value={this.state.messagerPhone} readOnly />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="assignedAgent" className="col-form-label">指派人</label>
+                            <label className="col-form-label">指派人</label>
                             <select className="form-control" onChange={this.agentChanged}>
                                 {this.state.agentOptions}
                             </select>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="priority">優先</label>
-                            <select className="form-control">
+                            <label>優先</label>
+                            <select className="form-control" onChange={this.priorityChanged}>
                                 <option value="1">低</option>
                                 <option value="2">中</option>
                                 <option value="3">高</option>
@@ -289,8 +289,8 @@ class TicketInsertModal extends React.Component {
                             </select>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="status">狀態</label>
-                            <select className="form-control">
+                            <label>狀態</label>
+                            <select className="form-control" onChange={this.statusChanged}>
                                 <option value="2">未處理</option>
                                 <option value="3">處理中</option>
                                 <option value="4">已解決</option>

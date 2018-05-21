@@ -147,7 +147,7 @@ class CalendarEditModal extends React.Component {
             return this.props.close(ev);
         }).catch(() => {
             this.setState({ isAsyncWorking: false });
-            return notify(this.props.t('Failed to delete!'), { type: 'danger' });
+            return notify(this.props.t('Failed to remove!'), { type: 'danger' });
         });
     }
 

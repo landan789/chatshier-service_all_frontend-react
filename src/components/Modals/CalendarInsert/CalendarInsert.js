@@ -101,7 +101,7 @@ class CalendarInsertModal extends React.Component {
         };
 
         if (!event.title) {
-            return notify(this.props.t('Please fill the event title'), { type: 'warning' });
+            return notify(this.props.t('Fill the event title'), { type: 'warning' });
         } else if (event.startedTime > event.endedTime) {
             return notify(this.props.t('Start datetime must be earlier than end datetime'), { type: 'warning' });
         }

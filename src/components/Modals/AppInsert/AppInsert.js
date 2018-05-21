@@ -11,7 +11,7 @@ import apiDatabase from '../../../helpers/apiDatabase/index';
 import fbHelper from '../../../helpers/facebook';
 import authHelper from '../../../helpers/authentication';
 import { notify } from '../../Notify/Notify';
-import FacebookLinkModal from '../FacebookLink/FacebookLink';
+import FacebookLinkModal from './FacebookLink';
 
 import apps1Jpg from '../../../image/apps-1.jpg';
 import apps2Jpg from '../../../image/apps-2.jpg';
@@ -44,7 +44,7 @@ class AppInsertModal extends React.Component {
         let groupId = Object.keys(this.props.groups)[0];
         this.state = {
             isOpen: this.props.isOpen,
-            seletedGroupId: groupId ? this.props.groups[groupId] : '',
+            seletedGroupId: groupId || '',
             seletedAppType: APP_TYPES.LINE,
 
             fanPages: void 0,
@@ -72,7 +72,56 @@ class AppInsertModal extends React.Component {
     }
 
     insertApp() {
+        if (!this.state.appName) {
+            return notify(this.props.t('Fill the bot name'), { type: 'warning' });
+        } else if (!this.state.appId1) {
+            if (APP_TYPES.LINE === this.state.seletedAppType) {
+                return notify(this.props.t('Channel ID can\'t be empty'), { type: 'warning' });
+            }
+            return notify(this.props.t('App ID can\'t be empty'), { type: 'warning' });
+        } else if (!this.state.appSecret) {
+            if (APP_TYPES.LINE === this.state.seletedAppType) {
+                return notify(this.props.t('Channel secret can\'t be empty'), { type: 'warning' });
+            }
+            return notify(this.props.t('App secret can\'t be empty'), { type: 'warning' });
+        }
 
+        let putApp = {
+            type: this.state.seletedAppType,
+            group_id: this.state.seletedGroupId,
+            name: this.state.appName,
+            id1: this.state.appId1,
+            secret: this.state.appSecret
+        };
+
+        switch (putApp.type) {
+            case APP_TYPES.LINE:
+                if (!this.state.appToken1) {
+                    return notify(this.props.t('Channel access token can\'t be empty'), { type: 'warning' });
+                }
+                putApp.token1 = this.state.appToken1;
+                break;
+            case APP_TYPES.FACEBOOK:
+                return notify(this.props.t('An error occurred!'), { type: 'danger' });
+            case APP_TYPES.WECHAT:
+            default:
+                break;
+        }
+
+        let userId = authHelper.userId;
+        this.setState({ isProcessing: true });
+        return apiDatabase.apps.insert(userId, putApp).then(() => {
+            this.setState({
+                isOpen: false,
+                isProcessing: false
+            });
+            return notify(this.props.t('Add successful!'), { type: 'success' });
+        }).then(() => {
+            return this.props.close();
+        }).catch(() => {
+            this.setState({ isProcessing: false });
+            return notify(this.props.t('Failed to add!'), { type: 'danger' });
+        });
     }
 
     linkFacebookPages() {
@@ -103,8 +152,7 @@ class AppInsertModal extends React.Component {
                 });
 
                 if (0 === fanPages.length) {
-                    notify('沒有可進行連結的粉絲專頁', { type: 'warning' });
-                    return fanPages;
+                    return notify('沒有可進行連結的粉絲專頁', { type: 'warning' });
                 }
 
                 return Promise.all(fanPages.map((fanPage) => {
@@ -124,13 +172,13 @@ class AppInsertModal extends React.Component {
 
     finishSelectFbPages(selectedFanPages) {
         if (0 === selectedFanPages.length) {
-            return;
+            return Promise.resolve();
         }
 
         // 使用者選取完欲連結的粉絲專頁後，將資料轉換為 Chatshier app 資料
         let appsList = selectedFanPages.map((fanPage) => {
             let app = {
-                group_id: this.seletedGroupId,
+                group_id: this.state.seletedGroupId,
                 type: APP_TYPES.FACEBOOK,
                 name: fanPage.name,
                 id1: fanPage.id,
@@ -138,9 +186,9 @@ class AppInsertModal extends React.Component {
             };
             return app;
         });
-        let responses = [];
 
         // 未處理 bug: 使用 Promise.all 會造成 group 的 app_ids 只會新增一筆
+        let responses = [];
         const nextRequest = (i) => {
             if (i >= appsList.length) {
                 return Promise.resolve(responses);
@@ -150,8 +198,6 @@ class AppInsertModal extends React.Component {
             let userId = authHelper.userId;
             return apiDatabase.apps.insert(userId, app).then(() => {
                 return fbHelper.setFanPageSubscribeApp(app.id1, app.token2);
-            }).then(() => {
-                return fbHelper.getFanPageSubscribeApp(app.id1, app.token2);
             }).then((res) => {
                 responses.push(res);
                 return nextRequest(i + 1);
@@ -165,6 +211,10 @@ class AppInsertModal extends React.Component {
                 return;
             }
             return fbHelper.signOut();
+        }).catch(() => {
+            return notify('An error occurred!', { type: 'danger' });
+        }).then(() => {
+            return this.props.close();
         });
     }
 
@@ -192,7 +242,7 @@ class AppInsertModal extends React.Component {
                                     type="text"
                                     name="appName"
                                     value={this.state.appName}
-                                    placeholder={this.props.t('Fill bot name')}
+                                    placeholder={this.props.t('Fill the bot name')}
                                     onChange={(ev) => this.setState({ appName: ev.target.value })} />
                             </div>
                         </FormGroup>
@@ -270,7 +320,7 @@ class AppInsertModal extends React.Component {
     render() {
         return (
             <Aux>
-                <Modal className="ticket-insert-modal" isOpen={this.state.isOpen} toggle={this.props.close}>
+                <Modal className="app-insert-modal" isOpen={this.state.isOpen} toggle={this.props.close}>
                     <ModalHeader toggle={this.props.close}>
                         <Trans i18nKey="Add bot" />
                     </ModalHeader>
@@ -321,7 +371,7 @@ class AppInsertModal extends React.Component {
                     isOpen={!this.state.isOpen}
                     fanPages={this.state.fanPages}
                     fanPagePics={this.state.fanPagePics}
-                    close={this.props.close}>
+                    close={this.finishSelectFbPages}>
                 </FacebookLinkModal>}
             </Aux>
         );

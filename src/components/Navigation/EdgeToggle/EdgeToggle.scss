@@ -14,6 +14,7 @@ $_edge-toggle-btn-height: 2.25rem;
     justify-content: center;
     z-index: 1000;
     opacity: 0;
+    will-change: transform;
     transition: opacity $ctrl-panel-transition-duration;
 
     &.put-away {
@@ -45,6 +46,7 @@ $_edge-toggle-btn-height: 2.25rem;
         i {
             color: #212529;
             font-size: .85rem;
+            will-change: transform;
             transition: transform $ctrl-panel-transition-duration;
             transform: rotate(90deg);
         }

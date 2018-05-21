@@ -25,6 +25,8 @@ import { updateSearchKeyword } from '../../../redux/actions/controlPanelStore/se
 import EdgeToggle from '../EdgeToggle/EdgeToggle';
 import { findChatroomMessager, findMessagerSelf } from '../../../containers/Chat/Chat';
 import AppInsertModal from '../../../components/Modals/AppInsert/AppInsert';
+import AppEditModal from '../../../components/Modals/AppEdit/AppEdit';
+import { notify } from '../../../components/Notify/Notify';
 
 import logoPng from '../../../image/logo-no-transparent.png';
 import logoSmallPng from '../../../image/logo-small.png';
@@ -134,6 +136,7 @@ class ControlPanel extends React.Component {
         this.endAnimating = this.endAnimating.bind(this);
         this.putAwayControlPanel = this.putAwayControlPanel.bind(this);
         this.closeAppInsertModal = this.closeAppInsertModal.bind(this);
+        this.closeAppEditModal = this.closeAppEditModal.bind(this);
     }
 
     componentDidMount() {
@@ -302,6 +305,34 @@ class ControlPanel extends React.Component {
         this.setState({ isOpenAddInertModal: false });
     }
 
+    closeAppEditModal() {
+        this.setState({ editModalData: void 0 });
+    }
+
+    openAppEditModal(ev, appId) {
+        let app = this.props.apps[appId];
+        this.setState({
+            editModalData: {
+                appId: appId,
+                app: app
+            }
+        });
+    }
+
+    removeApp(ev, appId) {
+        ev.stopPropagation(); // 防止觸發 parent event
+        if (!window.confirm('Are you sure want to delete it?')) {
+            return;
+        }
+
+        let userId = authHelper.userId;
+        return apiDatabase.apps.delete(appId, userId).then(() => {
+            return notify('Remove successful!', { type: 'success' });
+        }).catch(() => {
+            return notify('Failed to remove!', { type: 'danger' });
+        });
+    }
+
     renderChatroomList() {
         let isInChat = ROUTES.CHAT === this.props.history.location.pathname;
         if (!isInChat) {
@@ -345,7 +376,7 @@ class ControlPanel extends React.Component {
                 if (isGroupChatroom) {
                     itemElem = (
                         <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
-                            <img className="app-icon consumer-photo" src={CHATSHIER === app.type ? groupPng : logos[app.type]} alt="無法顯示相片" />
+                            <img className="app-icon consumer-photo" src={CHATSHIER === app.type ? groupPng : logos[app.type]} alt="" />
                             <span className="app-name">{chatroom.name || '群組聊天室'}</span>
                             <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')}>{unReadStr}</span>
                         </ListGroupItem>
@@ -363,7 +394,7 @@ class ControlPanel extends React.Component {
 
                     itemElem = (
                         <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
-                            <img className="app-icon consumer-photo" src={consumer.photo} alt="無法顯示相片" />
+                            <img className="app-icon consumer-photo" src={consumer.photo} alt="" />
                             <span className="app-name">{(messagerSelf && messagerSelf.namings[platformUid]) || consumer.name}</span>
                             <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')}>{unReadStr}</span>
                         </ListGroupItem>
@@ -516,9 +547,10 @@ class ControlPanel extends React.Component {
             }
 
             let appSymbol = (
-                <ListGroupItem key={appId} className="text-light nested">
+                <ListGroupItem key={appId} className="text-light nested" onClick={(ev) => this.openAppEditModal(ev, appId)}>
                     <i className={appIcon}></i>
                     <span>{app.name}</span>
+                    <i className={'ml-auto fas fa-trash-alt remove-icon'} onClick={(ev) => this.removeApp(ev, appId)}></i>
                 </ListGroupItem>
             );
             (LINE === app.type) && lineApps.push(appSymbol);
@@ -536,8 +568,9 @@ class ControlPanel extends React.Component {
             <Aux>
                 <div className={classes.ctrlPanel + (isSmall ? ' animated' : '') + (isOpen ? ' slide-in' : ' slide-out') + (isPutAway ? ' put-away' : '')} ref={this.initSwiper}>
                     <div className="swiper-wrapper">
+                        {!isPutAway &&
                         <div className="swiper-slide">
-                            <ListGroup className={('detail-list ' + (isPutAway ? 'd-none' : '')).trim()}>
+                            <ListGroup className="detail-list">
                                 <ListGroupItem className="text-light py-0 pl-2 logo-item" onClick={() => this.linkTo()}>
                                     <div className="p-1 ctrl-panel-logo">
                                         <img className="w-100 h-100" src={logoSmallPng} alt="" />
@@ -550,16 +583,17 @@ class ControlPanel extends React.Component {
                                     <i className="fab fa-android"></i>
                                     <span><Trans i18nKey="Bot" /></span>
                                 </ListGroupItem>
+
                                 <Collapse isOpen={!itemCollapse['CHATBOT']}>
                                     <ListGroupItem className="text-light" onClick={() => this.toggleItem('CHATBOT_' + LINE)}>
-                                        <img className="app-icon" src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" alt="LINE" />
+                                        <img className="app-icon" src={logos[LINE]} alt="LINE" />
                                         <span>{LINE}</span>
                                         <i className={'ml-auto fas ' + (itemCollapse['CHATBOT_' + LINE] ? 'fa-chevron-down' : 'fa-chevron-up')}></i>
                                     </ListGroupItem>
                                     <Collapse className="nested" isOpen={!itemCollapse['CHATBOT_' + LINE]}>{lineApps}</Collapse>
 
                                     <ListGroupItem className="text-light" onClick={() => this.toggleItem('CHATBOT_' + FACEBOOK)}>
-                                        <img className="app-icon" src="https://facebookbrand.com/wp-content/themes/fb-branding/prj-fb-branding/assets/images/fb-art.png" alt="Facebook" />
+                                        <img className="app-icon" src={logos[FACEBOOK]} alt="Facebook" />
                                         <span>{FACEBOOK}</span>
                                         <i className={'ml-auto fas ' + (itemCollapse['CHATBOT_' + FACEBOOK] ? 'fa-chevron-down' : 'fa-chevron-up')}></i>
                                     </ListGroupItem>
@@ -578,9 +612,11 @@ class ControlPanel extends React.Component {
                                     <span><Trans i18nKey="Add" /></span>
                                 </ListGroupItem>
                             </ListGroup>
-                        </div>
+                        </div>}
+
                         <div className="swiper-slide">
-                            <ListGroup className={('detail-list ' + (isPutAway ? 'd-none' : '')).trim()}>
+                            {!isPutAway &&
+                            <ListGroup className="detail-list">
                                 {this.state.isInChat && <ListGroupItem className="text-light px-1 search message-search">
                                     <input className="mx-0 search-box"
                                         type="text"
@@ -612,7 +648,7 @@ class ControlPanel extends React.Component {
                                 </ListGroupItem>
                                 <Collapse isOpen={!itemCollapse[ROUTES.CHAT]}>{this.renderChatroomList()}</Collapse>
                                 {this.renderLinkItems()}
-                            </ListGroup>
+                            </ListGroup>}
 
                             <ListGroup className={('simple-list animated slideInRight ' + (isPutAway ? '' : 'd-none')).trim()}>
                                 <ListGroupItem className="mb-3 px-0 text-light">
@@ -646,6 +682,11 @@ class ControlPanel extends React.Component {
                 {this.state.isOpenAddInertModal &&
                 <AppInsertModal isOpen={this.state.isOpenAddInertModal}
                     close={this.closeAppInsertModal} />}
+
+                {!!this.state.editModalData &&
+                <AppEditModal isOpen={!!this.state.editModalData}
+                    modalData={this.state.editModalData}
+                    close={this.closeAppEditModal}/>}
             </Aux>
         );
     }

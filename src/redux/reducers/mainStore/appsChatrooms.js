@@ -1,5 +1,5 @@
-import { UPDATE_CHATROOMS, DELETE_CHATROOM, UPDATE_CHATROOMS_MESSAGERS,
-    UPDATE_CHATROOMS_MESSAGES } from '../../actions/mainStore/appsChatrooms';
+import { UPDATE_CHATROOMS, DELETE_CHATROOM, DELETE_ALL_CHATROOMS,
+    UPDATE_CHATROOMS_MESSAGERS, UPDATE_CHATROOMS_MESSAGES } from '../../actions/mainStore/appsChatrooms';
 
 export const appsChatroomsReducer = (state = {}, action) => {
     /** @type {string} */
@@ -45,6 +45,13 @@ export const appsChatroomsReducer = (state = {}, action) => {
                 delete state[appId];
             }
             return Object.assign({}, state);
+        case DELETE_ALL_CHATROOMS:
+            appId = action.appId;
+            if (state[appId]) {
+                delete state[appId];
+                return Object.assign({}, state);
+            }
+            return state;
         case UPDATE_CHATROOMS_MESSAGERS:
             appId = action.appId;
             chatroomId = action.chatroomId;

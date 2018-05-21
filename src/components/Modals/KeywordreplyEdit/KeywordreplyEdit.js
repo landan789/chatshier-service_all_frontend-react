@@ -5,25 +5,26 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, I
 
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
+
+import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
 
-class KeywordreplyEdit extends React.Component {
+class KeywordreplyEditModal extends ModalCore {
     static propTypes = {
-        modalData: PropTypes.object,
-        isOpen: PropTypes.bool.isRequired,
-        close: PropTypes.func.isRequired
+        modalData: PropTypes.object
     }
 
     constructor(props) {
         super(props);
 
         this.state = {
+            isOpen: this.props.isOpen,
+            isAsyncWorking: false,
             appId: '',
             keywordreplyId: '',
             keyword: '',
             text: '',
-            status: false,
-            isAsyncWorking: false
+            status: false
         };
 
         this.handleKeywordChange = this.handleKeywordChange.bind(this);
@@ -44,23 +45,21 @@ class KeywordreplyEdit extends React.Component {
             });
         }
     }
-    handleKeywordChange(event) {
-        this.setState({ keyword: event.target.value });
+    handleKeywordChange(ev) {
+        this.setState({ keyword: ev.target.value });
     }
-    handleTextChange(event) {
-        this.setState({ text: event.target.value });
+    handleTextChange(ev) {
+        this.setState({ text: ev.target.value });
     }
-    handleDraftChange(event) {
-        this.setState({ status: event.target.checked });
+    handleDraftChange(ev) {
+        this.setState({ status: ev.target.checked });
     }
-    updateKeywordreply(event) {
+    updateKeywordreply(ev) {
         if (!this.state.keyword) {
             return notify('請輸入關鍵字', { type: 'warning' });
         } else if (!this.state.text) {
             return notify('請輸入回覆訊息', { type: 'warning' });
         }
-
-        this.setState({ isAsyncWorking: true });
 
         let appId = this.state.appId;
         let keywordreplyId = this.state.keywordreplyId;
@@ -72,19 +71,24 @@ class KeywordreplyEdit extends React.Component {
             updatedTime: Date.now()
         };
 
+        this.setState({ isAsyncWorking: true });
         return apiDatabase.appsKeywordreplies.update(appId, keywordreplyId, userId, keywordreply).then(() => {
-            this.props.close(event);
+            this.setState({
+                isOpen: false,
+                isAsyncWorking: false
+            });
             return notify('新增成功', { type: 'success' });
-        }).catch(() => {
-            return notify('新增失敗', { type: 'danger' });
         }).then(() => {
+            return this.closeModal(ev);
+        }).catch(() => {
             this.setState({ isAsyncWorking: false });
+            return notify('新增失敗', { type: 'danger' });
         });
     }
     render() {
         return (
-            <Modal size="lg" isOpen={this.props.isOpen} toggle={this.props.close}>
-                <ModalHeader toggle={this.props.close}>
+            <Modal size="lg" isOpen={this.state.isOpen} toggle={this.closeModal}>
+                <ModalHeader toggle={this.closeModal}>
                     新增關鍵字回覆
                 </ModalHeader>
                 <ModalBody>
@@ -105,11 +109,11 @@ class KeywordreplyEdit extends React.Component {
                 </ModalBody>
                 <ModalFooter>
                     <Button outline color="success" onClick={this.updateKeywordreply} disabled={this.state.isAsyncWorking}>修改</Button>{' '}
-                    <Button outline color="danger" onClick={this.props.close}>取消</Button>
+                    <Button outline color="danger" onClick={this.closeModal}>取消</Button>
                 </ModalFooter>
             </Modal>
         );
     }
 }
 
-export default KeywordreplyEdit;
+export default KeywordreplyEditModal;

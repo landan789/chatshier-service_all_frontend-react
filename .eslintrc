@@ -28,6 +28,7 @@
         "navigator": true,
         "window": true,
         "io": true,
+        "FB": true,
         "grecaptcha": true,
         "SOCKET_EVENTS": true,
         "urlConfig": true

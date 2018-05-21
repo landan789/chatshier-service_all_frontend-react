@@ -10,20 +10,16 @@ import { toDueDateSpan } from '../../../utils/ticket';
 import { formatDate, formatTime } from '../../../utils/unitTime';
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
+
+import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
 
 import './TicketEdit.css';
 
-class TicketEditModal extends React.Component {
+class TicketEditModal extends ModalCore {
     static propTypes = {
         appsAgents: PropTypes.object,
-        modalData: PropTypes.object,
-        isOpen: PropTypes.bool.isRequired,
-        close: PropTypes.func.isRequired
-    }
-
-    static defaultProps = {
-        isOpen: true
+        modalData: PropTypes.object
     }
 
     constructor(props, ctx) {
@@ -114,7 +110,7 @@ class TicketEditModal extends React.Component {
         })(this.props.modalData.ticket, ticket);
 
         if (!shouldUpdate) {
-            return this.props.close(ev);
+            return this.closeModal(ev);
         }
 
         this.setState({ isProcessing: true });
@@ -127,7 +123,7 @@ class TicketEditModal extends React.Component {
             let agent = this.props.appsAgents[appId].agents[ticket.assigned_id];
             return notify('待辦事項已更新，指派人: ' + agent.name, { type: 'success' });
         }).then(() => {
-            return this.props.close(ev);
+            return this.closeModal(ev);
         }).catch(() => {
             this.setState({ isProcessing: false });
             return notify('待辦事項更新失敗', { type: 'danger' });
@@ -149,10 +145,9 @@ class TicketEditModal extends React.Component {
                 isOpen: false,
                 isProcessing: false
             });
-
-            return notify('刪除成功', { type: 'success' }).then(() => {
-                return this.props.close(ev);
-            });
+            return notify('刪除成功', { type: 'success' });
+        }).then(() => {
+            return this.closeModal(ev);
         }).catch(() => {
             this.setState({ isProcessing: false });
             return notify('刪除失敗', { type: 'danger' });
@@ -164,8 +159,8 @@ class TicketEditModal extends React.Component {
         let consumer = this.props.modalData ? this.props.modalData.consumer : {};
 
         return (
-            <Modal className="ticket-edit-modal" isOpen={this.state.isOpen} toggle={this.props.close}>
-                <ModalHeader toggle={this.props.close}>
+            <Modal className="ticket-edit-modal" isOpen={this.state.isOpen} toggle={this.closeModal}>
+                <ModalHeader toggle={this.closeModal}>
                     {consumer.name || ''}
                 </ModalHeader>
 
@@ -246,7 +241,7 @@ class TicketEditModal extends React.Component {
                 <ModalFooter>
                     <Button color="primary" onClick={this.updateTicket} disabled={this.state.isProcessing}>更新</Button>
                     <Button color="danger" onClick={this.deleteTicket} disabled={this.state.isProcessing}>刪除</Button>
-                    <Button color="secondary" onClick={this.props.close}>取消</Button>
+                    <Button color="secondary" onClick={this.closeModal}>取消</Button>
                 </ModalFooter>
             </Modal>
         );

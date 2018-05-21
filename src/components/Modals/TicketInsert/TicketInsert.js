@@ -2,16 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Button, Modal, ModalHeader,
-    ModalBody, ModalFooter } from 'reactstrap';
+    ModalBody, ModalFooter, FormGroup } from 'reactstrap';
 
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
 import { DAY } from '../../../utils/unitTime';
+
+import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
 
 const appTypes = apiDatabase.apps.enums.type;
 
-class TicketInsertModal extends React.Component {
+class TicketInsertModal extends ModalCore {
     static propTypes = {
         appId: PropTypes.string,
         chatroomId: PropTypes.string,
@@ -19,16 +21,13 @@ class TicketInsertModal extends React.Component {
         apps: PropTypes.object,
         appsAgents: PropTypes.object,
         appsChatrooms: PropTypes.object,
-        consumers: PropTypes.object,
-        isOpen: PropTypes.bool,
-        close: PropTypes.func.isRequired
+        consumers: PropTypes.object
     }
 
     static defaultProps = {
         appId: '',
         chatroomId: '',
-        platformUid: '',
-        isOpen: true
+        platformUid: ''
     }
 
     constructor(props, ctx) {
@@ -56,6 +55,7 @@ class TicketInsertModal extends React.Component {
         this.ticketStatus = 2;
         this.ticketPriority = 1;
 
+        this.closeModal = this.closeModal.bind(this);
         this.insertTicket = this.insertTicket.bind(this);
         this.appChanged = this.appChanged.bind(this);
         this.consumerChanged = this.consumerChanged.bind(this);
@@ -214,7 +214,6 @@ class TicketInsertModal extends React.Component {
         } else if (!this.state.ticketDescription) {
             return notify('請輸入說明內容', { type: 'warning' });
         }
-        this.setState({ isProcessing: true });
 
         let appId = this.selectedAppId;
         let userId = authHelper.userId;
@@ -227,16 +226,16 @@ class TicketInsertModal extends React.Component {
             description: this.state.ticketDescription
         };
 
+        this.setState({ isProcessing: true });
         return apiDatabase.appsTickets.insert(appId, userId, ticket).then(() => {
             this.setState({
                 isOpen: false,
                 isProcessing: false
             });
-
             let agent = this.props.appsAgents[appId].agents[ticket.assigned_id];
             return notify('待辦事項已新增，指派人: ' + agent.name, { type: 'success' });
         }).then(() => {
-            return this.props.close(ev);
+            return this.closeModal(ev);
         }).catch(() => {
             this.setState({ isProcessing: false });
             return notify('待辦事項新增失敗', { type: 'danger' });
@@ -245,41 +244,41 @@ class TicketInsertModal extends React.Component {
 
     render() {
         return (
-            <Modal className="ticket-insert-modal" isOpen={this.state.isOpen} toggle={this.props.close}>
-                <ModalHeader toggle={this.props.close}>新增待辦事項</ModalHeader>
+            <Modal className="ticket-insert-modal" isOpen={this.state.isOpen} toggle={this.closeModal}>
+                <ModalHeader toggle={this.closeModal}>新增待辦事項</ModalHeader>
                 <ModalBody>
                     <div className="ticket-content">
-                        <div className="form-group">
-                            <label htmlFor="app">App</label>
+                        <FormGroup>
+                            <label>App</label>
                             <select className="form-control" onChange={this.appChanged}>
                                 {this.appOptions}
                             </select>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="name" className="col-form-label">客戶姓名</label>
+                        </FormGroup>
+                        <FormGroup>
+                            <label className="col-form-label">客戶姓名</label>
                             <select className="form-control" onChange={this.consumerChanged}>
                                 {this.state.consumerOptions}
                             </select>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="subject" className="col-form-label">客戶ID</label>
+                        </FormGroup>
+                        <FormGroup>
+                            <label className="col-form-label">客戶ID</label>
                             <input type="text" className="form-control" value={this.state.platformUid} readOnly />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="email" className="col-form-label">電子郵件</label>
+                        </FormGroup>
+                        <FormGroup>
+                            <label className="col-form-label">電子郵件</label>
                             <input type="text" className="form-control" value={this.state.messagerEmail} readOnly />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="phone" className="col-form-label">手機</label>
+                        </FormGroup>
+                        <FormGroup>
+                            <label className="col-form-label">手機</label>
                             <input type="text" className="form-control" value={this.state.messagerPhone} readOnly />
-                        </div>
-                        <div className="form-group">
+                        </FormGroup>
+                        <FormGroup>
                             <label className="col-form-label">指派人</label>
                             <select className="form-control" onChange={this.agentChanged}>
                                 {this.state.agentOptions}
                             </select>
-                        </div>
-                        <div className="form-group">
+                        </FormGroup>
+                        <FormGroup>
                             <label>優先</label>
                             <select className="form-control" onChange={this.priorityChanged}>
                                 <option value="1">低</option>
@@ -287,8 +286,8 @@ class TicketInsertModal extends React.Component {
                                 <option value="3">高</option>
                                 <option value="4">急</option>
                             </select>
-                        </div>
-                        <div className="form-group">
+                        </FormGroup>
+                        <FormGroup>
                             <label>狀態</label>
                             <select className="form-control" onChange={this.statusChanged}>
                                 <option value="2">未處理</option>
@@ -296,8 +295,8 @@ class TicketInsertModal extends React.Component {
                                 <option value="4">已解決</option>
                                 <option value="5">已關閉</option>
                             </select>
-                        </div>
-                        <div className="form-group">
+                        </FormGroup>
+                        <FormGroup>
                             <label htmlFor="description">內容</label>
                             <textarea
                                 className="form-control"
@@ -305,13 +304,13 @@ class TicketInsertModal extends React.Component {
                                 value={this.ticketDescription}
                                 onChange={this.descriptionChanged}>
                             </textarea>
-                        </div>
+                        </FormGroup>
                     </div>
                 </ModalBody>
 
                 <ModalFooter>
                     <Button color="primary" onClick={this.insertTicket} disabled={this.state.isProcessing}>新增</Button>
-                    <Button color="secondary" onClick={this.props.close}>取消</Button>
+                    <Button color="secondary" onClick={this.closeModal}>取消</Button>
                 </ModalFooter>
             </Modal>
         );

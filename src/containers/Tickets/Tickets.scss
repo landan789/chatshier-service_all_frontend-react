@@ -26,6 +26,7 @@
     }
 
     .consumer-avatar:hover {
+        will-change: transform;
         transition: transform 200ms;
         transform: scale(2);
         transition-timing-function: cubic-bezier(0.785, 0.135, 0.15, 0.86);

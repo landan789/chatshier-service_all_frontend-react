@@ -1,4 +1,5 @@
-import { UPDATE_COMPOSES, DELETE_COMPOSE } from '../../actions/mainStore/appsComposes';
+import { UPDATE_COMPOSES, DELETE_COMPOSE,
+    DELETE_ALL_COMPOSES } from '../../actions/mainStore/appsComposes';
 
 export const appsComposesReducer = (state = {}, action) => {
     switch (action.type) {
@@ -29,6 +30,13 @@ export const appsComposesReducer = (state = {}, action) => {
                 delete state[appId];
             }
             return Object.assign({}, state);
+        case DELETE_ALL_COMPOSES:
+            appId = action.appId;
+            if (state[appId]) {
+                delete state[appId];
+                return Object.assign({}, state);
+            }
+            return state;
         default:
             return state;
     }

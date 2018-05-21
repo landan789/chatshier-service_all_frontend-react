@@ -102,12 +102,6 @@ class Composes extends React.Component {
                                                 <i className="fas fa-plus"></i>
                                             </Button>
                                         </InputGroup>
-                                        <ComposeInsertModal
-                                            apps={this.props.apps}
-                                            appsFields={this.props.appsFields}
-                                            isOpen={this.state.isInsertModalOpen}
-                                            close={this.closeInsertModal}>
-                                        </ComposeInsertModal>
                                     </Col>
                                 </Row>
                             </Jumbotron>
@@ -115,6 +109,14 @@ class Composes extends React.Component {
                         </div>
                     </Fade>
                 </PageWrapper>
+
+                {this.state.isInsertModalOpen &&
+                <ComposeInsertModal
+                    apps={this.props.apps}
+                    appsFields={this.props.appsFields}
+                    isOpen={this.state.isInsertModalOpen}
+                    close={this.closeInsertModal}>
+                </ComposeInsertModal>}
             </Aux>
         );
     }

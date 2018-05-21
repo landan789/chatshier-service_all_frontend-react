@@ -155,12 +155,12 @@ class Tickets extends React.Component {
                                     <Button color="info"
                                         className={this.state.statusFilter === STATUS_TYPES.RESOLVED ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.RESOLVED })}>
-                                        <i className="fas fa-minus-circle fa-1p5x"></i>
+                                        <i className="fas fa-check-circle fa-1p5x"></i>
                                     </Button>
                                     <Button color="info"
                                         className={this.state.statusFilter === STATUS_TYPES.CLOSED ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.CLOSED })}>
-                                        <i className="fas fa-check-circle fa-1p5x"></i>
+                                        <i className="fas fa-minus-circle fa-1p5x"></i>
                                     </Button>
                                 </ButtonGroup>
 

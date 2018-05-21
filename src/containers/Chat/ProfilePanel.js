@@ -12,7 +12,7 @@ import socketHelper from '../../helpers/socket';
 import apiDatabase from '../../helpers/apiDatabase/index';
 import apiBot from '../../helpers/apiBot/index';
 import regex from '../../utils/regex';
-import { fixHttpsResource, logos } from '../../utils/common';
+import { logos } from '../../utils/common';
 
 import { notify } from '../../components/Notify/Notify';
 import controlPanelStore from '../../redux/controlPanelStore';
@@ -310,7 +310,7 @@ class ProfilePanel extends React.Component {
                                         let memberUser = this.props.users[memberUserId];
                                         memberUser && elems.push(
                                             <div className="person-chip">
-                                                <img className="person-avatar" src={fixHttpsResource(memberUser.photo || defaultAvatarPng)} alt="" />
+                                                <img className="person-avatar" src={memberUser.photo || defaultAvatarPng} alt="" />
                                                 <span>{memberUser.name}</span>
                                             </div>
                                         );
@@ -326,7 +326,7 @@ class ProfilePanel extends React.Component {
                                         let consumer = this.props.consumers[messager.platformUid];
                                         consumer && elems.push(
                                             <div key={messagerId} className="person-chip">
-                                                <img className="person-avatar" src={fixHttpsResource(consumer.photo || defaultAvatarPng)} alt="" onError={this.onPhotoLoadError} />
+                                                <img className="person-avatar" src={consumer.photo || defaultAvatarPng} alt="" onError={this.onPhotoLoadError} />
                                                 <span>{consumer.name}</span>
                                             </div>
                                         );
@@ -563,7 +563,7 @@ class ProfilePanel extends React.Component {
                 <div className="px-2 py-3 profile-wrapper">
                     <div className="person-profile profile-content table-responsive profile-group animated fadeIn">
                         <div className="photo-container">
-                            <img className="consumer-avatar large" src={fixHttpsResource(person.photo)} alt="無法顯示相片" />
+                            <img className="consumer-avatar large" src={person.photo} alt="" />
                         </div>
                         {(() => {
                             if (isGroupChatroom) {

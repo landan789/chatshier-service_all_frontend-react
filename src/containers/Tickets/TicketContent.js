@@ -10,6 +10,9 @@ import { toDueDateSpan, toPriorityColor,
 import { formatDate, formatTime } from '../../utils/unitTime';
 import TicketEditModal from '../../components/Modals/TicketEdit/TicketEdit';
 
+const RESOLVED = 4;
+const CLOSED = 5;
+
 class TicketContent extends React.Component {
     static propTypes = {
         className: PropTypes.string,
@@ -94,8 +97,15 @@ class TicketContent extends React.Component {
                 let ticket = tickets[ticketId];
                 let platformUid = ticket.platformUid;
 
-                if (!(platformUid && consumers[platformUid]) ||
-                    (this.props.statusFilter && ticket.status !== this.props.statusFilter)) {
+                // 當以下條件成立時，不顯示此筆待辦事項
+                // 1. 此待辦事項指派的 consumer 不存在
+                // 2. 當有設定狀態過濾時，不是指定狀態的待辦事項
+                // 3. 當沒有設定狀態過濾時，待辦事項狀態為已解決或已關閉
+                let shouldSkip =
+                    !(platformUid && consumers[platformUid]) ||
+                    (this.props.statusFilter && ticket.status !== this.props.statusFilter) ||
+                    (!this.props.statusFilter && (ticket.status === RESOLVED || ticket.status === CLOSED));
+                if (shouldSkip) {
                     continue;
                 }
 

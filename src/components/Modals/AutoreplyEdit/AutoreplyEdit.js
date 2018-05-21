@@ -6,19 +6,20 @@ import { DateTimePicker } from 'react-widgets';
 
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
+
+import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
 
-class AutoreplyEditModal extends React.Component {
+class AutoreplyEditModal extends ModalCore {
     static propTypes = {
-        modalData: PropTypes.object,
-        isOpen: PropTypes.bool.isRequired,
-        close: PropTypes.func.isRequired
+        modalData: PropTypes.object
     }
 
     constructor(props) {
         super(props);
 
         this.state = {
+            isOpen: this.props.isOpen,
             appId: '',
             autoreplyId: '',
             title: '',
@@ -49,7 +50,7 @@ class AutoreplyEditModal extends React.Component {
             });
         }
     }
-    updateAutoreply(event) {
+    updateAutoreply(ev) {
         if (!this.state.title) {
             return notify('請輸入事件名稱', { type: 'warning' });
         } else if (!this.state.startedTime) {
@@ -62,8 +63,6 @@ class AutoreplyEditModal extends React.Component {
             return notify('開始時間不能比結束時間晚', { type: 'warning' });
         }
 
-        this.setState({ isAsyncWorking: true });
-
         let appId = this.state.appId;
         let autoreplyId = this.state.autoreplyId;
         let userId = authHelper.userId;
@@ -75,13 +74,18 @@ class AutoreplyEditModal extends React.Component {
             updatedTime: Date.now()
         };
 
+        this.setState({ isAsyncWorking: true });
         return apiDatabase.appsAutoreplies.update(appId, autoreplyId, userId, autoreply).then(() => {
-            this.props.close(event);
+            this.setState({
+                isOpen: false,
+                isAsyncWorking: false
+            });
             return notify('修改成功', { type: 'success' });
-        }).catch(() => {
-            return notify('新增失敗', { type: 'danger' });
         }).then(() => {
+            return this.closeModal(ev);
+        }).catch(() => {
             this.setState({ isAsyncWorking: false });
+            return notify('修改失敗', { type: 'danger' });
         });
     }
     selectedApp(event) {
@@ -105,8 +109,8 @@ class AutoreplyEditModal extends React.Component {
     }
     render() {
         return (
-            <Modal size="lg" isOpen={this.props.isOpen} toggle={this.props.close}>
-                <ModalHeader toggle={this.props.close}>
+            <Modal size="lg" isOpen={this.props.isOpen} toggle={this.closeModal}>
+                <ModalHeader toggle={this.closeModal}>
                     修改自動回覆訊息
                 </ModalHeader>
                 <ModalBody>
@@ -128,7 +132,7 @@ class AutoreplyEditModal extends React.Component {
                 </ModalBody>
                 <ModalFooter>
                     <Button outline color="success" onClick={this.updateAutoreply} disabled={this.state.isAsyncWorking}>修改</Button>{' '}
-                    <Button outline color="danger" onClick={this.props.close}>取消</Button>
+                    <Button outline color="danger" onClick={this.closeModal}>取消</Button>
                 </ModalFooter>
             </Modal>
         );

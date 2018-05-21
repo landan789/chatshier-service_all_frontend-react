@@ -1,5 +1,6 @@
 export const UPDATE_AUTOREPLIES = 'UPDATE_AUTOREPLIES';
 export const DELETE_AUTOREPLY = 'DELETE_AUTOREPLY';
+export const DELETE_ALL_AUTOREPLIES = 'DELETE_ALL_AUTOREPLIES';
 
 /**
  * @param {Chatshier.AppsAutoreplies} appsAutoreplies
@@ -14,4 +15,11 @@ export const updateAutoreplies = (appsAutoreplies) => {
  */
 export const deleteAutoreply = (appId, autoreplyId) => {
     return { type: DELETE_AUTOREPLY, appId, autoreplyId };
+};
+
+/**
+ * @param {string} appId
+ */
+export const deleteAllAutoreplies = (appId) => {
+    return { type: DELETE_ALL_AUTOREPLIES, appId };
 };

@@ -41,6 +41,7 @@ $watermark-text-color: #8e8e8e;
             color: $watermark-text-color;
             opacity: .5;
             text-indent: 1rem;
+            will-change: transform;
             transform: translate3d(0, -50%, 0);
         }
     }

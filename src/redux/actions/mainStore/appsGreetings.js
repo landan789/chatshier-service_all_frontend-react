@@ -1,5 +1,6 @@
 export const UPDATE_GREETINGS = 'UPDATE_GREETINGS';
 export const DELETE_GREETING = 'DELETE_GREETING';
+export const DELETE_ALL_GREETINGS = 'DELETE_ALL_GREETINGS';
 
 /**
  * @param {Chatshier.AppsGreetings} appsGreetings
@@ -14,4 +15,11 @@ export const updateGreetings = (appsGreetings) => {
  */
 export const deleteGreeting = (appId, greetingId) => {
     return { type: DELETE_GREETING, appId, greetingId };
+};
+
+/**
+ * @param {string} appId
+ */
+export const deleteAllGreetings = (appId) => {
+    return { type: DELETE_ALL_GREETINGS, appId };
 };

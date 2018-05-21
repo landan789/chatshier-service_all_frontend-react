@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Aux from 'react-aux';
 import { Fade } from 'reactstrap';
-import { Trans } from 'react-i18next';
 import { withTranslate, currentLanguage } from '../../i18n';
 
 import ROUTES from '../../config/route';

@@ -4,24 +4,25 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, I
 
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
+
+import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
 
-class KeywordreplyInsert extends React.Component {
+class KeywordreplyInsertModal extends ModalCore {
     static propTypes = {
-        apps: PropTypes.object.isRequired,
-        isOpen: PropTypes.bool,
-        close: PropTypes.func.isRequired
+        apps: PropTypes.object.isRequired
     }
 
-    constructor(props) {
-        super(props);
+    constructor(props, ctx) {
+        super(props, ctx);
 
         this.state = {
+            isOpen: this.props.isOpen,
+            isAsyncWorking: false,
             appId: '',
             keyword: '',
             text: '',
-            status: false,
-            isAsyncWorking: false
+            status: false
         };
 
         this.handleAppChange = this.handleAppChange.bind(this);
@@ -30,30 +31,34 @@ class KeywordreplyInsert extends React.Component {
         this.handleDraftChange = this.handleDraftChange.bind(this);
         this.insertKeywordreply = this.insertKeywordreply.bind(this);
     }
+
     componentWillReceiveProps(nextProps) {
         let firstApp = Object.keys(nextProps.apps)[0];
         this.setState({appId: firstApp});
     }
-    handleAppChange(event) {
-        this.setState({appId: event.target.value});
+
+    handleAppChange(ev) {
+        this.setState({appId: ev.target.value});
     }
-    handleKeywordChange(event) {
-        this.setState({ keyword: event.target.value });
+
+    handleKeywordChange(ev) {
+        this.setState({ keyword: ev.target.value });
     }
-    handleTextChange(event) {
-        this.setState({ text: event.target.value });
+
+    handleTextChange(ev) {
+        this.setState({ text: ev.target.value });
     }
-    handleDraftChange(event) {
-        this.setState({ status: event.target.checked });
+
+    handleDraftChange(ev) {
+        this.setState({ status: ev.target.checked });
     }
-    insertKeywordreply(event) {
+
+    insertKeywordreply(ev) {
         if (!this.state.keyword) {
             return notify('請輸入關鍵字', { type: 'warning' });
         } else if (!this.state.text) {
             return notify('請輸入回覆訊息', { type: 'warning' });
         }
-
-        this.setState({ isAsyncWorking: true });
 
         let appId = this.state.appId;
         let userId = authHelper.userId;
@@ -69,15 +74,21 @@ class KeywordreplyInsert extends React.Component {
             updatedTime: Date.now()
         };
 
+        this.setState({ isAsyncWorking: true });
         return apiDatabase.appsKeywordreplies.insert(appId, userId, keywordreply).then(() => {
-            this.props.close(event);
+            this.setState({
+                isOpen: false,
+                isAsyncWorking: false
+            });
             return notify('新增成功', { type: 'success' });
-        }).catch(() => {
-            return notify('新增失敗', { type: 'danger' });
         }).then(() => {
+            return this.closeModal(ev);
+        }).catch(() => {
             this.setState({ isAsyncWorking: false });
+            return notify('新增失敗', { type: 'danger' });
         });
     }
+
     renderApps() {
         let apps = this.props.apps || {};
         let appIds = Object.keys(apps);
@@ -93,41 +104,42 @@ class KeywordreplyInsert extends React.Component {
             );
         });
     }
+
     render() {
         return (
-            <Modal size="lg" isOpen={this.props.isOpen} toggle={this.props.close}>
-                <ModalHeader toggle={this.props.close}>
+            <Modal size="lg" isOpen={this.state.isOpen} toggle={this.closeModal}>
+                <ModalHeader toggle={this.closeModal}>
                     新增關鍵字回覆
                 </ModalHeader>
                 <ModalBody>
                     <FormGroup>
-                        <Label>Apps: </Label>
+                        <Label>Apps:</Label>
                         <Input type="select" onChange={this.handleAppChange}>
                             { this.renderApps() }
                         </Input>
                     </FormGroup>
                     <FormGroup>
-                        <Label>關鍵字： </Label>
+                        <Label>關鍵字:</Label>
                         <Input type="text" onChange={this.handleKeywordChange}/>
                     </FormGroup>
                     <FormGroup>
-                        <Label>回覆內容: </Label>
+                        <Label>回覆內容:</Label>
                         <Input type="textarea" onChange={this.handleTextChange}/>
                     </FormGroup>
                     <FormGroup check>
                         <Label check>
-                            <Input type="checkbox" onChange={this.handleDraftChange} />{' '}
+                            <Input type="checkbox" onChange={this.handleDraftChange} />
                             是否儲存為草稿？
                         </Label>
                     </FormGroup>
                 </ModalBody>
                 <ModalFooter>
-                    <Button outline color="success" onClick={this.insertKeywordreply} disabled={this.state.isAsyncWorking}>新增</Button>{' '}
-                    <Button outline color="danger" onClick={this.props.close}>取消</Button>
+                    <Button outline color="success" onClick={this.insertKeywordreply} disabled={this.state.isAsyncWorking}>新增</Button>
+                    <Button outline color="danger" onClick={this.closeModal}>取消</Button>
                 </ModalFooter>
             </Modal>
         );
     }
 }
 
-export default KeywordreplyInsert;
+export default KeywordreplyInsertModal;

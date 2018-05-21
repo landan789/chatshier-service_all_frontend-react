@@ -9,7 +9,6 @@ import { withTranslate } from '../../../i18n';
 
 import ROUTES from '../../../config/route';
 import User from '../../Modals/User/User';
-import Group from '../../Modals/Group/Group';
 import Integration from '../../Modals/Integration/Integration';
 
 import mainStore from '../../../redux/mainStore';
@@ -23,10 +22,6 @@ const setingsItems = [
         link: ROUTES.SETTINGS_USERS,
         icon: 'fa fa-user',
         text: 'Settings'
-    }, {
-        link: ROUTES.SETTINGS_GROUPS,
-        icon: 'fas fa-object-group',
-        text: 'Groups'
     }, {
         link: ROUTES.SETTINGS_APPS,
         icon: 'fab fa-android',
@@ -66,7 +61,6 @@ class Toolbar extends React.Component {
             isInChat: ROUTES.CHAT === this.props.history.location.pathname,
             isControlPanelOpen: false,
             isUserModalOpen: false,
-            isGroupModalOpen: false,
             isIntegrationModalOpen: false,
             hasSelectChatroom: false,
             isGroupChatroom: false,
@@ -81,7 +75,6 @@ class Toolbar extends React.Component {
         this.mobileToggleControlPanel = this.mobileToggleControlPanel.bind(this);
         this.mobileToggleSetting = this.mobileToggleSetting.bind(this);
         this.closeUserModal = this.closeUserModal.bind(this);
-        this.closeGroupModal = this.closeGroupModal.bind(this);
         this.closeIntegrationModal = this.closeIntegrationModal.bind(this);
         this.sizeChanged = this.sizeChanged.bind(this);
         this.toggleProfile = this.toggleProfile.bind(this);
@@ -118,10 +111,6 @@ class Toolbar extends React.Component {
 
     closeUserModal() {
         this.setState({ isUserModalOpen: false });
-    }
-
-    closeGroupModal() {
-        this.setState({ isGroupModalOpen: false });
     }
 
     closeIntegrationModal() {
@@ -168,9 +157,6 @@ class Toolbar extends React.Component {
         switch (route) {
             case ROUTES.SETTINGS_USERS:
                 this.setState({ isUserModalOpen: true });
-                break;
-            case ROUTES.SETTINGS_GROUPS:
-                this.setState({ isGroupModalOpen: true });
                 break;
             case ROUTES.SETTINGS_APPS:
                 this.setState({ isIntegrationModalOpen: true });
@@ -224,7 +210,6 @@ class Toolbar extends React.Component {
                         </Dropdown>
 
                         {this.state.isUserModalOpen && <User isOpen={this.state.isUserModalOpen} close={this.closeUserModal}/>}
-                        {this.state.isGroupModalOpen && <Group isOpen={this.state.isGroupModalOpen} close={this.closeGroupModal}/>}
                         {this.state.isIntegrationModalOpen && <Integration isOpen={this.state.isIntegrationModalOpen} close={this.closeIntegrationModal}/>}
                     </nav>
                 </header>

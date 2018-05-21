@@ -617,7 +617,8 @@ class ControlPanel extends React.Component {
                         <div className="swiper-slide">
                             {!isPutAway &&
                             <ListGroup className="detail-list">
-                                {this.state.isInChat && <ListGroupItem className="text-light px-1 search message-search">
+                                {this.state.isInChat &&
+                                <ListGroupItem className="text-light px-1 search message-search">
                                     <input className="mx-0 search-box"
                                         type="text"
                                         placeholder={this.props.t('Search messages of text...')}
@@ -634,6 +635,7 @@ class ControlPanel extends React.Component {
                                         <i className="fas fa-chevron-down grey"></i>
                                     </div>
                                 </ListGroupItem>}
+
                                 <ListGroupItem className="text-light py-0 pl-2 logo-item" onClick={() => this.linkTo()}>
                                     <div className="p-1 ctrl-panel-logo">
                                         <img className="w-100 h-100" src={logoSmallPng} alt="" />
@@ -641,12 +643,12 @@ class ControlPanel extends React.Component {
                                     <span className="ctrl-panel-title">Chatshier</span>
                                     <i className={classes.menuToggle}></i>
                                 </ListGroupItem>
-                                <ListGroupItem className="text-light" onClick={() => isInChat ? this.toggleItem(ROUTES.CHAT) : this.linkTo(ROUTES.CHAT, true)}>
+
+                                <ListGroupItem className="text-light" onClick={() => !isInChat && this.linkTo(ROUTES.CHAT, true)}>
                                     <i className="fas fa-comment-dots fa-fw"></i>
                                     <span><Trans i18nKey="Chatroom" /></span>
-                                    {isInChat && <i className={'ml-auto fas ' + (itemCollapse[ROUTES.CHAT] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>}
                                 </ListGroupItem>
-                                <Collapse isOpen={!itemCollapse[ROUTES.CHAT]}>{this.renderChatroomList()}</Collapse>
+                                <Collapse isOpen="true">{this.renderChatroomList()}</Collapse>
                                 {this.renderLinkItems()}
                             </ListGroup>}
 

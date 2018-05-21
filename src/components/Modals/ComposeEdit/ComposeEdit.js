@@ -6,19 +6,21 @@ import { DateTimePicker } from 'react-widgets';
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
 import timeHelper from '../../../helpers/timer';
+
+import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
 
-class ComposeEdit extends React.Component {
+class ComposeEditModal extends ModalCore {
     static propTypes = {
-        modalData: PropTypes.object,
-        isOpen: PropTypes.bool.isRequired,
-        close: PropTypes.func.isRequired
+        modalData: PropTypes.object
     }
 
     constructor(props) {
         super(props);
 
         this.state = {
+            isOpen: this.props.isOpen,
+            isAsyncWorking: false,
             appId: '',
             composeId: '',
             time: '',
@@ -27,8 +29,7 @@ class ComposeEdit extends React.Component {
             field_ids: null,
             text: '',
             status: null,
-            fields: null,
-            isAsyncWorking: false
+            fields: null
         };
 
         this.handleDatetimeChange = this.handleDatetimeChange.bind(this);
@@ -38,6 +39,7 @@ class ComposeEdit extends React.Component {
         this.handleTextChange = this.handleTextChange.bind(this);
         this.updateCompose = this.updateCompose.bind(this);
     }
+
     componentWillReceiveProps(nextProps) {
         let compose = nextProps.modalData ? nextProps.modalData.compose : {};
         let composeLength = Object.keys(compose).length;
@@ -92,15 +94,18 @@ class ComposeEdit extends React.Component {
         }, {});
         this.setState({ fields: _appsFields });
     }
+
     handleDatetimeChange(time) {
         let datetime = new Date(time);
         let timeInMs = datetime.getTime();
         this.setState({time: timeInMs});
     }
+
     handleDraftChange(event) {
         let status = !this.state.status;
         this.setState({ status });
     }
+
     handleFieldButtonChange(event) {
         let key = event.target.getAttribute('name');
         let className = event.target.getAttribute('class');
@@ -111,16 +116,19 @@ class ComposeEdit extends React.Component {
         }
         this.setState({fields});
     }
+
     handleFieldInputChange(event) {
         let key = event.target.getAttribute('name');
         let fields = this.state.fields;
         fields[key].value = event.target.value;
         this.setState({ fields });
     }
+
     handleTextChange(event) {
         this.setState({text: event.target.value});
     }
-    updateCompose(event) {
+
+    updateCompose(ev) {
         if (!this.state.time) {
             return notify('請選擇時間', { type: 'warning' });
         } else if (!this.state.text) {
@@ -129,19 +137,17 @@ class ComposeEdit extends React.Component {
             return notify('不能選擇過去的時間', { type: 'warning' });
         }
 
-        this.setState({ isAsyncWorking: true });
-
         let appId = this.state.appId;
         let composeId = this.state.composeId;
         let userId = authHelper.userId;
-        let field_ids = {};
+        let fieldIds = {};
         let age, gender;
 
         Object.values(this.state.fields).forEach((field) => {
             if (!field.value) {
                 return;
             }
-            field_ids[field.id] = {
+            fieldIds[field.id] = {
                 value: field.value
             };
             age = 'Age' === field.name ? field.value : '';
@@ -155,17 +161,24 @@ class ComposeEdit extends React.Component {
             status: this.state.status,
             ageRange: [].concat(age),
             gender: gender,
-            field_ids
+            field_ids: fieldIds
         };
+
+        this.setState({ isAsyncWorking: true });
         return apiDatabase.appsComposes.update(appId, composeId, userId, compose).then(() => {
-            this.props.close(event);
+            this.setState({
+                isOpen: false,
+                isAsyncWorking: false
+            });
             return notify('修改成功', { type: 'success' });
-        }).catch(() => {
-            return notify('修改失敗', { type: 'danger' });
         }).then(() => {
+            return this.closeModal(ev);
+        }).catch(() => {
             this.setState({ isAsyncWorking: false });
+            return notify('修改失敗', { type: 'danger' });
         });
     }
+
     renderFilter() {
         let appsFields = this.state.fields ? Object.values(this.state.fields) : [];
         if (0 >= appsFields.length) { return null; }
@@ -192,10 +205,11 @@ class ComposeEdit extends React.Component {
             );
         });
     }
+
     render() {
         return (
-            <Modal size="lg" isOpen={this.props.isOpen} toggle={this.props.close}>
-                <ModalHeader toggle={this.props.close}></ModalHeader>
+            <Modal size="lg" isOpen={this.state.isOpen} toggle={this.closeModal}>
+                <ModalHeader toggle={this.closeModal}></ModalHeader>
                 <ModalBody>
                     時間：
                     <DateTimePicker defaultValue={new Date(this.state.time)} onChange={this.handleDatetimeChange} disabled={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}></DateTimePicker>
@@ -218,11 +232,11 @@ class ComposeEdit extends React.Component {
                 </ModalBody>
                 <ModalFooter>
                     <Button outline color="success" onClick={this.updateCompose} disabled={this.state.isAsyncWorking} hidden={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}>修改</Button>{' '}
-                    <Button outline color="danger" onClick={this.props.close}>取消</Button>
+                    <Button outline color="danger" onClick={this.closeModal}>取消</Button>
                 </ModalFooter>
             </Modal>
         );
     }
 }
 
-export default ComposeEdit;
+export default ComposeEditModal;

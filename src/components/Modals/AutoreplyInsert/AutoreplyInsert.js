@@ -6,19 +6,20 @@ import { DateTimePicker } from 'react-widgets';
 
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
+
+import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
 
-class AutoreplyInsert extends React.Component {
+class AutoreplyInsertModal extends ModalCore {
     static propTypes = {
-        apps: PropTypes.object.isRequired,
-        isOpen: PropTypes.bool,
-        close: PropTypes.func.isRequired
+        apps: PropTypes.object.isRequired
     }
 
     constructor(props) {
         super(props);
 
         this.state = {
+            isOpen: this.props.isOpen,
             appId: '',
             title: '',
             startedTime: '',
@@ -34,26 +35,32 @@ class AutoreplyInsert extends React.Component {
         this.handleEndDatetimeChange = this.handleEndDatetimeChange.bind(this);
         this.selectedApp = this.selectedApp.bind(this);
     }
+
     componentWillReceiveProps(nextProps) {
         let firstApp = Object.keys(nextProps.apps)[0];
         this.setState({appId: firstApp});
     }
+
     handleTitleChange(event) {
         this.setState({title: event.target.value});
     }
+
     handleDescriptionChange(event) {
         this.setState({text: event.target.value});
     }
+
     handleStartDatetimeChange(time) {
         let datetime = new Date(time);
         let timeInMs = datetime.getTime();
         this.setState({startedTime: timeInMs});
     }
+
     handleEndDatetimeChange(time) {
         let datetime = new Date(time);
         let timeInMs = datetime.getTime();
         this.setState({endedTime: timeInMs});
     }
+
     insertAutoreply(event) {
         if (!this.state.title) {
             return notify('請輸入事件名稱', { type: 'warning' });
@@ -82,17 +89,23 @@ class AutoreplyInsert extends React.Component {
         };
 
         return apiDatabase.appsAutoreplies.insert(appId, userId, autoreply).then(() => {
-            this.props.close(event);
+            this.setState({
+                isOpen: false,
+                isAsyncWorking: false
+            });
             return notify('新增成功', { type: 'success' });
-        }).catch(() => {
-            return notify('新增失敗', { type: 'danger' });
         }).then(() => {
+            return this.closeModal(event);
+        }).catch(() => {
             this.setState({ isAsyncWorking: false });
+            return notify('新增失敗', { type: 'danger' });
         });
     }
+
     selectedApp(event) {
         this.setState({appId: event.target.value});
     }
+
     renderApps() {
         let apps = this.props.apps || {};
         let appIds = Object.keys(apps);
@@ -109,10 +122,11 @@ class AutoreplyInsert extends React.Component {
             );
         });
     }
+
     render() {
         return (
-            <Modal size="lg" isOpen={this.props.isOpen} toggle={this.props.close}>
-                <ModalHeader toggle={this.props.close}>
+            <Modal size="lg" isOpen={this.props.isOpen} toggle={this.closeModal}>
+                <ModalHeader toggle={this.closeModal}>
                     新增自動回覆訊息
                 </ModalHeader>
                 <ModalBody>
@@ -140,11 +154,11 @@ class AutoreplyInsert extends React.Component {
                 </ModalBody>
                 <ModalFooter>
                     <Button outline color="success" onClick={this.insertAutoreply} disabled={this.state.isAsyncWorking}>新增</Button>{' '}
-                    <Button outline color="danger" onClick={this.props.close}>取消</Button>
+                    <Button outline color="danger" onClick={this.closeModal}>取消</Button>
                 </ModalFooter>
             </Modal>
         );
     }
 }
 
-export default AutoreplyInsert;
+export default AutoreplyInsertModal;

@@ -3,7 +3,7 @@
 
 $ctrl-panel-bg-color: #4a8998;
 $ctrl-panel-active-color: rgb(46, 85, 95);
-$ctrl-item-icon-size: 1.5rem;
+$ctrl-item-icon-size: 1rem;
 
 .ctrl-panel {
     display: none;
@@ -83,23 +83,26 @@ $ctrl-item-icon-size: 1.5rem;
             z-index: 10;
         }
 
+        .feature-icon {
+            &:hover {
+                will-change: transform;
+                transform: scale(1.25);
+            }
+        }
+
         .custom-item-icon {
             width: $ctrl-item-icon-size;
             height: $ctrl-item-icon-size;
             padding-left: 1.5px; // 與 font-awesome icon 對齊
             color: inherit;
 
+            &.large {
+                width: $ctrl-item-icon-size * 1.5;
+                height: $ctrl-item-icon-size * 1.5;
+            }
+
             &.svg path {
                 fill: #f8f9fa;
-            }
-        }
-
-        .remove-icon {
-            z-index: 10;
-
-            &:hover {
-                will-change: transform;
-                transform: scale(1.25);
             }
         }
     }
@@ -133,6 +136,10 @@ $ctrl-item-icon-size: 1.5rem;
             &.list-group-item,
             > :first-child {
                 margin-left: .5rem;
+
+                + .list-group-item {
+                    margin-left: .5rem;
+                }
             }
 
             .nested {

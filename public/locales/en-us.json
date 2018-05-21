@@ -2,6 +2,7 @@
     "Add": "Add",
     "Add bot": "Add bot",
     "Add calendar event": "Add calendar event",
+    "Add group": "Add group",
     "Add To-Do item": "Add To-Do item",
     "Add successful!": "Add successful!",
     "Age": "Age",
@@ -40,6 +41,7 @@
 
     "Edit bot": "Edit bot",
     "Edit calendar event": "Edit calendar event",
+    "Edit group": "Edit group",
     "Email": "Email",
     "Email was empty!": "Email was empty!",
     "End datetime": "End datetime",
@@ -54,6 +56,7 @@
     "Female": "Female",
     "Fill the bot name": "Fill the bot name",
     "Fill the event title": "Fill the event title",
+    "Fill the group name": "Fill the group name",
     "Fill your email": "Fill your email",
     "Fill your name": "Fill your name",
     "Fill your password": "Fill your password",
@@ -63,6 +66,7 @@
 
     "Gender": "Gender",
     "Greetings": "Greetings",
+    "Group name": "Group name",
     "Groups": "Groups",
 
     "Hour": "Hour",

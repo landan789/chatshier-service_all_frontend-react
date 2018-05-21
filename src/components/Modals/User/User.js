@@ -5,15 +5,15 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, I
 
 import authHelper from '../../../helpers/authentication';
 import apiDatabase from '../../../helpers/apiDatabase/index';
+
+import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
 
 import './User.css';
 
-class User extends React.Component {
+class User extends ModalCore {
     static propTypes = {
-        isOpen: PropTypes.bool.isRequired,
-        close: PropTypes.func.isRequired,
-        users: PropTypes.object
+        users: PropTypes.object.isRequired
     }
 
     constructor(props) {
@@ -55,9 +55,7 @@ class User extends React.Component {
         }
     }
 
-    updateUser(event) {
-        this.setState({ isAsyncWorking: true });
-
+    updateUser(ev) {
         let userId = authHelper.userId;
         let user = {
             company: this.state.company,
@@ -65,11 +63,15 @@ class User extends React.Component {
             address: this.state.address
         };
 
+        this.setState({ isAsyncWorking: true });
         return apiDatabase.users.update(userId, user).then(() => {
-            this.setState({ isAsyncWorking: false });
-            return notify('修改成功', { type: 'success' }).then(() => {
-                this.props.close(event);
+            this.setState({
+                isOpen: false,
+                isAsyncWorking: false
             });
+            return notify('修改成功', { type: 'success' });
+        }).then(() => {
+            return this.closeModal(ev);
         }).catch(() => {
             this.setState({ isAsyncWorking: false });
             return notify('修改失敗', { type: 'danger' });
@@ -86,11 +88,6 @@ class User extends React.Component {
 
     handleAddressChange(event) {
         this.setState({ address: event.target.value });
-    }
-
-    closeModal(ev) {
-        this.setState({ isOpen: false });
-        window.setTimeout(() => this.props.close(ev), 300);
     }
 
     render() {

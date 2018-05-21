@@ -1,7 +1,8 @@
 {
     "Add": "新增",
-    "Add bot": "Add bot",
+    "Add bot": "新增機器人",
     "Add calendar event": "新增行事曆事件",
+    "Add group": "新增群組",
     "Add To-Do item": "新增待辦",
     "Add successful!": "新增成功！",
     "Age": "年齡",
@@ -40,6 +41,7 @@
 
     "Edit bot": "編輯機器人",
     "Edit calendar event": "編輯行事曆事件",
+    "Edit group": "編輯群組",
     "Email": "電子郵件",
     "Email was empty!": "電子郵件未填寫！",
     "End datetime": "結束時間",
@@ -54,6 +56,7 @@
     "Female": "女",
     "Fill the bot name": "請輸入機器人名稱",
     "Fill the event title": "請填入事件標題",
+    "Fill the group name": "請輸入群組名稱",
     "Fill your email": "請輸入電子郵件",
     "Fill your name": "請輸入姓名",
     "Fill your password": "請輸入密碼",
@@ -63,6 +66,7 @@
 
     "Gender": "性別",
     "Greetings": "加好友回覆",
+    "Group name": "群組名稱",
     "Groups": "內部群組",
 
     "Hour": "小時",

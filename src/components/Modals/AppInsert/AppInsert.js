@@ -10,6 +10,8 @@ import { Button, Modal, ModalHeader,
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import fbHelper from '../../../helpers/facebook';
 import authHelper from '../../../helpers/authentication';
+
+import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
 import FacebookLinkModal from './FacebookLink';
 
@@ -25,17 +27,11 @@ const APP_TYPES = Object.freeze({
     WECHAT: 'WECHAT'
 });
 
-class AppInsertModal extends React.Component {
+class AppInsertModal extends ModalCore {
     static propTypes = {
         t: PropTypes.func.isRequired,
-        isOpen: PropTypes.bool,
-        close: PropTypes.func.isRequired,
         apps: PropTypes.object.isRequired,
         groups: PropTypes.object.isRequired
-    }
-
-    static defaultProps = {
-        isOpen: true
     }
 
     constructor(props, ctx) {
@@ -117,7 +113,7 @@ class AppInsertModal extends React.Component {
             });
             return notify(this.props.t('Add successful!'), { type: 'success' });
         }).then(() => {
-            return this.props.close();
+            return this.closeModal();
         }).catch(() => {
             this.setState({ isProcessing: false });
             return notify(this.props.t('Failed to add!'), { type: 'danger' });
@@ -214,7 +210,7 @@ class AppInsertModal extends React.Component {
         }).catch(() => {
             return notify('An error occurred!', { type: 'danger' });
         }).then(() => {
-            return this.props.close();
+            return this.closeModal();
         });
     }
 
@@ -320,8 +316,8 @@ class AppInsertModal extends React.Component {
     render() {
         return (
             <Aux>
-                <Modal className="app-insert-modal" isOpen={this.state.isOpen} toggle={this.props.close}>
-                    <ModalHeader toggle={this.props.close}>
+                <Modal className="app-insert-modal" isOpen={this.state.isOpen} toggle={this.closeModal}>
+                    <ModalHeader toggle={this.closeModal}>
                         <Trans i18nKey="Add bot" />
                     </ModalHeader>
                     <ModalBody>
@@ -360,7 +356,7 @@ class AppInsertModal extends React.Component {
                         <Button color="primary" onClick={this.insertApp} disabled={this.state.isProcessing}>
                             <Trans i18nKey="Add" />
                         </Button>}
-                        <Button color="secondary" onClick={this.props.close}>
+                        <Button color="secondary" onClick={this.closeModal}>
                             <Trans i18nKey="Cancel" />
                         </Button>
                     </ModalFooter>

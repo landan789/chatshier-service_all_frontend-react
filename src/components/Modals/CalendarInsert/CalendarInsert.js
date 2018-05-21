@@ -10,14 +10,14 @@ import { DateTimePicker } from 'react-widgets';
 import { formatDate, formatTime } from '../../../utils/unitTime';
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
+
+import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
 
-class CalendarInsertModal extends React.Component {
+class CalendarInsertModal extends ModalCore {
     static propTypes = {
         t: PropTypes.func.isRequired,
-        modalData: PropTypes.object,
-        isOpen: PropTypes.bool.isRequired,
-        close: PropTypes.func.isRequired
+        modalData: PropTypes.object
     }
 
     constructor(props, ctx) {
@@ -115,7 +115,7 @@ class CalendarInsertModal extends React.Component {
             });
             return notify(this.props.t('Add successful!'), { type: 'success' });
         }).then(() => {
-            return this.props.close(ev);
+            return this.closeModal(ev);
         }).catch(() => {
             this.setState({ isAsyncWorking: false });
             return notify(this.props.t('Failed to add!'), { type: 'danger' });
@@ -128,8 +128,8 @@ class CalendarInsertModal extends React.Component {
         }
 
         return (
-            <Modal className="calendar-insert-modal" isOpen={this.state.isOpen} toggle={this.props.close}>
-                <ModalHeader toggle={this.props.close}>
+            <Modal className="calendar-insert-modal" isOpen={this.state.isOpen} toggle={this.closeModal}>
+                <ModalHeader toggle={this.closeModal}>
                     <Trans i18nKey="Add calendar event" />
                 </ModalHeader>
 
@@ -195,7 +195,7 @@ class CalendarInsertModal extends React.Component {
                     <Button color="primary" onClick={this.insertEvent} disabled={this.state.isAsyncWorking}>
                         <Trans i18nKey="Add" />
                     </Button>
-                    <Button color="secondary" onClick={this.props.close}>
+                    <Button color="secondary" onClick={this.closeModal}>
                         <Trans i18nKey="Cancel" />
                     </Button>
                 </ModalFooter>

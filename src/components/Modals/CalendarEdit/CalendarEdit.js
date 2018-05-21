@@ -7,21 +7,20 @@ import { Button, Modal, ModalHeader,
     ModalBody, ModalFooter } from 'reactstrap';
 import { DateTimePicker } from 'react-widgets';
 
-import { formatDate, formatTime } from '../../../utils/unitTime';
+import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
 
+import { formatDate, formatTime } from '../../../utils/unitTime';
 import { CALENDAR_EVENT_TYPES } from '../../../containers/Calendar/Calendar';
 
 import googleCalendarPng from '../../../image/google-calendar.png';
 
-class CalendarEditModal extends React.Component {
+class CalendarEditModal extends ModalCore {
     static propTypes = {
         t: PropTypes.func.isRequired,
         modalData: PropTypes.object,
-        isOpen: PropTypes.bool.isRequired,
         updateHandle: PropTypes.func.isRequired,
-        deleteHandle: PropTypes.func.isRequired,
-        close: PropTypes.func.isRequired
+        deleteHandle: PropTypes.func.isRequired
     }
 
     constructor(props, ctx) {
@@ -120,7 +119,7 @@ class CalendarEditModal extends React.Component {
             });
             return notify(this.props.t('Update successful!'), { type: 'success' });
         }).then(() => {
-            return this.props.close(ev);
+            return this.closeModal(ev);
         }).catch(() => {
             this.setState({ isAsyncWorking: false });
             return notify(this.props.t('Failed to update!'), { type: 'danger' });
@@ -144,7 +143,7 @@ class CalendarEditModal extends React.Component {
             });
             return notify(this.props.t('Remove successful!'), { type: 'success' });
         }).then(() => {
-            return this.props.close(ev);
+            return this.closeModal(ev);
         }).catch(() => {
             this.setState({ isAsyncWorking: false });
             return notify(this.props.t('Failed to remove!'), { type: 'danger' });
@@ -157,8 +156,8 @@ class CalendarEditModal extends React.Component {
         }
 
         return (
-            <Modal size="lg" className="calendar-edit-modal" isOpen={this.state.isOpen} toggle={this.props.close}>
-                <ModalHeader toggle={this.props.close}>
+            <Modal size="lg" className="calendar-edit-modal" isOpen={this.state.isOpen} toggle={this.closeModal}>
+                <ModalHeader toggle={this.closeModal}>
                     <Trans i18nKey="Edit calendar event" />
                     {this.props.modalData.eventType === CALENDAR_EVENT_TYPES.GOOGLE &&
                     this.props.modalData.origin.htmlLink &&
@@ -237,7 +236,7 @@ class CalendarEditModal extends React.Component {
                         <Trans i18nKey="Remove" />
                     </Button>
                     <Button color="secondary"
-                        onClick={this.props.close}>
+                        onClick={this.closeModal}>
                         <Trans i18nKey="Cancel" />
                     </Button>
                 </ModalFooter>

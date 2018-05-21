@@ -7,11 +7,13 @@ import { Button, Modal, ModalHeader,
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
 import { DAY } from '../../../utils/unitTime';
+
+import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
 
 const appTypes = apiDatabase.apps.enums.type;
 
-class TicketInsertModal extends React.Component {
+class TicketInsertModal extends ModalCore {
     static propTypes = {
         appId: PropTypes.string,
         chatroomId: PropTypes.string,
@@ -19,16 +21,13 @@ class TicketInsertModal extends React.Component {
         apps: PropTypes.object,
         appsAgents: PropTypes.object,
         appsChatrooms: PropTypes.object,
-        consumers: PropTypes.object,
-        isOpen: PropTypes.bool,
-        close: PropTypes.func.isRequired
+        consumers: PropTypes.object
     }
 
     static defaultProps = {
         appId: '',
         chatroomId: '',
-        platformUid: '',
-        isOpen: true
+        platformUid: ''
     }
 
     constructor(props, ctx) {
@@ -56,6 +55,7 @@ class TicketInsertModal extends React.Component {
         this.ticketStatus = 2;
         this.ticketPriority = 1;
 
+        this.closeModal = this.closeModal.bind(this);
         this.insertTicket = this.insertTicket.bind(this);
         this.appChanged = this.appChanged.bind(this);
         this.consumerChanged = this.consumerChanged.bind(this);
@@ -214,7 +214,6 @@ class TicketInsertModal extends React.Component {
         } else if (!this.state.ticketDescription) {
             return notify('請輸入說明內容', { type: 'warning' });
         }
-        this.setState({ isProcessing: true });
 
         let appId = this.selectedAppId;
         let userId = authHelper.userId;
@@ -227,16 +226,16 @@ class TicketInsertModal extends React.Component {
             description: this.state.ticketDescription
         };
 
+        this.setState({ isProcessing: true });
         return apiDatabase.appsTickets.insert(appId, userId, ticket).then(() => {
             this.setState({
                 isOpen: false,
                 isProcessing: false
             });
-
             let agent = this.props.appsAgents[appId].agents[ticket.assigned_id];
             return notify('待辦事項已新增，指派人: ' + agent.name, { type: 'success' });
         }).then(() => {
-            return this.props.close(ev);
+            return this.closeModal(ev);
         }).catch(() => {
             this.setState({ isProcessing: false });
             return notify('待辦事項新增失敗', { type: 'danger' });
@@ -245,8 +244,8 @@ class TicketInsertModal extends React.Component {
 
     render() {
         return (
-            <Modal className="ticket-insert-modal" isOpen={this.state.isOpen} toggle={this.props.close}>
-                <ModalHeader toggle={this.props.close}>新增待辦事項</ModalHeader>
+            <Modal className="ticket-insert-modal" isOpen={this.state.isOpen} toggle={this.closeModal}>
+                <ModalHeader toggle={this.closeModal}>新增待辦事項</ModalHeader>
                 <ModalBody>
                     <div className="ticket-content">
                         <FormGroup>
@@ -311,7 +310,7 @@ class TicketInsertModal extends React.Component {
 
                 <ModalFooter>
                     <Button color="primary" onClick={this.insertTicket} disabled={this.state.isProcessing}>新增</Button>
-                    <Button color="secondary" onClick={this.props.close}>取消</Button>
+                    <Button color="secondary" onClick={this.closeModal}>取消</Button>
                 </ModalFooter>
             </Modal>
         );

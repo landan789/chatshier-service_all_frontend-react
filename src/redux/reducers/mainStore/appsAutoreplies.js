@@ -1,9 +1,12 @@
-import { UPDATE_AUTOREPLIES, DELETE_AUTOREPLY } from '../../actions/mainStore/appsAutoreplies';
+import { UPDATE_AUTOREPLIES, DELETE_AUTOREPLY,
+    DELETE_ALL_AUTOREPLIES } from '../../actions/mainStore/appsAutoreplies';
 
 export const appsAutorepliesReducer = (state = {}, action) => {
+    let appId;
+
     switch (action.type) {
         case UPDATE_AUTOREPLIES:
-            for (let appId in action.appsAutoreplies) {
+            for (appId in action.appsAutoreplies) {
                 /** @type {Chatshier.AppsAutoreplies} */
                 let app = action.appsAutoreplies[appId];
                 state[appId] = state[appId] || { autoreplies: {} };
@@ -20,7 +23,7 @@ export const appsAutorepliesReducer = (state = {}, action) => {
             }
             return Object.assign({}, state);
         case DELETE_AUTOREPLY:
-            let appId = action.appId;
+            appId = action.appId;
             let autoreplyId = action.autoreplyId;
 
             delete state[appId].autoreplies[autoreplyId];
@@ -29,6 +32,13 @@ export const appsAutorepliesReducer = (state = {}, action) => {
                 delete state[appId];
             }
             return Object.assign({}, state);
+        case DELETE_ALL_AUTOREPLIES:
+            appId = action.appId;
+            if (state[appId]) {
+                delete state[appId];
+                return Object.assign({}, state);
+            }
+            return state;
         default:
             return state;
     }

@@ -5,14 +5,13 @@ import { withTranslate } from '../../../i18n';
 
 import { Button, Modal, ModalHeader,
     ModalBody, ModalFooter, FormGroup } from 'reactstrap';
+import ModalCore from '../ModalCore';
 
-class FacebookLinkModal extends React.Component {
+class FacebookLinkModal extends ModalCore {
     static propTypes = {
         t: PropTypes.func.isRequired,
-        isOpen: PropTypes.bool,
         fanPages: PropTypes.array,
-        fanPagePics: PropTypes.array,
-        close: PropTypes.func.isRequired
+        fanPagePics: PropTypes.array
     }
 
     static defaultProps = {
@@ -48,13 +47,13 @@ class FacebookLinkModal extends React.Component {
         }
 
         this.setState({ isOpen: false });
-        return this.props.close(selectedFanPages);
+        return this.closeModal(selectedFanPages);
     }
 
     render() {
         return (
-            <Modal className="fb-link-modal" isOpen={this.state.isOpen} toggle={() => this.props.close([])}>
-                <ModalHeader toggle={() => this.props.close([])}>
+            <Modal className="fb-link-modal" isOpen={this.state.isOpen} toggle={() => this.closeModal([])}>
+                <ModalHeader toggle={() => this.closeModal([])}>
                     選取連結的粉絲專頁
                 </ModalHeader>
                 <ModalBody>
@@ -76,7 +75,7 @@ class FacebookLinkModal extends React.Component {
                     <Button color="primary" onClick={this.prepareApps} disabled={this.state.isProcessing}>
                         <Trans i18nKey="Confirm" />
                     </Button>
-                    <Button color="secondary" onClick={() => this.props.close([])}>
+                    <Button color="secondary" onClick={() => this.closeModal([])}>
                         <Trans i18nKey="Cancel" />
                     </Button>
                 </ModalFooter>

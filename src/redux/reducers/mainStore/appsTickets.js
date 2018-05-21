@@ -1,4 +1,5 @@
-import { UPDATE_TICKETS, DELETE_TICKET } from '../../actions/mainStore/appsTickets';
+import { UPDATE_TICKETS, DELETE_TICKET,
+    DELETE_ALL_TICKETS } from '../../actions/mainStore/appsTickets';
 
 export const appsTicketsReducer = (state = {}, action) => {
     switch (action.type) {
@@ -29,6 +30,13 @@ export const appsTicketsReducer = (state = {}, action) => {
                 delete state[appId];
             }
             return Object.assign({}, state);
+        case DELETE_ALL_TICKETS:
+            appId = action.appId;
+            if (state[appId]) {
+                delete state[appId];
+                return Object.assign({}, state);
+            }
+            return state;
         default:
             return state;
     }

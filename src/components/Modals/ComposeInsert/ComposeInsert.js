@@ -6,14 +6,14 @@ import { DateTimePicker } from 'react-widgets';
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
 import timeHelper from '../../../helpers/timer';
+
+import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
 
-class ComposeInsert extends React.Component {
+class ComposeInsertModal extends ModalCore {
     static propTypes = {
         apps: PropTypes.object.isRequired,
-        appsFields: PropTypes.object,
-        isOpen: PropTypes.bool,
-        close: PropTypes.func.isRequired
+        appsFields: PropTypes.object
     }
 
     constructor(props) {
@@ -153,14 +153,12 @@ class ComposeInsert extends React.Component {
         radioTime[time] = true;
         this.setState({ radioTime });
     }
-    insertCompose(event) {
+    insertCompose(ev) {
         if (!this.state.text1) {
             return notify('請輸入要送出的訊息', { type: 'warning' });
         } else if (Date.now() > timeHelper.toMilliseconds(this.state.time)) {
             return notify('不能選擇過去的時間', { type: 'warning' });
         }
-
-        this.setState({ isAsyncWorking: true });
 
         let appId = this.state.appId;
         let userId = authHelper.userId;
@@ -180,7 +178,7 @@ class ComposeInsert extends React.Component {
                 usingRecursive = true;
         }
 
-        let field_ids = {};
+        let fieldIds = {};
         let ageRange = '';
         let gender = '';
         let time = Date.now() >= this.state.time ? Date.now() : this.state.time;
@@ -194,7 +192,7 @@ class ComposeInsert extends React.Component {
                     gender += this.state.fields[field.id].value;
                     break;
                 default:
-                    field_ids[field.id] = {
+                    fieldIds[field.id] = {
                         value: field.value
                     };
             }
@@ -208,19 +206,26 @@ class ComposeInsert extends React.Component {
                 status: this.state.status,
                 ageRange,
                 gender,
-                field_ids
+                field_ids: fieldIds
             };
             return compose;
         });
+
+        this.setState({ isAsyncWorking: true });
         return apiDatabase.appsComposes.insert(appId, userId, composes, usingRecursive).then(() => {
-            this.props.close(event);
+            this.setState({
+                isOpen: false,
+                isAsyncWorking: false
+            });
             return notify('新增成功', { type: 'success' });
-        }).catch(() => {
-            return notify('新增失敗', { type: 'danger' });
         }).then(() => {
+            return this.closeModal(ev);
+        }).catch(() => {
             this.setState({ isAsyncWorking: false });
+            return notify('新增失敗', { type: 'danger' });
         });
     }
+
     renderApps() {
         let apps = this.props.apps || {};
         let appIds = Object.keys(apps);
@@ -234,6 +239,7 @@ class ComposeInsert extends React.Component {
             );
         });
     }
+
     renderFilter() {
         let appsFields = this.state.fields ? Object.values(this.state.fields) : [];
         if (0 >= appsFields.length) { return null; }
@@ -276,8 +282,8 @@ class ComposeInsert extends React.Component {
     }
     render() {
         return (
-            <Modal size="lg" isOpen={this.props.isOpen} toggle={this.props.close}>
-                <ModalHeader toggle={this.props.close}></ModalHeader>
+            <Modal size="lg" isOpen={this.props.isOpen} toggle={this.closeModal}>
+                <ModalHeader toggle={this.closeModal}></ModalHeader>
                 <ModalBody>
                     <FormGroup>
                         <Label>Apps: </Label>
@@ -342,11 +348,11 @@ class ComposeInsert extends React.Component {
                 </ModalBody>
                 <ModalFooter>
                     <Button outline color="success" onClick={this.insertCompose} disabled={this.state.isAsyncWorking}>新增</Button>{' '}
-                    <Button outline color="danger" onClick={this.props.close}>取消</Button>
+                    <Button outline color="danger" onClick={this.closeModal}>取消</Button>
                 </ModalFooter>
             </Modal>
         );
     }
 }
 
-export default ComposeInsert;
+export default ComposeInsertModal;

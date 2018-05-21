@@ -26,7 +26,7 @@ import EdgeToggle from '../EdgeToggle/EdgeToggle';
 import { findChatroomMessager, findMessagerSelf } from '../../../containers/Chat/Chat';
 import AppInsertModal from '../../../components/Modals/AppInsert/AppInsert';
 import AppEditModal from '../../../components/Modals/AppEdit/AppEdit';
-import { notify } from '../../../components/Notify/Notify';
+import GroupInsertModal from '../../../components/Modals/GroupInsert/GroupInsert';
 
 import logoPng from '../../../image/logo-no-transparent.png';
 import logoSmallPng from '../../../image/logo-small.png';
@@ -106,6 +106,7 @@ class ControlPanel extends React.Component {
         apps: PropTypes.object.isRequired,
         appsChatrooms: PropTypes.object.isRequired,
         consumers: PropTypes.object.isRequired,
+        groups: PropTypes.object.isRequired,
         history: PropTypes.object.isRequired
     }
 
@@ -116,7 +117,11 @@ class ControlPanel extends React.Component {
         this.swiper = null;
 
         this.state = {
-            isOpenAddInertModal: false,
+            isOpenAppInertModal: false,
+            isOpenGroupInertModal: false,
+            editAppId: void 0,
+            editGroupId: void 0,
+
             isInChat: ROUTES.CHAT === this.props.history.location.pathname,
             gridState: this.getGridState(window.innerWidth),
             isOpen: false,
@@ -135,8 +140,13 @@ class ControlPanel extends React.Component {
         this.startAnimating = this.startAnimating.bind(this);
         this.endAnimating = this.endAnimating.bind(this);
         this.putAwayControlPanel = this.putAwayControlPanel.bind(this);
+
+        this.openAppInsertModal = this.openAppInsertModal.bind(this);
+        this.openGroupInsertModal = this.openGroupInsertModal.bind(this);
         this.closeAppInsertModal = this.closeAppInsertModal.bind(this);
         this.closeAppEditModal = this.closeAppEditModal.bind(this);
+        this.closeGroupInsertModal = this.closeGroupInsertModal.bind(this);
+        this.closeGroupEditModal = this.closeGroupEditModal.bind(this);
     }
 
     componentDidMount() {
@@ -301,36 +311,40 @@ class ControlPanel extends React.Component {
         }
     }
 
-    closeAppInsertModal() {
-        this.setState({ isOpenAddInertModal: false });
-    }
-
-    closeAppEditModal() {
-        this.setState({ editModalData: void 0 });
+    openAppInsertModal(ev) {
+        ev.stopPropagation();
+        this.setState({ isOpenAppInertModal: true });
     }
 
     openAppEditModal(ev, appId) {
-        let app = this.props.apps[appId];
-        this.setState({
-            editModalData: {
-                appId: appId,
-                app: app
-            }
-        });
+        ev.stopPropagation();
+        this.setState({ editAppId: appId });
     }
 
-    removeApp(ev, appId) {
-        ev.stopPropagation(); // 防止觸發 parent event
-        if (!window.confirm('Are you sure want to delete it?')) {
-            return;
-        }
+    openGroupInsertModal(ev) {
+        ev.stopPropagation();
+        this.setState({ isOpenGroupInertModal: true });
+    }
 
-        let userId = authHelper.userId;
-        return apiDatabase.apps.delete(appId, userId).then(() => {
-            return notify('Remove successful!', { type: 'success' });
-        }).catch(() => {
-            return notify('Failed to remove!', { type: 'danger' });
-        });
+    openGroupEditModal(ev, groupId) {
+        ev.stopPropagation();
+        this.setState({ editGroupId: groupId });
+    }
+
+    closeAppInsertModal() {
+        this.setState({ isOpenAppInertModal: false });
+    }
+
+    closeAppEditModal() {
+        this.setState({ editAppId: void 0 });
+    }
+
+    closeGroupInsertModal() {
+        this.setState({ isOpenGroupInertModal: false });
+    }
+
+    closeGroupEditModal() {
+        this.setState({ isOpenGroupInertModal: false });
     }
 
     renderChatroomList() {
@@ -360,51 +374,54 @@ class ControlPanel extends React.Component {
         let facebookItems = [];
         let chatshierItems = [];
 
-        for (let appId in this.props.appsChatrooms) {
+        for (let appId in this.props.apps) {
             let app = this.props.apps[appId];
-            let chatrooms = this.props.appsChatrooms[appId].chatrooms;
-
             let chatroomElems = [];
-            for (let chatroomId in chatrooms) {
-                let chatroom = chatrooms[chatroomId];
-                let isGroupChatroom = CHATSHIER === app.type || !!chatroom.platformGroupId;
-                let messagerSelf = findMessagerSelf(chatroom.messagers);
-                let unReadStr = messagerSelf.unRead > 99 ? '99+' : ('' + messagerSelf.unRead);
-                let hasUnRead = !!messagerSelf.unRead;
 
-                let itemElem = null;
-                if (isGroupChatroom) {
-                    itemElem = (
-                        <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
-                            <img className="app-icon consumer-photo" src={CHATSHIER === app.type ? groupPng : logos[app.type]} alt="" />
-                            <span className="app-name">{chatroom.name || '群組聊天室'}</span>
-                            <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')}>{unReadStr}</span>
-                        </ListGroupItem>
-                    );
-                } else {
-                    let messager = findChatroomMessager(chatroom.messagers, app.type);
-                    let platformUid = messager.platformUid;
-                    let consumer = this.props.consumers[platformUid];
-                    if (!consumer) {
-                        continue;
+            if (this.props.appsChatrooms[appId]) {
+                let chatrooms = this.props.appsChatrooms[appId].chatrooms;
+
+                for (let chatroomId in chatrooms) {
+                    let chatroom = chatrooms[chatroomId];
+                    let isGroupChatroom = CHATSHIER === app.type || !!chatroom.platformGroupId;
+                    let messagerSelf = findMessagerSelf(chatroom.messagers);
+                    let unReadStr = messagerSelf.unRead > 99 ? '99+' : ('' + messagerSelf.unRead);
+                    let hasUnRead = !!messagerSelf.unRead;
+
+                    let itemElem = null;
+                    if (isGroupChatroom) {
+                        itemElem = (
+                            <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
+                                <img className="app-icon consumer-photo" src={CHATSHIER === app.type ? groupPng : logos[app.type]} alt="" />
+                                <span className="app-name">{chatroom.name || '群組聊天室'}</span>
+                                <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')}>{unReadStr}</span>
+                            </ListGroupItem>
+                        );
+                    } else {
+                        let messager = findChatroomMessager(chatroom.messagers, app.type);
+                        let platformUid = messager.platformUid;
+                        let consumer = this.props.consumers[platformUid];
+                        if (!consumer) {
+                            continue;
+                        }
+
+                        let assignedIds = messager.assigned_ids;
+                        let isAssigned = assignedIds.indexOf(userId) >= 0;
+
+                        itemElem = (
+                            <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
+                                <img className="app-icon consumer-photo" src={consumer.photo} alt="" />
+                                <span className="app-name">{(messagerSelf && messagerSelf.namings[platformUid]) || consumer.name}</span>
+                                <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')}>{unReadStr}</span>
+                            </ListGroupItem>
+                        );
+
+                        isAssigned && assignedItems.push(itemElem);
+                        !isAssigned && unassignedItems.push(itemElem);
                     }
-
-                    let assignedIds = messager.assigned_ids;
-                    let isAssigned = assignedIds.indexOf(userId) >= 0;
-
-                    itemElem = (
-                        <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
-                            <img className="app-icon consumer-photo" src={consumer.photo} alt="" />
-                            <span className="app-name">{(messagerSelf && messagerSelf.namings[platformUid]) || consumer.name}</span>
-                            <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')}>{unReadStr}</span>
-                        </ListGroupItem>
-                    );
-
-                    isAssigned && assignedItems.push(itemElem);
-                    !isAssigned && unassignedItems.push(itemElem);
+                    chatroomElems.push(itemElem);
+                    hasUnRead && unreadItems.push(itemElem);
                 }
-                chatroomElems.push(itemElem);
-                hasUnRead && unreadItems.push(itemElem);
             }
 
             let appIcon = '';
@@ -421,25 +438,26 @@ class ControlPanel extends React.Component {
                     break;
             }
 
-            let chatroomItem = (
+            let appElemItem = (
                 <Aux key={appId}>
                     <ListGroupItem className="text-light nested has-collapse" onClick={() => this.toggleItem(appId)}>
                         <i className={appIcon}></i>
                         <span>{app.name}</span>
-                        <i className={'ml-auto py-1 fas ' + (itemCollapse[appId] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
+                        <i className="ml-auto mr-1 p-1 fas fa-edit feature-icon" onClick={(ev) => this.openAppEditModal(ev, appId)}></i>
+                        <i className={'py-1 fas ' + (itemCollapse[appId] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
                     </ListGroupItem>
                     <Collapse isOpen={!itemCollapse[appId]} className="nested">{chatroomElems}</Collapse>
                 </Aux>
             );
-            (LINE === app.type) && lineItems.push(chatroomItem);
-            (FACEBOOK === app.type) && facebookItems.push(chatroomItem);
-            (CHATSHIER === app.type) && chatshierItems.push(chatroomItem);
+            (LINE === app.type) && lineItems.push(appElemItem);
+            (FACEBOOK === app.type) && facebookItems.push(appElemItem);
+            (CHATSHIER === app.type) && chatshierItems.push(appElemItem);
         }
 
         return (
             <Aux>
                 <ListGroupItem className="text-light nested has-collapse unread" onClick={() => this.toggleItem('unreadCollapse')}>
-                    <svg className="custom-item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                    <svg className="custom-item-icon large" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                         <path fill="currentColor" d="M400 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V80c0-26.51-21.49-48-48-48zM178.117 262.104C87.429 196.287 88.353 196.121 64 177.167V152c0-13.255 10.745-24 24-24h272c13.255 0 24 10.745 24 24v25.167c-24.371 18.969-23.434 19.124-114.117 84.938-10.5 7.655-31.392 26.12-45.883 25.894-14.503.218-35.367-18.227-45.883-25.895zM384 217.775V360c0 13.255-10.745 24-24 24H88c-13.255 0-24-10.745-24-24V217.775c13.958 10.794 33.329 25.236 95.303 70.214 14.162 10.341 37.975 32.145 64.694 32.01 26.887.134 51.037-22.041 64.72-32.025 61.958-44.965 81.325-59.406 95.283-70.199z"></path>
                     </svg>
                     <span><Trans i18nKey="Unread" /></span>
@@ -447,7 +465,7 @@ class ControlPanel extends React.Component {
                 </ListGroupItem>
                 <Collapse isOpen={!itemCollapse['unreadCollapse']} className="nested unread">{unreadItems}</Collapse>
                 <ListGroupItem className="text-light nested has-collapse assigned" onClick={() => this.toggleItem('assignedCollapse')}>
-                    <svg className="custom-item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                    <svg className="custom-item-icon large" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                         <path fill="currentColor" d="M400 480H48c-26.51 0-48-21.49-48-48V80c0-26.51 21.49-48 48-48h352c26.51 0 48 21.49 48 48v352c0 26.51-21.49 48-48 48zm-204.686-98.059l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.248-16.379-6.249-22.628 0L184 302.745l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.25 16.379 6.25 22.628.001z"></path>
                     </svg>
                     <span><Trans i18nKey="Assigned" /></span>
@@ -455,7 +473,8 @@ class ControlPanel extends React.Component {
                 </ListGroupItem>
                 <Collapse isOpen={!itemCollapse['assignedCollapse']} className="nested assigned">{assignedItems}</Collapse>
                 <ListGroupItem className="text-light nested has-collapse unassigned" onClick={() => this.toggleItem('unassignedCollapse')}>
-                    <svg className="custom-item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                    <svg className="custom-item-icon large" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
+                        onClick={this.openAppInsertModal}>
                         <path fill="currentColor" d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-54.4 289.1c4.7 4.7 4.7 12.3 0 17L306 377.6c-4.7 4.7-12.3 4.7-17 0L224 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L102.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L280 256l65.6 65.1z"></path>
                     </svg>
                     <span><Trans i18nKey="Unassigned" /></span>
@@ -525,39 +544,6 @@ class ControlPanel extends React.Component {
 
     render() {
         let isInChat = ROUTES.CHAT === this.props.history.location.pathname;
-        let lineApps = [];
-        let facebookApps = [];
-        let chatshierApps = [];
-
-        for (let appId in this.props.apps) {
-            let app = this.props.apps[appId];
-            let appIcon = '';
-
-            switch (app.type) {
-                case LINE:
-                    appIcon = 'fab fa-line';
-                    break;
-                case FACEBOOK:
-                    appIcon = 'fab fa-facebook-messenger';
-                    break;
-                case CHATSHIER:
-                default:
-                    appIcon = 'fas fa-copyright';
-                    break;
-            }
-
-            let appSymbol = (
-                <ListGroupItem key={appId} className="text-light nested" onClick={(ev) => this.openAppEditModal(ev, appId)}>
-                    <i className={appIcon}></i>
-                    <span>{app.name}</span>
-                    <i className={'ml-auto fas fa-trash-alt remove-icon'} onClick={(ev) => this.removeApp(ev, appId)}></i>
-                </ListGroupItem>
-            );
-            (LINE === app.type) && lineApps.push(appSymbol);
-            (FACEBOOK === app.type) && facebookApps.push(appSymbol);
-            (CHATSHIER === app.type) && chatshierApps.push(appSymbol);
-        }
-
         let isSmall = 'sm' === this.state.gridState;
         let isOpen = this.state.isOpen || !isSmall;
         let isPutAway = this.state.isPutAway;
@@ -579,35 +565,21 @@ class ControlPanel extends React.Component {
                                     <i className={classes.menuToggle}></i>
                                 </ListGroupItem>
 
-                                <ListGroupItem className="text-light" onClick={() => this.toggleItem('CHATBOT')}>
-                                    <i className="fab fa-android"></i>
-                                    <span><Trans i18nKey="Bot" /></span>
+                                <ListGroupItem className="text-light" onClick={() => this.toggleItem('GROUPS')}>
+                                    <i className="fas fa-building"></i>
+                                    <span><Trans i18nKey="Groups" /></span>
                                 </ListGroupItem>
 
-                                <Collapse isOpen={!itemCollapse['CHATBOT']}>
-                                    <ListGroupItem className="text-light" onClick={() => this.toggleItem('CHATBOT_' + LINE)}>
-                                        <img className="app-icon" src={logos[LINE]} alt="LINE" />
-                                        <span>{LINE}</span>
-                                        <i className={'ml-auto fas ' + (itemCollapse['CHATBOT_' + LINE] ? 'fa-chevron-down' : 'fa-chevron-up')}></i>
-                                    </ListGroupItem>
-                                    <Collapse className="nested" isOpen={!itemCollapse['CHATBOT_' + LINE]}>{lineApps}</Collapse>
-
-                                    <ListGroupItem className="text-light" onClick={() => this.toggleItem('CHATBOT_' + FACEBOOK)}>
-                                        <img className="app-icon" src={logos[FACEBOOK]} alt="Facebook" />
-                                        <span>{FACEBOOK}</span>
-                                        <i className={'ml-auto fas ' + (itemCollapse['CHATBOT_' + FACEBOOK] ? 'fa-chevron-down' : 'fa-chevron-up')}></i>
-                                    </ListGroupItem>
-                                    <Collapse className="nested" isOpen={!itemCollapse['CHATBOT_' + FACEBOOK]}>{facebookApps}</Collapse>
-
-                                    <ListGroupItem className="text-light" onClick={() => this.toggleItem('CHATBOT_' + CHATSHIER)}>
-                                        <img className="app-icon" src={logoPng} alt="Chatshier" />
-                                        <span>{CHATSHIER}</span>
-                                        <i className={'ml-auto fas ' + (itemCollapse['CHATBOT_' + CHATSHIER] ? 'fa-chevron-down' : 'fa-chevron-up')}></i>
-                                    </ListGroupItem>
-                                    <Collapse className="nested" isOpen={!itemCollapse['CHATBOT_' + CHATSHIER]}>{chatshierApps}</Collapse>
+                                <Collapse className="nested" isOpen={!itemCollapse['GROUPS']}>
+                                    {Object.keys(this.props.groups).map((groupId) => (
+                                        <ListGroupItem key={groupId} className="text-light">
+                                            <i className="fas fa-users"></i>
+                                            <span>{this.props.groups[groupId].name}</span>
+                                        </ListGroupItem>
+                                    ))}
                                 </Collapse>
 
-                                <ListGroupItem className="text-light" onClick={() => this.setState({ isOpenAddInertModal: true })}>
+                                <ListGroupItem className="text-light" onClick={this.openGroupInsertModal}>
                                     <i className="fas fa-plus"></i>
                                     <span><Trans i18nKey="Add" /></span>
                                 </ListGroupItem>
@@ -647,8 +619,13 @@ class ControlPanel extends React.Component {
                                 <ListGroupItem className="text-light" onClick={() => !isInChat && this.linkTo(ROUTES.CHAT, true)}>
                                     <i className="fas fa-comment-dots fa-fw"></i>
                                     <span><Trans i18nKey="Chatroom" /></span>
+                                    {isInChat &&
+                                    <svg className="ml-auto feature-icon custom-item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                                        onClick={this.openAppInsertModal}>
+                                        <path fill="currentColor" d="M384 240v32c0 6.6-5.4 12-12 12h-88v88c0 6.6-5.4 12-12 12h-32c-6.6 0-12-5.4-12-12v-88h-88c-6.6 0-12-5.4-12-12v-32c0-6.6 5.4-12 12-12h88v-88c0-6.6 5.4-12 12-12h32c6.6 0 12 5.4 12 12v88h88c6.6 0 12 5.4 12 12zm120 16c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zm-48 0c0-110.5-89.5-200-200-200S56 145.5 56 256s89.5 200 200 200 200-89.5 200-200z"></path>
+                                    </svg>}
                                 </ListGroupItem>
-                                <Collapse isOpen="true">{this.renderChatroomList()}</Collapse>
+                                <Collapse isOpen>{this.renderChatroomList()}</Collapse>
                                 {this.renderLinkItems()}
                             </ListGroup>}
 
@@ -681,14 +658,18 @@ class ControlPanel extends React.Component {
                 <EdgeToggle className={isPutAway ? 'put-away' : ''} onClick={this.putAwayControlPanel} />
                 <div className={'ctrl-panel-backdrop' + (shouldShowBackdrop ? '' : ' d-none')} onClick={() => this.linkTo()}></div>
 
-                {this.state.isOpenAddInertModal &&
-                <AppInsertModal isOpen={this.state.isOpenAddInertModal}
+                {this.state.isOpenAppInertModal &&
+                <AppInsertModal isOpen={this.state.isOpenAppInertModal}
                     close={this.closeAppInsertModal} />}
 
-                {!!this.state.editModalData &&
-                <AppEditModal isOpen={!!this.state.editModalData}
-                    modalData={this.state.editModalData}
+                {!!this.state.editAppId &&
+                <AppEditModal isOpen={!!this.state.editAppId}
+                    appId={this.state.editAppId}
                     close={this.closeAppEditModal}/>}
+
+                {this.state.isOpenGroupInertModal &&
+                <GroupInsertModal isOpen={this.state.isOpenGroupInertModal}
+                    close={this.closeGroupInsertModal} />}
             </Aux>
         );
     }
@@ -699,7 +680,8 @@ const mapStateToProps = (storeState, ownProps) => {
     return {
         apps: storeState.apps,
         appsChatrooms: storeState.appsChatrooms,
-        consumers: storeState.consumers
+        consumers: storeState.consumers,
+        groups: storeState.groups
     };
 };
 

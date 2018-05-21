@@ -1,19 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Row, Col, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import Switch from 'react-switch';
 
 import gCalendarHelper from '../../../helpers/googleCalendar';
 
+import ModalCore from '../ModalCore';
+
 import googleCalendarPng from '../../../image/google-calendar.png';
 import './Integration.css';
 
-class Integration extends React.Component {
-    static propTypes = {
-        isOpen: PropTypes.bool.isRequired,
-        close: PropTypes.func.isRequired
-    }
-
+class Integration extends ModalCore {
     constructor(props) {
         super(props);
         this.state = {
@@ -38,8 +34,8 @@ class Integration extends React.Component {
 
     render() {
         return (
-            <Modal className="user-modal" size="lg" isOpen={this.props.isOpen} toggle={this.props.close}>
-                <ModalHeader toggle={this.props.close}></ModalHeader>
+            <Modal className="user-modal" size="lg" isOpen={this.props.isOpen} toggle={this.closeModal}>
+                <ModalHeader toggle={this.closeModal}></ModalHeader>
                 <ModalBody>
                     <Row>
                         <Col className="col title">

@@ -1,4 +1,5 @@
-import { UPDATE_GREETINGS, DELETE_GREETING } from '../../actions/mainStore/appsGreetings';
+import { UPDATE_GREETINGS, DELETE_GREETING,
+    DELETE_ALL_GREETINGS } from '../../actions/mainStore/appsGreetings';
 
 export const appsGreetingsReducer = (state = {}, action) => {
     switch (action.type) {
@@ -27,6 +28,13 @@ export const appsGreetingsReducer = (state = {}, action) => {
                 delete state[appId];
             }
             return Object.assign({}, state);
+        case DELETE_ALL_GREETINGS:
+            appId = action.appId;
+            if (state[appId]) {
+                delete state[appId];
+                return Object.assign({}, state);
+            }
+            return state;
         default:
             return state;
     }

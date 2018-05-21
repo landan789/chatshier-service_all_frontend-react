@@ -100,11 +100,6 @@ class Autoreplies extends React.Component {
                                                 <i className="fas fa-plus"></i>
                                             </Button>
                                         </InputGroup>
-                                        <AutoreplyInsertModal
-                                            apps={this.props.apps}
-                                            isOpen={this.state.isInsertModalOpen}
-                                            close={this.closeInsertModal}>
-                                        </AutoreplyInsertModal>
                                     </Col>
                                 </Row>
                             </Jumbotron>
@@ -112,6 +107,13 @@ class Autoreplies extends React.Component {
                         </div>
                     </Fade>
                 </PageWrapper>
+
+                {this.state.isInsertModalOpen &&
+                <AutoreplyInsertModal
+                    apps={this.props.apps}
+                    isOpen={this.state.isInsertModalOpen}
+                    close={this.closeInsertModal}>
+                </AutoreplyInsertModal>}
             </Aux>
         );
     }

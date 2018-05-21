@@ -1,4 +1,5 @@
-import { UPDATE_FIELDS, DELETE_FIELD } from '../../actions/mainStore/appsFields';
+import { UPDATE_FIELDS, DELETE_FIELD,
+    DELETE_ALL_FIELDS } from '../../actions/mainStore/appsFields';
 
 export const appsFieldsReducer = (state = {}, action) => {
     switch (action.type) {
@@ -29,6 +30,13 @@ export const appsFieldsReducer = (state = {}, action) => {
                 delete state[appId];
             }
             return Object.assign({}, state);
+        case DELETE_ALL_FIELDS:
+            appId = action.appId;
+            if (state[appId]) {
+                delete state[appId];
+                return Object.assign({}, state);
+            }
+            return state;
         default:
             return state;
     }

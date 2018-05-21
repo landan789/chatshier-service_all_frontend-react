@@ -112,11 +112,13 @@ class AutoreplyTable extends React.Component {
                         {this.renderAutoreplies(this.state.appId, this.state.keyword)}
                     </tbody>
                 </Table>
+
+                {!!this.state.editModalData &&
                 <AutoreplyEditModal
                     modalData={this.state.editModalData}
                     isOpen={!!this.state.editModalData}
                     close={this.closeEditModal}>
-                </AutoreplyEditModal>
+                </AutoreplyEditModal>}
             </Aux>
         );
     }

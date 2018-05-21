@@ -150,11 +150,13 @@ class ComposeTable extends React.Component {
                         {this.renderComposes(false, this.state.appId, this.state.keyword, null)}
                     </tbody>
                 </Table>
+
+                {!!this.state.editModalData &&
                 <ComposeEditModal
                     modalData={this.state.editModalData}
                     isOpen={!!this.state.editModalData}
                     close={this.closeEditModal}>
-                </ComposeEditModal>
+                </ComposeEditModal>}
             </Aux>
         );
     }

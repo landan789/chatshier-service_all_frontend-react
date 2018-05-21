@@ -1,5 +1,6 @@
 export const UPDATE_CHATROOMS = 'UPDATE_CHATROOMS';
 export const DELETE_CHATROOM = 'DELETE_CHATROOM';
+export const DELETE_ALL_CHATROOMS = 'DELETE_ALL_CHATROOMS';
 export const UPDATE_CHATROOMS_MESSAGERS = 'UPDATE_CHATROOMS_MESSAGERS';
 export const UPDATE_CHATROOMS_MESSAGES = 'UPDATE_CHATROOMS_MESSAGES';
 
@@ -16,6 +17,13 @@ export const updateChatrooms = (appsChatrooms) => {
  */
 export const deleteChatroom = (appId, chatroomId) => {
     return { type: DELETE_CHATROOM, appId: appId, chatroomId: chatroomId };
+};
+
+/**
+ * @param {string} appId
+ */
+export const deleteAllChatrooms = (appId) => {
+    return { type: DELETE_ALL_CHATROOMS, appId: appId };
 };
 
 /**

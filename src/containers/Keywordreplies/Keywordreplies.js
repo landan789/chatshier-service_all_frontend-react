@@ -99,11 +99,6 @@ class Keywordreplies extends React.Component {
                                                 <i className="fas fa-plus"></i>
                                             </Button>
                                         </InputGroup>
-                                        <KeywordreplyInsertModal
-                                            apps={this.props.apps}
-                                            isOpen={this.state.isInsertModalOpen}
-                                            close={this.closeInsertModal}>
-                                        </KeywordreplyInsertModal>
                                     </Col>
                                 </Row>
                             </Jumbotron>
@@ -111,6 +106,13 @@ class Keywordreplies extends React.Component {
                         </div>
                     </Fade>
                 </PageWrapper>
+
+                {this.state.isInsertModalOpen &&
+                <KeywordreplyInsertModal
+                    apps={this.props.apps}
+                    isOpen={this.state.isInsertModalOpen}
+                    close={this.closeInsertModal}>
+                </KeywordreplyInsertModal>}
             </Aux>
         );
     }

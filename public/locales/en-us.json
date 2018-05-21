@@ -29,6 +29,7 @@
     "Channel access token can't be empty": "Channel access token can't be empty",
     "Chat time(s)": "Chat time(s)",
     "Chatroom": "Chatroom",
+    "Close": "Close",
     "Composes": "Composes",
     "Confirm": "Confirm",
     "Confirm password": "Confirm password",
@@ -76,6 +77,7 @@
     "Invalid email": "Invalid email",
     "Invalid verification code, Please verify again!": "Invalid verification code, Please verify again!",
     "Invalid token, please perform the reset password procedure again!": "Invalid token, please perform the reset password procedure again!",
+    "Invite": "Invite",
     "Is it all day?": "Is it all day?",
 
     "January": "January",
@@ -93,6 +95,7 @@
     "Messages": "Messages",
     "Message analysis": "Message analysis",
     "Month": "Month",
+    "My group": "My group",
 
     "Name": "Name",
     "Name was empty!": "Name was empty!",
@@ -109,6 +112,7 @@
     "Password does not match": "Password does not match",
     "Password update successful!": "Password update successful!",
     "Password was empty!": "Password was empty!",
+    "Permission": "Permission",
     "Phone": "Phone",
     "Platform of chat bot": "Platform of chat bot",
     "Please go to LINE Developers": "Please go to LINE Developers",

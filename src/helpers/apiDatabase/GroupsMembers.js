@@ -8,13 +8,11 @@ class GroupsMembers extends Core {
     constructor() {
         super();
         this.apiEndPoint += 'groups-members/';
-        this.enums = Object.freeze({
-            type: {
-                OWNER: 'OWNER',
-                ADMIN: 'ADMIN',
-                WRITE: 'WRITE',
-                READ: 'READ'
-            }
+        this.TYPES = Object.freeze({
+            OWNER: 'OWNER',
+            ADMIN: 'ADMIN',
+            WRITE: 'WRITE',
+            READ: 'READ'
         });
     }
 

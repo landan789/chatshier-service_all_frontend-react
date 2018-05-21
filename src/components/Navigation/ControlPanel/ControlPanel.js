@@ -27,6 +27,7 @@ import { findChatroomMessager, findMessagerSelf } from '../../../containers/Chat
 import AppInsertModal from '../../../components/Modals/AppInsert/AppInsert';
 import AppEditModal from '../../../components/Modals/AppEdit/AppEdit';
 import GroupInsertModal from '../../../components/Modals/GroupInsert/GroupInsert';
+import GroupEditModal from '../../../components/Modals/GroupEdit/GroupEdit';
 
 import logoPng from '../../../image/logo-no-transparent.png';
 import logoSmallPng from '../../../image/logo-small.png';
@@ -344,7 +345,7 @@ class ControlPanel extends React.Component {
     }
 
     closeGroupEditModal() {
-        this.setState({ isOpenGroupInertModal: false });
+        this.setState({ editGroupId: void 0 });
     }
 
     renderChatroomList() {
@@ -443,8 +444,11 @@ class ControlPanel extends React.Component {
                     <ListGroupItem className="text-light nested has-collapse" onClick={() => this.toggleItem(appId)}>
                         <i className={appIcon}></i>
                         <span>{app.name}</span>
-                        <i className="ml-auto mr-1 p-1 fas fa-edit feature-icon" onClick={(ev) => this.openAppEditModal(ev, appId)}></i>
-                        <i className={'py-1 fas ' + (itemCollapse[appId] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
+                        {CHATSHIER !== app.type &&
+                        <i className="ml-auto mr-1 p-1 fas fa-edit feature-icon"
+                            onClick={(ev) => this.openAppEditModal(ev, appId)}>
+                        </i>}
+                        <i className={(CHATSHIER === app.type ? 'ml-auto ' : '') + 'py-1 fas ' + (itemCollapse[appId] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
                     </ListGroupItem>
                     <Collapse isOpen={!itemCollapse[appId]} className="nested">{chatroomElems}</Collapse>
                 </Aux>
@@ -572,7 +576,8 @@ class ControlPanel extends React.Component {
 
                                 <Collapse className="nested" isOpen={!itemCollapse['GROUPS']}>
                                     {Object.keys(this.props.groups).map((groupId) => (
-                                        <ListGroupItem key={groupId} className="text-light">
+                                        <ListGroupItem key={groupId} className="text-light"
+                                            onClick={(ev) => this.openGroupEditModal(ev, groupId)}>
                                             <i className="fas fa-users"></i>
                                             <span>{this.props.groups[groupId].name}</span>
                                         </ListGroupItem>
@@ -665,11 +670,16 @@ class ControlPanel extends React.Component {
                 {!!this.state.editAppId &&
                 <AppEditModal isOpen={!!this.state.editAppId}
                     appId={this.state.editAppId}
-                    close={this.closeAppEditModal}/>}
+                    close={this.closeAppEditModal} />}
 
                 {this.state.isOpenGroupInertModal &&
                 <GroupInsertModal isOpen={this.state.isOpenGroupInertModal}
                     close={this.closeGroupInsertModal} />}
+
+                {!!this.state.editGroupId &&
+                <GroupEditModal isOpen={!!this.state.editGroupId}
+                    groupId={this.state.editGroupId}
+                    close={this.closeGroupEditModal} />}
             </Aux>
         );
     }

@@ -29,6 +29,7 @@
     "Channel access token can't be empty": "Channel access token 不能為空",
     "Chat time(s)": "聊天次數",
     "Chatroom": "聊天室",
+    "Close": "關閉",
     "Composes": "群發",
     "Confirm": "確認",
     "Confirm password": "確認密碼",
@@ -76,6 +77,7 @@
     "Invalid email": "無效電子郵件",
     "Invalid verification code, Please verify again!": "不合法的驗證碼，請重新進行驗證動作！",
     "Invalid token, please perform the reset password procedure again!": "不合法的令牌，請重新進行重設密碼流程！",
+    "Invite": "邀請",
     "Is it all day?": "是否為全天？",
 
     "January": "一月",
@@ -93,6 +95,7 @@
     "Messages": "訊息",
     "Message analysis": "訊息分析",
     "Month": "月",
+    "My group": "我的群組",
 
     "Name": "姓名",
     "Name was empty!": "姓名未填寫！",
@@ -109,6 +112,7 @@
     "Password does not match": "密碼不相符",
     "Password update successful!": "密碼更新成功！",
     "Password was empty!": "密碼未填寫！",
+    "Permission": "權限",
     "Phone": "電話",
     "Platform of chat bot": "聊天機器人平台",
     "Please go to LINE Developers": "請至 LINE Developers 查詢",

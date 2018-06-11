@@ -84,6 +84,13 @@
     }
 }
 
+.compose-modal {
+    .compose-textarea {
+        height: 5rem;
+        resize: none;
+    }
+}
+
 @media (min-width: 768px) {
     .Compose {
         thead, tbody {

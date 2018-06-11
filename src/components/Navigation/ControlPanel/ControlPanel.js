@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { Trans } from 'react-i18next';
 import { withTranslate } from '../../../i18n';
 
-import { Collapse, ListGroup, ListGroupItem } from 'reactstrap';
+import { Collapse, ListGroup, ListGroupItem, Badge } from 'reactstrap';
 import Swiper from 'swiper/dist/js/swiper.js';
 
 import authHelper from '../../../helpers/authentication';
@@ -397,7 +397,7 @@ class ControlPanel extends React.Component {
                             <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
                                 <img className="app-icon consumer-photo" src={CHATSHIER === app.type ? groupPng : logos[app.type]} alt="" />
                                 <span className="app-name">{chatroom.name || '群組聊天室'}</span>
-                                <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')}>{unReadStr}</span>
+                                <Badge className={'unread-msg ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')} pill>{unReadStr}</Badge>
                             </ListGroupItem>
                         );
                     } else {
@@ -415,7 +415,7 @@ class ControlPanel extends React.Component {
                             <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
                                 <img className="app-icon consumer-photo" src={consumer.photo || defaultAvatar} alt="" onError={() => apiBot.chatrooms.getProfile(appId, platformUid)} />
                                 <span className="app-name">{(messagerSelf.namings && messagerSelf.namings[platformUid]) || consumer.name}</span>
-                                <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')}>{unReadStr}</span>
+                                <Badge className={'unread-msg ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')} pill>{unReadStr}</Badge>
                             </ListGroupItem>
                         );
 

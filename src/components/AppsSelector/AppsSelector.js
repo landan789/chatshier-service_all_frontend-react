@@ -8,6 +8,11 @@ import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reac
 import authHelper from '../../helpers/authentication';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
+const ICONS = {
+    [apiDatabase.apps.TYPES.LINE]: 'mr-1 fab fa-line fa-fw line-color',
+    [apiDatabase.apps.TYPES.FACEBOOK]: 'mr-1 fab fa-facebook-messenger fa-fw fb-messsenger-color'
+};
+
 class AppsSelector extends React.Component {
     static propTypes = {
         t: PropTypes.func.isRequired,
@@ -77,8 +82,9 @@ class AppsSelector extends React.Component {
                         }
 
                         return (
-                            <DropdownItem key={appId}
+                            <DropdownItem key={appId} className="px-3"
                                 onClick={() => this.selectedApp(appId, this.props.apps[appId].name)}>
+                                <i className={ICONS[app.type]}></i>
                                 {this.props.apps[appId].name}
                             </DropdownItem>
                         );

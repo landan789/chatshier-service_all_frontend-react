@@ -4,7 +4,7 @@
         "lib": [ "dom", "es6" ],
         "target": "es6",
         "module": "commonjs",
-        "checkJs": true,
+        "checkJs": false,
         "allowJs": true,
         "allowSyntheticDefaultImports": true,
         "noEmit": true,

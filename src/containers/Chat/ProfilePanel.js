@@ -63,8 +63,8 @@ class ProfilePanel extends React.Component {
         this.leavePlatformGroup = this.leavePlatformGroup.bind(this);
     }
 
-    componentWillReceiveProps(props) {
-        this.createAppsAgents(this.props);
+    UNSAFE_componentWillReceiveProps(props) {
+        this.createAppsAgents(props);
     }
 
     componentWillUnmount() {

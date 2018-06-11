@@ -45,8 +45,8 @@ class AppsSelector extends React.Component {
         return userId && apiDatabase.apps.find(userId);
     }
 
-    componentWillReceiveProps(props) {
-        let apps = this.props.apps || {};
+    UNSAFE_componentWillReceiveProps(props) {
+        let apps = props.apps || {};
         let appIds = Object.keys(apps);
 
         if (appIds.length > 0 && !this.state.selectedAppName) {

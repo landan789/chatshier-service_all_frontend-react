@@ -58,11 +58,8 @@ class ChangePassword extends React.Component {
         } catch (ex) {
             this.props.history.replace(ROUTES.SIGNIN);
         }
-    }
 
-    componentWillMount() {
         browserHelper.setTitle(this.props.t('Change password'));
-
         if (authHelper.hasSignedin()) {
             return window.location.replace(ROUTES.CHAT);
         }

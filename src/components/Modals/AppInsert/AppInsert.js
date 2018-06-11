@@ -58,7 +58,7 @@ class AppInsertModal extends ModalCore {
         this.finishSelectFbPages = this.finishSelectFbPages.bind(this);
     }
 
-    componentWillReceiveProps(props) {
+    UNSAFE_componentWillReceiveProps(props) {
         if (!this.state.seletedGroupId) {
             let groupId = Object.keys(props.groups)[0];
             this.setState({

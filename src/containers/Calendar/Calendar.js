@@ -66,11 +66,8 @@ class Calendar extends React.Component {
         this.deleteCalendarEvent = this.deleteCalendarEvent.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
         this.closeEditModal = this.closeEditModal.bind(this);
-    }
 
-    componentWillMount() {
         browserHelper.setTitle(this.props.t('Calendar'));
-
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
@@ -95,7 +92,7 @@ class Calendar extends React.Component {
         });
     }
 
-    componentWillReceiveProps(props) {
+    UNSAFE_componentWillReceiveProps(props) {
         this.reload(props);
 
         // 每個 app 因群組不同，指派人清單也會不同，因此須根據群組準備指派人清單

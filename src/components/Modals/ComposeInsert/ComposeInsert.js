@@ -56,7 +56,8 @@ class ComposeInsertModal extends ModalCore {
         this.handleFieldButtonChange = this.handleFieldButtonChange.bind(this);
         this.handleFieldInputChange = this.handleFieldInputChange.bind(this);
     }
-    componentWillReceiveProps(nextProps) {
+
+    UNSAFE_componentWillReceiveProps(nextProps) {
         let appId = Object.keys(nextProps.apps)[0];
         let appsFields = nextProps.appsFields[appId] ? nextProps.appsFields[appId].fields : {};
         let appIds = Object.keys(appsFields).filter((appId) => {

@@ -38,11 +38,8 @@ class Composes extends React.Component {
         this.keywordChanged = this.keywordChanged.bind(this);
         this.openInsertModal = this.openInsertModal.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
-    }
 
-    componentWillMount() {
         browserHelper.setTitle('群發');
-
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
@@ -56,9 +53,6 @@ class Composes extends React.Component {
             apiDatabase.appsComposes.find(null, userId),
             apiDatabase.appsFields.find(userId)
         ]);
-    }
-
-    componentWillReceiveProps(nextProps) {
     }
 
     appChanged(appId) {

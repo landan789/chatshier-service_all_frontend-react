@@ -134,12 +134,8 @@ $ctrl-item-icon-size: 1rem;
 
         .nested {
             &.list-group-item,
-            > :first-child {
+            > .list-group-item {
                 margin-left: .5rem;
-
-                + .list-group-item {
-                    margin-left: .5rem;
-                }
             }
 
             .nested {

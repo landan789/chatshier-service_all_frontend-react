@@ -12,6 +12,7 @@ import Swiper from 'swiper/dist/js/swiper.js';
 import authHelper from '../../../helpers/authentication';
 import socketHelper from '../../../helpers/socket';
 import apiDatabase from '../../../helpers/apiDatabase/index';
+import apiBot from '../../../helpers/apiBot';
 import ROUTES from '../../../config/route';
 
 import mainStore from '../../../redux/mainStore';
@@ -32,6 +33,7 @@ import GroupEditModal from '../../../components/Modals/GroupEdit/GroupEdit';
 import logoPng from '../../../image/logo-no-transparent.png';
 import logoSmallPng from '../../../image/logo-small.png';
 import groupPng from '../../../image/group.png';
+import defaultAvatar from '../../../image/defautlt-avatar.png';
 import './ControlPanel.css';
 
 const LINE = 'LINE';
@@ -411,8 +413,8 @@ class ControlPanel extends React.Component {
 
                         itemElem = (
                             <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
-                                <img className="app-icon consumer-photo" src={consumer.photo} alt="" />
-                                <span className="app-name">{(messagerSelf && messagerSelf.namings[platformUid]) || consumer.name}</span>
+                                <img className="app-icon consumer-photo" src={consumer.photo || defaultAvatar} alt="" onError={() => apiBot.chatrooms.getProfile(appId, platformUid)} />
+                                <span className="app-name">{(messagerSelf.namings && messagerSelf.namings[platformUid]) || consumer.name}</span>
                                 <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')}>{unReadStr}</span>
                             </ListGroupItem>
                         );

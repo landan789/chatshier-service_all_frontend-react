@@ -78,7 +78,7 @@ class WordCloudChart extends React.Component {
             let wordCloudOpts = {
                 list: wordList,
                 // 文字雲字體基本大小
-                weightFactor: 24,
+                weightFactor: 1,
                 minSize: 8,
                 clearCanvas: true,
                 backgroundColor: '#eafaff'

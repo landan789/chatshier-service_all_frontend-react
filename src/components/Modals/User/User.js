@@ -40,7 +40,7 @@ class User extends ModalCore {
         return userId && apiDatabase.users.find(userId);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         let userId = authHelper.userId;
         let user = nextProps.users ? nextProps.users[userId] : {};
         let userLength = Object.keys(user).length;

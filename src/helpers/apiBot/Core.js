@@ -41,6 +41,7 @@ class Core {
      * @param {string} url
      * @param {RequestInit|RequestInit[]} [reqInits]
      * @param {Boolean} [usingRecursive=false] If true, the processes will do step one by one
+     * @returns {Promise<any>}
      */
     sendRequest(url, reqInits, usingRecursive) {
         reqInits = reqInits || {};

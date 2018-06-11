@@ -38,11 +38,8 @@ class Keywordreplies extends React.Component {
         this.keywordChanged = this.keywordChanged.bind(this);
         this.openInsertModal = this.openInsertModal.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
-    }
 
-    componentWillMount() {
         browserHelper.setTitle('關鍵字回覆');
-
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);

@@ -29,7 +29,8 @@ class AutoreplyTable extends React.Component {
         this.openEditModal = this.openEditModal.bind(this);
         this.closeEditModal = this.closeEditModal.bind(this);
     }
-    componentWillReceiveProps(nextProp) {
+
+    UNSAFE_componentWillReceiveProps(nextProp) {
         let autoreplies = nextProp.appsAutoreplies[nextProp.appId] || {};
         let autoreplyIds = Object.keys(autoreplies);
 
@@ -38,12 +39,15 @@ class AutoreplyTable extends React.Component {
         }
         this.updatekeywordSearch(nextProp.keyword);
     }
+
     updateAppId(appId) {
         this.setState({appId});
     }
+
     updatekeywordSearch(keyword) {
         this.setState({keyword});
     }
+
     openEditModal(appId, autoreplyId, autoreply) {
         this.setState({
             editModalData: {
@@ -51,6 +55,7 @@ class AutoreplyTable extends React.Component {
             }
         });
     }
+
     removeAutoreply(appId, autoreplyId) {
         let userId = authHelper.userId;
         return apiDatabase.appsAutoreplies.delete(appId, autoreplyId, userId).then(() => {
@@ -59,9 +64,11 @@ class AutoreplyTable extends React.Component {
             return notify('刪除失敗', { type: 'danger' });
         });
     }
+
     closeEditModal() {
         this.setState({ editModalData: null });
     }
+
     toLocalTimeString(ms) {
         let date = new Date(ms);
         let localDate = date.toLocaleDateString();
@@ -69,6 +76,7 @@ class AutoreplyTable extends React.Component {
         let localTimeString = localDate + localTime;
         return localTimeString;
     }
+
     renderAutoreplies(appId, keyword) {
         let autoreplies = this.props.appsAutoreplies[appId] ? this.props.appsAutoreplies[appId].autoreplies : {};
         let autoreplyIds = Object.keys(autoreplies);
@@ -95,6 +103,7 @@ class AutoreplyTable extends React.Component {
             );
         });
     }
+
     render() {
         return (
             <Aux>

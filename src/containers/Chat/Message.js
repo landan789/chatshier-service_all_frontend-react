@@ -57,7 +57,7 @@ class Message extends React.Component {
                 );
             case 'video':
                 return (
-                    <video className="video-content" controls playsinline webkit-playsinline>
+                    <video className="video-content" controls playsInline webkit-playsinline="true">
                         <source src={src} type="video/mp4" />
                     </video>
                 );

@@ -46,11 +46,8 @@ class SignUp extends React.Component {
         this.pwChanged = this.pwChanged.bind(this);
         this.pwConfirmChanged = this.pwConfirmChanged.bind(this);
         this.checkInputs = this.checkInputs.bind(this);
-    }
 
-    componentWillMount() {
         browserHelper.setTitle(this.props.t('Sign up'));
-
         if (authHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }

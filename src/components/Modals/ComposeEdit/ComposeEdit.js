@@ -40,7 +40,7 @@ class ComposeEditModal extends ModalCore {
         this.updateCompose = this.updateCompose.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         let compose = nextProps.modalData ? nextProps.modalData.compose : {};
         let composeLength = Object.keys(compose).length;
 

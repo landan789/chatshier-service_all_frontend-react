@@ -47,8 +47,8 @@ class TicketPanel extends React.Component {
         this.closeEditModal = this.closeEditModal.bind(this);
     }
 
-    componentWillReceiveProps(props) {
-        this.createAppsAgents(this.props);
+    UNSAFE_componentWillReceiveProps(props) {
+        this.createAppsAgents(props);
     }
 
     createAppsAgents(props) {
@@ -125,7 +125,7 @@ class TicketPanel extends React.Component {
 
         let platformMessager = findChatroomMessager(this.chatroom.messagers, this.app.type);
         let platformUid = platformMessager.platformUid;
-        let tickets = this.props.appsTickets[appId].tickets;
+        let tickets = this.props.appsTickets[appId] ? this.props.appsTickets[appId].tickets : {};
         let ticketIds = Object.keys(tickets).filter((ticketId) => {
             // 只顯示未刪除、對象是此客戶以及有被指派的待辦事項
             return !!(

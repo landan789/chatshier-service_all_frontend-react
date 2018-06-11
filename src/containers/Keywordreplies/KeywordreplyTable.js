@@ -30,7 +30,8 @@ class KeywordreplyTable extends React.Component {
         this.closeEditModal = this.closeEditModal.bind(this);
         this.updatekeywordSearch = this.updatekeywordSearch.bind(this);
     }
-    componentWillReceiveProps(nextProp) {
+
+    UNSAFE_componentWillReceiveProps(nextProp) {
         let appId = nextProp.appId;
         let keywordreplies = nextProp.appsKeywordreplies[appId] || {};
         let keywordreplyId = Object.keys(keywordreplies);
@@ -39,12 +40,15 @@ class KeywordreplyTable extends React.Component {
         }
         this.updatekeywordSearch(nextProp.keyword);
     }
+
     updateAppId(appId) {
         this.setState({appId});
     }
+
     updatekeywordSearch(keyword) {
         this.setState({keyword});
     }
+
     openEditModal(appId, keywordreplyId, keywordreply) {
         this.setState({
             editModalData: {
@@ -52,9 +56,11 @@ class KeywordreplyTable extends React.Component {
             }
         });
     }
+
     closeEditModal() {
         this.setState({ editModalData: null });
     }
+
     removekeywordreply(appId, keywordreplyId) {
         let userId = authHelper.userId;
         return apiDatabase.appsKeywordreplies.delete(appId, keywordreplyId, userId).then(() => {
@@ -63,6 +69,7 @@ class KeywordreplyTable extends React.Component {
             return notify('刪除失敗', { type: 'danger' });
         });
     }
+
     renderKeywordreplies(status, appId, keyword) {
         let keywordreplies = this.props.appsKeywordreplies[appId] ? this.props.appsKeywordreplies[appId].keywordreplies : {};
         let keywordreplyIds = Object.keys(keywordreplies);
@@ -91,6 +98,7 @@ class KeywordreplyTable extends React.Component {
             );
         });
     }
+
     render() {
         return (
             <Aux>

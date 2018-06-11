@@ -59,11 +59,8 @@ class Chat extends React.Component {
         this.toggleChatroom = this.toggleChatroom.bind(this);
         this.toggleProfle = this.toggleProfle.bind(this);
         this.toggleTicket = this.toggleTicket.bind(this);
-    }
 
-    componentWillMount() {
         browserHelper.setTitle(this.props.t('Chatroom'));
-
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);

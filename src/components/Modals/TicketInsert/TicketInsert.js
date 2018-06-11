@@ -65,7 +65,7 @@ class TicketInsertModal extends ModalCore {
         this.descriptionChanged = this.descriptionChanged.bind(this);
     }
 
-    componentWillReceiveProps() {
+    UNSAFE_componentWillReceiveProps() {
         this.appOptions = this.appsToOptions();
         this.consumerChanged();
         this.agentChanged();
@@ -91,7 +91,7 @@ class TicketInsertModal extends ModalCore {
             );
 
             this.appsConsumers[appId] = { consumers: {} };
-            let chatrooms = this.props.appsChatrooms[appId].chatrooms || {};
+            let chatrooms = this.props.appsChatrooms[appId] ? this.props.appsChatrooms[appId].chatrooms : {};
             for (let chatroomId in chatrooms) {
                 if (chatrooms[chatroomId].platformGroupId) {
                     continue;

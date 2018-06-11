@@ -88,7 +88,8 @@ class Toolbar extends React.Component {
         this.storeUnsubscribe = controlPanelStore.subscribe(() => {
             let selectedChatroom = controlPanelStore.getState().selectedChatroom;
             let newState = {
-                hasSelectChatroom: !!(selectedChatroom.appId && selectedChatroom.chatroomId)
+                hasSelectChatroom: !!(selectedChatroom.appId && selectedChatroom.chatroomId),
+                toggleButtons: this.state.toggleButtons
             };
 
             if (!newState.hasSelectChatroom) {
@@ -99,7 +100,12 @@ class Toolbar extends React.Component {
             let appsChatrooms = mainStore.getState().appsChatrooms;
             let chatroom = appsChatrooms[selectedChatroom.appId].chatrooms[selectedChatroom.chatroomId];
             newState.isGroupChatroom = !!chatroom.platformGroupId;
+            newState.toggleButtons.ticket = false;
+            newState.toggleButtons.profile = true;
+
             this.setState(newState);
+            this.props.onToggleProfle(newState.toggleButtons.profile);
+            this.props.onToggleTicket(newState.toggleButtons.ticket);
         });
     }
 

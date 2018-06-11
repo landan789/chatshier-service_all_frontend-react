@@ -28,11 +28,8 @@ class Settings extends React.Component {
         super(props, ctx);
 
         this.toggle = this.toggle.bind(this);
-    }
 
-    componentWillMount() {
         browserHelper.setTitle('設定');
-
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);

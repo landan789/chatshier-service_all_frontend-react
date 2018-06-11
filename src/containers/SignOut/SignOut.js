@@ -14,9 +14,10 @@ class SignOut extends React.Component {
         history: PropTypes.object.isRequired
     }
 
-    componentWillMount() {
-        browserHelper.setTitle(this.props.t('Sign out'));
+    constructor(props, ctx) {
+        super(props, ctx);
 
+        browserHelper.setTitle(this.props.t('Sign out'));
         return authHelper.signOut().then(() => {
             return gCalendarHelper.signOut();
         }).then(() => {

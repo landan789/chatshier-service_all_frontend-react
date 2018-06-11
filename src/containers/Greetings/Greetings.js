@@ -28,11 +28,8 @@ class Greetings extends React.Component {
         };
 
         this.appChanged = this.appChanged.bind(this);
-    }
 
-    componentWillMount() {
         browserHelper.setTitle('加好友回覆');
-
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);

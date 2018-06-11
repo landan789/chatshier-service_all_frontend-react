@@ -36,7 +36,7 @@ class AutoreplyInsertModal extends ModalCore {
         this.selectedApp = this.selectedApp.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         let firstApp = Object.keys(nextProps.apps)[0];
         this.setState({appId: firstApp});
     }

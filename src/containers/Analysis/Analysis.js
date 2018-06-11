@@ -62,9 +62,7 @@ class Analysis extends React.Component {
         this.onStartDatetimeChanged = this.onStartDatetimeChanged.bind(this);
         this.onEndDatetimeChanged = this.onEndDatetimeChanged.bind(this);
         this.toggleTypeDropdown = this.toggleTypeDropdown.bind(this);
-    }
 
-    componentWillMount() {
         browserHelper.setTitle(this.props.t('Analysis'));
 
         if (!authHelper.hasSignedin()) {
@@ -78,8 +76,8 @@ class Analysis extends React.Component {
         return userId && apiDatabase.appsChatrooms.find(userId);
     }
 
-    componentWillReceiveProps(props) {
-        let appChatrooms = this.props.appsChatrooms[this.state.selectedAppId];
+    UNSAFE_componentWillReceiveProps(props) {
+        let appChatrooms = props.appsChatrooms[this.state.selectedAppId];
         if (appChatrooms) {
             let startDatetime = Date.now();
             let endDatetime = Date.now();

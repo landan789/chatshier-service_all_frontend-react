@@ -29,7 +29,7 @@ class MessageInsert extends Component {
         this.messageChanged = this.messageChanged.bind(this);
     }
 
-    componentWillReceiveProps(props) {
+    UNSAFE_componentWillReceiveProps(props) {
         this.setState({
             time: new Date(props.message.time).toLocaleString(),
             text: props.message.text || ''

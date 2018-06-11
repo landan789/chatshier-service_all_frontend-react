@@ -40,11 +40,8 @@ class SignIn extends React.Component {
         this.emailChanged = this.emailChanged.bind(this);
         this.pwChanged = this.pwChanged.bind(this);
         this.checkInputs = this.checkInputs.bind(this);
-    }
 
-    componentWillMount() {
         browserHelper.setTitle(this.props.t('Sign in'));
-
         if (authHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }

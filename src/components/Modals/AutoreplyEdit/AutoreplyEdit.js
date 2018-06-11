@@ -36,7 +36,8 @@ class AutoreplyEditModal extends ModalCore {
         this.handleEndDatetimeChange = this.handleEndDatetimeChange.bind(this);
         this.selectedApp = this.selectedApp.bind(this);
     }
-    componentWillReceiveProps(nextProps) {
+
+    UNSAFE_componentWillReceiveProps(nextProps) {
         let autoreply = nextProps.modalData ? nextProps.modalData.autoreply : {};
         let autoreplyLength = Object.keys(autoreply).length;
         if (0 < autoreplyLength) {

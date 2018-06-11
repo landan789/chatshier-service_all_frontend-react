@@ -70,11 +70,8 @@ class Tickets extends React.Component {
         this.keywordChanged = this.keywordChanged.bind(this);
         this.openInsertModal = this.openInsertModal.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
-    }
 
-    componentWillMount() {
         browserHelper.setTitle(this.props.t('To-Do items'));
-
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);

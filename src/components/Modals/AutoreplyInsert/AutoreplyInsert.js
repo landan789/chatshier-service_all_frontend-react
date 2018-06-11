@@ -146,7 +146,7 @@ class AutoreplyInsertModal extends ModalCore {
                         <Label>結束時間 </Label>
                         <DateTimePicker onChange={this.handleEndDatetimeChange}></DateTimePicker>
                     </InputGroup>
-                    <br/>
+
                     <FormGroup>
                         <Label>自動回覆訊息: </Label>
                         <Input type="textarea" onChange={this.handleDescriptionChange}/>

@@ -10,6 +10,8 @@ import { toDueDateSpan, toPriorityColor,
 import { formatDate, formatTime } from '../../utils/unitTime';
 import TicketEditModal from '../../components/Modals/TicketEdit/TicketEdit';
 
+import defaultAvatar from '../../image/defautlt-avatar.png';
+
 const RESOLVED = 4;
 const CLOSED = 5;
 
@@ -138,7 +140,7 @@ class TicketContent extends React.Component {
                             <CardSubtitle>
                                 <div className="my-2 d-flex align-items-center">
                                     <div className="mr-1 card-label">客戶姓名:</div>
-                                    <img className="m-2 consumer-avatar small" src={consumer.photo} alt="" />
+                                    <img className="my-2 mr-2 consumer-avatar small" src={consumer.photo || defaultAvatar} alt="" />
                                     <span className="ticket-value">{consumer.name || ''}</span>
                                 </div>
                                 <div className="my-2 d-flex align-items-center">

@@ -79,7 +79,7 @@ class Composes extends React.Component {
                     <Fade in className="composes-wrapper">
                         <div className="composes">
                             <Jumbotron>
-                                <h1 className="display-3">群發</h1><br/>
+                                <h1 className="display-3">群發</h1>
                                 <Row>
                                     <Col>
                                         <AppsSelector onChange={this.appChanged} />

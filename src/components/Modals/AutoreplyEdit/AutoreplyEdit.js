@@ -125,7 +125,7 @@ class AutoreplyEditModal extends ModalCore {
                         <Label>結束時間 </Label>
                         <DateTimePicker defaultValue={new Date(this.state.endedTime)} onChange={this.handleEndDatetimeChange}></DateTimePicker>
                     </InputGroup>
-                    <br/>
+
                     <FormGroup>
                         <Label>自動回覆訊息: </Label>
                         <Input type="textarea" value={this.state.text} onChange={this.handleDescriptionChange}/>

@@ -79,7 +79,7 @@ class Keywordreplies extends React.Component {
                     <Fade in className="keywordreplies-wrapper">
                         <div className="keywordreplies">
                             <Jumbotron>
-                                <h1 className="display-3">關鍵字回覆</h1><br/>
+                                <h1 className="display-3">關鍵字回覆</h1>
                                 <Row>
                                     <Col>
                                         <AppsSelector onChange={this.appChanged} />

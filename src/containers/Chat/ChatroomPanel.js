@@ -93,11 +93,14 @@ class ChatroomPanel extends React.Component {
         let messagerSelf = findMessagerSelf(chatroom.messagers);
         let userId = authHelper.userId;
 
+        // 發送給各平台時，文字訊息前面加上自己的名稱當成前輟
+        let messagePrefix = app.type !== CHATSHIER ? '[' + this.props.users[userId].name + ']\n' : '';
+
         /** @type {Chatshier.SocketMessage} */
         let messageToSend = {
             from: CHATSHIER,
             time: Date.now(),
-            text: messageText,
+            text: messagePrefix + messageText,
             src: '',
             type: 'text',
             messager_id: messagerSelf._id
@@ -174,9 +177,12 @@ class ChatroomPanel extends React.Component {
         let messagerSelf = findMessagerSelf(chatroom.messagers);
         let platformMessager = findChatroomMessager(chatroom.messagers, app.type);
 
+        // 傳送檔案時，帶上檔案大小當成文字訊息
+        let fileText = 'file' === messageType ? '小幫手傳送檔案給你:\n檔案大小: ' + fileSize + '\n' : '';
+
         /** @type {Chatshier.SocketMessage} */
         let messageToSend = {
-            text: '錢掌櫃傳送檔案給您:\n檔案大小: ' + fileSize + '\n',
+            text: fileText,
             src: file,
             fileName: file.name,
             type: messageType,
@@ -355,13 +361,14 @@ class ChatroomPanel extends React.Component {
                                 onChange={(ev) => this.uploadFile(ev, 'file')} />
                         </div>
                     </div>
-                    <div className="message-input form-lower">
-                        <input className="submit-message-input px-2" type="text"
-                            placeholder="輸入訊息..."
+                    <div className="d-flex align-items-center message-input form-lower">
+                        <textarea className="submit-message-input px-2"
+                            placeholder="輸入訊息... (Ctrl + Enter 發送訊息)"
                             value={this.state.messageText}
                             onChange={this.onMessageChange}
-                            onKeyDown={(ev) => (13 === ev.keyCode) && this.sendMessage()} />
-                        <img className="submit-message-btn p-0 ml-2" src={sendBtnSvg} alt="" onClick={this.sendMessage} />
+                            onKeyDown={(ev) => (13 === ev.keyCode && ev.ctrlKey) && this.sendMessage()}>
+                        </textarea>
+                        <button className="p-0 ml-2 submit-message-btn" type="button" onClick={this.sendMessage}></button>
                     </div>
                 </div>
             </div>

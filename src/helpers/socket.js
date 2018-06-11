@@ -35,11 +35,13 @@ class SocketHelper {
                     console.info('=== socket connected ===');
                     this._connectionReadyResolve();
                     delete this._connectionReadyResolve;
-                    this.appsRegistration();
-                    this._bindingSocketEvents(this.socket);
                     resolve();
                 });
             });
+        }).then(() => {
+            return this.userRegistration();
+        }).then(() => {
+            this._bindingSocketEvents(this.socket);
         });
     }
 
@@ -70,13 +72,11 @@ class SocketHelper {
         return this._send(SOCKET_EVENTS.READ_CHATROOM_MESSAGES, socketBody);
     }
 
-    appsRegistration() {
-        let appIds = Object.keys(mainStore.getState().apps);
-        return Promise.all(appIds.map((appId) => {
-            return new Promise((resolve) => {
-                this.socket.emit(SOCKET_EVENTS.APP_REGISTRATION, appId, resolve);
-            });
-        }));
+    userRegistration() {
+        let userId = authHelper.userId;
+        return new Promise((resolve) => {
+            this.socket.emit(SOCKET_EVENTS.USER_REGISTRATION, userId, resolve);
+        });
     }
 
     /**
@@ -121,7 +121,7 @@ class SocketHelper {
                 console.info('=== socket reconnected ===');
                 _this._connectionReadyResolve();
                 delete _this._connectionReadyResolve;
-                return _this.appsRegistration();
+                return _this.userRegistration();
             }).then(() => {
                 return keepConnection();
             });
@@ -133,9 +133,9 @@ class SocketHelper {
 
             let appId = socketBody.app_id;
             let chatroomId = socketBody.chatroom_id;
-            let chatroomFromSocket = socketBody.chatroom;
             /** @type {Chatshier.ChatroomMessage[]} */
             let messages = socketBody.messages;
+            let chatroomFromSocket = socketBody.chatroom;
             let consumersFromSocket = socketBody.consumers;
 
             // 根據發送的時間從早到晚排序

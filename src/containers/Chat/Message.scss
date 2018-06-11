@@ -1,0 +1,292 @@
+@import '../../styles/mixins/_mixins';
+
+.chatroom-panel {
+    .message-panel {
+        @include scrollable('y');
+        padding-bottom: 2.5%;
+        clear: right;
+
+        .loading-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+
+            img {
+                width: 3rem;
+                height: 3rem;
+            }
+        }
+    }
+
+    .message {
+        width: 100%;
+        padding: 0 10px;
+        line-height: normal;
+
+        .content {
+            max-width: 60%;
+
+            &.words {
+                padding: .75rem;
+                border: 1px solid #b5e7a0;
+                border-radius: 1rem;
+                background-color: #b5e7a0;
+                display: inline-block;
+                word-wrap: break-word;
+                text-align: justify;
+            }
+
+            &.media {
+                position: relative;
+
+                &.buttons-format,
+                &.carousel-format {
+                    @include scrollable('x');
+                    height: 27rem;
+                }
+
+                &.confirm-format {
+                    position: relative;
+                    height: 10rem;
+                }
+
+                &.imagemap-format {
+                    height: 20rem;
+                }
+            }
+
+            &.found {
+                color:white;
+                background-color: #33ccff !important;
+            }
+
+            .image-content,
+            .sticker-content,
+            .video-content,
+            .imagemap-image {
+                width: 100%;
+                max-width: 20rem;
+                height: auto;
+                border-radius: .5rem;
+            }
+
+            .image-container {
+                &.stretch {
+                    position: fixed;
+                    left: 0;
+                    top: 0;
+                    z-index: 1;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: rgba(0, 0, 0, .3);
+
+                    img {
+                        width: auto;
+                        max-width: 95%;
+                        max-height: 95%;
+                    }
+                }
+
+                &:hover {
+                    cursor: pointer;
+                }
+
+            }
+
+            .text-content {
+                line-height: 1.25rem;
+                white-space: pre-line;
+            }
+
+            .location-icon {
+                margin-right: .5rem;
+                color: red;
+            }
+
+            .box {
+                position: relative; 
+                text-align: center; 
+
+                .imagemap-text-space {
+                    border-radius: .5rem;
+                    color: #fff;
+                    background-color:  rgba(0, 0, 0, .6);
+                    visibility: hidden;
+
+                    a {
+                        color: #fff;
+                        text-decoration: none;
+                    }
+                }
+            }
+        }
+
+        .messager-name {
+            margin-bottom: .25rem;
+
+            .sender-name {
+                font-size: 1rem;
+                padding: .25rem;
+                color: #aaa;
+            }
+
+            .template-btn {
+                font-size: 1rem;
+                color: #fff;
+            }
+        }
+
+        .message-group {
+            display: flex;
+            align-items: flex-end;
+
+            &.right-side {
+                flex-direction: row-reverse;
+            }
+        }
+
+        .send-time {
+            margin: 0 .5rem;
+            color: grey;
+            font-size: .6rem;
+            vertical-align: bottom;
+        }
+
+        .template {
+            position: relative;
+            border: 0.0625rem solid #efefef;
+            border-radius: 1rem;
+            width: 18rem;
+            min-width: 18rem;
+            height: 25rem;
+            word-break: break-all;
+
+            .top-img-container {
+                position: relative;
+                width: 100%;
+                height: 43%;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 1rem 1rem 0 0;
+                }
+            }
+
+            .template-title {
+                font-weight: bold;
+                background-color: #fff;
+            }
+
+            .template-desc {
+                color: #8c8c8c;
+                background-color: #fff;
+                font-size: 1rem;
+            }
+
+            .template-buttons {
+                height: 44%;
+                color: #7caeff;
+                background-color: #fff;
+                border: 0.0625rem solid #efefef;
+                border-radius: 0 0 1rem 1rem;
+            }
+
+            .template-button {
+                overflow: hidden;
+                font-weight: bold;
+                font-size: 1rem;
+            }
+
+            .template-button1,
+            .template-button2,
+            .template-button3 {
+                position: relative;
+                height: 3rem;
+                font-size: .5rem;
+                padding: 0 .5rem;
+            }
+        }
+
+        // small template
+        .template-sm {
+            border: 0.0625rem solid #efefef;
+            border-radius: 1rem;
+            width: 18rem;
+            height: 8rem;
+            position: relative;
+
+            .template-sm-title,
+            .template-sm-buttons {
+                position: relative;
+            }
+
+            .template-sm-title {
+                border-radius: 1rem 1rem 0 0;
+                background-color: #efefef;
+                line-height: 3rem;
+                height: 3.5rem;
+                padding: 0 1rem;
+                font-weight: bold;
+                position: relative;
+            }
+
+            .template-sm-buttons {
+                height: 4.5rem;
+                padding: 0 1rem;
+                position: relative;
+                color: #7caeff;
+                background-color: #fff;
+                border-radius: 0 0 1rem 1rem;
+
+                .template-confirm {
+                    overflow: hidden;
+                    font-weight: bold;
+                    font-size: 1rem;
+                }
+            }
+
+            .template-sm-button1,
+            .template-sm-button2 {
+                position: absolute;
+                width: 49.5%;
+                height: 3rem;
+                line-height: 3rem;
+                text-align: center;
+            }
+
+            .template-sm-button1 {
+                left: 0;
+            }
+    
+            .template-sm-button2 {
+                right: 0;
+            }
+        }
+
+        .imagemap-message-container {
+            position: relative;
+
+            .imagemap-message-content {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                right: 0;
+                bottom: 0; 
+                border: 1px solid #ccc;
+                border-radius: .5rem; 
+                padding: 1%;
+            }
+
+            .imagemap-btn {
+                position: absolute; 
+                width: 5rem;
+                height: 1.4rem;
+                top: -1.5rem; 
+                left: 0; 
+                font-size: 1rem;
+            }
+        }
+    }
+}

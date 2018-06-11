@@ -1,4 +1,14 @@
-@keyframes GropUpScale {
-    form { transform: scale(0); }
-    to { transform: scale(1); }
+.ScaleYGrowUp {
+    animation-name: ScaleYGrowUp;
+    animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+@keyframes ScaleGropUp {
+    form { transform: scale3d(0, 0, 1); }
+    to { transform: scale3d(1, 1, 1); }
+}
+
+@keyframes ScaleYGrowUp {
+    from { transform: scale3d(1, 0, 1); }
+    to { transform: scale3d(1, 1, 1); }
 }

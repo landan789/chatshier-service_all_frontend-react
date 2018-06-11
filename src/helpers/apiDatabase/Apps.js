@@ -15,13 +15,12 @@ class Apps extends Core {
     constructor() {
         super();
         this.apiEndPoint += 'apps/';
-        this.enums = Object.freeze({
-            type: {
-                SYSTEM: 'SYSTEM',
-                CHATSHIER: 'CHATSHIER',
-                LINE: 'LINE',
-                FACEBOOK: 'FACEBOOK'
-            }
+        this.TYPES = Object.freeze({
+            SYSTEM: 'SYSTEM',
+            CHATSHIER: 'CHATSHIER',
+            LINE: 'LINE',
+            FACEBOOK: 'FACEBOOK',
+            WECHAT: 'WECHAT'
         });
     }
 

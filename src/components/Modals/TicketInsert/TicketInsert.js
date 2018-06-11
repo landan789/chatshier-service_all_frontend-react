@@ -11,7 +11,7 @@ import { DAY } from '../../../utils/unitTime';
 import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
 
-const appTypes = apiDatabase.apps.enums.type;
+const APP_TYPES = apiDatabase.apps.TYPES;
 
 class TicketInsertModal extends ModalCore {
     static propTypes = {
@@ -81,7 +81,7 @@ class TicketInsertModal extends ModalCore {
         this.appsConsumers = {};
         for (let appId in apps) {
             let app = apps[appId];
-            if (app.isDeleted || appTypes.CHATSHIER === app.type) {
+            if (app.isDeleted || APP_TYPES.CHATSHIER === app.type) {
                 continue;
             }
 
@@ -100,7 +100,7 @@ class TicketInsertModal extends ModalCore {
                 let messagers = chatrooms[chatroomId].messagers;
                 for (let messagerId in messagers) {
                     let messager = messagers[messagerId];
-                    if (appTypes.CHATSHIER === messager.type) {
+                    if (APP_TYPES.CHATSHIER === messager.type) {
                         continue;
                     }
                     let consumer = Object.assign({}, this.props.consumers[messager.platformUid]);

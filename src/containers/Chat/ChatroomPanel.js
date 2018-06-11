@@ -12,7 +12,6 @@ import { notify } from '../../components/Notify/Notify';
 import { findChatroomMessager, findMessagerSelf } from './Chat';
 import Message from './Message';
 
-import sendBtnSvg from '../../image/send-btn.svg';
 import './ChatroomPanel.css';
 
 const CHATSHIER = 'CHATSHIER';
@@ -245,7 +244,7 @@ class ChatroomPanel extends React.Component {
                 <div className="w-100 chatroom-body">
                     <div className="chat-content">
                         <div className="h-100 d-flex flex-column message-panel" ref={(elem) => (this.messagePanelElem = elem)}>
-                            {messageIds.length < 10 && <p className="message-time font-weight-bold">-沒有更舊的歷史訊息-</p>}
+                            {messageIds.length < 10 && <p className="text-center message-time font-weight-bold">-沒有更舊的歷史訊息-</p>}
                             {messageIds.map((messageId) => {
                                 let message = messages[messageId];
                                 let messagerId = message.messager_id;
@@ -271,7 +270,8 @@ class ChatroomPanel extends React.Component {
                                     'audio' === message.type ||
                                     'video' === message.type ||
                                     'sticker' === message.type ||
-                                    'template' === message.type
+                                    'template' === message.type ||
+                                    'imagemap' === message.type
                                 );
 
                                 // 如果訊息是來自於 Chatshier 或 系統自動回覆 的話，訊息一律放在右邊
@@ -286,14 +286,14 @@ class ChatroomPanel extends React.Component {
                                 if (dateStr !== this.nowDateStr) {
                                     this.nowDateStr = dateStr;
                                     dateStrSymbol = (
-                                        <p className="message-time font-weight-bold">{this.nowDateStr}</p>
+                                        <p className="text-center message-time font-weight-bold">{this.nowDateStr}</p>
                                     );
                                 }
                                 let messageTime = messageDatetime.getTime();
                                 let datetimeStrSymbol = null;
                                 if (messageTime - this.prevTime > 15 * MINUTE) {
                                     datetimeStrSymbol = (
-                                        <p className="message-time font-weight-bold">{this._toDateStr(messageTime)}</p>
+                                        <p className="text-center message-time font-weight-bold">{this._toDateStr(messageTime)}</p>
                                     );
                                 }
                                 this.prevTime = messageTime;
@@ -303,6 +303,7 @@ class ChatroomPanel extends React.Component {
                                         {dateStrSymbol}
                                         {datetimeStrSymbol}
                                         <Message
+                                            appType={app.type}
                                             shouldRightSide={shouldRightSide}
                                             senderName={senderName}
                                             isMedia={isMedia}

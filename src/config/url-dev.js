@@ -5,30 +5,29 @@ const urlConfig = {
     /**
      * 指向 www.chatshier 專案的伺服器位址
      */
-    wwwUrl: 'https://www.chatshier.com',
+    wwwUrl: 'https://www.dev.chatshier.com',
     port: 80,
     /**
      * wwwUrl 伺服器的首頁路徑
      */
-    index: '/index.html',
+    index: '/index',
     /**
      * 服務項目頁面路徑
      */
-    terms: '/terms.html',
+    terms: '/terms',
     /**
      * 隱私權頁面路徑
      */
-    privacy: '/privacy.html',
+    privacy: '/privacy',
     /**
      * 外部服務發送 webhook 至本機的前輟網址，
-     * 本機開發時可使用 ngrok 產生外部鏈結，
-     * 如: https://ab971dae.ngrok.io
+     * 本機開發時可使用 ngrok 產生外部鏈結
      */
-    webhookUrl: 'https://dev-chatshier.herokuapp.com/webhook',
+    webhookUrl: 'https://service.dev.chatshier.com/webhook',
     /**
      * 指向 service.chatshier 專案的 API 伺服器位址
      */
-    apiUrl: '//api.chatshier.com/'
+    apiUrl: '//service.dev.chatshier.com/'
 };
 
 export default urlConfig;

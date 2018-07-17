@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader, ModalBody,
     ModalFooter, Form, FormGroup, Label,
-    Input, Row, Col, Table, Card,
-    CardHeader, CardBody, Dropdown, DropdownToggle } from 'reactstrap';
+    Input, Card, CardHeader, CardBody,
+    Dropdown, DropdownToggle } from 'reactstrap';
 import { DateTimePicker } from 'react-widgets';
 
 import apiDatabase from '../../../helpers/apiDatabase/index';

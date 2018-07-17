@@ -18,11 +18,13 @@ class SignOut extends React.Component {
         super(props, ctx);
 
         browserHelper.setTitle(this.props.t('Sign out'));
-        return authHelper.signOut().then(() => {
+        this.isSignedOut = authHelper.signOut().then(() => {
             return gCalendarHelper.signOut();
-        }).then(() => {
-            this.props.history.replace(ROUTES.SIGNIN);
         });
+    }
+
+    componentDidMount() {
+        return this.isSignedOut.then(() => this.props.history.replace(ROUTES.SIGNIN));
     }
 
     render() {

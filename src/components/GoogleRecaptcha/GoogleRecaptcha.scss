@@ -1,3 +1,7 @@
 .recaptcha-container {
     height: 5rem;
+
+    .g-recaptcha {
+        transform-origin: left center;
+    }
 }

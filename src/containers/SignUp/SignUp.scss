@@ -19,7 +19,7 @@ $_signup-bg-color: $primary-color;
 
     @include media-phone() {
         & {
-            padding: 2rem 1rem 0;
+            padding: 2rem .5rem 0;
         }
     }
 

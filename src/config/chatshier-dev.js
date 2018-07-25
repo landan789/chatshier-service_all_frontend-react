@@ -1,4 +1,4 @@
-export default {
+const chatshierCfg = window.CHATSHIER || {
     CONFIG: {
         // https://developers.line.me/en/docs/messaging-api/reference/#upload-rich-menu-image
         // According to LINE official document, the max size of richmenu image should set to 1 MB
@@ -51,3 +51,5 @@ export default {
         apiUrl: '..'
     }
 };
+
+export default chatshierCfg;

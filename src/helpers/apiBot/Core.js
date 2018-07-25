@@ -1,9 +1,9 @@
-import urlConfig from '../../config/url';
+import chatshierCfg from '../../config/chatshier';
 
 class Core {
     constructor() {
-        let config = window.urlConfig || urlConfig;
-        this.apiEndPoint = config.apiUrl + '/api/bot/';
+        let URL = chatshierCfg.URL;
+        this.apiEndPoint = URL.apiUrl + '/api/bot/';
     }
 
     /**

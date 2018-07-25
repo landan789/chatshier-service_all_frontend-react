@@ -1,6 +1,6 @@
 import socketClient from 'socket.io-client';
 import SOCKET_EVENTS from '../config/socket-events';
-import urlConfig from '../config/url';
+import chatshierCfg from '../config/chatshier';
 
 import authHelper from './authentication';
 import mainStore from '../redux/mainStore';
@@ -29,7 +29,8 @@ class SocketHelper {
                 return this.disconnect();
             }
         }).then(() => {
-            this.socket = socketClient.connect(urlConfig.apiUrl + SOCKET_NAMESPACE);
+            let URL = chatshierCfg.URL;
+            this.socket = socketClient.connect(URL.apiUrl + SOCKET_NAMESPACE);
             return new Promise((resolve) => {
                 this.socket.once('connect', () => {
                     console.info('=== socket connected ===');

@@ -125,7 +125,7 @@ $ctrl-item-icon-size: 1rem;
             }
 
             span {
-                max-width: 60%;
+                max-width: 55%;
                 white-space: nowrap;
                 overflow-x: hidden;
                 text-overflow: ellipsis;
@@ -133,20 +133,20 @@ $ctrl-item-icon-size: 1rem;
         }
 
         .nested {
-            &.list-group-item,
-            > .list-group-item {
+            > :first-child,
+            &.list-group-item {
                 margin-left: .5rem;
             }
 
             .nested {
-                &.list-group-item,
-                > :first-child {
+                > :first-child,
+                &.list-group-item {
                     margin-left: 1rem;
                 }
 
                 .nested {
-                    &.list-group-item,
-                    > :first-child {
+                    > :first-child,
+                    &.list-group-item {
                         margin-left: 1.25rem;
                     }
                 }

@@ -19,18 +19,15 @@ import './Toolbar.css';
 
 const setingsItems = [
     {
-        link: ROUTES.SETTINGS_USERS,
+        link: ROUTES.SETTINGS,
         icon: 'fa fa-user',
-        text: 'Settings'
-    }, {
-        link: ROUTES.SETTINGS_APPS,
-        icon: 'fab fa-android',
-        text: 'Integration'
+        text: 'Settings',
+        useReactRouter: false
     }, {
         link: ROUTES.SIGNOUT,
-        icon: 'fa fa-sign-out-alt',
+        icon: 'fas fa-sign-out-alt',
         text: 'Sign out',
-        useReactRouter: true
+        useReactRouter: false
     }
 ];
 
@@ -182,7 +179,7 @@ class Toolbar extends React.Component {
                 <header className="chsr toolbar">
                     <nav className="navbar px-1">
                         <button type="button"
-                            className="btn text-light transparent ctrl-panel-toggle d-sm-none"
+                            className="btn text-light transparent ctrl-panel-toggle d-md-none"
                             onClick={this.mobileToggleControlPanel}>
                             <i className="fas fa-bars"></i>
                         </button>
@@ -203,7 +200,7 @@ class Toolbar extends React.Component {
 
                         <Dropdown isOpen={this.state.dropdownOpen} toggle={this.mobileToggleSetting}>
                             <DropdownToggle color="none" className="text-light transparent">
-                                <i className="fas fa-ellipsis-v"></i>
+                                <i className="fas fa-cog fa-lg"></i>
                             </DropdownToggle>
                             <DropdownMenu className="settings-menu">
                                 {setingsItems.map((item, i) => (

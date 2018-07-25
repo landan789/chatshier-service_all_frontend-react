@@ -49,6 +49,12 @@ $_toolbar-bg-color: $primary-color;
             }
         }
     }
+
+    @media (max-width: 768px) {
+        .d-md-none {
+            display: block !important;
+        }
+    }
 }
 
 .chsr .dropdown-menu {

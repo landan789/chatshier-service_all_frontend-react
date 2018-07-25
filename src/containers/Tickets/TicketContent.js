@@ -3,12 +3,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Aux from 'react-aux';
 import { Col, CardGroup, Card, CardText,
-    CardTitle, CardSubtitle, Button } from 'reactstrap';
+    CardTitle, CardSubtitle, Button, UncontrolledTooltip } from 'reactstrap';
 
 import { toDueDateSpan, toPriorityColor,
     toPriorityText, toStatusText } from '../../utils/ticket';
 import { formatDate, formatTime } from '../../utils/unitTime';
 import TicketEditModal from '../../components/Modals/TicketEdit/TicketEdit';
+import apiDatabase from '../../helpers/apiDatabase/index';
+import authHelper from '../../helpers/authentication';
+import { notify } from '../../components/Notify/Notify';
 
 import defaultAvatar from '../../image/defautlt-avatar.png';
 
@@ -61,6 +64,19 @@ class TicketContent extends React.Component {
 
     closeEditModal(ev) {
         this.setState({ editModalData: null });
+    }
+
+    deleteTicket(appId, ticketId) {
+        if (!window.confirm('確定要刪除嗎？')) {
+            return;
+        }
+        let userId = authHelper.userId;
+
+        return apiDatabase.appsTickets.delete(appId, ticketId, userId).then(() => {
+            return notify('刪除成功', { type: 'success' });
+        }).catch(() => {
+            return notify('刪除失敗', { type: 'danger' });
+        });
     }
 
     render() {
@@ -125,6 +141,8 @@ class TicketContent extends React.Component {
                     // 如果有輸入搜尋文字時，有包含在要顯示的文字中時才顯示
                     // 否則此欄位資料就不加入渲染的陣列中
                     shouldShow &= (
+                        (consumer && consumer.name.includes(searchKeyword)) ||
+                        agentName.includes(searchKeyword) ||
                         description.includes(searchKeyword) ||
                         statusText.includes(searchKeyword) ||
                         priorityText.includes(searchKeyword) ||
@@ -161,11 +179,23 @@ class TicketContent extends React.Component {
                                     <span className="ticket-value">{agentName || '無'}</span>
                                 </div>
                             </CardSubtitle>
+
                             <CardText className="d-flex align-items-center">
                                 <span className="mr-1 card-label">內容:</span>
                                 <span className="ticket-value">{description}</span>
                             </CardText>
-                            <Button onClick={() => this.openEditModal(appId, ticketId)}>編輯</Button>
+
+                            <div className="d-flex w-100 buttons-container">
+                                <Button className="w-100 mr-1" color="light" id={'ticketEditBtn_' + ticketId} onClick={() => this.openEditModal(appId, ticketId)}>
+                                    <i className="fas fa-edit text-muted"></i>
+                                </Button>
+                                <UncontrolledTooltip placement="top" delay={0} target={'ticketEditBtn_' + ticketId}>編輯</UncontrolledTooltip>
+
+                                <Button className="w-100" color="light" id={'ticketDeleteBtn_' + ticketId} onClick={() => this.deleteTicket(appId, ticketId)}>
+                                    <i className="fas fa-trash-alt text-muted"></i>
+                                </Button>
+                                <UncontrolledTooltip placement="top" delay={0} target={'ticketDeleteBtn_' + ticketId}>刪除</UncontrolledTooltip>
+                            </div>
                         </Card>
                     </Col>
                 );

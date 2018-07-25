@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Aux from 'react-aux';
-import { Fade, Card, ButtonGroup, Button } from 'reactstrap';
-import { Trans } from 'react-i18next';
+import { Fade, Card, ButtonGroup, Button, UncontrolledTooltip } from 'reactstrap';
+// import { Trans } from 'react-i18next';
 import { withTranslate } from '../../i18n';
 
 import ROUTES from '../../config/route';
@@ -130,41 +130,45 @@ class Tickets extends React.Component {
             <Aux>
                 <ControlPanel />
                 <PageWrapper toolbarTitle={this.props.t('To-Do items')}>
-                    <Fade in className="mt-5 container ticket-wrapper">
+                    <Fade in className="align-items-center mt-5 container ticket-wrapper">
                         <Card className="pb-5 chsr">
                             <div className="mx-4 px-3 ticket-toolbar">
                                 <ButtonGroup className="mr-auto">
-                                    <Button color="info"
+                                    <Button color="info" id="allTicketsFilter"
                                         className={this.state.statusFilter === STATUS_TYPES.NONE ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.NONE })}>
                                         <i className="fas fa-list-alt fa-1p5x"></i>
                                     </Button>
-                                    <Button color="info"
+                                    <UncontrolledTooltip placement="top" delay={0} target="allTicketsFilter">全部</UncontrolledTooltip>
+
+                                    <Button color="info" id="pendingFilter"
                                         className={this.state.statusFilter === STATUS_TYPES.PENDING ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.PENDING })}>
                                         <i className="fas fa-times-circle fa-1p5x"></i>
                                     </Button>
-                                    <Button color="info"
+                                    <UncontrolledTooltip placement="top" delay={0} target="pendingFilter">未處理</UncontrolledTooltip>
+
+                                    <Button color="info" id="processingFilter"
                                         className={this.state.statusFilter === STATUS_TYPES.PROCESSING ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.PROCESSING })}>
                                         <i className="fas fa-play-circle fa-1p5x"></i>
                                     </Button>
-                                    <Button color="info"
+                                    <UncontrolledTooltip placement="top" delay={0} target="processingFilter">處理中</UncontrolledTooltip>
+
+                                    <Button color="info" id="resolvedFilter"
                                         className={this.state.statusFilter === STATUS_TYPES.RESOLVED ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.RESOLVED })}>
                                         <i className="fas fa-check-circle fa-1p5x"></i>
                                     </Button>
-                                    <Button color="info"
+                                    <UncontrolledTooltip placement="top" delay={0} target="resolvedFilter">已處理</UncontrolledTooltip>
+
+                                    <Button color="info" id="closedFilter"
                                         className={this.state.statusFilter === STATUS_TYPES.CLOSED ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.CLOSED })}>
                                         <i className="fas fa-minus-circle fa-1p5x"></i>
                                     </Button>
+                                    <UncontrolledTooltip placement="top" delay={0} target="closedFilter">已關閉</UncontrolledTooltip>
                                 </ButtonGroup>
-
-                                <Button className="ticket-insert" color="light" onClick={this.openInsertModal}>
-                                    <span className="fas fa-plus fa-fw"></span>
-                                    <span><Trans i18nKey="Add To-Do item" /></span>
-                                </Button>
 
                                 <div className="d-flex align-items-center w-25 mx-0 search">
                                     <input className="search-box"
@@ -173,6 +177,10 @@ class Tickets extends React.Component {
                                         value={this.state.searchKeyword}
                                         onChange={this.keywordChanged} />
                                 </div>
+
+                                <Button size="sm" className="ticket-insert" color="light" onClick={this.openInsertModal}>
+                                    <i className="fas fa-plus fa-fw"></i>
+                                </Button>
                             </div>
 
                             <TicketContent className="mx-4"

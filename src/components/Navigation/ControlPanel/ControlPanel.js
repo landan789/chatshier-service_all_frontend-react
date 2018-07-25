@@ -25,10 +25,6 @@ import { updateSearchKeyword } from '../../../redux/actions/controlPanelStore/se
 
 import EdgeToggle from '../EdgeToggle/EdgeToggle';
 import { findChatroomMessager, findMessagerSelf } from '../../../containers/Chat/Chat';
-import AppInsertModal from '../../../components/Modals/AppInsert/AppInsert';
-import AppEditModal from '../../../components/Modals/AppEdit/AppEdit';
-import GroupInsertModal from '../../../components/Modals/GroupInsert/GroupInsert';
-import GroupEditModal from '../../../components/Modals/GroupEdit/GroupEdit';
 
 import logoPng from '../../../image/logo-no-transparent.png';
 import logoSmallPng from '../../../image/logo-small.png';
@@ -53,41 +49,62 @@ const linkItems = [
         link: ROUTES.CALENDAR,
         icon: 'far fa-calendar-alt fa-fw',
         text: 'Calendar',
-        useReactRouter: true
+        useReactRouter: false
     }, {
         link: ROUTES.TICKETS,
-        icon: 'fa fa-list-ul fa-fw',
+        icon: 'fas fa-list-ul fa-fw',
         text: 'To-Do items',
-        useReactRouter: true
+        useReactRouter: false
     }, {
         link: ROUTES.ANALYSIS,
-        icon: 'fa fa-chart-bar fa-fw',
+        icon: 'fas fa-chart-bar fa-fw',
         text: 'Analysis',
-        useReactRouter: true
+        useReactRouter: false
     }, {
-        icon: 'fa fa-envelope fa-fw',
+        icon: 'fas fa-envelope fa-fw',
         text: 'Messages',
         dropdownItems: [
             {
                 link: ROUTES.COMPOSES,
-                icon: 'fa fa-comments',
+                icon: 'fas fa-comments',
                 text: 'Composes',
-                useReactRouter: true
+                useReactRouter: false
             }, {
                 link: ROUTES.AUTOREPLIES,
-                icon: 'fa fa-comments',
+                icon: 'fas fa-comments',
                 text: 'Auto Replies',
-                useReactRouter: true
+                useReactRouter: false
             }, {
                 link: ROUTES.KEYWORDREPLIES,
-                icon: 'fa fa-comments',
+                icon: 'fas fa-comments',
                 text: 'Keyword Replies',
-                useReactRouter: true
+                useReactRouter: false
             }, {
                 link: ROUTES.GREETINGS,
-                icon: 'fa fa-comments',
+                icon: 'fas fa-comments',
                 text: 'Greetings',
-                useReactRouter: true
+                useReactRouter: false
+            }
+        ]
+    }, {
+        icon: 'far fa-images fa-fw',
+        text: 'Graphic content',
+        dropdownItems: [
+            {
+                link: ROUTES.RICHMENU,
+                icon: 'fas fa-image',
+                text: 'Rich menu',
+                useReactRouter: false
+            }, {
+                link: ROUTES.IMAGEMAP,
+                icon: 'fas fa-comment',
+                text: 'Image map message',
+                useReactRouter: false
+            }, {
+                link: ROUTES.TEMPLATE,
+                icon: 'fas fa-clone',
+                text: 'Template message',
+                useReactRouter: false
             }
         ]
     }
@@ -97,7 +114,7 @@ const startEvents = ['animationstart', 'oAnimationStart', 'webkitAnimationStart'
 const endEvents = ['animationend', 'oAnimationEnd', 'webkitAnimationEnd'];
 
 const classes = {
-    ctrlPanel: 'chsr ctrl-panel swiper-container h-100 m-0 d-sm-block',
+    ctrlPanel: 'chsr ctrl-panel swiper-container h-100 m-0 d-md-block',
     menuToggle: 'ml-auto p-2 fas fa-times d-sm-none menu-toggle'
 };
 
@@ -120,11 +137,6 @@ class ControlPanel extends React.Component {
         this.swiper = null;
 
         this.state = {
-            isOpenAppInertModal: false,
-            isOpenGroupInertModal: false,
-            editAppId: void 0,
-            editGroupId: void 0,
-
             isInChat: ROUTES.CHAT === this.props.history.location.pathname,
             gridState: this.getGridState(window.innerWidth),
             isOpen: false,
@@ -143,13 +155,6 @@ class ControlPanel extends React.Component {
         this.startAnimating = this.startAnimating.bind(this);
         this.endAnimating = this.endAnimating.bind(this);
         this.putAwayControlPanel = this.putAwayControlPanel.bind(this);
-
-        this.openAppInsertModal = this.openAppInsertModal.bind(this);
-        this.openGroupInsertModal = this.openGroupInsertModal.bind(this);
-        this.closeAppInsertModal = this.closeAppInsertModal.bind(this);
-        this.closeAppEditModal = this.closeAppEditModal.bind(this);
-        this.closeGroupInsertModal = this.closeGroupInsertModal.bind(this);
-        this.closeGroupEditModal = this.closeGroupEditModal.bind(this);
     }
 
     componentDidMount() {
@@ -217,7 +222,8 @@ class ControlPanel extends React.Component {
     }
 
     linkTo(route, useReactRouter) {
-        if ('sm' === this.state.gridState) {
+        if ('sm' === this.state.gridState ||
+            'md' === this.state.gridState) {
             controlPanelStore.dispatch(closePanel());
         }
 
@@ -312,42 +318,6 @@ class ControlPanel extends React.Component {
         } else {
             return 'xl';
         }
-    }
-
-    openAppInsertModal(ev) {
-        ev.stopPropagation();
-        this.setState({ isOpenAppInertModal: true });
-    }
-
-    openAppEditModal(ev, appId) {
-        ev.stopPropagation();
-        this.setState({ editAppId: appId });
-    }
-
-    openGroupInsertModal(ev) {
-        ev.stopPropagation();
-        this.setState({ isOpenGroupInertModal: true });
-    }
-
-    openGroupEditModal(ev, groupId) {
-        ev.stopPropagation();
-        this.setState({ editGroupId: groupId });
-    }
-
-    closeAppInsertModal() {
-        this.setState({ isOpenAppInertModal: false });
-    }
-
-    closeAppEditModal() {
-        this.setState({ editAppId: void 0 });
-    }
-
-    closeGroupInsertModal() {
-        this.setState({ isOpenGroupInertModal: false });
-    }
-
-    closeGroupEditModal() {
-        this.setState({ editGroupId: void 0 });
     }
 
     renderChatroomList() {
@@ -526,7 +496,7 @@ class ControlPanel extends React.Component {
                             {item.dropdownItems.map((dropdownItem, j) => (
                                 <ListGroupItem className="text-light nested" key={j} onClick={() => this.linkTo(dropdownItem.link, dropdownItem.useReactRouter)}>
                                     <i className={dropdownItem.icon}></i>
-                                    <span><Trans i18nKey={dropdownItem.text} /></span>
+                                    <span><Trans i18nKey={dropdownItem.text}>{dropdownItem.text}</Trans></span>
                                 </ListGroupItem>
                             ))}
                         </Collapse>
@@ -542,7 +512,7 @@ class ControlPanel extends React.Component {
                     this.linkTo(item.link, item.useReactRouter);
                 }}>
                     <i className={item.icon}></i>
-                    <span><Trans i18nKey={item.text} /></span>
+                    <span><Trans i18nKey={item.text}>{item.text}</Trans></span>
                 </ListGroupItem>
             );
         });
@@ -550,49 +520,15 @@ class ControlPanel extends React.Component {
 
     render() {
         let isInChat = ROUTES.CHAT === this.props.history.location.pathname;
-        let isSmall = 'sm' === this.state.gridState;
+        let isSmall = 'sm' === this.state.gridState || 'md' === this.state.gridState;
         let isOpen = this.state.isOpen || !isSmall;
         let isPutAway = this.state.isPutAway;
         let shouldShowBackdrop = isOpen && isSmall;
-        let itemCollapse = this.state.itemCollapse;
 
         return (
             <Aux>
                 <div className={classes.ctrlPanel + (isSmall ? ' animated' : '') + (isOpen ? ' slide-in' : ' slide-out') + (isPutAway ? ' put-away' : '')} ref={this.initSwiper}>
                     <div className="swiper-wrapper">
-                        {!isPutAway &&
-                        <div className="swiper-slide">
-                            <ListGroup className="detail-list">
-                                <ListGroupItem className="text-light py-0 pl-2 logo-item" onClick={() => this.linkTo()}>
-                                    <div className="p-1 ctrl-panel-logo">
-                                        <img className="w-100 h-100" src={logoSmallPng} alt="" />
-                                    </div>
-                                    <span className="ctrl-panel-title">Chatshier</span>
-                                    <i className={classes.menuToggle}></i>
-                                </ListGroupItem>
-
-                                <ListGroupItem className="text-light" onClick={() => this.toggleItem('GROUPS')}>
-                                    <i className="fas fa-building"></i>
-                                    <span><Trans i18nKey="Groups" /></span>
-                                </ListGroupItem>
-
-                                <Collapse className="nested" isOpen={!itemCollapse['GROUPS']}>
-                                    {Object.keys(this.props.groups).map((groupId) => (
-                                        <ListGroupItem key={groupId} className="text-light"
-                                            onClick={(ev) => this.openGroupEditModal(ev, groupId)}>
-                                            <i className="fas fa-users"></i>
-                                            <span>{this.props.groups[groupId].name}</span>
-                                        </ListGroupItem>
-                                    ))}
-                                </Collapse>
-
-                                <ListGroupItem className="text-light" onClick={this.openGroupInsertModal}>
-                                    <i className="fas fa-plus"></i>
-                                    <span><Trans i18nKey="Add" /></span>
-                                </ListGroupItem>
-                            </ListGroup>
-                        </div>}
-
                         <div className="swiper-slide">
                             {!isPutAway &&
                             <ListGroup className="detail-list">
@@ -623,7 +559,7 @@ class ControlPanel extends React.Component {
                                     <i className={classes.menuToggle}></i>
                                 </ListGroupItem>
 
-                                <ListGroupItem className="text-light" onClick={() => !isInChat && this.linkTo(ROUTES.CHAT, true)}>
+                                <ListGroupItem className="text-light" onClick={() => !isInChat && this.linkTo(ROUTES.CHAT, false)}>
                                     <i className="fas fa-comment-dots fa-fw"></i>
                                     <span><Trans i18nKey="Chatroom" /></span>
                                     {isInChat &&
@@ -660,28 +596,9 @@ class ControlPanel extends React.Component {
                             </ListGroup>
                         </div>
                     </div>
-                    <div className="swiper-pagination w-100"></div>
                 </div>
                 <EdgeToggle className={isPutAway ? 'put-away' : ''} onClick={this.putAwayControlPanel} />
                 <div className={'ctrl-panel-backdrop' + (shouldShowBackdrop ? '' : ' d-none')} onClick={() => this.linkTo()}></div>
-
-                {this.state.isOpenAppInertModal &&
-                <AppInsertModal isOpen={this.state.isOpenAppInertModal}
-                    close={this.closeAppInsertModal} />}
-
-                {!!this.state.editAppId &&
-                <AppEditModal isOpen={!!this.state.editAppId}
-                    appId={this.state.editAppId}
-                    close={this.closeAppEditModal} />}
-
-                {this.state.isOpenGroupInertModal &&
-                <GroupInsertModal isOpen={this.state.isOpenGroupInertModal}
-                    close={this.closeGroupInsertModal} />}
-
-                {!!this.state.editGroupId &&
-                <GroupEditModal isOpen={!!this.state.editGroupId}
-                    groupId={this.state.editGroupId}
-                    close={this.closeGroupEditModal} />}
             </Aux>
         );
     }

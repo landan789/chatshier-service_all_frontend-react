@@ -11,7 +11,7 @@
         max-width: calc(100% - #{$ctrl-panel-put-away-width});
     }
 
-    @media (max-width: 576px) {
+    @media (max-width: 768px) {
         & {
             max-width: 100%;
         }

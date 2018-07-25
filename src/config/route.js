@@ -6,8 +6,10 @@ const ROUTES = {
     CHAT: '/chat',
     COMPOSES: '/composes',
     GREETINGS: '/greetings',
+    IMAGEMAP: '/imagemap',
     KEYWORDREPLIES: '/keywordreplies',
     RESET_PASSWORD: '/reset-password',
+    RICHMENU: '/richmenu',
     SIGNIN: '/signin',
     SIGNUP: '/signup',
     SIGNOUT: '/signout',
@@ -16,6 +18,7 @@ const ROUTES = {
     SETTINGS_GROUPS: '/settings/groups',
     SETTINGS_FIELDS: '/settings/fields',
     SETTINGS_USERS: '/settings/users',
+    TEMPLATE: '/template',
     TICKETS: '/tickets'
 };
 

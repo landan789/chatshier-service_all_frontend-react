@@ -66,6 +66,7 @@
     "Frequency of word": "Frequency of word",
 
     "Gender": "Gender",
+    "Graphic content": "Graphic content",
     "Greetings": "Greetings",
     "Group name": "Group name",
     "Groups": "Groups",
@@ -73,6 +74,7 @@
     "Hour": "Hour",
 
     "I agree Chatshier": "I agree Chatshier",
+    "Image map message": "Image map message",
     "Integration": "Integration",
     "Invalid email": "Invalid email",
     "Invalid verification code, Please verify again!": "Invalid verification code, Please verify again!",
@@ -127,6 +129,7 @@
     "Remove": "Remove",
     "Remove successful!": "Remove successful!",
     "Reset password": "Reset password",
+    "Rich menu": "Rich menu",
 
     "Sent email to your mailbox": "Sent email to your mailbox",
     "Sign in": "Sign in",
@@ -134,6 +137,7 @@
     "Sign out": "Sign out",
     "Sign up": "Sign up",
     "Signing up": "Signing up",
+    "Search": "Search",
     "Search messages of text...": "Search messages of text...",
     "Select a bot": "Select a bot",
     "Select a data type": "Select a data type",
@@ -144,6 +148,7 @@
     "Start datetime": "Start datetime",
     "Start datetime must be earlier than end datetime": "Start datetime must be earlier than end datetime",
 
+    "Template message": "Template message",
     "Terms": "Terms",
     "The entered new password is inconsistent": "The entered new password is inconsistent",
     "Title": "Title",

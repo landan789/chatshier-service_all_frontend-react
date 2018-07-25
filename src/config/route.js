@@ -1,25 +1,27 @@
 const ROUTES = {
-    ANALYSIS: '/analysis',
-    AUTOREPLIES: '/autoreplies',
+    ANALYSIS: '/analyze',
+    APPOINTMENT: '/appointment',
+    AUTOREPLIES: '/autoreply',
     CALENDAR: '/calendar',
+    CATEGORY_PRODUCT: '/category-product',
     CHANGE_PASSWORD: '/change-password',
     CHAT: '/chat',
-    COMPOSES: '/composes',
-    GREETINGS: '/greetings',
+    COMPOSES: '/compose',
+    GREETINGS: '/greeting',
     IMAGEMAP: '/imagemap',
-    KEYWORDREPLIES: '/keywordreplies',
+    KEYWORDREPLIES: '/keywordsreply',
     RESET_PASSWORD: '/reset-password',
     RICHMENU: '/richmenu',
     SIGNIN: '/signin',
     SIGNUP: '/signup',
     SIGNOUT: '/signout',
-    SETTINGS: '/settings',
+    SETTINGS: '/setting',
     SETTINGS_APPS: '/settings/apps',
     SETTINGS_GROUPS: '/settings/groups',
     SETTINGS_FIELDS: '/settings/fields',
     SETTINGS_USERS: '/settings/users',
     TEMPLATE: '/template',
-    TICKETS: '/tickets'
+    TICKETS: '/ticket'
 };
 
 export default ROUTES;

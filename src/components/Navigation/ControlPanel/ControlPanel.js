@@ -227,7 +227,7 @@ class ControlPanel extends React.Component {
             controlPanelStore.dispatch(closePanel());
         }
 
-        if (!route) {
+        if (!(route && window.location.pathname !== route)) {
             return;
         }
 

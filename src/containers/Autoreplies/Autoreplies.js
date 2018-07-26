@@ -117,10 +117,10 @@ class Autoreplies extends React.Component {
 }
 
 const mapStateToProps = (storeState, ownProps) => {
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps,
         appsAutoreplies: storeState.appsAutoreplies
-    };
+    });
 };
 
 export default withRouter(connect(mapStateToProps)(Autoreplies));

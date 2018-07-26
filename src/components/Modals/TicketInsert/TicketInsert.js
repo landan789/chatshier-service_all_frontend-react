@@ -70,7 +70,7 @@ class TicketInsertModal extends ModalCore {
     appsToOptions() {
         let options = [];
 
-        /** @type {Chatshier.Apps} */
+        /** @type {Chatshier.Model.Apps} */
         let apps = this.props.apps || {};
         let firstAppId = this.props.appId;
 
@@ -137,7 +137,7 @@ class TicketInsertModal extends ModalCore {
             return options;
         }
 
-        /** @type {Chatshier.Users} */
+        /** @type {Chatshier.Model.Users} */
         let agents = appsAgents[appId].agents;
 
         let firstAgentUserId = '';
@@ -175,7 +175,7 @@ class TicketInsertModal extends ModalCore {
             newState.platformUid = platformUid;
         }
 
-        /** @type {Chatshier.Consumer} */
+        /** @type {Chatshier.Model.Consumer} */
         let consumers = this.appsConsumers[appId].consumers;
         if (newState.platformUid && consumers[platformUid]) {
             let consumer = consumers[platformUid];

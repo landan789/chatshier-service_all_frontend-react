@@ -7,13 +7,13 @@ export const appsAutorepliesReducer = (state = {}, action) => {
     switch (action.type) {
         case UPDATE_AUTOREPLIES:
             for (appId in action.appsAutoreplies) {
-                /** @type {Chatshier.AppsAutoreplies} */
+                /** @type {Chatshier.Model.AppsAutoreplies} */
                 let app = action.appsAutoreplies[appId];
                 state[appId] = state[appId] || { autoreplies: {} };
 
                 let autoreplies = app.autoreplies;
                 for (let autoreplyId in autoreplies) {
-                    /** @type {Chatshier.Autoreply} */
+                    /** @type {Chatshier.Model.Autoreply} */
                     let autoreply = autoreplies[autoreplyId];
                     if (autoreply.isDeleted) {
                         continue;

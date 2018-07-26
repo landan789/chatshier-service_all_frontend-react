@@ -3,7 +3,7 @@ export const DELETE_KEYWORDREPLY = 'DELETE_KEYWORDREPLY';
 export const DELETE_ALL_KEYWORDREPLIES = 'DELETE_ALL_KEYWORDREPLIES';
 
 /**
- * @param {Chatshier.AppsKeywordreplies} appsKeywordreplies
+ * @param {Chatshier.Model.AppsKeywordreplies} appsKeywordreplies
  */
 export const updateKeywordreplies = (appsKeywordreplies) => {
     return { type: UPDATE_KEYWORDREPLIES, appsKeywordreplies };

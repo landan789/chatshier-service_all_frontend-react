@@ -375,10 +375,10 @@ class AppInsertModal extends ModalCore {
 }
 
 const mapStateToProps = (storeState, ownProps) => {
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps,
         groups: storeState.groups
-    };
+    });
 };
 
 export default withTranslate(connect(mapStateToProps)(AppInsertModal));

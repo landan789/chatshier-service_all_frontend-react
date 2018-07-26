@@ -28,9 +28,9 @@ class TicketPanel extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
 
-        /** @type {Chatshier.App} */
+        /** @type {Chatshier.Model.App} */
         this.app = void 0;
-        /** @type {Chatshier.Chatroom} */
+        /** @type {Chatshier.Model.Chatroom} */
         this.chatroom = void 0;
 
         this.state = {
@@ -84,9 +84,9 @@ class TicketPanel extends React.Component {
     }
 
     openEditModal(ev, appId, ticketId) {
-        /** @type {Chatshier.Ticket} */
+        /** @type {Chatshier.Model.Ticket} */
         let ticket = this.props.appsTickets[appId].tickets[ticketId];
-        /** @type {Chatshier.Consumer} */
+        /** @type {Chatshier.Model.Consumer} */
         let consumer = this.props.consumers[ticket.platformUid];
 
         this.setState({
@@ -201,14 +201,14 @@ class TicketPanel extends React.Component {
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps,
         appsChatrooms: storeState.appsChatrooms,
         appsTickets: storeState.appsTickets,
         consumers: storeState.consumers,
         groups: storeState.groups,
         users: storeState.users
-    };
+    });
 };
 
 export default connect(mapStateToProps)(TicketPanel);

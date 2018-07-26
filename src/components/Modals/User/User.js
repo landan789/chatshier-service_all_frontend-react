@@ -126,9 +126,9 @@ class User extends ModalCore {
 }
 
 const mapStateToProps = (storeState, ownProps) => {
-    return {
+    return Object.assign({}, ownProps, {
         users: storeState.users
-    };
+    });
 };
 
 export default connect(mapStateToProps)(User);

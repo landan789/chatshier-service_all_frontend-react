@@ -104,9 +104,9 @@ class AppsSelector extends React.Component {
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps
-    };
+    });
 };
 
 export default withTranslate(connect(mapStateToProps)(AppsSelector));

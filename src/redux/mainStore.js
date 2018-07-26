@@ -3,6 +3,7 @@ import { routerReducer } from 'react-router-redux';
 
 import { appsReducer } from './reducers/mainStore/apps';
 import { appsAutorepliesReducer } from './reducers/mainStore/appsAutoreplies';
+import { appsCategoriesReducer } from './reducers/mainStore/appsCategories';
 import { appsChatroomsReducer } from './reducers/mainStore/appsChatrooms';
 import { appsComposesReducer } from './reducers/mainStore/appsComposes';
 import { appsFieldsReducer } from './reducers/mainStore/appsFields';
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
     router: routerReducer,
     apps: appsReducer,
     appsAutoreplies: appsAutorepliesReducer,
+    appsCategories: appsCategoriesReducer,
     appsChatrooms: appsChatroomsReducer,
     appsComposes: appsComposesReducer,
     appsFields: appsFieldsReducer,

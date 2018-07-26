@@ -25,12 +25,12 @@ class TicketEditModal extends ModalCore {
     constructor(props, ctx) {
         super(props, ctx);
 
-        /** @type {Chatshier.Ticket} */
+        /** @type {Chatshier.Model.Ticket} */
         let ticket = props.modalData ? props.modalData.ticket : {};
         let agentOptions = [];
         if (Object.keys(props.appsAgents).length > 0) {
             let appId = props.modalData.appId;
-            /** @type {Chatshier.Users} */
+            /** @type {Chatshier.Model.Users} */
             let agents = props.appsAgents[appId].agents;
 
             for (let userId in agents) {
@@ -89,7 +89,7 @@ class TicketEditModal extends ModalCore {
         let ticketId = this.props.modalData.ticketId;
         let userId = authHelper.userId;
 
-        /** @type {Chatshier.Ticket} */
+        /** @type {Chatshier.Model.Ticket} */
         let ticket = {
             assigned_id: this.state.agentUserId,
             dueTime: this.state.dueTime,

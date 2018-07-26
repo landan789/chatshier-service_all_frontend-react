@@ -143,9 +143,9 @@ class KeywordreplyTable extends React.Component {
 }
 
 const mapStateToProps = (storeState, ownProps) => {
-    return {
+    return Object.assign({}, ownProps, {
         appsKeywordreplies: storeState.appsKeywordreplies
-    };
+    });
 };
 
 export default connect(mapStateToProps)(KeywordreplyTable);

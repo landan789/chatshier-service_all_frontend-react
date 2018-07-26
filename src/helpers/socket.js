@@ -134,7 +134,7 @@ class SocketHelper {
 
             let appId = socketBody.app_id;
             let chatroomId = socketBody.chatroom_id;
-            /** @type {Chatshier.ChatroomMessage[]} */
+            /** @type {Chatshier.Model.ChatroomMessage[]} */
             let messages = socketBody.messages;
             let chatroomFromSocket = socketBody.chatroom;
             let consumersFromSocket = socketBody.consumers;

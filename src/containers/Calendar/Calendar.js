@@ -92,11 +92,11 @@ class Calendar extends React.Component {
         let nextState = prevState;
         nextState.prevProps = nextProps;
 
-        /** @type {Chatshier.Apps} */
+        /** @type {Chatshier.Model.Apps} */
         let apps = nextProps.apps;
-        /** @type {Chatshier.Groups} */
+        /** @type {Chatshier.Model.Groups} */
         let groups = nextProps.groups;
-        /** @type {Chatshier.Users} */
+        /** @type {Chatshier.Model.Users} */
         let users = nextProps.users;
 
         // 每個 app 因群組不同，指派人清單也會不同，因此須根據群組準備指派人清單
@@ -313,9 +313,9 @@ class Calendar extends React.Component {
         if (CALENDAR_EVENT_TYPES.TICKET === calendarEvent.eventType) {
             let appId = calendarEvent.calendarId;
             let ticketId = calendarEvent.id;
-            /** @type {Chatshier.Ticket} */
+            /** @type {Chatshier.Model.Ticket} */
             let ticket = origin;
-            /** @type {Chatshier.Consumers} */
+            /** @type {Chatshier.Model.Consumers} */
             let consumers = this.props.consumers;
             let consumer = consumers[ticket.platformUid];
 
@@ -385,7 +385,7 @@ class Calendar extends React.Component {
             case CALENDAR_EVENT_TYPES.CALENDAR:
                 return apiDatabase.calendarsEvents.update(calendarId, eventId, userId, event);
             case CALENDAR_EVENT_TYPES.TICKET:
-                /** @type {Chatshier.Ticket} */
+                /** @type {Chatshier.Model.Ticket} */
                 let ticket = {
                     description: event.description,
                     dueTime: event.endedTime
@@ -512,14 +512,14 @@ class Calendar extends React.Component {
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps,
         appsTickets: storeState.appsTickets,
         consumers: storeState.consumers,
         calendarsEvents: storeState.calendarsEvents,
         groups: storeState.groups,
         users: storeState.users
-    };
+    });
 };
 
 export default withRouter(withTranslate(connect(mapStateToProps)(Calendar)));

@@ -3,7 +3,7 @@ export const DELETE_FIELD = 'DELETE_FIELD';
 export const DELETE_ALL_FIELDS = 'DELETE_ALL_FIELDS';
 
 /**
- * @param {Chatshier.AppsFields} appsFields
+ * @param {Chatshier.Model.AppsFields} appsFields
  */
 export const updateFields = (appsFields) => {
     return { type: UPDATE_FIELDS, appsFields };

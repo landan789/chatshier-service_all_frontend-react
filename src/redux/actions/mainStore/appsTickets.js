@@ -3,7 +3,7 @@ export const DELETE_TICKET = 'DELETE_TICKET';
 export const DELETE_ALL_TICKETS = 'DELETE_ALL_TICKETS';
 
 /**
- * @param {Chatshier.AppsTickets} appsTickets
+ * @param {Chatshier.Model.AppsTickets} appsTickets
  */
 export const updateTickets = (appsTickets) => {
     return { type: UPDATE_TICKETS, appsTickets };

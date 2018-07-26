@@ -134,9 +134,9 @@ class AutoreplyTable extends React.Component {
 }
 
 const mapStateToProps = (storeState, ownProps) => {
-    return {
+    return Object.assign({}, ownProps, {
         appsAutoreplies: storeState.appsAutoreplies
-    };
+    });
 };
 
 export default connect(mapStateToProps)(AutoreplyTable);

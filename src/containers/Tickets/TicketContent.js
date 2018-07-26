@@ -45,10 +45,10 @@ class TicketContent extends React.Component {
     }
 
     openEditModal(appId, ticketId) {
-        /** @type {Chatshier.AppsTickets} */
+        /** @type {Chatshier.Model.AppsTickets} */
         let appsTickets = this.props.appsTickets;
         let ticket = appsTickets[appId].tickets[ticketId];
-        /** @type {Chatshier.Consumers} */
+        /** @type {Chatshier.Model.Consumers} */
         let consumers = this.props.consumers;
         let consumer = consumers[ticket.platformUid];
 
@@ -80,9 +80,9 @@ class TicketContent extends React.Component {
     }
 
     render() {
-        /** @type {Chatshier.AppsTickets} */
+        /** @type {Chatshier.Model.AppsTickets} */
         let appsTickets = this.props.appsTickets;
-        /** @type {Chatshier.Consumers} */
+        /** @type {Chatshier.Model.Consumers} */
         let consumers = this.props.consumers;
         let appsAgents = this.props.appsAgents;
 
@@ -220,10 +220,10 @@ class TicketContent extends React.Component {
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
-    return {
+    return Object.assign({}, ownProps, {
         appsTickets: storeState.appsTickets,
         consumers: storeState.consumers
-    };
+    });
 };
 
 export default connect(mapStateToProps)(TicketContent);

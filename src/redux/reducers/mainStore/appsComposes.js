@@ -5,7 +5,7 @@ export const appsComposesReducer = (state = {}, action) => {
     switch (action.type) {
         case UPDATE_COMPOSES:
             for (let appId in action.appsComposes) {
-                /** @type {Chatshier.AppsComposes} */
+                /** @type {Chatshier.Model.AppsComposes} */
                 let app = action.appsComposes[appId];
                 state[appId] = state[appId] || { composes: {} };
 

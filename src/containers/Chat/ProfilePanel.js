@@ -43,9 +43,9 @@ class ProfilePanel extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
 
-        /** @type {Chatshier.App} */
+        /** @type {Chatshier.Model.App} */
         this.app = void 0;
-        /** @type {Chatshier.Chatroom} */
+        /** @type {Chatshier.Model.Chatroom} */
         this.chatroom = void 0;
 
         this.state = {
@@ -289,7 +289,7 @@ class ProfilePanel extends React.Component {
                                         if (CHATSHIER === messager.type) {
                                             continue;
                                         }
-                                        /** @type {Chatshier.Consumer} */
+                                        /** @type {Chatshier.Model.Consumer} */
                                         let consumer = this.props.consumers[messager.platformUid];
                                         consumer && elems.push(
                                             <div key={messagerId} className="person-chip">
@@ -638,14 +638,14 @@ class ProfilePanel extends React.Component {
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps,
         appsChatrooms: storeState.appsChatrooms,
         appsFields: storeState.appsFields,
         consumers: storeState.consumers,
         groups: storeState.groups,
         users: storeState.users
-    };
+    });
 };
 
 export default connect(mapStateToProps)(withTranslate(ProfilePanel));

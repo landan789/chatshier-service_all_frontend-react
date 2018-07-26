@@ -64,11 +64,11 @@ class Tickets extends React.Component {
         let nextState = prevState;
         nextState.prevProps = nextProps;
 
-        /** @type {Chatshier.Apps} */
+        /** @type {Chatshier.Model.Apps} */
         let apps = nextProps.apps;
-        /** @type {Chatshier.Groups} */
+        /** @type {Chatshier.Model.Groups} */
         let groups = nextProps.groups;
-        /** @type {Chatshier.Users} */
+        /** @type {Chatshier.Model.Users} */
         let users = nextProps.users;
 
         if (Object.keys(apps).length > 0 &&
@@ -226,14 +226,14 @@ class Tickets extends React.Component {
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps,
         appsChatrooms: storeState.appsChatrooms,
         appsTickets: storeState.appsTickets,
         consumers: storeState.consumers,
         groups: storeState.groups,
         users: storeState.users
-    };
+    });
 };
 
 export default withRouter(withTranslate(connect(mapStateToProps)(Tickets)));

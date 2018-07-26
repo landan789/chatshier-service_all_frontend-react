@@ -11,7 +11,7 @@ class AppsAutoreplies extends Core {
     }
 
     /**
-     * @param {string|null} appId
+     * @param {string} [appId]
      * @param {string} userId
      * @returns {Promise<AppsAutorepliesResponse>}
      */
@@ -39,7 +39,7 @@ class AppsAutoreplies extends Core {
     /**
      * @param {string} appId
      * @param {string} userId
-     * @param {Chatshier.Autoreply} autoreply
+     * @param {Chatshier.Model.Autoreply} autoreply
      * @returns {Promise<AppsAutorepliesResponse>}
      */
     insert(appId, userId, autoreply) {
@@ -59,7 +59,7 @@ class AppsAutoreplies extends Core {
      * @param {string} appId
      * @param {string} autoreplyId
      * @param {string} userId
-     * @param {Chatshier.Autoreply} autoreply
+     * @param {Chatshier.Model.Autoreply} autoreply
      * @returns {Promise<AppsAutorepliesResponse>}
      */
     update(appId, autoreplyId, userId, autoreply) {

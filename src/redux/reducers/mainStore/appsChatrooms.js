@@ -10,13 +10,13 @@ export const appsChatroomsReducer = (state = {}, action) => {
     switch (action.type) {
         case UPDATE_CHATROOMS:
             for (appId in action.appsChatrooms) {
-                /** @type {Chatshier.AppsChatrooms} */
+                /** @type {Chatshier.Model.AppsChatrooms} */
                 let app = action.appsChatrooms[appId];
                 state[appId] = state[appId] || { chatrooms: {} };
 
                 let chatrooms = app.chatrooms;
                 for (chatroomId in chatrooms) {
-                    /** @type {Chatshier.Chatroom} */
+                    /** @type {Chatshier.Model.Chatroom} */
                     let chatroom = chatrooms[chatroomId];
                     if (chatroom.isDeleted) {
                         continue;

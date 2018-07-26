@@ -25,7 +25,7 @@ class CalendarModal extends ModalCore {
     constructor(props, ctx) {
         super(props, ctx);
 
-        /** @type {Chatshier.CalendarEvent} */
+        /** @type {Chatshier.Model.CalendarEvent} */
         let event = this.props.calendarData.event || {};
 
         this.state = {

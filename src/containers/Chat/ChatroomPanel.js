@@ -83,7 +83,7 @@ class ChatroomPanel extends React.Component {
     sendMessage() {
         let messageText = this.state.messageText;
         let appId = this.props.appId;
-        /** @type {Chatshier.App} */
+        /** @type {Chatshier.Model.App} */
         let app = this.props.apps[appId];
 
         let chatroomId = this.props.chatroomId;
@@ -392,12 +392,12 @@ class ChatroomPanel extends React.Component {
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps,
         appsChatrooms: storeState.appsChatrooms,
         consumers: storeState.consumers,
         users: storeState.users
-    };
+    });
 };
 
 export default connect(mapStateToProps)(ChatroomPanel);

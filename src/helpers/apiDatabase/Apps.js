@@ -4,6 +4,7 @@ import { reqHeaders } from './index';
 import mainStore from '../../redux/mainStore';
 import { updateApps, deleteApp } from '../../redux/actions/mainStore/apps';
 import { deleteAllAutoreplies } from '../../redux/actions/mainStore/appsAutoreplies';
+import { deleteAllCategories } from '../../redux/actions/mainStore/appsCategories';
 import { deleteAllChatrooms } from '../../redux/actions/mainStore/appsChatrooms';
 import { deleteAllComposes } from '../../redux/actions/mainStore/appsComposes';
 import { deleteAllFields } from '../../redux/actions/mainStore/appsFields';
@@ -76,7 +77,7 @@ class Apps extends Core {
 
     /**
      * @param {string} userId
-     * @param {Chatshier.App} app
+     * @param {Chatshier.Model.App} app
      * @returns {Promise<AppsResponse>}
      */
     insert(userId, app) {
@@ -95,7 +96,7 @@ class Apps extends Core {
     /**
      * @param {string} appId
      * @param {string} userId
-     * @param {Chatshier.App} app
+     * @param {Chatshier.Model.App} app
      * @returns {Promise<AppsResponse>}
      */
     update(appId, userId, app) {
@@ -124,6 +125,7 @@ class Apps extends Core {
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
             mainStore.dispatch(deleteApp(appId));
             mainStore.dispatch(deleteAllAutoreplies(appId));
+            mainStore.dispatch(deleteAllCategories(appId));
             mainStore.dispatch(deleteAllChatrooms(appId));
             mainStore.dispatch(deleteAllComposes(appId));
             mainStore.dispatch(deleteAllFields(appId));

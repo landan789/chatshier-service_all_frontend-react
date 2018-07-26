@@ -171,10 +171,10 @@ class ComposeTable extends React.Component {
 }
 
 const mapStateToProps = (storeState, ownProps) => {
-    return {
+    return Object.assign({}, ownProps, {
         appsFields: storeState.appsFields,
         appsComposes: storeState.appsComposes
-    };
+    });
 };
 
 export default connect(mapStateToProps)(ComposeTable);

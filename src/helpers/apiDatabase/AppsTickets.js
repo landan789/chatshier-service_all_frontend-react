@@ -39,7 +39,7 @@ class AppsTickets extends Core {
     /**
      * @param {string} appId
      * @param {string} userId
-     * @param {Chatshier.Ticket} ticket
+     * @param {Chatshier.Model.Ticket} ticket
      * @returns {Promise<AppsTicketsResponse>}
      */
     insert(appId, userId, ticket) {
@@ -59,7 +59,7 @@ class AppsTickets extends Core {
      * @param {string} appId
      * @param {string} ticketId
      * @param {string} userId
-     * @param {Chatshier.Ticket} ticket
+     * @param {Chatshier.Model.Ticket} ticket
      * @returns {Promise<AppsTicketsResponse>}
      */
     update(appId, ticketId, userId, ticket) {
@@ -79,6 +79,7 @@ class AppsTickets extends Core {
      * @param {string} appId
      * @param {string} ticketId
      * @param {string} userId
+     * @returns {Promise<AppsTicketsResponse>}
      */
     delete(appId, ticketId, userId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/tickets/' + ticketId + '/users/' + userId;

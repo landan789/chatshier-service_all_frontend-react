@@ -60,22 +60,22 @@ const linkItems = [
         icon: 'fas fa-chart-bar fa-fw',
         text: 'Analysis',
         useReactRouter: true
-    }, {
-        icon: 'fas fa-shopping-cart fa-fw',
-        text: 'Product service',
-        dropdownItems: [
-            {
-                link: ROUTES.CATEGORY_PRODUCT,
-                icon: 'fas fa-cart-plus fa-fw',
-                text: 'Product management',
-                useReactRouter: false
-            }, {
-                link: ROUTES.APPOINTMENT,
-                icon: 'fas fa-calendar-check fa-fw',
-                text: 'Appointment system',
-                useReactRouter: false
-            }
-        ]
+    // }, {
+    //     icon: 'fas fa-shopping-cart fa-fw',
+    //     text: 'Product service',
+    //     dropdownItems: [
+    //         {
+    //             link: ROUTES.CATEGORY_PRODUCT,
+    //             icon: 'fas fa-cart-plus fa-fw',
+    //             text: 'Product management',
+    //             useReactRouter: true
+    //         }, {
+    //             link: ROUTES.APPOINTMENT,
+    //             icon: 'fas fa-calendar-check fa-fw',
+    //             text: 'Appointment system',
+    //             useReactRouter: true
+    //         }
+    //     ]
     }, {
         icon: 'fas fa-envelope fa-fw',
         text: 'Messages',
@@ -612,12 +612,12 @@ class ControlPanel extends React.Component {
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps,
         appsChatrooms: storeState.appsChatrooms,
         consumers: storeState.consumers,
         groups: storeState.groups
-    };
+    });
 };
 
 export default connect(mapStateToProps)(withRouter(withTranslate(ControlPanel)));

@@ -5,13 +5,13 @@ export const appsKeywordrepliesReducer = (state = {}, action) => {
     switch (action.type) {
         case UPDATE_KEYWORDREPLIES:
             for (let appId in action.appsKeywordreplies) {
-                /** @type {Chatshier.AppsKeywordreplies} */
+                /** @type {Chatshier.Model.AppsKeywordreplies} */
                 let app = action.appsKeywordreplies[appId];
                 state[appId] = state[appId] || { keywordreplies: {} };
 
                 let keywordreplies = app.keywordreplies;
                 for (let keywordreplyId in keywordreplies) {
-                    /** @type {Chatshier.Keywordreply} */
+                    /** @type {Chatshier.Model.Keywordreply} */
                     let keywordreply = keywordreplies[keywordreplyId];
                     if (keywordreply.isDeleted) {
                         continue;

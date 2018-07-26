@@ -58,7 +58,7 @@ class AppInsertModal extends ModalCore {
         this.finishSelectFbPages = this.finishSelectFbPages.bind(this);
     }
 
-    componentWillReceiveProps(props) {
+    UNSAFE_componentWillReceiveProps(props) {
         if (!this.state.seletedGroupId) {
             let groupId = Object.keys(props.groups)[0];
             this.setState({
@@ -375,10 +375,10 @@ class AppInsertModal extends ModalCore {
 }
 
 const mapStateToProps = (storeState, ownProps) => {
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps,
         groups: storeState.groups
-    };
+    });
 };
 
 export default withTranslate(connect(mapStateToProps)(AppInsertModal));

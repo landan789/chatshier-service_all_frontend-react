@@ -1,5 +1,6 @@
 import Apps from './Apps';
 import AppsAutoreplies from './AppsAutoreplies';
+import AppsCategories from './AppsCategories';
 import AppsChatrooms from './AppsChatrooms';
 import AppsComposes from './AppsComposes';
 import AppsFields from './AppsFields';
@@ -19,6 +20,7 @@ class APIDatabase {
     constructor() {
         this.apps = new Apps();
         this.appsAutoreplies = new AppsAutoreplies();
+        this.appsCategories = new AppsCategories();
         this.appsChatrooms = new AppsChatrooms();
         this.appsComposes = new AppsComposes();
         this.appsFields = new AppsFields();

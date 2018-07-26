@@ -39,7 +39,7 @@ class AppsKeywordreplies extends Core {
     /**
      * @param {string} appId
      * @param {string} userId
-     * @param {Chatshier.Keywordreply} keywordreply
+     * @param {Chatshier.Model.Keywordreply} keywordreply
      * @returns {Promise<AppsKeywordrepliesResponse>}
      */
     insert(appId, userId, keywordreply) {
@@ -59,7 +59,7 @@ class AppsKeywordreplies extends Core {
      * @param {string} appId
      * @param {string} keywordreplyId
      * @param {string} userId
-     * @param {Chatshier.Autoreply} keywordreply
+     * @param {Chatshier.Model.Autoreply} keywordreply
      * @returns {Promise<AppsKeywordrepliesResponse>}
      */
     update(appId, keywordreplyId, userId, keywordreply) {
@@ -79,6 +79,7 @@ class AppsKeywordreplies extends Core {
      * @param {string} appId
      * @param {string} keywordreplyId
      * @param {string} userId
+     * @returns {Promise<AppsKeywordrepliesResponse>}
      */
     delete(appId, keywordreplyId, userId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/keywordreplies/' + keywordreplyId + '/users/' + userId;

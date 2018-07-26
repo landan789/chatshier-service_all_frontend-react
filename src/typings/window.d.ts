@@ -1,4 +1,4 @@
-namespace Chatshier {
+declare module Chatshier {
     interface JWT {
         adu: string;
         exp: number;
@@ -14,8 +14,8 @@ namespace Chatshier {
         senderUid: string;
         recipientUid: string;
         type: string;
-        chatroom?: Chatshier.Chatroom;
-        consumers?: Chatshier.Consumer;
+        chatroom?: Chatshier.Models.Chatroom;
+        consumers?: Chatshier.Models.Consumer;
         messages: SocketMessage[]
     }
 

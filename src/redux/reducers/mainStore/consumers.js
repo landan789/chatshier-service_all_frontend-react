@@ -4,7 +4,7 @@ export const consumersReducer = (state = {}, action) => {
     switch (action.type) {
         case UPDATE_CONSUMERS:
             for (let platformUid in action.consumers) {
-                /** @type {Chatshier.Consumers} */
+                /** @type {Chatshier.Model.Consumers} */
                 let consumer = action.consumers[platformUid];
                 state[platformUid] = consumer;
             }

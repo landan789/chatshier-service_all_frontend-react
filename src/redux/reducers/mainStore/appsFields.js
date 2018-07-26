@@ -5,7 +5,7 @@ export const appsFieldsReducer = (state = {}, action) => {
     switch (action.type) {
         case UPDATE_FIELDS:
             for (let appId in action.appsFields) {
-                /** @type {Chatshier.AppsFields} */
+                /** @type {Chatshier.Model.AppsFields} */
                 let app = action.appsFields[appId];
                 state[appId] = state[appId] || { fields: {} };
 

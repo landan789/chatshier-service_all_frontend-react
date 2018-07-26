@@ -46,11 +46,8 @@ class SignUp extends React.Component {
         this.pwChanged = this.pwChanged.bind(this);
         this.pwConfirmChanged = this.pwConfirmChanged.bind(this);
         this.checkInputs = this.checkInputs.bind(this);
-    }
 
-    componentWillMount() {
         browserHelper.setTitle(this.props.t('Sign up'));
-
         if (authHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }
@@ -159,88 +156,86 @@ class SignUp extends React.Component {
         return (
             <Fade in className="signup-container w-100">
                 <SignForm title={this.props.t('Sign up')} subTitle={this.props.t('No fee. Experience chat now.')} onSubmit={this.checkInputs}>
-                    <fieldset>
-                        <div className="form-group">
-                            <div className="input-group">
-                                <div className="chsr input-group-prepend">
-                                    <span className="input-group-text w-100 justify-content-center">
-                                        <i className="fas fa-user"></i>
-                                    </span>
-                                </div>
-
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder={this.props.t('Name')}
-                                    value={this.state.name}
-                                    onChange={this.nameChanged}
-                                    required />
+                    <div className="form-group">
+                        <div className="input-group">
+                            <div className="chsr input-group-prepend">
+                                <span className="input-group-text w-100 justify-content-center">
+                                    <i className="fas fa-user"></i>
+                                </span>
                             </div>
-                        </div>
-                        <div className="form-group">
-                            <div className="input-group">
-                                <div className="chsr input-group-prepend">
-                                    <span className="input-group-text w-100 justify-content-center">
-                                        <i className="fas fa-envelope"></i>
-                                    </span>
-                                </div>
 
-                                <input
-                                    type="email"
-                                    className="form-control"
-                                    pattern={regex.emailWeak.source}
-                                    placeholder={this.props.t('Email')}
-                                    value={this.state.email}
-                                    onChange={this.emailChanged}
-                                    required />
-                            </div>
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder={this.props.t('Name')}
+                                value={this.state.name}
+                                onChange={this.nameChanged}
+                                required />
                         </div>
-                        <div className="form-group">
-                            <div className="input-group">
-                                <div className="chsr input-group-prepend">
-                                    <span className="input-group-text w-100 justify-content-center">
-                                        <i className="fas fa-lock"></i>
-                                    </span>
-                                </div>
+                    </div>
+                    <div className="form-group">
+                        <div className="input-group">
+                            <div className="chsr input-group-prepend">
+                                <span className="input-group-text w-100 justify-content-center">
+                                    <i className="fas fa-envelope"></i>
+                                </span>
+                            </div>
 
-                                <input
-                                    type="password"
-                                    className="form-control"
-                                    placeholder={this.props.t('Password')}
-                                    value={this.state.password}
-                                    onChange={this.pwChanged}
-                                    required />
-                            </div>
+                            <input
+                                type="email"
+                                className="form-control"
+                                pattern={regex.emailWeak.source}
+                                placeholder={this.props.t('Email')}
+                                value={this.state.email}
+                                onChange={this.emailChanged}
+                                required />
                         </div>
-                        <div className="form-group">
-                            <div className="input-group">
-                                <div className="chsr input-group-prepend">
-                                    <span className="input-group-text w-100 justify-content-center">
-                                        <i className="fas fa-lock"></i>
-                                    </span>
-                                </div>
+                    </div>
+                    <div className="form-group">
+                        <div className="input-group">
+                            <div className="chsr input-group-prepend">
+                                <span className="input-group-text w-100 justify-content-center">
+                                    <i className="fas fa-lock"></i>
+                                </span>
+                            </div>
 
-                                <input
-                                    type="password"
-                                    className="form-control"
-                                    placeholder={this.props.t('Confirm password')}
-                                    value={this.state.passwordConfirm}
-                                    onChange={this.pwConfirmChanged}
-                                    required />
-                            </div>
+                            <input
+                                type="password"
+                                className="form-control"
+                                placeholder={this.props.t('Password')}
+                                value={this.state.password}
+                                onChange={this.pwChanged}
+                                required />
                         </div>
+                    </div>
+                    <div className="form-group">
+                        <div className="input-group">
+                            <div className="chsr input-group-prepend">
+                                <span className="input-group-text w-100 justify-content-center">
+                                    <i className="fas fa-lock"></i>
+                                </span>
+                            </div>
 
-                        <div className="form-group">
-                            <div className="controls">
-                                <button
-                                    type="submit"
-                                    className="btn btn-info"
-                                    disabled={!this.state.isInputReady || this.state.isSignuping}
-                                    dangerouslySetInnerHTML={{__html: this.state.signupBtnHtml}}>
-                                </button>
-                            </div>
+                            <input
+                                type="password"
+                                className="form-control"
+                                placeholder={this.props.t('Confirm password')}
+                                value={this.state.passwordConfirm}
+                                onChange={this.pwConfirmChanged}
+                                required />
                         </div>
-                    </fieldset>
+                    </div>
+
+                    <div className="form-group">
+                        <div className="controls">
+                            <button
+                                type="submit"
+                                className="btn btn-info"
+                                disabled={!this.state.isInputReady || this.state.isSignuping}
+                                dangerouslySetInnerHTML={{__html: this.state.signupBtnHtml}}>
+                            </button>
+                        </div>
+                    </div>
                     <div className="my-4 text-center">
                         <p>
                             <span><Trans i18nKey="I agree Chatshier" /></span>

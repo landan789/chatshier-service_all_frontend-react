@@ -6,12 +6,13 @@ import { withRouter } from 'react-router-dom';
 import { Trans } from 'react-i18next';
 import { withTranslate } from '../../../i18n';
 
-import { Collapse, ListGroup, ListGroupItem } from 'reactstrap';
+import { Collapse, ListGroup, ListGroupItem, Badge } from 'reactstrap';
 import Swiper from 'swiper/dist/js/swiper.js';
 
 import authHelper from '../../../helpers/authentication';
 import socketHelper from '../../../helpers/socket';
 import apiDatabase from '../../../helpers/apiDatabase/index';
+import apiBot from '../../../helpers/apiBot';
 import ROUTES from '../../../config/route';
 
 import mainStore from '../../../redux/mainStore';
@@ -24,14 +25,11 @@ import { updateSearchKeyword } from '../../../redux/actions/controlPanelStore/se
 
 import EdgeToggle from '../EdgeToggle/EdgeToggle';
 import { findChatroomMessager, findMessagerSelf } from '../../../containers/Chat/Chat';
-import AppInsertModal from '../../../components/Modals/AppInsert/AppInsert';
-import AppEditModal from '../../../components/Modals/AppEdit/AppEdit';
-import GroupInsertModal from '../../../components/Modals/GroupInsert/GroupInsert';
-import GroupEditModal from '../../../components/Modals/GroupEdit/GroupEdit';
 
 import logoPng from '../../../image/logo-no-transparent.png';
 import logoSmallPng from '../../../image/logo-small.png';
 import groupPng from '../../../image/group.png';
+import defaultAvatar from '../../../image/defautlt-avatar.png';
 import './ControlPanel.css';
 
 const LINE = 'LINE';
@@ -54,38 +52,75 @@ const linkItems = [
         useReactRouter: true
     }, {
         link: ROUTES.TICKETS,
-        icon: 'fa fa-list-ul fa-fw',
+        icon: 'fas fa-list-ul fa-fw',
         text: 'To-Do items',
         useReactRouter: true
     }, {
         link: ROUTES.ANALYSIS,
-        icon: 'fa fa-chart-bar fa-fw',
+        icon: 'fas fa-chart-bar fa-fw',
         text: 'Analysis',
         useReactRouter: true
+    // }, {
+    //     icon: 'fas fa-shopping-cart fa-fw',
+    //     text: 'Product service',
+    //     dropdownItems: [
+    //         {
+    //             link: ROUTES.CATEGORY_PRODUCT,
+    //             icon: 'fas fa-cart-plus fa-fw',
+    //             text: 'Product management',
+    //             useReactRouter: true
+    //         }, {
+    //             link: ROUTES.APPOINTMENT,
+    //             icon: 'fas fa-calendar-check fa-fw',
+    //             text: 'Appointment system',
+    //             useReactRouter: true
+    //         }
+    //     ]
     }, {
-        icon: 'fa fa-envelope fa-fw',
+        icon: 'fas fa-envelope fa-fw',
         text: 'Messages',
         dropdownItems: [
             {
                 link: ROUTES.COMPOSES,
-                icon: 'fa fa-comments',
+                icon: 'fas fa-comments',
                 text: 'Composes',
-                useReactRouter: true
+                useReactRouter: false
             }, {
                 link: ROUTES.AUTOREPLIES,
-                icon: 'fa fa-comments',
+                icon: 'fas fa-comments',
                 text: 'Auto Replies',
-                useReactRouter: true
+                useReactRouter: false
             }, {
                 link: ROUTES.KEYWORDREPLIES,
-                icon: 'fa fa-comments',
+                icon: 'fas fa-comments',
                 text: 'Keyword Replies',
-                useReactRouter: true
+                useReactRouter: false
             }, {
                 link: ROUTES.GREETINGS,
-                icon: 'fa fa-comments',
+                icon: 'fas fa-comments',
                 text: 'Greetings',
-                useReactRouter: true
+                useReactRouter: false
+            }
+        ]
+    }, {
+        icon: 'far fa-images fa-fw',
+        text: 'Graphic content',
+        dropdownItems: [
+            {
+                link: ROUTES.RICHMENU,
+                icon: 'fas fa-image',
+                text: 'Rich menu',
+                useReactRouter: false
+            }, {
+                link: ROUTES.IMAGEMAP,
+                icon: 'fas fa-comment',
+                text: 'Image map message',
+                useReactRouter: false
+            }, {
+                link: ROUTES.TEMPLATE,
+                icon: 'fas fa-clone',
+                text: 'Template message',
+                useReactRouter: false
             }
         ]
     }
@@ -95,7 +130,7 @@ const startEvents = ['animationstart', 'oAnimationStart', 'webkitAnimationStart'
 const endEvents = ['animationend', 'oAnimationEnd', 'webkitAnimationEnd'];
 
 const classes = {
-    ctrlPanel: 'chsr ctrl-panel swiper-container h-100 m-0 d-sm-block',
+    ctrlPanel: 'chsr ctrl-panel swiper-container h-100 m-0 d-md-block',
     menuToggle: 'ml-auto p-2 fas fa-times d-sm-none menu-toggle'
 };
 
@@ -118,11 +153,6 @@ class ControlPanel extends React.Component {
         this.swiper = null;
 
         this.state = {
-            isOpenAppInertModal: false,
-            isOpenGroupInertModal: false,
-            editAppId: void 0,
-            editGroupId: void 0,
-
             isInChat: ROUTES.CHAT === this.props.history.location.pathname,
             gridState: this.getGridState(window.innerWidth),
             isOpen: false,
@@ -141,13 +171,6 @@ class ControlPanel extends React.Component {
         this.startAnimating = this.startAnimating.bind(this);
         this.endAnimating = this.endAnimating.bind(this);
         this.putAwayControlPanel = this.putAwayControlPanel.bind(this);
-
-        this.openAppInsertModal = this.openAppInsertModal.bind(this);
-        this.openGroupInsertModal = this.openGroupInsertModal.bind(this);
-        this.closeAppInsertModal = this.closeAppInsertModal.bind(this);
-        this.closeAppEditModal = this.closeAppEditModal.bind(this);
-        this.closeGroupInsertModal = this.closeGroupInsertModal.bind(this);
-        this.closeGroupEditModal = this.closeGroupEditModal.bind(this);
     }
 
     componentDidMount() {
@@ -215,11 +238,12 @@ class ControlPanel extends React.Component {
     }
 
     linkTo(route, useReactRouter) {
-        if ('sm' === this.state.gridState) {
+        if ('sm' === this.state.gridState ||
+            'md' === this.state.gridState) {
             controlPanelStore.dispatch(closePanel());
         }
 
-        if (!route) {
+        if (!(route && window.location.pathname !== route)) {
             return;
         }
 
@@ -312,42 +336,6 @@ class ControlPanel extends React.Component {
         }
     }
 
-    openAppInsertModal(ev) {
-        ev.stopPropagation();
-        this.setState({ isOpenAppInertModal: true });
-    }
-
-    openAppEditModal(ev, appId) {
-        ev.stopPropagation();
-        this.setState({ editAppId: appId });
-    }
-
-    openGroupInsertModal(ev) {
-        ev.stopPropagation();
-        this.setState({ isOpenGroupInertModal: true });
-    }
-
-    openGroupEditModal(ev, groupId) {
-        ev.stopPropagation();
-        this.setState({ editGroupId: groupId });
-    }
-
-    closeAppInsertModal() {
-        this.setState({ isOpenAppInertModal: false });
-    }
-
-    closeAppEditModal() {
-        this.setState({ editAppId: void 0 });
-    }
-
-    closeGroupInsertModal() {
-        this.setState({ isOpenGroupInertModal: false });
-    }
-
-    closeGroupEditModal() {
-        this.setState({ editGroupId: void 0 });
-    }
-
     renderChatroomList() {
         let isInChat = ROUTES.CHAT === this.props.history.location.pathname;
         if (!isInChat) {
@@ -395,7 +383,7 @@ class ControlPanel extends React.Component {
                             <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
                                 <img className="app-icon consumer-photo" src={CHATSHIER === app.type ? groupPng : logos[app.type]} alt="" />
                                 <span className="app-name">{chatroom.name || '群組聊天室'}</span>
-                                <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')}>{unReadStr}</span>
+                                <Badge className={'unread-msg ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')} pill>{unReadStr}</Badge>
                             </ListGroupItem>
                         );
                     } else {
@@ -411,9 +399,9 @@ class ControlPanel extends React.Component {
 
                         itemElem = (
                             <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
-                                <img className="app-icon consumer-photo" src={consumer.photo} alt="" />
-                                <span className="app-name">{(messagerSelf && messagerSelf.namings[platformUid]) || consumer.name}</span>
-                                <span className={'unread-msg badge badge-pill ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')}>{unReadStr}</span>
+                                <img className="app-icon consumer-photo" src={consumer.photo || defaultAvatar} alt="" onError={() => apiBot.chatrooms.getProfile(appId, platformUid)} />
+                                <span className="app-name">{(messagerSelf.namings && messagerSelf.namings[platformUid]) || consumer.name}</span>
+                                <Badge className={'unread-msg ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')} pill>{unReadStr}</Badge>
                             </ListGroupItem>
                         );
 
@@ -444,11 +432,7 @@ class ControlPanel extends React.Component {
                     <ListGroupItem className="text-light nested has-collapse" onClick={() => this.toggleItem(appId)}>
                         <i className={appIcon}></i>
                         <span>{app.name}</span>
-                        {CHATSHIER !== app.type &&
-                        <i className="ml-auto mr-1 p-1 fas fa-edit feature-icon"
-                            onClick={(ev) => this.openAppEditModal(ev, appId)}>
-                        </i>}
-                        <i className={(CHATSHIER === app.type ? 'ml-auto ' : '') + 'py-1 fas ' + (itemCollapse[appId] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
+                        <i className={'ml-auto py-1 fas ' + (itemCollapse[appId] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
                     </ListGroupItem>
                     <Collapse isOpen={!itemCollapse[appId]} className="nested">{chatroomElems}</Collapse>
                 </Aux>
@@ -477,8 +461,7 @@ class ControlPanel extends React.Component {
                 </ListGroupItem>
                 <Collapse isOpen={!itemCollapse['assignedCollapse']} className="nested assigned">{assignedItems}</Collapse>
                 <ListGroupItem className="text-light nested has-collapse unassigned" onClick={() => this.toggleItem('unassignedCollapse')}>
-                    <svg className="custom-item-icon large" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
-                        onClick={this.openAppInsertModal}>
+                    <svg className="custom-item-icon large" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                         <path fill="currentColor" d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-54.4 289.1c4.7 4.7 4.7 12.3 0 17L306 377.6c-4.7 4.7-12.3 4.7-17 0L224 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L102.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L280 256l65.6 65.1z"></path>
                     </svg>
                     <span><Trans i18nKey="Unassigned" /></span>
@@ -524,7 +507,7 @@ class ControlPanel extends React.Component {
                             {item.dropdownItems.map((dropdownItem, j) => (
                                 <ListGroupItem className="text-light nested" key={j} onClick={() => this.linkTo(dropdownItem.link, dropdownItem.useReactRouter)}>
                                     <i className={dropdownItem.icon}></i>
-                                    <span><Trans i18nKey={dropdownItem.text} /></span>
+                                    <span><Trans i18nKey={dropdownItem.text}>{dropdownItem.text}</Trans></span>
                                 </ListGroupItem>
                             ))}
                         </Collapse>
@@ -540,7 +523,7 @@ class ControlPanel extends React.Component {
                     this.linkTo(item.link, item.useReactRouter);
                 }}>
                     <i className={item.icon}></i>
-                    <span><Trans i18nKey={item.text} /></span>
+                    <span><Trans i18nKey={item.text}>{item.text}</Trans></span>
                 </ListGroupItem>
             );
         });
@@ -548,49 +531,15 @@ class ControlPanel extends React.Component {
 
     render() {
         let isInChat = ROUTES.CHAT === this.props.history.location.pathname;
-        let isSmall = 'sm' === this.state.gridState;
+        let isSmall = 'sm' === this.state.gridState || 'md' === this.state.gridState;
         let isOpen = this.state.isOpen || !isSmall;
         let isPutAway = this.state.isPutAway;
         let shouldShowBackdrop = isOpen && isSmall;
-        let itemCollapse = this.state.itemCollapse;
 
         return (
             <Aux>
                 <div className={classes.ctrlPanel + (isSmall ? ' animated' : '') + (isOpen ? ' slide-in' : ' slide-out') + (isPutAway ? ' put-away' : '')} ref={this.initSwiper}>
                     <div className="swiper-wrapper">
-                        {!isPutAway &&
-                        <div className="swiper-slide">
-                            <ListGroup className="detail-list">
-                                <ListGroupItem className="text-light py-0 pl-2 logo-item" onClick={() => this.linkTo()}>
-                                    <div className="p-1 ctrl-panel-logo">
-                                        <img className="w-100 h-100" src={logoSmallPng} alt="" />
-                                    </div>
-                                    <span className="ctrl-panel-title">Chatshier</span>
-                                    <i className={classes.menuToggle}></i>
-                                </ListGroupItem>
-
-                                <ListGroupItem className="text-light" onClick={() => this.toggleItem('GROUPS')}>
-                                    <i className="fas fa-building"></i>
-                                    <span><Trans i18nKey="Groups" /></span>
-                                </ListGroupItem>
-
-                                <Collapse className="nested" isOpen={!itemCollapse['GROUPS']}>
-                                    {Object.keys(this.props.groups).map((groupId) => (
-                                        <ListGroupItem key={groupId} className="text-light"
-                                            onClick={(ev) => this.openGroupEditModal(ev, groupId)}>
-                                            <i className="fas fa-users"></i>
-                                            <span>{this.props.groups[groupId].name}</span>
-                                        </ListGroupItem>
-                                    ))}
-                                </Collapse>
-
-                                <ListGroupItem className="text-light" onClick={this.openGroupInsertModal}>
-                                    <i className="fas fa-plus"></i>
-                                    <span><Trans i18nKey="Add" /></span>
-                                </ListGroupItem>
-                            </ListGroup>
-                        </div>}
-
                         <div className="swiper-slide">
                             {!isPutAway &&
                             <ListGroup className="detail-list">
@@ -621,65 +570,44 @@ class ControlPanel extends React.Component {
                                     <i className={classes.menuToggle}></i>
                                 </ListGroupItem>
 
-                                <ListGroupItem className="text-light" onClick={() => !isInChat && this.linkTo(ROUTES.CHAT, true)}>
+                                <ListGroupItem className="text-light" onClick={() => !isInChat && this.linkTo(ROUTES.CHAT, false)}>
                                     <i className="fas fa-comment-dots fa-fw"></i>
                                     <span><Trans i18nKey="Chatroom" /></span>
-                                    {isInChat &&
-                                    <svg className="ml-auto feature-icon custom-item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-                                        onClick={this.openAppInsertModal}>
-                                        <path fill="currentColor" d="M384 240v32c0 6.6-5.4 12-12 12h-88v88c0 6.6-5.4 12-12 12h-32c-6.6 0-12-5.4-12-12v-88h-88c-6.6 0-12-5.4-12-12v-32c0-6.6 5.4-12 12-12h88v-88c0-6.6 5.4-12 12-12h32c6.6 0 12 5.4 12 12v88h88c6.6 0 12 5.4 12 12zm120 16c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zm-48 0c0-110.5-89.5-200-200-200S56 145.5 56 256s89.5 200 200 200 200-89.5 200-200z"></path>
-                                    </svg>}
                                 </ListGroupItem>
                                 <Collapse isOpen>{this.renderChatroomList()}</Collapse>
                                 {this.renderLinkItems()}
                             </ListGroup>}
 
                             <ListGroup className={('simple-list animated slideInRight ' + (isPutAway ? '' : 'd-none')).trim()}>
-                                <ListGroupItem className="mb-3 px-0 text-light">
+                                <ListGroupItem className="mb-5 p-0 text-light logo-item">
                                     <div className="p-1 mx-auto ctrl-panel-logo">
                                         <img className="w-100 h-100" src={logoSmallPng} alt="" />
                                     </div>
                                 </ListGroupItem>
-                                <ListGroupItem className="px-0 text-light text-center" onClick={this.putAwayControlPanel}>
+                                <ListGroupItem className="mb-3 px-0 text-light text-center" onClick={this.putAwayControlPanel}>
                                     <i className="fas fa-comment-dots fa-2x"></i>
                                 </ListGroupItem>
-                                <ListGroupItem className="mt-3 px-0 text-light text-center" onClick={() => this.linkTo(ROUTES.CALENDAR, true)}>
+                                <ListGroupItem className="mb-3 px-0 text-light text-center" onClick={() => this.linkTo(ROUTES.CALENDAR, true)}>
                                     <i className="far fa-calendar-alt fa-2x"></i>
                                 </ListGroupItem>
-                                <ListGroupItem className="mt-3 px-0 text-light text-center" onClick={() => this.linkTo(ROUTES.TICKETS, true)}>
+                                <ListGroupItem className="mb-3 px-0 text-light text-center" onClick={() => this.linkTo(ROUTES.TICKETS, true)}>
                                     <i className="fa fa-list-ul fa-2x"></i>
                                 </ListGroupItem>
-                                <ListGroupItem className="mt-3 px-0 text-light text-center" onClick={() => this.linkTo(ROUTES.ANALYSIS, true)}>
+                                <ListGroupItem className="mb-3 px-0 text-light text-center" onClick={() => this.linkTo(ROUTES.ANALYSIS, true)}>
                                     <i className="fa fa-chart-bar fa-2x"></i>
                                 </ListGroupItem>
-                                <ListGroupItem className="mt-3 px-0 text-light text-center" onClick={this.putAwayControlPanel}>
+                                <ListGroupItem className="mb-3 px-0 text-light text-center" onClick={this.putAwayControlPanel}>
                                     <i className="fa fa-envelope fa-2x"></i>
+                                </ListGroupItem>
+                                <ListGroupItem className="mb-3 px-0 text-light text-center" onClick={this.putAwayControlPanel}>
+                                    <i className="far fa-images fa-2x"></i>
                                 </ListGroupItem>
                             </ListGroup>
                         </div>
                     </div>
-                    <div className="swiper-pagination w-100"></div>
                 </div>
                 <EdgeToggle className={isPutAway ? 'put-away' : ''} onClick={this.putAwayControlPanel} />
                 <div className={'ctrl-panel-backdrop' + (shouldShowBackdrop ? '' : ' d-none')} onClick={() => this.linkTo()}></div>
-
-                {this.state.isOpenAppInertModal &&
-                <AppInsertModal isOpen={this.state.isOpenAppInertModal}
-                    close={this.closeAppInsertModal} />}
-
-                {!!this.state.editAppId &&
-                <AppEditModal isOpen={!!this.state.editAppId}
-                    appId={this.state.editAppId}
-                    close={this.closeAppEditModal} />}
-
-                {this.state.isOpenGroupInertModal &&
-                <GroupInsertModal isOpen={this.state.isOpenGroupInertModal}
-                    close={this.closeGroupInsertModal} />}
-
-                {!!this.state.editGroupId &&
-                <GroupEditModal isOpen={!!this.state.editGroupId}
-                    groupId={this.state.editGroupId}
-                    close={this.closeGroupEditModal} />}
             </Aux>
         );
     }
@@ -687,12 +615,12 @@ class ControlPanel extends React.Component {
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps,
         appsChatrooms: storeState.appsChatrooms,
         consumers: storeState.consumers,
         groups: storeState.groups
-    };
+    });
 };
 
 export default connect(mapStateToProps)(withRouter(withTranslate(ControlPanel)));

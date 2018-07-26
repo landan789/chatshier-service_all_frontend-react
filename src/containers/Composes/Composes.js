@@ -38,11 +38,8 @@ class Composes extends React.Component {
         this.keywordChanged = this.keywordChanged.bind(this);
         this.openInsertModal = this.openInsertModal.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
-    }
 
-    componentWillMount() {
         browserHelper.setTitle('群發');
-
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
@@ -56,9 +53,6 @@ class Composes extends React.Component {
             apiDatabase.appsComposes.find(null, userId),
             apiDatabase.appsFields.find(userId)
         ]);
-    }
-
-    componentWillReceiveProps(nextProps) {
     }
 
     appChanged(appId) {
@@ -85,7 +79,7 @@ class Composes extends React.Component {
                     <Fade in className="composes-wrapper">
                         <div className="composes">
                             <Jumbotron>
-                                <h1 className="display-3">群發</h1><br/>
+                                <h1 className="display-3">群發</h1>
                                 <Row>
                                     <Col>
                                         <AppsSelector onChange={this.appChanged} />
@@ -124,11 +118,11 @@ class Composes extends React.Component {
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps,
         appsFields: storeState.appsFields,
         appsComposes: storeState.appsComposes
-    };
+    });
 };
 
 export default withRouter(connect(mapStateToProps)(Composes));

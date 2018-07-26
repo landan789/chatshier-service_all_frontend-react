@@ -40,7 +40,7 @@ class ComposeEditModal extends ModalCore {
         this.updateCompose = this.updateCompose.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         let compose = nextProps.modalData ? nextProps.modalData.compose : {};
         let composeLength = Object.keys(compose).length;
 
@@ -208,7 +208,7 @@ class ComposeEditModal extends ModalCore {
 
     render() {
         return (
-            <Modal size="lg" isOpen={this.state.isOpen} toggle={this.closeModal}>
+            <Modal className="compose-modal" isOpen={this.state.isOpen} toggle={this.closeModal}>
                 <ModalHeader toggle={this.closeModal}></ModalHeader>
                 <ModalBody>
                     時間：

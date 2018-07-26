@@ -28,9 +28,9 @@ class TicketPanel extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
 
-        /** @type {Chatshier.App} */
+        /** @type {Chatshier.Model.App} */
         this.app = void 0;
-        /** @type {Chatshier.Chatroom} */
+        /** @type {Chatshier.Model.Chatroom} */
         this.chatroom = void 0;
 
         this.state = {
@@ -47,8 +47,8 @@ class TicketPanel extends React.Component {
         this.closeEditModal = this.closeEditModal.bind(this);
     }
 
-    componentWillReceiveProps(props) {
-        this.createAppsAgents(this.props);
+    UNSAFE_componentWillReceiveProps(props) {
+        this.createAppsAgents(props);
     }
 
     createAppsAgents(props) {
@@ -84,9 +84,9 @@ class TicketPanel extends React.Component {
     }
 
     openEditModal(ev, appId, ticketId) {
-        /** @type {Chatshier.Ticket} */
+        /** @type {Chatshier.Model.Ticket} */
         let ticket = this.props.appsTickets[appId].tickets[ticketId];
-        /** @type {Chatshier.Consumer} */
+        /** @type {Chatshier.Model.Consumer} */
         let consumer = this.props.consumers[ticket.platformUid];
 
         this.setState({
@@ -125,7 +125,7 @@ class TicketPanel extends React.Component {
 
         let platformMessager = findChatroomMessager(this.chatroom.messagers, this.app.type);
         let platformUid = platformMessager.platformUid;
-        let tickets = this.props.appsTickets[appId].tickets;
+        let tickets = this.props.appsTickets[appId] ? this.props.appsTickets[appId].tickets : {};
         let ticketIds = Object.keys(tickets).filter((ticketId) => {
             // 只顯示未刪除、對象是此客戶以及有被指派的待辦事項
             return !!(
@@ -201,14 +201,14 @@ class TicketPanel extends React.Component {
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps,
         appsChatrooms: storeState.appsChatrooms,
         appsTickets: storeState.appsTickets,
         consumers: storeState.consumers,
         groups: storeState.groups,
         users: storeState.users
-    };
+    });
 };
 
 export default connect(mapStateToProps)(TicketPanel);

@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input, Row, Col, Table } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody,
+    ModalFooter, Form, FormGroup, Label,
+    Input, Card, CardHeader, CardBody,
+    Dropdown, DropdownToggle } from 'reactstrap';
 import { DateTimePicker } from 'react-widgets';
 
 import apiDatabase from '../../../helpers/apiDatabase/index';
@@ -23,40 +26,28 @@ class ComposeInsertModal extends ModalCore {
             appId: '',
             time: '',
             status: true,
-            radioCategory: {
-                ALL: true,
-                ONE: false
-            },
             radioTime: {
                 NOW: true,
                 LATER: false
             },
             count: 0,
             fields: null,
-            text1: '',
-            text2: '',
-            text3: '',
+            composeTexts: [''],
             isAsyncWorking: false
         };
 
-        this.PLUS = 'PLUS';
-        this.MINUS = 'MINUS';
-        this.ALL = 'ALL';
-        this.ONE = 'ONE';
         this.NOW = 'NOW';
         this.LATER = 'LATER';
         this.CUSTOM = 'CUSTOM';
 
         this.selectedApp = this.selectedApp.bind(this);
-        this.handleDatetimeChange = this.handleDatetimeChange.bind(this);
-        this.handleDraftChange = this.handleDraftChange.bind(this);
-        this.handleCountChange = this.handleCountChange.bind(this);
-        this.handleTextChange = this.handleTextChange.bind(this);
+        this.onAddText = this.onAddText.bind(this);
+        this.onDatetimeChange = this.onDatetimeChange.bind(this);
+        this.onTextChange = this.onTextChange.bind(this);
         this.insertCompose = this.insertCompose.bind(this);
-        this.handleFieldButtonChange = this.handleFieldButtonChange.bind(this);
-        this.handleFieldInputChange = this.handleFieldInputChange.bind(this);
     }
-    componentWillReceiveProps(nextProps) {
+
+    UNSAFE_componentWillReceiveProps(nextProps) {
         let appId = Object.keys(nextProps.apps)[0];
         let appsFields = nextProps.appsFields[appId] ? nextProps.appsFields[appId].fields : {};
         let appIds = Object.keys(appsFields).filter((appId) => {
@@ -80,68 +71,38 @@ class ComposeInsertModal extends ModalCore {
             fields: _appsFields
         });
     }
+
     selectedApp(event) {
         this.setState({appId: event.target.value});
     }
-    handleDatetimeChange(time) {
+
+    onDatetimeChange(time) {
         let datetime = new Date(time);
         let timeInMs = datetime.getTime();
         this.setState({time: timeInMs});
     }
-    handleDraftChange(event) {
-        let result = !this.state.status;
-        this.setState({ status: result });
-    }
-    handleCountChange(operator) {
-        let count = this.PLUS === operator ? this.state.count + 1 : this.state.count - 1;
-        if (3 >= count) {
-            this.setState({ count });
-        } else {
-            this.setState({ count: 3 });
+
+    onAddText() {
+        let composeTexts = this.state.composeTexts;
+        if (composeTexts.length >= 3) {
+            return;
         }
+        composeTexts.push('');
+        this.setState({ composeTexts: composeTexts });
     }
-    handleTextChange(event) {
-        let index = event.target.getAttribute('name');
-        switch (index) {
-            case '2':
-                this.setState({text3: event.target.value});
-                break;
-            case '1':
-                this.setState({text2: event.target.value});
-                break;
-            default:
-                this.setState({text1: event.target.value});
-        }
+
+    onRemoveText(i) {
+        let composeTexts = this.state.composeTexts;
+        composeTexts.splice(i, 1);
+        this.setState({ composeTexts: composeTexts });
     }
-    handleFieldButtonChange(event) {
-        let key = event.target.getAttribute('name');
-        let className = event.target.getAttribute('class');
-        let fields = this.state.fields;
-        fields[key].isSelected = !this.state.fields[key].isSelected;
-        if (className.includes('btn-danger') || className.includes('fa-times')) {
-            fields[key].value = '';
-        }
-        this.setState({fields});
+
+    onTextChange(ev, i) {
+        let composeTexts = this.state.composeTexts;
+        composeTexts[i] = ev.target.value;
+        this.setState({ composeTexts: composeTexts });
     }
-    handleFieldInputChange(event) {
-        let key = event.target.getAttribute('name');
-        let fields = this.state.fields;
-        fields[key].value = event.target.value;
-        this.setState({fields});
-    }
-    categoryChanged(name) {
-        if (this.NOW === name) {
-            this.setState({
-                fieldInputs: []
-            });
-        }
-        let radioCategory = {
-            ALL: false,
-            ONE: false
-        };
-        radioCategory[name] = true;
-        this.setState({ radioCategory });
-    }
+
     timeChanged(time) {
         if (this.NOW === time) {
             this.setState({ time: '' });
@@ -153,6 +114,7 @@ class ComposeInsertModal extends ModalCore {
         radioTime[time] = true;
         this.setState({ radioTime });
     }
+
     insertCompose(ev) {
         if (!this.state.text1) {
             return notify('請輸入要送出的訊息', { type: 'warning' });
@@ -226,128 +188,82 @@ class ComposeInsertModal extends ModalCore {
         });
     }
 
-    renderApps() {
-        let apps = this.props.apps || {};
-        let appIds = Object.keys(apps);
-        return appIds.map((appId) => {
-            let app = apps[appId];
-            if ('CHATSHIER' === app.type) {
-                return null;
-            }
-            return (
-                <option key={appId} value={appId}>{apps[appId].name}</option>
-            );
-        });
-    }
+    renderTextareas() {
+        let composeTexts = this.state.composeTexts;
 
-    renderFilter() {
-        let appsFields = this.state.fields ? Object.values(this.state.fields) : [];
-        if (0 >= appsFields.length) { return null; }
-        return appsFields.map((field, index) => {
-            return (
-                <Row key={index}>
-                    <Col>
-                        <Button color="secondary" hidden={this.state.fields[field.id].isSelected} name={field.id} onClick={this.handleFieldButtonChange}>
-                            {'' !== field.value.trim() ? `${field.name} : ${field.value}` : field.name}
-                        </Button>
-                        <FormGroup hidden={!this.state.fields[field.id].isSelected}>
-                            <Row>
-                                <Col>
-                                    <Input type="text" name={field.id} onChange={this.handleFieldInputChange}/>
-                                </Col>
-                                <Col>
-                                    <Button color="success" name={field.id} onClick={this.handleFieldButtonChange}><i className="fas fa-check" name={field.id}></i></Button>{' '}
-                                    <Button color="danger" name={field.id} onClick={this.handleFieldButtonChange}><i className="fas fa-times" name={field.id}></i></Button>
-                                </Col>
-                            </Row>
-                        </FormGroup>
-                    </Col>
-                </Row>
-            );
-        });
-    }
-    renderMessage() {
-        let count = this.state.count;
-        let list = [];
-        for (let c = 0; c < count; c++) {
-            list.push('');
-        }
-        return list.map((message, index) => (
-            <div key={index}>
-                <span className="remove-btn" onClick={() => this.handleCountChange(this.MINUS)}>刪除</span>
-                輸入文字:
-                <Input type="textarea" name={index} defaultValue={list[index]} onChange={this.handleTextChange} />
-            </div>
+        return composeTexts.map((text, i) => (
+            <FormGroup key={i} className="w-100 input-warpper">
+                <div className="position-relative input-container">
+                    {i > 0 && <span className="remove-btn" onClick={() => this.onRemoveText(i)}>刪除</span>}
+                    <Input className="w-100 px-2 compose-textarea text-input"
+                        type="textarea"
+                        name="composeTexts"
+                        defaultValue={text}
+                        placeholder="輸入文字..."
+                        onChange={(ev) => this.onTextChange(ev, i)} />
+                </div>
+            </FormGroup>
         ));
     }
+
     render() {
         return (
-            <Modal size="lg" isOpen={this.props.isOpen} toggle={this.closeModal}>
+            <Modal className="compose-modal" isOpen={this.props.isOpen} toggle={this.closeModal}>
                 <ModalHeader toggle={this.closeModal}></ModalHeader>
                 <ModalBody>
                     <FormGroup>
-                        <Label>Apps: </Label>
-                        <Input type="select" onChange={this.selectedApp}>
-                            { this.renderApps() }
-                        </Input>
+                        <label className="col-form-label font-weight-bold">聊天機器人:</label>
+                        <Dropdown isOpen toggle={() => {}}>
+                            <DropdownToggle className="btn-block btn-border" color="light" block caret>
+                                <span className="dropdown-value">已選擇的機器人 (0)</span>
+                            </DropdownToggle>
+                            <Form className="px-2 dropdown-menu dropdown-menu-right"></Form>
+                        </Dropdown>
                     </FormGroup>
-                    <FormGroup>
-                        <Label>篩選發送: </Label>
-                        <FormGroup check>
-                            <Label check>
-                                <Input type="radio" name="category" checked={this.state.radioCategory.ALL} onChange={() => this.categoryChanged(this.ALL)} />{' '}
-                                全部發送
-                            </Label>
-                        </FormGroup>
-                        <FormGroup check>
-                            <Label check>
-                                <Input type="radio" name="category" checked={this.state.radioCategory.ONE} onChange={() => this.categoryChanged(this.ONE)} />{' '}
-                                限制發送對象
-                            </Label>
-                        </FormGroup>
-                    </FormGroup>
-                    <div className="panel panel-default" hidden={!this.state.radioCategory.ONE}>
-                        <div className="panel-heading">條件</div>
-                        <div className="panel-body">
-                            { this.renderFilter() }
-                        </div>
-                    </div>
+
+                    <Card>
+                        <CardHeader>
+                            <span>發送條件</span>
+                            <small className="mx-1 text-info d-none"></small>
+                        </CardHeader>
+                        <CardBody>
+                            <div className="condition-container"></div>
+                            <Button className="condition-add-btn" color="light">
+                                <i className="fas fa-plus fa-fw"></i>
+                                <span>新增發送條件</span>
+                            </Button>
+                        </CardBody>
+                    </Card>
+
                     <FormGroup>
                         <Label>設定傳送時間: </Label>
-                        <FormGroup check>
+                        <FormGroup check className="my-1">
                             <Label check>
                                 <Input type="radio" name="time" checked={this.state.radioTime.NOW} onChange={() => this.timeChanged(this.NOW)} />{' '}
                                 立刻傳送
                             </Label>
                         </FormGroup>
-                        <FormGroup check>
+                        <FormGroup check className="my-1">
                             <Label check>
                                 <Input type="radio" name="time" checked={this.state.radioTime.LATER} onChange={() => this.timeChanged(this.LATER)} />{' '}
                                 傳送時間
                             </Label>
-                            <DateTimePicker onChange={this.handleDatetimeChange} disabled={!this.state.radioTime.LATER}></DateTimePicker>
                         </FormGroup>
+                        <DateTimePicker onChange={this.handleDatetimeChange} disabled={!this.state.radioTime.LATER}></DateTimePicker>
                     </FormGroup>
-                    <div>{this.renderMessage()}</div>
-                    <Table>
-                        <tbody>
-                            <tr>
-                                <td className="add-msg-btn-padding">
-                                    <p>一次可以發送三則訊息</p>
-                                    <button className="add-text-btn-style" onClick={() => this.handleCountChange(this.PLUS)}>文字</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </Table>
-                    <FormGroup check>
-                        <Label check>
-                            <Input type="checkbox" onChange={this.handleDraftChange} />{' '}
-                            是否儲存為草稿？
-                        </Label>
+
+                    <FormGroup>
+                        <label className="col-form-label font-weight-bold mb-2">內容: </label>
+                        <Button className="mx-2 btn-border insert" color="light" onClick={this.onAddText}>
+                            <i className="fas fa-plus"></i>
+                        </Button>
+                        <span>(一次最多 3 則)</span>
+                        {this.renderTextareas()}
                     </FormGroup>
                 </ModalBody>
                 <ModalFooter>
-                    <Button outline color="success" onClick={this.insertCompose} disabled={this.state.isAsyncWorking}>新增</Button>{' '}
+                    <Button outline color="success" onClick={this.insertCompose} disabled={this.state.isAsyncWorking}>新增</Button>
+                    <Button outline color="info" disabled={this.state.isAsyncWorking}>存為草稿</Button>
                     <Button outline color="danger" onClick={this.closeModal}>取消</Button>
                 </ModalFooter>
             </Modal>

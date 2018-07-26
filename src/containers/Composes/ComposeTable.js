@@ -35,7 +35,8 @@ class ComposeTable extends React.Component {
         this.closeEditModal = this.closeEditModal.bind(this);
         this.updatekeywordSearch = this.updatekeywordSearch.bind(this);
     }
-    componentWillReceiveProps(nextProp) {
+
+    UNSAFE_componentWillReceiveProps(nextProp) {
         let appId = nextProp.appId;
         let composes = nextProp.appsComposes[appId] || {};
         let composeIds = Object.keys(composes);
@@ -44,9 +45,11 @@ class ComposeTable extends React.Component {
         }
         this.updatekeywordSearch(nextProp.keyword);
     }
+
     updateAppId(appId) {
         this.setState({ appId });
     }
+
     openEditModal(appId, composeId, compose, appsFields) {
         this.setState({
             editModalData: {
@@ -54,12 +57,15 @@ class ComposeTable extends React.Component {
             }
         });
     }
+
     closeEditModal() {
         this.setState({ editModalData: null });
     }
+
     updatekeywordSearch(keyword) {
         this.setState({ keyword });
     }
+
     removeCompose(appId, composeId) {
         let userId = authHelper.userId;
         return apiDatabase.appsComposes.delete(appId, composeId, userId).then(() => {
@@ -68,6 +74,7 @@ class ComposeTable extends React.Component {
             return notify('刪除失敗', { type: 'danger' });
         });
     }
+
     renderComposes(status, appId, keyword, determineSentTime) { // status 0(false): draft, 1(true): history, reserved
         let composes = this.props.appsComposes[appId] ? this.props.appsComposes[appId].composes : {};
         let composeIds = Object.keys(composes);
@@ -105,6 +112,7 @@ class ComposeTable extends React.Component {
             );
         });
     }
+
     render() {
         return (
             <Aux>
@@ -163,10 +171,10 @@ class ComposeTable extends React.Component {
 }
 
 const mapStateToProps = (storeState, ownProps) => {
-    return {
+    return Object.assign({}, ownProps, {
         appsFields: storeState.appsFields,
         appsComposes: storeState.appsComposes
-    };
+    });
 };
 
 export default connect(mapStateToProps)(ComposeTable);

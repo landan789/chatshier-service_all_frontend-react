@@ -114,6 +114,8 @@ class AuthenticationHelper {
 
             let waittingTime = Math.max(0, this.payload.exp - Date.now() - PREPARE_TIME);
             return this._keepToken(waittingTime);
+        }).catch(() => {
+            window.location.replace(ROUTES.SIGNOUT);
         });
     };
 }

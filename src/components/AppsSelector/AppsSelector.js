@@ -8,6 +8,11 @@ import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reac
 import authHelper from '../../helpers/authentication';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
+const ICONS = {
+    [apiDatabase.apps.TYPES.LINE]: 'mr-1 fab fa-line fa-fw line-color',
+    [apiDatabase.apps.TYPES.FACEBOOK]: 'mr-1 fab fa-facebook-messenger fa-fw fb-messsenger-color'
+};
+
 class AppsSelector extends React.Component {
     static propTypes = {
         t: PropTypes.func.isRequired,
@@ -42,16 +47,23 @@ class AppsSelector extends React.Component {
 
     componentDidMount() {
         let userId = authHelper.userId;
-        return userId && apiDatabase.apps.find(userId);
-    }
+        let props = this.props;
 
-    componentWillReceiveProps(props) {
-        let apps = this.props.apps || {};
-        let appIds = Object.keys(apps);
+        return Promise.resolve().then(() => {
+            if (!userId) {
+                return;
+            }
+            return apiDatabase.apps.find(userId);
+        }).then(() => {
+            let apps = props.apps || {};
+            let appIds = Object.keys(apps).filter((appId) => {
+                return this.props.showAll || (!this.props.showAll && apiDatabase.apps.TYPES.CHATSHIER !== apps[appId].type);
+            });
 
-        if (appIds.length > 0 && !this.state.selectedAppName) {
-            this.selectedApp(appIds[0], apps[appIds[0]].name);
-        }
+            if (appIds.length > 0 && !this.state.selectedAppName) {
+                this.selectedApp(appIds[0], apps[appIds[0]].name);
+            }
+        });
     }
 
     toggle() {
@@ -72,13 +84,14 @@ class AppsSelector extends React.Component {
                 <DropdownMenu>
                     {Object.keys(this.props.apps).map((appId) => {
                         let app = this.props.apps[appId];
-                        if (!this.props.showAll && 'CHATSHIER' === app.type) {
+                        if (!this.props.showAll && apiDatabase.apps.TYPES.CHATSHIER === app.type) {
                             return null;
                         }
 
                         return (
-                            <DropdownItem key={appId}
+                            <DropdownItem key={appId} className="px-3"
                                 onClick={() => this.selectedApp(appId, this.props.apps[appId].name)}>
+                                <i className={ICONS[app.type]}></i>
                                 {this.props.apps[appId].name}
                             </DropdownItem>
                         );
@@ -91,9 +104,9 @@ class AppsSelector extends React.Component {
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps
-    };
+    });
 };
 
 export default withTranslate(connect(mapStateToProps)(AppsSelector));

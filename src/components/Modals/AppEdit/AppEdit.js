@@ -191,9 +191,9 @@ class AppEditModal extends ModalCore {
 }
 
 const mapStateToProps = (storeState, ownProps) => {
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps
-    };
+    });
 };
 
 export default withTranslate(connect(mapStateToProps)(AppEditModal));

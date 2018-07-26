@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Aux from 'react-aux';
 import { connect } from 'react-redux';
 import { Dropdown, DropdownItem, DropdownMenu,
-    DropdownToggle } from 'reactstrap';
+    DropdownToggle, FormGroup, Form } from 'reactstrap';
 import { Trans } from 'react-i18next';
 import { withTranslate } from '../../i18n';
 
@@ -25,8 +25,8 @@ import './ProfilePanel.css';
 const CHATSHIER = 'CHATSHIER';
 const DEFAULT_CHATROOM_NAME = '群組聊天室';
 
-const messagerCase = ['age', 'email', 'gender', 'phone', 'remark', 'custom_fields'];
-const messagerSelfCase = ['createdTime', 'lastTime', 'chatCount'];
+// 不處理已棄用的 fields
+const SKIP_AlIASES = ['name', 'assigned', 'createdTime', 'lastTime', 'chatCount'];
 
 class ProfilePanel extends React.Component {
     static propTypes = {
@@ -43,9 +43,9 @@ class ProfilePanel extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
 
-        /** @type {Chatshier.App} */
+        /** @type {Chatshier.Model.App} */
         this.app = void 0;
-        /** @type {Chatshier.Chatroom} */
+        /** @type {Chatshier.Model.Chatroom} */
         this.chatroom = void 0;
 
         this.state = {
@@ -63,8 +63,8 @@ class ProfilePanel extends React.Component {
         this.leavePlatformGroup = this.leavePlatformGroup.bind(this);
     }
 
-    componentWillReceiveProps(props) {
-        this.createAppsAgents(this.props);
+    UNSAFE_componentWillReceiveProps(props) {
+        this.createAppsAgents(props);
     }
 
     componentWillUnmount() {
@@ -104,39 +104,6 @@ class ProfilePanel extends React.Component {
         let chatroomNames = this.state.chatroomNames;
         chatroomNames[chatroomId] = ev.target.value;
         this.setState({ chatroomNames: chatroomNames });
-    }
-
-    onFieldValueChanged(ev, fieldId, opts) {
-        let appId = this.props.appId;
-        let field = this.props.appsFields[appId].fields[fieldId];
-        let fieldValues = this.state.fieldValues;
-
-        if (apiDatabase.appsFields.SETS_TYPES.MULTI_SELECT === field.setsType) {
-            fieldValues[fieldId] = fieldValues[fieldId] || opts.initData.slice();
-            fieldValues[fieldId][opts.idx] = !fieldValues[fieldId][opts.idx];
-
-            let multiSelectTexts = this.state.multiSelectTexts;
-            let textArray = fieldValues[fieldId].reduce((output, value, i) => {
-                if (!value) {
-                    return output;
-                }
-                output.push('assigned' === field.alias ? field.sets[i].agentName : field.sets[i]);
-                return output;
-            }, []);
-
-            multiSelectTexts[fieldId] = textArray.join(',');
-            if (textArray.length > 1) {
-                multiSelectTexts[fieldId] = textArray[0] + ' 及其他 ' + (textArray.length - 1) + ' 項';
-            }
-
-            this.setState({
-                fieldValues: fieldValues,
-                multiSelectTexts: multiSelectTexts
-            });
-        } else {
-            fieldValues[fieldId] = ev.target.value;
-            this.setState({ fieldValues: fieldValues });
-        }
     }
 
     toggleMultiSelect(ev, fieldId) {
@@ -322,7 +289,7 @@ class ProfilePanel extends React.Component {
                                         if (CHATSHIER === messager.type) {
                                             continue;
                                         }
-                                        /** @type {Chatshier.Consumer} */
+                                        /** @type {Chatshier.Model.Consumer} */
                                         let consumer = this.props.consumers[messager.platformUid];
                                         consumer && elems.push(
                                             <div key={messagerId} className="person-chip">
@@ -345,182 +312,255 @@ class ProfilePanel extends React.Component {
         let appId = this.props.appId;
         let messager = findChatroomMessager(this.chatroom.messagers, this.app.type);
         let messagerSelf = findMessagerSelf(this.chatroom.messagers);
-        let customFields = messager.custom_fields || {};
+        let personDisplayName = (messagerSelf.namings && messagerSelf.namings[platformUid]) || '';
 
-        // 呈現客戶分類條件資料之前先把客戶分類條件資料設定的順序排列
-        let appsFields = this.props.appsFields;
-        let fieldIds = Object.keys(appsFields[appId].fields);
-        fieldIds.sort((a, b) => {
-            return appsFields[appId].fields[a].order - appsFields[appId].fields[b].order;
-        });
-
-        let renderField = (fieldId, field) => {
-            let timezoneGap = new Date().getTimezoneOffset() * 60 * 1000;
-            let readonly = 'name' !== field.alias && field.type === apiDatabase.appsFields.TYPES.SYSTEM;
-            let fieldValue = '';
-
-            if (field.type === apiDatabase.appsFields.TYPES.CUSTOM) {
-                fieldValue = customFields[fieldId] ? customFields[fieldId].value : '';
-            } else {
-                if (messagerCase.indexOf(field.alias) >= 0) {
-                    fieldValue = undefined !== messager[field.alias] ? messager[field.alias] : '';
-                } else if (messagerSelfCase.indexOf(field.alias) >= 0) {
-                    fieldValue = undefined !== messagerSelf[field.alias] ? messagerSelf[field.alias] : '';
-                } else {
-                    // 如果是名稱的話則是取用 displayName
-                    if ('name' === field.alias) {
-                        fieldValue = (messagerSelf.namings && messagerSelf.namings[platformUid]) || '';
-                    } else {
-                        fieldValue = undefined !== person[field.alias] ? person[field.alias] : '';
-                    }
-                }
-            }
-
-            let SETS_TYPES = apiDatabase.appsFields.SETS_TYPES;
-            switch (field.setsType) {
-                case SETS_TYPES.SELECT:
-                    return (
-                        <td className="profile-content user-info-td">
-                            <select className="form-control td-inner"
-                                value={undefined !== this.state.fieldValues[fieldId] ? this.state.fieldValues[fieldId] : fieldValue}
-                                onChange={(ev) => this.onFieldValueChanged(ev, fieldId)}>
-                                <option value="">未選擇</option>
-                                {field.sets.map((set, i) => (
-                                    <option key={i} value={set}>
-                                        <Trans i18nKey={set} />
-                                    </option>
-                                ))}
-                            </select>
-                        </td>
-                    );
-                case SETS_TYPES.MULTI_SELECT:
-                    let selectValues = [];
-                    if ('assigned' === field.alias) {
-                        // 指派人存放的位置在每個 chatroom 的 messager 裡
-                        // 取得 chatroom messager 的 assigned_ids 來確認有指派給 chatshier 那些 users
-                        let agents = this.appsAgents[appId].agents;
-                        let assignedIds = messager.assigned_ids;
-                        field.sets = [];
-
-                        for (let agentUserId in agents) {
-                            field.sets.push({
-                                agentUserId: agentUserId,
-                                agentName: agents[agentUserId].name
-                            });
-                            selectValues.push(0 <= assignedIds.indexOf(agentUserId));
-                        }
-                    } else {
-                        for (let i in field.sets) {
-                            selectValues[i] = 0 <= fieldValue.indexOf(field.sets[i]);
-                        }
-                    }
-                    let multiSelectText = selectValues.reduce((output, value, i) => {
-                        if (!value) {
-                            return output;
-                        }
-                        output.push('assigned' === field.alias ? field.sets[i].agentName : field.sets[i]);
-                        return output;
-                    }, []).join(',');
-
-                    return (
-                        <td className="user-info-td">
-                            <Dropdown className="btn-group btn-block td-inner multi-select-wrapper"
-                                toggle={(ev) => this.toggleMultiSelect(ev, fieldId)}
-                                isOpen={this.state.multiSelectOpenStates[fieldId]}>
-                                <DropdownToggle color="none" className="btn btn-light btn-border btn-block">
-                                    <span className="multi-select-values">{undefined !== this.state.multiSelectTexts[fieldId] ? this.state.multiSelectTexts[fieldId] : multiSelectText}</span>
-                                    <i className="pl-1 fas fa-caret-down"></i>
-                                </DropdownToggle>
-                                <DropdownMenu className="multi-select-container">
-                                    {field.sets.map((set, i) => {
-                                        let setsValue = set;
-                                        let labelName = set;
-
-                                        if ('assigned' === field.alias) {
-                                            setsValue = set.agentUserId;
-                                            labelName = set.agentName;
-                                        }
-
-                                        return (
-                                            <DropdownItem key={i}>
-                                                <div className="form-check form-check-inline">
-                                                    <label className="form-check-label">
-                                                        <input className="form-check-input"
-                                                            type="checkbox"
-                                                            value={setsValue}
-                                                            checked={this.state.fieldValues[fieldId] ? this.state.fieldValues[fieldId][i] : !!selectValues[i]}
-                                                            onChange={(ev) => this.onFieldValueChanged(ev, fieldId, { idx: i, initData: selectValues })} />
-                                                        {labelName}
-                                                    </label>
-                                                </div>
-                                            </DropdownItem>
-                                        );
-                                    })}
-                                </DropdownMenu>
-                            </Dropdown>
-                        </td>
-                    );
-                case SETS_TYPES.CHECKBOX:
-                    return (
-                        <td className="user-info-td">
-                            <input className="td-inner"
-                                type="checkbox"
-                                checked={!!fieldValue}
-                                readOnly={readonly}
-                                disabled={readonly}
-                                onChange={(ev) => this.onFieldValueChanged(ev, fieldId)} />
-                        </td>
-                    );
-                case SETS_TYPES.DATE:
-                    fieldValue = fieldValue || 0;
-                    let fieldDateStr = new Date(new Date(fieldValue).getTime() - timezoneGap).toJSON().split('.').shift();
-                    return (
-                        <td className="user-info-td">
-                            <input className="form-control td-inner"
-                                type="datetime-local"
-                                value={fieldDateStr}
-                                readOnly={readonly}
-                                disabled={readonly}
-                                onChange={(ev) => this.onFieldValueChanged(ev, fieldId)} />
-                        </td>
-                    );
-                case SETS_TYPES.TEXT:
-                case SETS_TYPES.NUMBER:
-                default:
-                    let placeholder = 'name' === field.alias ? person.name : '尚未輸入';
-                    let inputType = SETS_TYPES.NUMBER === field.setsType ? 'tel' : 'text';
-                    inputType = 'email' === field.alias ? 'email' : inputType;
-                    return (
-                        <td className="user-info-td">
-                            <input className="form-control td-inner"
-                                type={inputType}
-                                placeholder={placeholder}
-                                value={undefined !== this.state.fieldValues[fieldId] ? this.state.fieldValues[fieldId] : fieldValue || ''}
-                                readOnly={readonly}
-                                disabled={readonly}
-                                autoCapitalize="none"
-                                onChange={(ev) => this.onFieldValueChanged(ev, fieldId)} />
-                        </td>
-                    );
-            }
-        };
+        let timezoneGap = new Date().getTimezoneOffset() * 60 * 1000;
+        let agents = this.appsAgents[appId].agents;
+        let assignedIds = messager.assigned_ids || [];
+        let assignerNames = assignedIds.map((agentUserId) => agents[agentUserId].name);
+        let assignerNamesText = assignerNames.length > 1 ? assignerNames[0] + ' 及其他' + (assignerNames.length - 1) + ' 名' : assignerNames.join('');
 
         return (
-            <table className="table table-hover panel-table">
-                <tbody>
-                    {fieldIds.map((fieldId) => {
-                        let field = appsFields[appId].fields[fieldId];
-                        return (
-                            <tr key={fieldId}>
-                                <th className="profile-label user-info-th">
-                                    <Trans i18nKey={field.text} />
-                                </th>
-                                {renderField(fieldId, field)}
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
+            <Aux>
+                <Form className="about-form">
+                    <FormGroup className="px-2 d-flex align-items-center user-info">
+                        <label className="px-0 col-3 col-form-label">
+                            <Trans i18nKey="Name" />
+                        </label>
+                        <div className="pr-0 col-9 d-flex">
+                            <input className="form-control" type="text" placeholder={person.name} value={personDisplayName} autoCapitalize="none" />
+                            <button type="button" className="ml-2 btn btn-primary btn-update-name">變更</button>
+                        </div>
+                    </FormGroup>
+
+                    <FormGroup className="px-2 d-flex align-items-center user-info">
+                        <label className="px-0 col-3 col-form-label">
+                            <Trans i18nKey="First chat date" />
+                        </label>
+                        <div className="pr-0 col-9">
+                            <input className="form-control"
+                                type="datetime-local"
+                                value={new Date(new Date(messagerSelf.createdTime).getTime() - timezoneGap).toJSON().split('.').shift()}
+                                disabled />
+                        </div>
+                    </FormGroup>
+
+                    <FormGroup className="px-2 d-flex align-items-center user-info">
+                        <label className="px-0 col-3 col-form-label">
+                            <Trans i18nKey="Recent chat date" />
+                        </label>
+                        <div className="pr-0 col-9">
+                            <input className="form-control"
+                                type="datetime-local"
+                                value={new Date(new Date(messagerSelf.lastTime).getTime() - timezoneGap).toJSON().split('.').shift()}
+                                disabled />
+                        </div>
+                    </FormGroup>
+
+                    <FormGroup className="px-2 d-flex align-items-center user-info">
+                        <label className="px-0 col-3 col-form-label">
+                            <Trans i18nKey="Chat time(s)" />
+                        </label>
+                        <div className="pr-0 col-9">
+                            <input className="form-control"
+                                type="text"
+                                value={messagerSelf.chatCount}
+                                disabled />
+                        </div>
+                    </FormGroup>
+
+                    <FormGroup className="px-2 d-flex user-info">
+                        <label className="px-0 col-3 col-form-label">
+                            <Trans i18nKey="Assigned" />
+                        </label>
+                        <Dropdown isOpen={this.state.multiSelectOpenStates.assigners} className="pr-0 col-9 btn-group btn-block multi-select-wrapper" toggle={(ev) => this.toggleMultiSelect(ev, 'assigners')}>
+                            <DropdownToggle className="btn btn-light btn-border btn-block" caret>
+                                <span className="multi-select-values">{assignerNamesText}</span>
+                            </DropdownToggle>
+                            <DropdownMenu className="multi-select-container assigners-select">
+                                {Object.keys(agents).map((agentUserId) => {
+                                    let isAssigned = assignedIds.indexOf(agentUserId) >= 0;
+                                    return (
+                                        <DropdownItem key={agentUserId} className="px-3">
+                                            <div className="form-check form-check-inline">
+                                                <label className="form-check-label">
+                                                    <input type="checkbox" className="form-check-input" value={agentUserId} checked={isAssigned} onChange={() => {}} />
+                                                    {agents[agentUserId].name}
+                                                </label>
+                                            </div>
+                                        </DropdownItem>
+                                    );
+                                })}
+                            </DropdownMenu>
+                        </Dropdown>
+                    </FormGroup>
+                </Form>
+                <hr />
+                <Form className="fields-form">
+                    {(() => {
+                        // 呈現客戶分類條件資料之前先把客戶分類條件資料設定的順序排列
+                        let fields = this.props.appsFields[appId].fields;
+                        let fieldIds = Object.keys(fields);
+
+                        let SETS_TYPES = apiDatabase.appsFields.SETS_TYPES;
+                        let FIELD_TYPES = apiDatabase.appsFields.TYPES;
+                        fieldIds.sort((a, b) => {
+                            let fieldsA = this.props.appsFields[appId].fields[a];
+                            let fieldsB = this.props.appsFields[appId].fields[b];
+
+                            // DEFAULT, SYSTEM 在前 CUSTOM 在後
+                            if (FIELD_TYPES.CUSTOM !== fieldsA.type &&
+                                FIELD_TYPES.CUSTOM === fieldsB.type) {
+                                return false;
+                            } else if (FIELD_TYPES.CUSTOM === fieldsA.type &&
+                                FIELD_TYPES.CUSTOM !== fieldsB.type) {
+                                return true;
+                            }
+                            return fieldsA.order - fieldsB.order;
+                        });
+
+                        let customFields = messager.custom_fields || {};
+
+                        return fieldIds.map((fieldId) => {
+                            let field = fields[fieldId];
+                            if (SKIP_AlIASES.indexOf(field.alias) >= 0) {
+                                return null;
+                            }
+
+                            let fieldValue;
+                            if (field.type === apiDatabase.appsFields.TYPES.CUSTOM) {
+                                fieldValue = customFields[fieldId] ? customFields[fieldId].value : '';
+                            } else {
+                                fieldValue = undefined !== messager[field.alias] ? messager[field.alias] : '';
+                            }
+
+                            switch (field.setsType) {
+                                case SETS_TYPES.SELECT:
+                                    return (
+                                        <FormGroup key={fieldId} className="px-2 d-flex align-items-center profile-content user-info">
+                                            <label className="px-0 col-3 col-form-label">
+                                                <Trans i18nKey={field.text}>{field.text}</Trans>
+                                            </label>
+                                            <div className="pr-0 col-9">
+                                                <select className="form-control field-value" value={fieldValue}>
+                                                    <option value="" disabled>未選擇</option>
+                                                    {field.sets.map((set, i) => (
+                                                        <option key={i} value={set}>{field.sets[i]}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        </FormGroup>
+                                    );
+                                case SETS_TYPES.MULTI_SELECT:
+                                    let selectValues = fieldValue instanceof Array ? fieldValue : [];
+                                    let multiSelectTextArr = selectValues.reduce((output, value, i) => {
+                                        if (!value) {
+                                            return output;
+                                        }
+                                        output.push(field.sets[i]);
+                                        return output;
+                                    }, []);
+                                    let multiSelectText = multiSelectTextArr.length > 1 ? multiSelectTextArr[0] + ' 及其他' + (multiSelectTextArr.length - 1) + ' 項' : multiSelectTextArr.join('');
+
+                                    return (
+                                        <FormGroup key={fieldId} className="px-2 d-flex align-items-center profile-content user-info">
+                                            <label className="px-0 col-3 col-form-label">
+                                                <Trans i18nKey={field.text}>{field.text}</Trans>
+                                            </label>
+                                            <Dropdown isOpen={this.state.multiSelectOpenStates[fieldId]} className="pr-0 col-9 btn-group btn-block multi-select-wrapper" toggle={(ev) => this.toggleMultiSelect(ev, fieldId)}>
+                                                <DropdownToggle className="btn btn-light btn-border btn-block" caret>
+                                                    <span className="multi-select-values">{multiSelectText}</span>
+                                                </DropdownToggle>
+                                                <DropdownMenu className="multi-select-container fields-select">
+                                                    {field.sets.map((set, i) => (
+                                                        <DropdownItem key={i} className="px-3">
+                                                            <div className="form-check form-check-inline">
+                                                                <label className="form-check-label">
+                                                                    <input className="form-check-input" type="checkbox" value={set} checked={selectValues[i]} onChange={() => {}} />
+                                                                    {set}
+                                                                </label>
+                                                            </div>
+                                                        </DropdownItem>
+                                                    ))}
+                                                </DropdownMenu>
+                                            </Dropdown>
+                                        </FormGroup>
+                                    );
+                                case SETS_TYPES.CHECKBOX:
+                                    return (
+                                        <FormGroup key={fieldId} className="px-2 d-flex align-items-center profile-content user-info">
+                                            <label className="px-0 col-3 col-form-label">
+                                                <Trans i18nKey={field.text}>{field.text}</Trans>
+                                            </label>
+                                            <div className="pr-0 col-9">
+                                                <input className="form-control field-value" type="checkbox" checked={fieldValue} onChange={() => {}} />
+                                            </div>
+                                        </FormGroup>
+                                    );
+                                case SETS_TYPES.DATE:
+                                    fieldValue = fieldValue || 0;
+                                    let fieldDateTime = new Date(fieldValue).getTime();
+                                    fieldDateTime = isNaN(fieldDateTime) ? new Date() : fieldDateTime - timezoneGap;
+                                    let fieldDateStr = new Date(fieldDateTime).toJSON().split('.').shift();
+                                    return (
+                                        <FormGroup key={fieldId} className="px-2 d-flex align-items-center profile-content user-info">
+                                            <label className="px-0 col-3 col-form-label">
+                                                <Trans i18nKey={field.text}>{field.text}</Trans>
+                                            </label>
+                                            <div className="pr-0 col-9">
+                                                <input className="form-control field-value" type="datetime-local" value={fieldDateStr} />
+                                            </div>
+                                        </FormGroup>
+                                    );
+                                case SETS_TYPES.TEXT:
+                                case SETS_TYPES.NUMBER:
+                                default:
+                                    let inputType = SETS_TYPES.NUMBER === field.setsType ? 'tel' : 'text';
+                                    inputType = 'email' === field.alias ? 'email' : inputType;
+                                    return (
+                                        <FormGroup key={fieldId} className="px-2 d-flex align-items-center profile-content user-info">
+                                            <label className="px-0 col-3 col-form-label">
+                                                <Trans i18nKey={field.text}>{field.text}</Trans>
+                                            </label>
+                                            <div className="pr-0 col-9">
+                                                <input className="form-control field-value" type={inputType} placeholder="尚未輸入" value={fieldValue} autoCapitalize="none" />
+                                            </div>
+                                        </FormGroup>
+                                    );
+                            }
+                        });
+                    })()}
+                    <div className="text-center profile-confirm">
+                        <button type="button" className="btn btn-info">更新資料</button>
+                    </div>
+                    <hr />
+                    <FormGroup className="px-2 d-flex align-items-center tags-wrapper">
+                        <label className="px-0 col-3 col-form-label">標籤</label>
+                        <div className="pr-0 col-9 tags-container">
+                            {(() => {
+                                let tags = messager.tags || [];
+                                if (0 === tags.length) {
+                                    return <span>無標籤</span>;
+                                }
+
+                                return tags.map((tag, i) => (
+                                    <div key={i} className="d-inline-flex align-items-center mx-2 my-1 tag-chip">
+                                        <span className="pt-2 pb-2 pl-2 chip-text">{tag}</span>
+                                        <i className="p-2 fas fa-times remove-chip"></i>
+                                    </div>
+                                ));
+                            })()}
+                        </div>
+                    </FormGroup>
+
+                    <FormGroup className="px-2 d-flex align-items-center tags-wrapper">
+                        <label className="px-0 col-3 col-form-label"></label>
+                        <div className="pr-0 col-9">
+                            <input className="form-control tag-input" type="text" placeholder="新增標籤" autoCapitalize="none" />
+                        </div>
+                    </FormGroup>
+                </Form>
+            </Aux>
         );
     }
 
@@ -598,14 +638,14 @@ class ProfilePanel extends React.Component {
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps,
         appsChatrooms: storeState.appsChatrooms,
         appsFields: storeState.appsFields,
         consumers: storeState.consumers,
         groups: storeState.groups,
         users: storeState.users
-    };
+    });
 };
 
 export default connect(mapStateToProps)(withTranslate(ProfilePanel));

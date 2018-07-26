@@ -2,7 +2,7 @@ export const UPDATE_MEMBERS = 'UPDATE_GROUPS_MEMBERS';
 export const DELETE_MEMBER = 'DELETE_GROUP_MEMBER';
 
 /**
- * @param {Chatshier.GroupsMembers} groupsMembers
+ * @param {Chatshier.Model.GroupsMembers} groupsMembers
  */
 export const updateGroupsMembers = (groupsMembers) => {
     return { type: UPDATE_MEMBERS, groupsMembers };

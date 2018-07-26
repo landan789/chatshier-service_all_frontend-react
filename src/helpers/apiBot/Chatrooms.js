@@ -3,6 +3,7 @@ import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
 import { deleteChatroom } from '../../redux/actions/mainStore/appsChatrooms';
+import { updateConsumers } from '../../redux/actions/mainStore/consumers';
 
 class Chatrooms extends Core {
     /**
@@ -15,7 +16,10 @@ class Chatrooms extends Core {
             method: 'GET',
             headers: reqHeaders
         };
-        return this.sendRequest(destUrl, reqInit);
+        return this.sendRequest(destUrl, reqInit).then((resJson) => {
+            mainStore.dispatch(updateConsumers(resJson.data));
+            return resJson;
+        });
     };
 
     /**

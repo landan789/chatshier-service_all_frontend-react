@@ -10,6 +10,11 @@ class AppsGreetings extends Core {
         this.apiEndPoint += 'apps-greetings/';
     }
 
+    /**
+     * @param {string} appId
+     * @param {string} userId
+     * @returns {Promise<AppsGreetingsResponse>}
+     */
     find(appId, userId) {
         let appsGreetings = mainStore.getState().appsGreetings;
         if (Object.keys(appsGreetings).length > 0) {
@@ -31,6 +36,12 @@ class AppsGreetings extends Core {
         });
     };
 
+    /**
+     * @param {string} appId
+     * @param {string} userId
+     * @param {Chatshier.Greeting} greeting
+     * @returns {Promise<AppsGreetingsResponse>}
+     */
     insert(appId, userId, greeting) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
         let reqInit = {
@@ -44,6 +55,12 @@ class AppsGreetings extends Core {
         });
     };
 
+    /**
+     * @param {string} appId
+     * @param {string} userId
+     * @param {string} greetingId
+     * @returns {Promise<AppsGreetingsResponse>}
+     */
     delete(appId, userId, greetingId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/greetings/' + greetingId + '/users/' + userId;
         let reqInit = {

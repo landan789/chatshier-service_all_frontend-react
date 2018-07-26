@@ -59,11 +59,8 @@ class Chat extends React.Component {
         this.toggleChatroom = this.toggleChatroom.bind(this);
         this.toggleProfle = this.toggleProfle.bind(this);
         this.toggleTicket = this.toggleTicket.bind(this);
-    }
 
-    componentWillMount() {
         browserHelper.setTitle(this.props.t('Chatroom'));
-
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
@@ -204,7 +201,7 @@ class Chat extends React.Component {
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps,
         appsChatrooms: storeState.appsChatrooms,
         appsFields: storeState.appsFields,
@@ -212,14 +209,14 @@ const mapStateToProps = (storeState, ownProps) => {
         consumers: storeState.consumers,
         groups: storeState.groups,
         users: storeState.users
-    };
+    });
 };
 
 export default withRouter(withTranslate(connect(mapStateToProps)(Chat)));
 
 /**
  * @param {{[messagerId: string]: Chatshier.ChatroomMessager }} messagers
- * @return {Chatshier.ChatroomMessager}
+ * @return {Chatshier.Model.ChatroomMessager}
  */
 export const findMessagerSelf = (messagers) => {
     let userId = authHelper.userId;
@@ -244,7 +241,7 @@ export const findMessagerSelf = (messagers) => {
 /**
  * @param {{[messagerId: string]: Chatshier.ChatroomMessager }} messagers
  * @param {string} appType
- * @return {Chatshier.ChatroomMessager}
+ * @return {Chatshier.Model.ChatroomMessager}
  */
 export const findChatroomMessager = (messagers, appType) => {
     let userId = authHelper.userId;

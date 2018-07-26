@@ -38,11 +38,8 @@ class Autoreplies extends React.Component {
         this.openInsertModal = this.openInsertModal.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
         this.appChanged = this.appChanged.bind(this);
-    }
 
-    componentWillMount() {
         browserHelper.setTitle('自動回覆');
-
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
@@ -120,10 +117,10 @@ class Autoreplies extends React.Component {
 }
 
 const mapStateToProps = (storeState, ownProps) => {
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps,
         appsAutoreplies: storeState.appsAutoreplies
-    };
+    });
 };
 
 export default withRouter(connect(mapStateToProps)(Autoreplies));

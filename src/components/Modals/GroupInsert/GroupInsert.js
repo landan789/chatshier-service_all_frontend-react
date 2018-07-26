@@ -93,9 +93,9 @@ class GroupInsertModal extends ModalCore {
 }
 
 const mapStateToProps = (storeState, ownProps) => {
-    return {
+    return Object.assign({}, ownProps, {
         groups: storeState.groups
-    };
+    });
 };
 
 export default connect(mapStateToProps)(GroupInsertModal);

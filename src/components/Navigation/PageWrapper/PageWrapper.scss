@@ -11,7 +11,11 @@
         max-width: calc(100% - #{$ctrl-panel-put-away-width});
     }
 
-    @media (max-width: 576px) {
+    > div:first-of-type {
+        padding-top: $toolbar-height;
+    }
+
+    @media (max-width: 768px) {
         & {
             max-width: 100%;
         }

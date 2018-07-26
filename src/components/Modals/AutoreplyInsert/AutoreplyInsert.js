@@ -36,7 +36,7 @@ class AutoreplyInsertModal extends ModalCore {
         this.selectedApp = this.selectedApp.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         let firstApp = Object.keys(nextProps.apps)[0];
         this.setState({appId: firstApp});
     }
@@ -146,7 +146,7 @@ class AutoreplyInsertModal extends ModalCore {
                         <Label>結束時間 </Label>
                         <DateTimePicker onChange={this.handleEndDatetimeChange}></DateTimePicker>
                     </InputGroup>
-                    <br/>
+
                     <FormGroup>
                         <Label>自動回覆訊息: </Label>
                         <Input type="textarea" onChange={this.handleDescriptionChange}/>

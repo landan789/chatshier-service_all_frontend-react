@@ -1,77 +1,77 @@
 interface AppsResponse {
     status: number,
     msg: string,
-    data: Chatshier.Apps
+    data: Chatshier.Models.Apps
 }
 
 interface AppsAutorepliesResponse {
     status: number,
     msg: string,
-    data: Chatshier.AppsAutoreplies
+    data: Chatshier.Models.AppsAutoreplies
 }
 
 interface AppsChatroomsResponse {
     status: number,
     msg: string,
-    data: Chatshier.AppsChatrooms
+    data: Chatshier.Models.AppsChatrooms
 }
 
 interface AppsComposesResponse {
     status: number,
     msg: string,
-    data: Chatshier.AppsComposes
+    data: Chatshier.Models.AppsComposes
 }
 
 interface AppsGreetingsResponse {
     status: number,
     msg: string,
-    data: Chatshier.AppsGreetings
+    data: Chatshier.Models.AppsGreetings
 }
 
 interface AppsKeywordrepliesResponse {
     status: number,
     msg: string,
-    data: Chatshier.AppsKeywordreplies
+    data: Chatshier.Models.AppsKeywordreplies
 }
 
 interface AppsFieldsResponse {
     status: number,
     msg: string,
-    data: Chatshier.AppsFields
+    data: Chatshier.Models.AppsFields
 }
 
 interface AppsTicketsResponse {
     status: number,
     msg: string,
-    data: Chatshier.AppsTickets
+    data: Chatshier.Models.AppsTickets
 }
 
 interface CalendarsEventsResponse {
     status: number,
     msg: string,
-    data: Chatshier.CalendarsEvents
+    data: Chatshier.Models.CalendarEvents
 }
 
 interface ConsumersResponse {
     status: number,
     msg: string,
-    data: Chatshier.Consumers
+    data: Chatshier.Models.Consumers
 }
 
 interface GroupsResponse {
     status: number,
     msg: string,
-    data: Chatshier.Groups
+    data: Chatshier.Models.Groups
 }
 
 interface GroupsMembersResponse {
     status: number,
     msg: string,
-    data: Chatshier.GroupsMembers
+    data: Chatshier.Models.Groups
 }
 
 interface UsersResponse {
     status: number,
     msg: string,
-    data: Chatshier.Users
+    data: Chatshier.Models.Users
 }

@@ -15,6 +15,7 @@ import i18n from './i18n';
 import Analysis from './containers/Analysis/Analysis';
 import Autoreplies from './containers/Autoreplies/Autoreplies';
 import Calendar from './containers/Calendar/Calendar';
+import CategoriesProducts from './containers/CategoriesProducts/CategoriesProducts';
 import ChangePassword from './containers/ChangePassword/ChangePassword';
 import Chat from './containers/Chat/Chat';
 import Composes from './containers/Composes/Composes';
@@ -45,6 +46,10 @@ const routes = [
     }, {
         path: ROUTES.CALENDAR,
         component: Calendar,
+        exact: true
+    }, {
+        path: ROUTES.CATEGORY_PRODUCT,
+        component: CategoriesProducts,
         exact: true
     }, {
         path: ROUTES.CHANGE_PASSWORD,

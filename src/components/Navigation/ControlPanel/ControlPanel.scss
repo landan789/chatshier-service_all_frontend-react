@@ -68,9 +68,7 @@ $ctrl-item-icon-size: 1rem;
         border-radius: .25rem;
     }
 
-    .list-group-item {  
-        padding-top: .5rem;
-        padding-bottom: .5rem;
+    .list-group-item {
         background-color: $ctrl-panel-bg-color;
         cursor: pointer;
         border: none;
@@ -114,6 +112,8 @@ $ctrl-item-icon-size: 1rem;
             display: flex;
             align-items: center;
             letter-spacing: 1.2px;
+            padding-top: .5rem;
+            padding-bottom: .5rem;
             font-weight: 300;
 
             &:hover {
@@ -125,7 +125,7 @@ $ctrl-item-icon-size: 1rem;
             }
 
             span {
-                max-width: 60%;
+                max-width: 55%;
                 white-space: nowrap;
                 overflow-x: hidden;
                 text-overflow: ellipsis;
@@ -133,28 +133,30 @@ $ctrl-item-icon-size: 1rem;
         }
 
         .nested {
-            &.list-group-item,
-            > :first-child {
+            > :first-child,
+            &.list-group-item {
                 margin-left: .5rem;
-
-                + .list-group-item {
-                    margin-left: .5rem;
-                }
             }
 
             .nested {
-                &.list-group-item,
-                > :first-child {
+                > :first-child,
+                &.list-group-item {
                     margin-left: 1rem;
                 }
 
                 .nested {
-                    &.list-group-item,
-                    > :first-child {
+                    > :first-child,
+                    &.list-group-item {
                         margin-left: 1.25rem;
                     }
                 }
             }
+        }
+    }
+
+    .simple-list {
+        .logo-item + .list-group-item {
+            margin-top: 6rem;
         }
     }
 

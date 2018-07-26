@@ -12,7 +12,6 @@ import { notify } from '../../components/Notify/Notify';
 import { findChatroomMessager, findMessagerSelf } from './Chat';
 import Message from './Message';
 
-import sendBtnSvg from '../../image/send-btn.svg';
 import './ChatroomPanel.css';
 
 const CHATSHIER = 'CHATSHIER';
@@ -84,7 +83,7 @@ class ChatroomPanel extends React.Component {
     sendMessage() {
         let messageText = this.state.messageText;
         let appId = this.props.appId;
-        /** @type {Chatshier.App} */
+        /** @type {Chatshier.Model.App} */
         let app = this.props.apps[appId];
 
         let chatroomId = this.props.chatroomId;
@@ -93,11 +92,14 @@ class ChatroomPanel extends React.Component {
         let messagerSelf = findMessagerSelf(chatroom.messagers);
         let userId = authHelper.userId;
 
+        // 發送給各平台時，文字訊息前面加上自己的名稱當成前輟
+        let messagePrefix = app.type !== CHATSHIER ? '[' + this.props.users[userId].name + ']\n' : '';
+
         /** @type {Chatshier.SocketMessage} */
         let messageToSend = {
             from: CHATSHIER,
             time: Date.now(),
-            text: messageText,
+            text: messagePrefix + messageText,
             src: '',
             type: 'text',
             messager_id: messagerSelf._id
@@ -174,9 +176,12 @@ class ChatroomPanel extends React.Component {
         let messagerSelf = findMessagerSelf(chatroom.messagers);
         let platformMessager = findChatroomMessager(chatroom.messagers, app.type);
 
+        // 傳送檔案時，帶上檔案大小當成文字訊息
+        let fileText = 'file' === messageType ? '小幫手傳送檔案給你:\n檔案大小: ' + fileSize + '\n' : '';
+
         /** @type {Chatshier.SocketMessage} */
         let messageToSend = {
-            text: '錢掌櫃傳送檔案給您:\n檔案大小: ' + fileSize + '\n',
+            text: fileText,
             src: file,
             fileName: file.name,
             type: messageType,
@@ -239,7 +244,7 @@ class ChatroomPanel extends React.Component {
                 <div className="w-100 chatroom-body">
                     <div className="chat-content">
                         <div className="h-100 d-flex flex-column message-panel" ref={(elem) => (this.messagePanelElem = elem)}>
-                            {messageIds.length < 10 && <p className="message-time font-weight-bold">-沒有更舊的歷史訊息-</p>}
+                            {messageIds.length < 10 && <p className="text-center message-time font-weight-bold">-沒有更舊的歷史訊息-</p>}
                             {messageIds.map((messageId) => {
                                 let message = messages[messageId];
                                 let messagerId = message.messager_id;
@@ -265,7 +270,8 @@ class ChatroomPanel extends React.Component {
                                     'audio' === message.type ||
                                     'video' === message.type ||
                                     'sticker' === message.type ||
-                                    'template' === message.type
+                                    'template' === message.type ||
+                                    'imagemap' === message.type
                                 );
 
                                 // 如果訊息是來自於 Chatshier 或 系統自動回覆 的話，訊息一律放在右邊
@@ -280,14 +286,14 @@ class ChatroomPanel extends React.Component {
                                 if (dateStr !== this.nowDateStr) {
                                     this.nowDateStr = dateStr;
                                     dateStrSymbol = (
-                                        <p className="message-time font-weight-bold">{this.nowDateStr}</p>
+                                        <p className="text-center message-time font-weight-bold">{this.nowDateStr}</p>
                                     );
                                 }
                                 let messageTime = messageDatetime.getTime();
                                 let datetimeStrSymbol = null;
                                 if (messageTime - this.prevTime > 15 * MINUTE) {
                                     datetimeStrSymbol = (
-                                        <p className="message-time font-weight-bold">{this._toDateStr(messageTime)}</p>
+                                        <p className="text-center message-time font-weight-bold">{this._toDateStr(messageTime)}</p>
                                     );
                                 }
                                 this.prevTime = messageTime;
@@ -297,6 +303,7 @@ class ChatroomPanel extends React.Component {
                                         {dateStrSymbol}
                                         {datetimeStrSymbol}
                                         <Message
+                                            appType={app.type}
                                             shouldRightSide={shouldRightSide}
                                             senderName={senderName}
                                             isMedia={isMedia}
@@ -355,13 +362,14 @@ class ChatroomPanel extends React.Component {
                                 onChange={(ev) => this.uploadFile(ev, 'file')} />
                         </div>
                     </div>
-                    <div className="message-input form-lower">
-                        <input className="submit-message-input px-2" type="text"
-                            placeholder="輸入訊息..."
+                    <div className="d-flex align-items-center message-input form-lower">
+                        <textarea className="submit-message-input px-2"
+                            placeholder="輸入訊息... (Ctrl + Enter 發送訊息)"
                             value={this.state.messageText}
                             onChange={this.onMessageChange}
-                            onKeyDown={(ev) => (13 === ev.keyCode) && this.sendMessage()} />
-                        <img className="submit-message-btn p-0 ml-2" src={sendBtnSvg} alt="" onClick={this.sendMessage} />
+                            onKeyDown={(ev) => (13 === ev.keyCode && ev.ctrlKey) && this.sendMessage()}>
+                        </textarea>
+                        <button className="p-0 ml-2 submit-message-btn" type="button" onClick={this.sendMessage}></button>
                     </div>
                 </div>
             </div>
@@ -384,12 +392,12 @@ class ChatroomPanel extends React.Component {
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps,
         appsChatrooms: storeState.appsChatrooms,
         consumers: storeState.consumers,
         users: storeState.users
-    };
+    });
 };
 
 export default connect(mapStateToProps)(ChatroomPanel);

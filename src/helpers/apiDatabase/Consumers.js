@@ -64,7 +64,7 @@ class Consumers extends Core {
     /**
      * @param {string} platformUid
      * @param {string} userId
-     * @param {Chatshier.Consumer} consumer
+     * @param {Chatshier.Model.Consumer} consumer
      * @returns {Promise<ConsumerResponse>}
      */
     update(platformUid, userId, consumer) {

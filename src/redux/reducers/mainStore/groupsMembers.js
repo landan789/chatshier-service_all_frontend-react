@@ -4,7 +4,7 @@ export const groupsMembersReducer = (state = {}, action) => {
     switch (action.type) {
         case UPDATE_MEMBERS:
             for (let groupId in action.groups) {
-                /** @type {Chatshier.GroupsMembers} */
+                /** @type {Chatshier.Model.GroupsMembers} */
                 let group = action.groups[groupId];
                 state[groupId] = state[groupId] || { members: {} };
 

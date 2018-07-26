@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Aux from 'react-aux';
-import { Fade, Card, ButtonGroup, Button } from 'reactstrap';
-import { Trans } from 'react-i18next';
+import { Fade, Card, ButtonGroup, Button, UncontrolledTooltip } from 'reactstrap';
+// import { Trans } from 'react-i18next';
 import { withTranslate } from '../../i18n';
 
 import ROUTES from '../../config/route';
@@ -57,10 +57,51 @@ class Tickets extends React.Component {
         history: PropTypes.object.isRequired
     }
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (prevState.prevProps === nextProps) {
+            return prevState;
+        }
+        let nextState = prevState;
+        nextState.prevProps = nextProps;
+
+        /** @type {Chatshier.Model.Apps} */
+        let apps = nextProps.apps;
+        /** @type {Chatshier.Model.Groups} */
+        let groups = nextProps.groups;
+        /** @type {Chatshier.Model.Users} */
+        let users = nextProps.users;
+
+        if (Object.keys(apps).length > 0 &&
+            Object.keys(groups).length > 0 &&
+            Object.keys(users).length > 0) {
+            let appsAgents = {};
+            for (let appId in apps) {
+                for (let groupId in groups) {
+                    let group = groups[groupId];
+                    if (group.app_ids.indexOf(appId) < 0) {
+                        continue;
+                    }
+
+                    appsAgents[appId] = { agents: {} };
+                    for (let memberId in group.members) {
+                        let memberUserId = group.members[memberId].user_id;
+                        appsAgents[appId].agents[memberUserId] = {
+                            name: users[memberUserId].name,
+                            email: users[memberUserId].email
+                        };
+                    }
+                }
+            }
+            nextState.appsAgents = appsAgents;
+        }
+        return nextState;
+    }
+
     constructor(props) {
         super(props);
 
         this.state = {
+            prevProps: null,
             statusFilter: STATUS_TYPES.NONE,
             isInsertModalOpen: false,
             searchKeyword: '',
@@ -70,11 +111,8 @@ class Tickets extends React.Component {
         this.keywordChanged = this.keywordChanged.bind(this);
         this.openInsertModal = this.openInsertModal.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
-    }
 
-    componentWillMount() {
         browserHelper.setTitle(this.props.t('To-Do items'));
-
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
@@ -90,30 +128,7 @@ class Tickets extends React.Component {
             apiDatabase.consumers.find(userId),
             apiDatabase.groups.find(userId),
             apiDatabase.users.find(userId)
-        ]).then((resJsons) => {
-            // 每個 app 因群組不同，指派人清單也會不同，因此須根據群組準備指派人清單
-            let appsTickets = resJsons[2].data;
-            let groups = resJsons[4].data;
-            let users = resJsons[5].data;
-
-            let appsAgents = {};
-            for (let appId in appsTickets) {
-                for (let groupId in groups) {
-                    let group = groups[groupId];
-                    if (0 <= group.app_ids.indexOf(appId)) {
-                        appsAgents[appId] = { agents: {} };
-                        for (let memberId in group.members) {
-                            let memberUserId = group.members[memberId].user_id;
-                            appsAgents[appId].agents[memberUserId] = {
-                                name: users[memberUserId].name,
-                                email: users[memberUserId].email
-                            };
-                        }
-                    }
-                }
-            }
-            this.setState({ appsAgents: appsAgents });
-        });
+        ]);
     }
 
     keywordChanged(ev) {
@@ -133,41 +148,45 @@ class Tickets extends React.Component {
             <Aux>
                 <ControlPanel />
                 <PageWrapper toolbarTitle={this.props.t('To-Do items')}>
-                    <Fade in className="mt-5 container ticket-wrapper">
+                    <Fade in className="align-items-center mt-5 container ticket-wrapper">
                         <Card className="pb-5 chsr">
                             <div className="mx-4 px-3 ticket-toolbar">
                                 <ButtonGroup className="mr-auto">
-                                    <Button color="info"
+                                    <Button color="info" id="allTicketsFilter"
                                         className={this.state.statusFilter === STATUS_TYPES.NONE ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.NONE })}>
                                         <i className="fas fa-list-alt fa-1p5x"></i>
                                     </Button>
-                                    <Button color="info"
+                                    <UncontrolledTooltip placement="top" delay={0} target="allTicketsFilter">全部</UncontrolledTooltip>
+
+                                    <Button color="info" id="pendingFilter"
                                         className={this.state.statusFilter === STATUS_TYPES.PENDING ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.PENDING })}>
                                         <i className="fas fa-times-circle fa-1p5x"></i>
                                     </Button>
-                                    <Button color="info"
+                                    <UncontrolledTooltip placement="top" delay={0} target="pendingFilter">未處理</UncontrolledTooltip>
+
+                                    <Button color="info" id="processingFilter"
                                         className={this.state.statusFilter === STATUS_TYPES.PROCESSING ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.PROCESSING })}>
                                         <i className="fas fa-play-circle fa-1p5x"></i>
                                     </Button>
-                                    <Button color="info"
+                                    <UncontrolledTooltip placement="top" delay={0} target="processingFilter">處理中</UncontrolledTooltip>
+
+                                    <Button color="info" id="resolvedFilter"
                                         className={this.state.statusFilter === STATUS_TYPES.RESOLVED ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.RESOLVED })}>
                                         <i className="fas fa-check-circle fa-1p5x"></i>
                                     </Button>
-                                    <Button color="info"
+                                    <UncontrolledTooltip placement="top" delay={0} target="resolvedFilter">已處理</UncontrolledTooltip>
+
+                                    <Button color="info" id="closedFilter"
                                         className={this.state.statusFilter === STATUS_TYPES.CLOSED ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.CLOSED })}>
                                         <i className="fas fa-minus-circle fa-1p5x"></i>
                                     </Button>
+                                    <UncontrolledTooltip placement="top" delay={0} target="closedFilter">已關閉</UncontrolledTooltip>
                                 </ButtonGroup>
-
-                                <Button className="ticket-insert" color="light" onClick={this.openInsertModal}>
-                                    <span className="fas fa-plus fa-fw"></span>
-                                    <span><Trans i18nKey="Add To-Do item" /></span>
-                                </Button>
 
                                 <div className="d-flex align-items-center w-25 mx-0 search">
                                     <input className="search-box"
@@ -176,6 +195,10 @@ class Tickets extends React.Component {
                                         value={this.state.searchKeyword}
                                         onChange={this.keywordChanged} />
                                 </div>
+
+                                <Button size="sm" className="ticket-insert" color="light" onClick={this.openInsertModal}>
+                                    <i className="fas fa-plus fa-fw"></i>
+                                </Button>
                             </div>
 
                             <TicketContent className="mx-4"
@@ -203,14 +226,14 @@ class Tickets extends React.Component {
 
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
-    return {
+    return Object.assign({}, ownProps, {
         apps: storeState.apps,
         appsChatrooms: storeState.appsChatrooms,
         appsTickets: storeState.appsTickets,
         consumers: storeState.consumers,
         groups: storeState.groups,
         users: storeState.users
-    };
+    });
 };
 
 export default withRouter(withTranslate(connect(mapStateToProps)(Tickets)));

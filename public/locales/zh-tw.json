@@ -11,10 +11,11 @@
     "An error occurred!": "發生錯誤！",
     "App ID can't be empty": "App ID 不能為空",
     "App secret can't be empty": "App secret 不能為空",
+    "Appointment system": "預約系統",
     "April": "四月",
     "Are you sure want to delete it?": "確定要刪除嗎？",
     "Assigned": "已指派",
-    "Assigner": "指派人",
+    "Assignee": "指派人",
     "August": "八月",
     "Auto Replies": "自動回覆",
 
@@ -46,6 +47,7 @@
     "Email": "電子郵件",
     "Email was empty!": "電子郵件未填寫！",
     "End datetime": "結束時間",
+    "Event description": "事件描述",
 
     "Failed to add!": "新增失敗！",
     "Failed to remove!": "刪除失敗！",
@@ -56,8 +58,10 @@
     "FEMALE": "女",
     "Female": "女",
     "Fill the bot name": "請輸入機器人名稱",
+    "Fill the description": "請輸入描述內容",
     "Fill the event title": "請填入事件標題",
     "Fill the group name": "請輸入群組名稱",
+    "Fill the title": "請輸入標題",
     "Fill your email": "請輸入電子郵件",
     "Fill your name": "請輸入姓名",
     "Fill your password": "請輸入密碼",
@@ -66,6 +70,7 @@
     "Frequency of word": "文字頻率",
 
     "Gender": "性別",
+    "Graphic content": "圖文影音內容",
     "Greetings": "加好友回覆",
     "Group name": "群組名稱",
     "Groups": "內部群組",
@@ -73,6 +78,7 @@
     "Hour": "小時",
 
     "I agree Chatshier": "我同意 Chatshier",
+    "Image map message": "圖文訊息",
     "Integration": "系統整合",
     "Invalid email": "無效電子郵件",
     "Invalid verification code, Please verify again!": "不合法的驗證碼，請重新進行驗證動作！",
@@ -102,6 +108,7 @@
     "New password": "新密碼",
     "New password can't be empty": "新密碼不能為空",
     "New password was inconsistent": "輸入的新密碼不一致",
+    "No": "否",
     "No fee. Experience chat now.": "不需付費。馬上體驗聊天功能。",
     "No user found": "找不到使用者",
     "November": "十一月",
@@ -121,12 +128,15 @@
     "Please perform the verification": "請執行驗證操作",
     "Privacy": "隱私權條款",
     "Processing": "處理中",
+    "Product management": "商品管理",
+    "Product service": "商品服務",
 
     "Recent chat date": "最近聊天時間",
     "Remark": "備註",
     "Remove": "刪除",
     "Remove successful!": "刪除成功！",
     "Reset password": "重設密碼",
+    "Rich menu": "圖文選單",
 
     "Sent email to your mailbox": "已發送電子郵件至您的信箱",
     "Sign in": "登入",
@@ -134,16 +144,18 @@
     "Sign out": "登出",
     "Sign up": "註冊",
     "Signing up": "註冊中",
+    "Search": "搜尋",
     "Search messages of text...": "搜尋文字訊息...",
     "Select a bot": "選擇機器人",
     "Select a data type": "選擇資料類型",
     "September": "九月",
     "Set your new password": "設定您的新密碼",
-    "Settings": "基本設定",
+    "Settings": "設定",
     "Sorry, unable to send email to your mailbox!": "很抱歉，無法發送電子郵件至您的信箱！",
     "Start datetime": "開始時間",
     "Start datetime must be earlier than end datetime": "開始時間需早於結束時間",
 
+    "Template message": "範本訊息",
     "Terms": "服務條款",
     "The entered new password is inconsistent": "輸入的新密碼不一致",
     "Title": "標題",
@@ -159,5 +171,7 @@
     "User email had been signed up!": "電子郵件已被註冊！",
 
     "Welcome to Chatshier integration platform": "歡迎使用 錢掌櫃 整合平台",
-    "Wrong password!": "密碼錯誤！"
+    "Wrong password!": "密碼錯誤！",
+
+    "Yes": "是"
 }

@@ -1,9 +1,9 @@
-import urlConfig from '../../config/url';
+import chatshierCfg from '../../config/chatshier';
 
 class Core {
     constructor() {
-        let config = window.urlConfig || urlConfig;
-        this.apiEndPoint = config.apiUrl + '/api/bot/';
+        let URL = chatshierCfg.URL;
+        this.apiEndPoint = URL.apiUrl + '/api/bot/';
     }
 
     /**
@@ -41,6 +41,7 @@ class Core {
      * @param {string} url
      * @param {RequestInit|RequestInit[]} [reqInits]
      * @param {Boolean} [usingRecursive=false] If true, the processes will do step one by one
+     * @returns {Promise<any>}
      */
     sendRequest(url, reqInits, usingRecursive) {
         reqInits = reqInits || {};

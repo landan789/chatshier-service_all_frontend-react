@@ -5,7 +5,7 @@ export const UPDATE_CHATROOMS_MESSAGERS = 'UPDATE_CHATROOMS_MESSAGERS';
 export const UPDATE_CHATROOMS_MESSAGES = 'UPDATE_CHATROOMS_MESSAGES';
 
 /**
- * @param {Chatshier.AppsChatrooms} appsChatrooms
+ * @param {Chatshier.Model.AppsChatrooms} appsChatrooms
  */
 export const updateChatrooms = (appsChatrooms) => {
     return { type: UPDATE_CHATROOMS, appsChatrooms };

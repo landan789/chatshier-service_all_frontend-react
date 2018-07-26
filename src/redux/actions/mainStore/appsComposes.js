@@ -3,7 +3,7 @@ export const DELETE_COMPOSE = 'DELETE_COMPOSE';
 export const DELETE_ALL_COMPOSES = 'DELETE_ALL_COMPOSES';
 
 /**
- * @param {Chatshier.AppsComposes} appsComposes
+ * @param {Chatshier.Model.AppsComposes} appsComposes
  */
 export const updateComposes = (appsComposes) => {
     return { type: UPDATE_COMPOSES, appsComposes };

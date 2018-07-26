@@ -44,15 +44,13 @@ class ResetPassword extends React.Component {
         this.emailChanged = this.emailChanged.bind(this);
         this.recaptchaResponseChanged = this.recaptchaResponseChanged.bind(this);
         this.checkInputs = this.checkInputs.bind(this);
-    }
 
-    componentWillMount() {
         browserHelper.setTitle(this.props.t('Reset password'));
-
         if (authHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }
     }
+
     emailChanged(ev) {
         this.setState({
             email: ev.target.value,

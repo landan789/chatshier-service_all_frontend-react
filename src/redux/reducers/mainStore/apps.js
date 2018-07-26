@@ -4,7 +4,7 @@ export const appsReducer = (state = {}, action) => {
     switch (action.type) {
         case UPDATE_APPS:
             for (let appId in action.apps) {
-                /** @type {Chatshier.App} */
+                /** @type {Chatshier.Model.App} */
                 let app = action.apps[appId];
                 if (app.isDeleted) {
                     continue;

@@ -40,11 +40,8 @@ class SignIn extends React.Component {
         this.emailChanged = this.emailChanged.bind(this);
         this.pwChanged = this.pwChanged.bind(this);
         this.checkInputs = this.checkInputs.bind(this);
-    }
 
-    componentWillMount() {
         browserHelper.setTitle(this.props.t('Sign in'));
-
         if (authHelper.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }
@@ -127,68 +124,62 @@ class SignIn extends React.Component {
         return (
             <Fade in className="signin-container w-100">
                 <SignForm title={this.props.t('Sign in')} onSubmit={this.checkInputs}>
-                    <fieldset>
-                        <div className="form-group">
-                            <div className="input-group">
-                                <div className="chsr input-group-prepend">
-                                    <span className="input-group-text w-100 justify-content-center">
-                                        <i className="fas fa-envelope"></i>
-                                    </span>
-                                </div>
-                                <input
-                                    type="email"
-                                    className="form-control"
-                                    name="email"
-                                    pattern={regex.emailWeak.source}
-                                    placeholder={this.props.t('Email')}
-                                    value={this.state.email}
-                                    onChange={this.emailChanged}
-                                    required />
+                    <div className="form-group">
+                        <div className="input-group">
+                            <div className="chsr input-group-prepend">
+                                <span className="input-group-text w-100 justify-content-center">
+                                    <i className="fas fa-envelope"></i>
+                                </span>
                             </div>
+                            <input
+                                type="email"
+                                className="form-control"
+                                name="email"
+                                pattern={regex.emailWeak.source}
+                                placeholder={this.props.t('Email')}
+                                value={this.state.email}
+                                onChange={this.emailChanged}
+                                required />
                         </div>
-                        <div className="form-group">
-                            <div className="input-group">
-                                <div className="chsr input-group-prepend">
-                                    <span className="input-group-text w-100 justify-content-center">
-                                        <i className="fas fa-lock"></i>
-                                    </span>
-                                </div>
-                                <input
-                                    type="password"
-                                    className="form-control"
-                                    name="password"
-                                    placeholder={this.props.t('Password')}
-                                    value={this.state.password}
-                                    onChange={this.pwChanged}
-                                    required />
+                    </div>
+                    <div className="form-group">
+                        <div className="input-group">
+                            <div className="chsr input-group-prepend">
+                                <span className="input-group-text w-100 justify-content-center">
+                                    <i className="fas fa-lock"></i>
+                                </span>
                             </div>
+                            <input
+                                type="password"
+                                className="form-control"
+                                name="password"
+                                placeholder={this.props.t('Password')}
+                                value={this.state.password}
+                                onChange={this.pwChanged}
+                                required />
                         </div>
-                        <div className="form-group">
-                            <div className="controls">
-                                <button
-                                    type="submit"
-                                    className="btn btn-info"
-                                    disabled={!this.state.isInputReady || this.state.isSignIning}
-                                    dangerouslySetInnerHTML={{__html: this.state.signInBtnHtml}}>
-                                </button>
-                            </div>
+                    </div>
+                    <div className="form-group">
+                        <div className="controls">
+                            <button
+                                type="submit"
+                                className="btn btn-info"
+                                disabled={!this.state.isInputReady || this.state.isSignIning}
+                                dangerouslySetInnerHTML={{__html: this.state.signInBtnHtml}}>
+                            </button>
                         </div>
-                    </fieldset>
+                    </div>
                     <div className="my-4 text-center">
                         <Route render={(router) => (
                             <p>
                                 <span><Trans i18nKey="Forgot password?" /></span>
-                                <span className="mx-1 link-text" onClick={() => {
-                                    router.history.push(ROUTES.RESET_PASSWORD);
-                                }}><Trans i18nKey="Reset password" /></span>
+                                <span className="mx-1 link-text" onClick={() => router.history.push(ROUTES.RESET_PASSWORD)}><Trans i18nKey="Reset password" /></span>
                             </p>
                         )}></Route>
                         <Route render={(router) => (
                             <p>
                                 <span><Trans i18nKey="Don't have an account yet?" /></span>
-                                <span className="mx-1 link-text" onClick={() => {
-                                    router.history.push(ROUTES.SIGNUP);
-                                }}><Trans i18nKey="Sign up" /></span>
+                                <span className="mx-1 link-text" onClick={() => router.history.push(ROUTES.SIGNUP)}><Trans i18nKey="Sign up" /></span>
                             </p>
                         )}></Route>
                     </div>

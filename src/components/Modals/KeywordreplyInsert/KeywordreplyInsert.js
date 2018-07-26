@@ -32,7 +32,7 @@ class KeywordreplyInsertModal extends ModalCore {
         this.insertKeywordreply = this.insertKeywordreply.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         let firstApp = Object.keys(nextProps.apps)[0];
         this.setState({appId: firstApp});
     }

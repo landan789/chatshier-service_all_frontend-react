@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Aux from 'react-aux';
 
-import urlConfig from '../../config/url';
+import chatshierCfg from '../../config/chatshier';
 import regex from '../../utils/regex';
 
 import logoPng from '../../image/logo.png';
 import './SignForm.css';
 
-const URL = window.urlConfig || urlConfig;
+const URL = chatshierCfg.URL;
 const wwwUrl = URL.wwwUrl
     ? URL.wwwUrl + (80 !== URL.port ? ':' + URL.port : '')
     : window.location.protocol + '//' + document.domain.replace(regex.domainPrefix, 'www.');
@@ -34,7 +34,7 @@ class SignForm extends React.Component {
                         <img src={logoPng} alt="Chatshier" />
                     </a>
                 </div>
-                <div className="mx-auto col-md-12 col-lg-6">
+                <div className="mx-auto col-md-12 col-lg-5">
                     <div className="row justify-content-center">
                         <div className="form-container col-12 col-sm-10 col-md-8 col-lg-12">
                             <h2 className="text-center sign-title">{this.props.title}</h2>

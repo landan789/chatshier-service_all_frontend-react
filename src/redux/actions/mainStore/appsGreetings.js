@@ -3,7 +3,7 @@ export const DELETE_GREETING = 'DELETE_GREETING';
 export const DELETE_ALL_GREETINGS = 'DELETE_ALL_GREETINGS';
 
 /**
- * @param {Chatshier.AppsGreetings} appsGreetings
+ * @param {Chatshier.Model.AppsGreetings} appsGreetings
  */
 export const updateGreetings = (appsGreetings) => {
     return { type: UPDATE_GREETINGS, appsGreetings };

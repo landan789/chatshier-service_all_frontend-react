@@ -32,7 +32,8 @@ class KeywordreplyEditModal extends ModalCore {
         this.handleDraftChange = this.handleDraftChange.bind(this);
         this.updateKeywordreply = this.updateKeywordreply.bind(this);
     }
-    componentWillReceiveProps(nextProps) {
+
+    UNSAFE_componentWillReceiveProps(nextProps) {
         let keywordreply = nextProps.modalData ? nextProps.modalData.keywordreply : {};
         let keywordreplyLength = Object.keys(keywordreply).length;
         if (0 < keywordreplyLength) {

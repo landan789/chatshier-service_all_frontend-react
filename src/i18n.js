@@ -2,17 +2,18 @@ import i18next from 'i18next';
 import XHR from 'i18next-xhr-backend';
 import { translate } from 'react-i18next';
 
-/** @type {string} */
-let currentLanguage =
-    (navigator.languages && navigator.languages[0]) ||
-    navigator.language ||
-    navigator.userLanguage;
-currentLanguage = currentLanguage.toLocaleLowerCase();
-if (currentLanguage.startsWith('en')) {
-    currentLanguage = 'en-us';
-} else if (currentLanguage.startsWith('zh')) {
-    currentLanguage = 'zh-tw';
-}
+// /** @type {string} */
+// let currentLanguage =
+//     (navigator.languages && navigator.languages[0]) ||
+//     navigator.language ||
+//     navigator.userLanguage;
+// currentLanguage = currentLanguage.toLocaleLowerCase();
+// if (currentLanguage.startsWith('en')) {
+//     currentLanguage = 'en-us';
+// } else if (currentLanguage.startsWith('zh')) {
+//     currentLanguage = 'zh-tw';
+// }
+let currentLanguage = 'zh-tw';
 
 i18next.use(XHR).init({
     lowerCaseLng: true, // 語系統一自動轉為小寫，來處理檔案名稱

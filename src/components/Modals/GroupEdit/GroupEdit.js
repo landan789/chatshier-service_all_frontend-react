@@ -155,9 +155,9 @@ class GroupEditModal extends ModalCore {
 }
 
 const mapStateToProps = (storeState, ownProps) => {
-    return {
+    return Object.assign({}, ownProps, {
         groups: storeState.groups
-    };
+    });
 };
 
 export default withTranslate(connect(mapStateToProps)(GroupEditModal));

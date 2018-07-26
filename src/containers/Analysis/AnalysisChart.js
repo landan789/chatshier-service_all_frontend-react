@@ -102,7 +102,7 @@ class AnalysisChart extends React.Component {
         this.messagesData[this.props.appId] && this.renderChart(this.props);
     }
 
-    componentWillReceiveProps(props) {
+    UNSAFE_componentWillReceiveProps(props) {
         props.appsChatrooms[props.appId] && this.prepareMessages(props);
         this.messagesData[props.appId] && this.renderChart(props);
     }

@@ -54,11 +54,6 @@
                         flex-direction: column;
                         align-items: center;
                         height: 50%; }
-                    .loading-wrapper .loading-text {
-                        font-size: 3rem;
-                        font-family: Helvetica;
-                        font-weight: 900;
-                        color: #33ccff; }
                     .loading-wrapper .loader-container {
                         width: 6rem;
                         height: 6rem; }
@@ -76,31 +71,24 @@
                 }
 
                 @media (min-width: 576px) {
-                    .loading-wrapper .loading-text {
-                        font-size: 4rem; }
                     .loading-wrapper .loader-container {
                         width: 8rem;
                         height: 8rem; }
                 }
 
                 @media (min-width: 992px) {
-                    .loading-wrapper .loading-text {
-                        font-size: 6rem; }
                     .loading-wrapper .loader-container {
                         width: 12rem;
                         height: 12rem; }
                 }
             </style>
             <div class="loading-body">
-                <div class="loading-text">
-                    <span>Chatshier...</span>
-                </div>
                 <div class="loader-container">
                     <div class="loader"></div>
                 </div>
             </div>
         </div>
         <div class="root d-flex h-100" id="charshierRoot"></div>
-        <script src="/config/url-config.js"></script>
+        <script src="/config/chatshier.js"></script>
     </body>
 </html>

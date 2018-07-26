@@ -79,6 +79,10 @@ $ctrl-item-icon-size: 1rem;
             width: 100%;
             height: $toolbar-height;
             z-index: 10;
+
+            + .list-group-item {
+                padding-top: 6rem;
+            }
         }
 
         .feature-icon {

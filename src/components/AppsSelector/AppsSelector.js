@@ -47,16 +47,23 @@ class AppsSelector extends React.Component {
 
     componentDidMount() {
         let userId = authHelper.userId;
-        return userId && apiDatabase.apps.find(userId);
-    }
+        let props = this.props;
 
-    UNSAFE_componentWillReceiveProps(props) {
-        let apps = props.apps || {};
-        let appIds = Object.keys(apps);
+        return Promise.resolve().then(() => {
+            if (!userId) {
+                return;
+            }
+            return apiDatabase.apps.find(userId);
+        }).then(() => {
+            let apps = props.apps || {};
+            let appIds = Object.keys(apps).filter((appId) => {
+                return this.props.showAll || (!this.props.showAll && apiDatabase.apps.TYPES.CHATSHIER !== apps[appId].type);
+            });
 
-        if (appIds.length > 0 && !this.state.selectedAppName) {
-            this.selectedApp(appIds[0], apps[appIds[0]].name);
-        }
+            if (appIds.length > 0 && !this.state.selectedAppName) {
+                this.selectedApp(appIds[0], apps[appIds[0]].name);
+            }
+        });
     }
 
     toggle() {
@@ -77,7 +84,7 @@ class AppsSelector extends React.Component {
                 <DropdownMenu>
                     {Object.keys(this.props.apps).map((appId) => {
                         let app = this.props.apps[appId];
-                        if (!this.props.showAll && 'CHATSHIER' === app.type) {
+                        if (!this.props.showAll && apiDatabase.apps.TYPES.CHATSHIER === app.type) {
                             return null;
                         }
 

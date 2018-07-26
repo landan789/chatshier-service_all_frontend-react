@@ -49,16 +49,36 @@ class Analysis extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
 
+        this.dataTypes = [{
+            className: 'view-time',
+            type: ANALYSIS_TYPES.TIME,
+            text: this.props.t('Total count of messages per hour')
+        }, {
+            className: 'view-month',
+            type: ANALYSIS_TYPES.MONTH,
+            text: this.props.t('Unit') + ': ' + this.props.t('Month')
+        }, {
+            className: 'view-date',
+            type: ANALYSIS_TYPES.DAY,
+            text: this.props.t('Unit') + ': ' + this.props.t('Day')
+        }, {
+            className: 'view-hour',
+            type: ANALYSIS_TYPES.HOUR,
+            text: this.props.t('Unit') + ': ' + this.props.t('Hour')
+        }, {
+            className: 'view-cloud',
+            type: ANALYSIS_TYPES.WORDCLOUR,
+            text: this.props.t('Frequency of word')
+        }];
+
         this.state = {
             selectedAppId: '',
-            selectedType: ANALYSIS_TYPES.NONE,
-            selectedTypeName: '',
+            selectedDataType: this.dataTypes[0],
             startDatetime: null,
             endDatetime: null
         };
 
         this.onAppChanged = this.onAppChanged.bind(this);
-        this.onTypeChanged = this.onTypeChanged.bind(this);
         this.onStartDatetimeChanged = this.onStartDatetimeChanged.bind(this);
         this.onEndDatetimeChanged = this.onEndDatetimeChanged.bind(this);
         this.toggleTypeDropdown = this.toggleTypeDropdown.bind(this);
@@ -73,14 +93,21 @@ class Analysis extends React.Component {
 
     componentDidMount() {
         let userId = authHelper.userId;
-        return userId && apiDatabase.appsChatrooms.find(userId);
-    }
+        let props = this.props;
 
-    UNSAFE_componentWillReceiveProps(props) {
-        let appChatrooms = props.appsChatrooms[this.state.selectedAppId];
-        if (appChatrooms) {
+        return Promise.resolve().then(() => {
+            if (!userId) {
+                return;
+            }
+            return apiDatabase.appsChatrooms.find(userId);
+        }).then(() => {
+            let appChatrooms = props.appsChatrooms[this.state.selectedAppId];
+            if (!appChatrooms) {
+                return;
+            }
+
             let startDatetime = Date.now();
-            let endDatetime = Date.now();
+            let endDatetime = startDatetime;
 
             for (let chatroomId in appChatrooms.chatrooms) {
                 let chatroom = appChatrooms.chatrooms[chatroomId];
@@ -103,7 +130,7 @@ class Analysis extends React.Component {
                 startDatetime: startDatetime,
                 endDatetime: endDatetime
             });
-        }
+        });
     }
 
     onAppChanged(appId) {
@@ -134,14 +161,6 @@ class Analysis extends React.Component {
         }
 
         this.setState(newState);
-    }
-
-    onTypeChanged(ev, type) {
-        let typeName = ev.target.textContent;
-        this.setState({
-            selectedType: type,
-            selectedTypeName: typeName
-        });
     }
 
     onStartDatetimeChanged(date) {
@@ -179,24 +198,14 @@ class Analysis extends React.Component {
                                         <AppsSelector className="col-12 col-lg-6 mb-3" onChange={this.onAppChanged} />
                                         <Dropdown className="col-12 col-lg-6 mb-3 chart-dropdown" isOpen={this.state.typeDropdownOpen} toggle={this.toggleTypeDropdown}>
                                             <DropdownToggle className="btn btn-info" caret color="info">
-                                                {this.state.selectedTypeName || this.props.t('Select a data type')}
+                                                {this.state.selectedDataType.text || this.props.t('Select a data type')}
                                             </DropdownToggle>
                                             <DropdownMenu>
-                                                <DropdownItem className="view-time" onClick={(ev) => this.onTypeChanged(ev, ANALYSIS_TYPES.TIME)}>
-                                                    <Trans i18nKey="Total count of messages per hour" />
-                                                </DropdownItem>
-                                                <DropdownItem className="view-month" onClick={(ev) => this.onTypeChanged(ev, ANALYSIS_TYPES.MONTH)}>
-                                                    <Trans i18nKey="Unit" />: <Trans i18nKey="Month" />
-                                                </DropdownItem>
-                                                <DropdownItem className="view-date" onClick={(ev) => this.onTypeChanged(ev, ANALYSIS_TYPES.DAY)}>
-                                                    <Trans i18nKey="Unit" />: <Trans i18nKey="Day" />
-                                                </DropdownItem>
-                                                <DropdownItem className="view-hour" onClick={(ev) => this.onTypeChanged(ev, ANALYSIS_TYPES.HOUR)}>
-                                                    <Trans i18nKey="Unit" />: <Trans i18nKey="Hour" />
-                                                </DropdownItem>
-                                                <DropdownItem className="view-cloud" onClick={(ev) => this.onTypeChanged(ev, ANALYSIS_TYPES.WORDCLOUR)}>
-                                                    <Trans i18nKey="Frequency of word" />
-                                                </DropdownItem>
+                                                {this.dataTypes.map((dataType, i) => (
+                                                    <DropdownItem key={i} className={dataType.className} onClick={() => this.setState({ selectedDataType: dataType })}>
+                                                        {dataType.text}
+                                                    </DropdownItem>
+                                                ))}
                                             </DropdownMenu>
                                         </Dropdown>
 
@@ -220,17 +229,17 @@ class Analysis extends React.Component {
 
                                     <div className="chart-container">
                                         {!!this.state.selectedAppId &&
-                                        this.state.selectedType !== ANALYSIS_TYPES.NONE &&
-                                        this.state.selectedType !== ANALYSIS_TYPES.WORDCLOUR &&
+                                        this.state.selectedDataType.type !== ANALYSIS_TYPES.NONE &&
+                                        this.state.selectedDataType.type !== ANALYSIS_TYPES.WORDCLOUR &&
                                         <AnalysisChart className="w-100 h-100 mx-auto chart-body"
-                                            dataType={this.state.selectedType}
+                                            dataType={this.state.selectedDataType.type}
                                             appId={this.state.selectedAppId}
                                             appsChatrooms={this.props.appsChatrooms}
                                             startDatetime={this.state.startDatetime}
                                             endDatetime={this.state.endDatetime} />}
 
                                         {!!this.state.selectedAppId &&
-                                        this.state.selectedType === ANALYSIS_TYPES.WORDCLOUR &&
+                                        this.state.selectedDataType.type === ANALYSIS_TYPES.WORDCLOUR &&
                                         <WordCloudChart className="w-100 h-100 mx-auto chart-body"
                                             appId={this.state.selectedAppId}
                                             appsChatrooms={this.props.appsChatrooms}

@@ -16,8 +16,7 @@ import { formatDate } from '../../utils/unitTime';
 import { notify } from '../../components/Notify/Notify';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
-import CalendarInsertModal from '../../components/Modals/CalendarInsert/CalendarInsert';
-import CalendarEditModal from '../../components/Modals/CalendarEdit/CalendarEdit';
+import CalendarModal from '../../components/Modals/Calendar/Calendar';
 import TicketEditModal from '../../components/Modals/TicketEdit/TicketEdit';
 
 import $ from 'jquery';
@@ -26,11 +25,54 @@ import 'fullcalendar/dist/locale/zh-tw';
 import 'fullcalendar/dist/fullcalendar.min.css';
 import './Calendar.css';
 
-export const CALENDAR_EVENT_TYPES = Object.freeze({
+const CALENDAR_EVENT_TYPES = Object.freeze({
     CALENDAR: 'CALENDAR',
     GOOGLE: 'GOOGLE',
     TICKET: 'TICKET'
 });
+
+class CalendarEventItem {
+    constructor(options) {
+        options = options || {};
+        // 目前只設定使用到的項目，並無全部都設定
+        // 參考: https://fullcalendar.io/docs/event_data/Event_Object/
+        this.calendarId = options.calendarId || '';
+        this.id = options.id || '';
+        this.eventType = CALENDAR_EVENT_TYPES.CALENDAR;
+        this.title = options.title || '';
+        this.description = options.description || '';
+        this.isAllDay = !!options.isAllDay;
+        this.start = options.start || null;
+        this.end = options.end || null;
+        this.origin = options.origin || {};
+
+        this.backgroundColor = '#90b5c7';
+        this.borderColor = '#90b5c7';
+        this.textColor = '#efefef';
+    }
+}
+
+class TicketEventItem extends CalendarEventItem {
+    constructor(options) {
+        options = options || {};
+        super(options);
+        this.eventType = CALENDAR_EVENT_TYPES.TICKET;
+        this.backgroundColor = '#c7e6c7';
+        this.borderColor = '#c7e6c7';
+        this.textColor = '#6e6e6e';
+    }
+}
+
+class GoogleEventItem extends CalendarEventItem {
+    constructor(options) {
+        options = options || {};
+        super(options);
+        this.eventType = CALENDAR_EVENT_TYPES.GOOGLE;
+        this.backgroundColor = '#468af5';
+        this.borderColor = '#468af5';
+        this.textColor = '#efeff0';
+    }
+}
 
 class Calendar extends React.Component {
     static propTypes = {
@@ -43,15 +85,57 @@ class Calendar extends React.Component {
         history: PropTypes.object.isRequired
     }
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (prevState.prevProps === nextProps) {
+            return prevState;
+        }
+        let nextState = prevState;
+        nextState.prevProps = nextProps;
+
+        /** @type {Chatshier.AppsTickets} */
+        let appsTickets = nextProps.appsTickets;
+        /** @type {Chatshier.Groups} */
+        let groups = nextProps.groups;
+        /** @type {Chatshier.Users} */
+        let users = nextProps.users;
+
+        // 每個 app 因群組不同，指派人清單也會不同，因此須根據群組準備指派人清單
+        if (Object.keys(appsTickets).length > 0 &&
+            Object.keys(groups).length > 0 &&
+            Object.keys(users).length > 0) {
+            let appsAgents = {};
+            for (let appId in appsTickets) {
+                for (let groupId in groups) {
+                    let group = groups[groupId];
+                    if (group.app_ids.indexOf(appId) < 0) {
+                        continue;
+                    }
+
+                    appsAgents[appId] = { agents: {} };
+                    for (let memberId in group.members) {
+                        let memberUserId = group.members[memberId].user_id;
+                        appsAgents[appId].agents[memberUserId] = {
+                            name: users[memberUserId].name,
+                            email: users[memberUserId].email
+                        };
+                    }
+                }
+            }
+            nextState.appsAgents = appsAgents;
+        }
+        return nextState;
+    }
+
     constructor(props) {
         super(props);
 
         this.state = {
+            prevProps: null,
             insertModalData: void 0,
-            editModalData: void 0
+            editModalData: void 0,
+            appsAgents: {}
         };
 
-        this.appsAgents = {};
         /** @type {JQuery<HTMLElement>} */
         this.$calendar = void 0;
 
@@ -63,9 +147,8 @@ class Calendar extends React.Component {
         this.onEventClick = this.onEventClick.bind(this);
         this.onEventDrop = this.onEventDrop.bind(this);
         this.updateCalendarEvent = this.updateCalendarEvent.bind(this);
-        this.deleteCalendarEvent = this.deleteCalendarEvent.bind(this);
-        this.closeInsertModal = this.closeInsertModal.bind(this);
-        this.closeEditModal = this.closeEditModal.bind(this);
+        this.closeCalendarModal = this.closeCalendarModal.bind(this);
+        this.closeTicketModal = this.closeTicketModal.bind(this);
 
         browserHelper.setTitle(this.props.t('Calendar'));
         if (!authHelper.hasSignedin()) {
@@ -84,45 +167,12 @@ class Calendar extends React.Component {
             apiDatabase.consumers.find(userId),
             apiDatabase.groups.find(userId),
             apiDatabase.users.find(userId),
-            gCalendarHelper.loadCalendarApi()
-        ]).then(() => {
-            return gCalendarHelper.findEvents().then(() => {
-                return this.reload(this.props);
-            }).catch(() => {});
-        });
+            gCalendarHelper.loadCalendarApi().then(() => gCalendarHelper.findEvents())
+        ]).catch(() => {});
     }
 
-    UNSAFE_componentWillReceiveProps(props) {
-        this.reload(props);
-
-        // 每個 app 因群組不同，指派人清單也會不同，因此須根據群組準備指派人清單
-        if (Object.keys(props.appsTickets).length > 0 &&
-            Object.keys(props.groups).length > 0 &&
-            Object.keys(props.users).length > 0) {
-            /** @type {Chatshier.AppsTickets} */
-            let appsTickets = props.appsTickets;
-            /** @type {Chatshier.Groups} */
-            let groups = props.groups;
-            /** @type {Chatshier.Users} */
-            let users = props.users;
-
-            this.appsAgents = {};
-            for (let appId in appsTickets) {
-                for (let groupId in groups) {
-                    let group = groups[groupId];
-                    if (0 <= group.app_ids.indexOf(appId)) {
-                        this.appsAgents[appId] = { agents: {} };
-                        for (let memberId in group.members) {
-                            let memberUserId = group.members[memberId].user_id;
-                            this.appsAgents[appId].agents[memberUserId] = {
-                                name: users[memberUserId].name,
-                                email: users[memberUserId].email
-                            };
-                        }
-                    }
-                }
-            }
-        }
+    componentDidUpdate() {
+        this.reload();
     }
 
     componentWillUnmount() {
@@ -130,13 +180,13 @@ class Calendar extends React.Component {
         this.gSignListenerId = void 0;
     }
 
-    reload(props) {
+    reload() {
         if (!this.$calendar) {
             return;
         }
         this.$calendar.fullCalendar('removeEvents');
-        this.reloadCalendarEvents(props.calendarsEvents);
-        this.reloadAppsTickets(props.appsTickets);
+        this.reloadCalendarEvents(this.props.calendarsEvents);
+        this.reloadAppsTickets(this.props.appsTickets);
         this.reloadGoogleCalendar(gCalendarHelper.eventCaches.items);
     }
 
@@ -231,27 +281,29 @@ class Calendar extends React.Component {
 
     onGoogleSignChange(isSignedIn) {
         if (!isSignedIn) {
-            return this.reload(this.props);
+            return this.reload();
         }
 
         return gCalendarHelper.findEvents().catch(() => {
             return gCalendarHelper.eventCaches;
-        }).then((resJson) => {
-            this.reload(this.props);
+        }).then(() => {
+            this.reload();
         });
     }
 
     onSelectDate(start, end) {
-        let startDatetime = start.toDate();
-        startDatetime.setHours(0, 0, 0, 0);
-        let endDatetime = new Date(startDatetime);
-        endDatetime.setDate(endDatetime.getDate() + 1);
+        let startedTime = start.toDate();
+        startedTime.setHours(0, 0, 0, 0);
+        let endedTime = new Date(startedTime);
+        endedTime.setDate(endedTime.getDate() + 1);
 
-        let modalData = {
-            startDatetime: startDatetime,
-            endDatetime: endDatetime
+        let calendarData = {
+            event: {
+                startedTime: startedTime,
+                endedTime: endedTime
+            }
         };
-        this.setState({ insertModalData: modalData });
+        this.setState({ calendarData: calendarData });
     }
 
     onEventClick(calendarEvent) {
@@ -266,13 +318,13 @@ class Calendar extends React.Component {
             let consumers = this.props.consumers;
             let consumer = consumers[ticket.platformUid];
 
-            let modalData = {
+            let ticketData = {
                 appId: appId,
                 ticketId: ticketId,
                 ticket: origin,
                 consumer: consumer
             };
-            this.setState({ editTicketData: modalData });
+            this.setState({ ticketData: ticketData });
             return;
         }
 
@@ -285,14 +337,14 @@ class Calendar extends React.Component {
             endedTime: origin.endedTime || calendarEvent.end.toDate()
         };
 
-        let modalData = {
+        let calendarData = {
             calendarId: calendarEvent.calendarId,
             eventId: calendarEvent.id,
             eventType: calendarEvent.eventType,
             event: event,
             origin: origin
         };
-        this.setState({ editModalData: modalData });
+        this.setState({ calendarData: calendarData });
     }
 
     onEventDrop(calendarEvent, delta, revertFunc) {
@@ -307,6 +359,7 @@ class Calendar extends React.Component {
             endedTime: endDate.getTime(),
             isAllDay: calendarEvent.isAllDay ? 1 : 0
         };
+
         if (event.startedTime > event.endedTime) {
             revertFunc();
             return notify('開始時間需早於結束時間', { type: 'warning' });
@@ -315,9 +368,7 @@ class Calendar extends React.Component {
         let calendarId = event.calendarId;
         let eventId = event.id;
         let eventType = event.eventType;
-        return this.updateCalendarEvent(calendarId, eventId, eventType, event).catch(() => {
-            revertFunc();
-        });
+        return this.updateCalendarEvent(calendarId, eventId, eventType, event).catch(() => revertFunc());
     }
 
     updateCalendarEvent(calendarId, eventId, eventType, event) {
@@ -376,33 +427,12 @@ class Calendar extends React.Component {
         }
     }
 
-    deleteCalendarEvent(calendarId, eventId, eventType) {
-        let userId = authHelper.userId;
-
-        // 根據事件型態來判斷發送不同 API 進行資料更新動作
-        switch (eventType) {
-            case CALENDAR_EVENT_TYPES.CALENDAR:
-                return apiDatabase.calendarsEvents.delete(calendarId, eventId, userId);
-            case CALENDAR_EVENT_TYPES.TICKET:
-                return apiDatabase.appsTickets.delete(calendarId, eventId, userId);
-            case CALENDAR_EVENT_TYPES.GOOGLE:
-                return gCalendarHelper.deleteEvent(calendarId, eventId).then(() => {
-                    this.reload(this.props);
-                });
-            default:
-                return Promise.reject(new Error('UNKNOWN_EVENT_TYPE'));
-        }
+    closeCalendarModal() {
+        this.setState({ calendarData: null });
     }
 
-    closeInsertModal(ev) {
-        this.setState({ insertModalData: null });
-    }
-
-    closeEditModal(ev) {
-        this.setState({
-            editModalData: null,
-            editTicketData: null
-        });
+    closeTicketModal() {
+        this.setState({ ticketData: null });
     }
 
     initCalendar(refElem) {
@@ -426,10 +456,11 @@ class Calendar extends React.Component {
             },
             // Defines the buttons and title position which is at the top of the calendar.
             header: {
-                left: 'prev,next today',
+                left: 'prev, today, next',
                 center: 'title',
-                right: 'month,agendaWeek,agendaDay,listMonth'
+                right: 'month, agendaWeek, agendaDay'
             },
+            height: 'auto',
             defaultDate: new Date(), // The initial date displayed when the calendar first loads.
             editable: true, // true allow user to edit events.
             eventLimit: true, // allow "more" link when too many events
@@ -444,41 +475,34 @@ class Calendar extends React.Component {
             eventDrop: this.onEventDrop,
             eventDurationEditable: true
         });
-        this.reload(this.props);
+        this.reload(this.props.calendarsEvents, this.props.appsTickets);
     }
 
     render() {
         return (
             <Aux>
                 <ControlPanel />
-                <PageWrapper toolbarTitle="行事曆">
+                <PageWrapper toolbarTitle={this.props.t('Calendar')}>
                     <Fade in className="container mt-5 calendar-wrapper">
                         <div className="mb-5 card chsr calendar" ref={this.initCalendar}></div>
                     </Fade>
                 </PageWrapper>
 
-                {!!this.state.insertModalData &&
-                <CalendarInsertModal
-                    modalData={this.state.insertModalData}
-                    isOpen={!!this.state.insertModalData}
-                    close={this.closeInsertModal}>
-                </CalendarInsertModal>}
+                {!!this.state.calendarData &&
+                <CalendarModal
+                    calendarData={this.state.calendarData}
+                    isOpen={!!this.state.calendarData}
+                    isUpdate={!!this.state.calendarData.eventId}
+                    close={this.closeCalendarModal}>
+                </CalendarModal>}
 
-                {!!this.state.editModalData &&
-                <CalendarEditModal
-                    modalData={this.state.editModalData}
-                    isOpen={!!this.state.editModalData}
-                    updateHandle={this.updateCalendarEvent}
-                    deleteHandle={this.deleteCalendarEvent}
-                    close={this.closeEditModal}>
-                </CalendarEditModal>}
-
-                {!!this.state.editTicketData &&
+                {!!this.state.ticketData &&
                 <TicketEditModal
-                    appsAgents={this.appsAgents}
-                    modalData={this.state.editTicketData}
-                    isOpen={!!this.state.editTicketData}
-                    close={this.closeEditModal}>
+                    appsAgents={this.state.appsAgents}
+                    modalData={this.state.ticketData}
+                    isOpen={!!this.state.ticketData}
+                    isUpdate={!!this.state.ticketData.ticketId}
+                    close={this.closeTicketModal}>
                 </TicketEditModal>}
             </Aux>
         );
@@ -498,45 +522,4 @@ const mapStateToProps = (storeState, ownProps) => {
 
 export default withRouter(withTranslate(connect(mapStateToProps)(Calendar)));
 
-class CalendarEventItem {
-    constructor(options) {
-        options = options || {};
-        // 目前只設定使用到的項目，並無全部都設定
-        // 參考: https://fullcalendar.io/docs/event_data/Event_Object/
-        this.calendarId = options.calendarId || '';
-        this.id = options.id || '';
-        this.eventType = CALENDAR_EVENT_TYPES.CALENDAR;
-        this.title = options.title || '';
-        this.description = options.description || '';
-        this.isAllDay = !!options.isAllDay;
-        this.start = options.start || null;
-        this.end = options.end || null;
-        this.origin = options.origin || {};
-
-        this.backgroundColor = '#90b5c7';
-        this.borderColor = '#90b5c7';
-        this.textColor = '#efefef';
-    }
-}
-
-class TicketEventItem extends CalendarEventItem {
-    constructor(options) {
-        options = options || {};
-        super(options);
-        this.eventType = CALENDAR_EVENT_TYPES.TICKET;
-        this.backgroundColor = '#c7e6c7';
-        this.borderColor = '#c7e6c7';
-        this.textColor = '#6e6e6e';
-    }
-}
-
-class GoogleEventItem extends CalendarEventItem {
-    constructor(options) {
-        options = options || {};
-        super(options);
-        this.eventType = CALENDAR_EVENT_TYPES.GOOGLE;
-        this.backgroundColor = '#468af5';
-        this.borderColor = '#468af5';
-        this.textColor = '#efeff0';
-    }
-}
+export { CALENDAR_EVENT_TYPES, CalendarEventItem, TicketEventItem, GoogleEventItem };

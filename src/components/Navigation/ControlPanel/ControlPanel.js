@@ -49,17 +49,33 @@ const linkItems = [
         link: ROUTES.CALENDAR,
         icon: 'far fa-calendar-alt fa-fw',
         text: 'Calendar',
-        useReactRouter: false
+        useReactRouter: true
     }, {
         link: ROUTES.TICKETS,
         icon: 'fas fa-list-ul fa-fw',
         text: 'To-Do items',
-        useReactRouter: false
+        useReactRouter: true
     }, {
         link: ROUTES.ANALYSIS,
         icon: 'fas fa-chart-bar fa-fw',
         text: 'Analysis',
-        useReactRouter: false
+        useReactRouter: true
+    }, {
+        icon: 'fas fa-shopping-cart fa-fw',
+        text: 'Product service',
+        dropdownItems: [
+            {
+                link: ROUTES.CATEGORY_PRODUCT,
+                icon: 'fas fa-cart-plus fa-fw',
+                text: 'Product management',
+                useReactRouter: false
+            }, {
+                link: ROUTES.APPOINTMENT,
+                icon: 'fas fa-calendar-check fa-fw',
+                text: 'Appointment system',
+                useReactRouter: false
+            }
+        ]
     }, {
         icon: 'fas fa-envelope fa-fw',
         text: 'Messages',

@@ -432,11 +432,7 @@ class ControlPanel extends React.Component {
                     <ListGroupItem className="text-light nested has-collapse" onClick={() => this.toggleItem(appId)}>
                         <i className={appIcon}></i>
                         <span>{app.name}</span>
-                        {CHATSHIER !== app.type &&
-                        <i className="ml-auto mr-1 p-1 fas fa-edit feature-icon"
-                            onClick={(ev) => this.openAppEditModal(ev, appId)}>
-                        </i>}
-                        <i className={(CHATSHIER === app.type ? 'ml-auto ' : '') + 'py-1 fas ' + (itemCollapse[appId] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
+                        <i className={'ml-auto py-1 fas ' + (itemCollapse[appId] ? 'fa-chevron-down' : 'fa-chevron-up') + ' collapse-icon'}></i>
                     </ListGroupItem>
                     <Collapse isOpen={!itemCollapse[appId]} className="nested">{chatroomElems}</Collapse>
                 </Aux>
@@ -465,8 +461,7 @@ class ControlPanel extends React.Component {
                 </ListGroupItem>
                 <Collapse isOpen={!itemCollapse['assignedCollapse']} className="nested assigned">{assignedItems}</Collapse>
                 <ListGroupItem className="text-light nested has-collapse unassigned" onClick={() => this.toggleItem('unassignedCollapse')}>
-                    <svg className="custom-item-icon large" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
-                        onClick={this.openAppInsertModal}>
+                    <svg className="custom-item-icon large" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                         <path fill="currentColor" d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-54.4 289.1c4.7 4.7 4.7 12.3 0 17L306 377.6c-4.7 4.7-12.3 4.7-17 0L224 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L102.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L280 256l65.6 65.1z"></path>
                     </svg>
                     <span><Trans i18nKey="Unassigned" /></span>
@@ -578,11 +573,6 @@ class ControlPanel extends React.Component {
                                 <ListGroupItem className="text-light" onClick={() => !isInChat && this.linkTo(ROUTES.CHAT, false)}>
                                     <i className="fas fa-comment-dots fa-fw"></i>
                                     <span><Trans i18nKey="Chatroom" /></span>
-                                    {isInChat &&
-                                    <svg className="ml-auto feature-icon custom-item-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-                                        onClick={this.openAppInsertModal}>
-                                        <path fill="currentColor" d="M384 240v32c0 6.6-5.4 12-12 12h-88v88c0 6.6-5.4 12-12 12h-32c-6.6 0-12-5.4-12-12v-88h-88c-6.6 0-12-5.4-12-12v-32c0-6.6 5.4-12 12-12h88v-88c0-6.6 5.4-12 12-12h32c6.6 0 12 5.4 12 12v88h88c6.6 0 12 5.4 12 12zm120 16c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zm-48 0c0-110.5-89.5-200-200-200S56 145.5 56 256s89.5 200 200 200 200-89.5 200-200z"></path>
-                                    </svg>}
                                 </ListGroupItem>
                                 <Collapse isOpen>{this.renderChatroomList()}</Collapse>
                                 {this.renderLinkItems()}

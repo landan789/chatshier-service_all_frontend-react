@@ -92,19 +92,19 @@ class Calendar extends React.Component {
         let nextState = prevState;
         nextState.prevProps = nextProps;
 
-        /** @type {Chatshier.AppsTickets} */
-        let appsTickets = nextProps.appsTickets;
+        /** @type {Chatshier.Apps} */
+        let apps = nextProps.apps;
         /** @type {Chatshier.Groups} */
         let groups = nextProps.groups;
         /** @type {Chatshier.Users} */
         let users = nextProps.users;
 
         // 每個 app 因群組不同，指派人清單也會不同，因此須根據群組準備指派人清單
-        if (Object.keys(appsTickets).length > 0 &&
+        if (Object.keys(apps).length > 0 &&
             Object.keys(groups).length > 0 &&
             Object.keys(users).length > 0) {
             let appsAgents = {};
-            for (let appId in appsTickets) {
+            for (let appId in apps) {
                 for (let groupId in groups) {
                     let group = groups[groupId];
                     if (group.app_ids.indexOf(appId) < 0) {
@@ -162,8 +162,9 @@ class Calendar extends React.Component {
         this.gSignListenerId = gCalendarHelper.addSignChangeListener(this.onGoogleSignChange);
 
         return userId && Promise.all([
+            apiDatabase.apps.find(userId),
+            apiDatabase.appsTickets.find(void 0, userId),
             apiDatabase.calendarsEvents.find(userId),
-            apiDatabase.appsTickets.find(null, userId),
             apiDatabase.consumers.find(userId),
             apiDatabase.groups.find(userId),
             apiDatabase.users.find(userId),
@@ -512,8 +513,9 @@ class Calendar extends React.Component {
 const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
     return {
-        consumers: storeState.consumers,
+        apps: storeState.apps,
         appsTickets: storeState.appsTickets,
+        consumers: storeState.consumers,
         calendarsEvents: storeState.calendarsEvents,
         groups: storeState.groups,
         users: storeState.users

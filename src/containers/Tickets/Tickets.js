@@ -57,10 +57,51 @@ class Tickets extends React.Component {
         history: PropTypes.object.isRequired
     }
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (prevState.prevProps === nextProps) {
+            return prevState;
+        }
+        let nextState = prevState;
+        nextState.prevProps = nextProps;
+
+        /** @type {Chatshier.Apps} */
+        let apps = nextProps.apps;
+        /** @type {Chatshier.Groups} */
+        let groups = nextProps.groups;
+        /** @type {Chatshier.Users} */
+        let users = nextProps.users;
+
+        if (Object.keys(apps).length > 0 &&
+            Object.keys(groups).length > 0 &&
+            Object.keys(users).length > 0) {
+            let appsAgents = {};
+            for (let appId in apps) {
+                for (let groupId in groups) {
+                    let group = groups[groupId];
+                    if (group.app_ids.indexOf(appId) < 0) {
+                        continue;
+                    }
+
+                    appsAgents[appId] = { agents: {} };
+                    for (let memberId in group.members) {
+                        let memberUserId = group.members[memberId].user_id;
+                        appsAgents[appId].agents[memberUserId] = {
+                            name: users[memberUserId].name,
+                            email: users[memberUserId].email
+                        };
+                    }
+                }
+            }
+            nextState.appsAgents = appsAgents;
+        }
+        return nextState;
+    }
+
     constructor(props) {
         super(props);
 
         this.state = {
+            prevProps: null,
             statusFilter: STATUS_TYPES.NONE,
             isInsertModalOpen: false,
             searchKeyword: '',
@@ -87,30 +128,7 @@ class Tickets extends React.Component {
             apiDatabase.consumers.find(userId),
             apiDatabase.groups.find(userId),
             apiDatabase.users.find(userId)
-        ]).then((resJsons) => {
-            // 每個 app 因群組不同，指派人清單也會不同，因此須根據群組準備指派人清單
-            let appsTickets = resJsons[2].data;
-            let groups = resJsons[4].data;
-            let users = resJsons[5].data;
-
-            let appsAgents = {};
-            for (let appId in appsTickets) {
-                for (let groupId in groups) {
-                    let group = groups[groupId];
-                    if (0 <= group.app_ids.indexOf(appId)) {
-                        appsAgents[appId] = { agents: {} };
-                        for (let memberId in group.members) {
-                            let memberUserId = group.members[memberId].user_id;
-                            appsAgents[appId].agents[memberUserId] = {
-                                name: users[memberUserId].name,
-                                email: users[memberUserId].email
-                            };
-                        }
-                    }
-                }
-            }
-            this.setState({ appsAgents: appsAgents });
-        });
+        ]);
     }
 
     keywordChanged(ev) {

@@ -1,16 +1,14 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
-
-# testing
-/coverage
+node_modules/
 
 # production
-/build
-/src/**/*.css
-/src/config/chatshier.js
-/src/config/url.js
+build/
+public/config/chatshier.js
+src/**/*.css
+src/config/chatshier.js
+src/config/url.js
 
 # misc
 .DS_Store

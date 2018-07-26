@@ -10,6 +10,7 @@ import { DAY } from '../../../utils/unitTime';
 
 import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
+import { withTranslate } from '../../../i18n';
 
 const APP_TYPES = apiDatabase.apps.TYPES;
 
@@ -33,21 +34,22 @@ class TicketInsertModal extends ModalCore {
     constructor(props, ctx) {
         super(props, ctx);
 
-        this.selectedAppId = this.props.appId;
-        this.selectedPlatformUid = this.props.platformUid;
-        this.selectedAgentUserId = '';
+        this.defaultAppId = this.props.appId;
+        this.defaultPlatformUid = this.props.platformUid;
+        this.defaultAgentUserId = '';
         this.appOptions = this.appsToOptions();
+        let consumerOptions = this.consumersToOptions(this.defaultAppId);
+        let agentOptions = this.agentsToOptions(this.defaultAppId);
 
-        let consumerOptions = this.consumersToOptions();
-        let agentOptions = this.agentsToOptions();
-        let consumer = this.appsConsumers[this.selectedAppId].consumers[this.selectedPlatformUid];
-
+        let consumer = this.appsConsumers[this.defaultAppId].consumers[this.defaultPlatformUid];
         this.state = {
+            appId: this.defaultAppId,
+            platformUid: this.defaultPlatformUid,
+            agentUserId: this.defaultAgentUserId,
             isOpen: this.props.isOpen,
             isProcessing: false,
             consumerOptions: consumerOptions,
             agentOptions: agentOptions,
-            platformUid: this.selectedPlatformUid,
             messagerEmail: consumer.email || '',
             messagerPhone: consumer.phone || '',
             ticketDescription: ''
@@ -63,12 +65,6 @@ class TicketInsertModal extends ModalCore {
         this.statusChanged = this.statusChanged.bind(this);
         this.priorityChanged = this.priorityChanged.bind(this);
         this.descriptionChanged = this.descriptionChanged.bind(this);
-    }
-
-    UNSAFE_componentWillReceiveProps() {
-        this.appOptions = this.appsToOptions();
-        this.consumerChanged();
-        this.agentChanged();
     }
 
     appsToOptions() {
@@ -111,14 +107,17 @@ class TicketInsertModal extends ModalCore {
             }
         }
 
-        this.selectedAppId = firstAppId;
+        this.defaultAppId = firstAppId;
         return options;
     }
 
-    consumersToOptions() {
+    consumersToOptions(appId) {
         let options = [];
-        let consumers = this.appsConsumers[this.selectedAppId].consumers;
+        if (!this.appsConsumers[appId]) {
+            return options;
+        }
 
+        let consumers = this.appsConsumers[appId].consumers;
         let firstPlatformUid = this.props.platformUid;
         for (let platformUid in consumers) {
             let consumer = consumers[platformUid];
@@ -127,21 +126,21 @@ class TicketInsertModal extends ModalCore {
                 <option key={platformUid} value={platformUid}>{consumer.name}</option>
             );
         }
-        this.selectedPlatformUid = firstPlatformUid;
+        this.defaultPlatformUid = firstPlatformUid;
         return options;
     }
 
-    agentsToOptions() {
+    agentsToOptions(appId) {
         let options = [];
         let appsAgents = this.props.appsAgents;
-        if (!(this.selectedAppId && appsAgents[this.selectedAppId])) {
+        if (!(appId && appsAgents[appId])) {
             return options;
         }
 
         /** @type {Chatshier.Users} */
-        let agents = appsAgents[this.selectedAppId].agents;
+        let agents = appsAgents[appId].agents;
 
-        let firstAgentUserId;
+        let firstAgentUserId = '';
         for (let userId in agents) {
             let consumer = agents[userId];
             firstAgentUserId = firstAgentUserId || userId;
@@ -149,47 +148,55 @@ class TicketInsertModal extends ModalCore {
                 <option key={userId} value={userId}>{consumer.name}</option>
             );
         }
-        this.selectedAgentUserId = firstAgentUserId;
+        this.defaultAgentUserId = firstAgentUserId;
         return options;
     }
 
     appChanged(ev) {
         let selectedOpt = ev.target.selectedOptions[0];
-        this.selectedAppId = selectedOpt.value;
-        this.consumerChanged();
-        this.agentChanged();
+        let selectedAppId = selectedOpt.value;
+
+        let newState = { appId: selectedAppId };
+        Object.assign(newState, this.consumerChanged(void 0, selectedAppId));
+        Object.assign(newState, this.agentChanged());
+        this.setState(newState);
     }
 
-    consumerChanged(ev) {
+    consumerChanged(ev, appId, platformUid) {
+        appId = appId || this.state.appId;
+        platformUid = platformUid || this.state.platformUid;
+
         let newState = {};
         if (ev) {
             let selectedOpt = ev.target.selectedOptions[0];
-            this.selectedPlatformUid = selectedOpt.value;
+            newState.platformUid = selectedOpt.value;
         } else {
-            newState.consumerOptions = this.consumersToOptions();
+            newState.consumerOptions = this.consumersToOptions(appId);
+            newState.platformUid = platformUid;
         }
 
         /** @type {Chatshier.Consumer} */
-        let consumers = this.appsConsumers[this.selectedAppId].consumers;
-        let platformUid = this.selectedPlatformUid;
-        if (platformUid && consumers[platformUid]) {
+        let consumers = this.appsConsumers[appId].consumers;
+        if (newState.platformUid && consumers[platformUid]) {
             let consumer = consumers[platformUid];
-            newState.platformUid = platformUid;
             newState.messagerEmail = consumer.email;
             newState.messagerPhone = consumer.phone;
         }
-        Object.keys(newState).length > 0 && this.setState(newState);
+        ev && Object.keys(newState).length > 0 && this.setState(newState);
+        return newState;
     }
 
-    agentChanged(ev) {
+    agentChanged(ev, appId) {
+        appId = appId || this.state.appId;
+
         let newState = {};
         if (ev) {
             let selectedOpt = ev.target.selectedOptions[0];
-            this.selectedAgentUserId = selectedOpt.value;
+            newState.agentUserId = selectedOpt.value;
         } else {
-            newState.agentOptions = this.agentsToOptions();
-            this.setState(newState);
+            newState.agentOptions = this.agentsToOptions(appId);
         }
+        return newState;
     }
 
     statusChanged(ev) {
@@ -207,23 +214,26 @@ class TicketInsertModal extends ModalCore {
     }
 
     insertTicket(ev) {
-        if (!this.selectedAppId) {
-            return notify('請選擇App', { type: 'warning' });
-        } else if (!this.selectedPlatformUid) {
+        let appId = this.state.appId;
+        let platformUid = this.state.platformUid;
+        let ticketDescription = this.state.ticketDescription;
+
+        if (!appId) {
+            return notify('請選擇機器人', { type: 'warning' });
+        } else if (!platformUid) {
             return notify('請選擇目標客戶', { type: 'warning' });
-        } else if (!this.state.ticketDescription) {
+        } else if (!ticketDescription) {
             return notify('請輸入說明內容', { type: 'warning' });
         }
 
-        let appId = this.selectedAppId;
         let userId = authHelper.userId;
         let ticket = {
             dueTime: Date.now() + (DAY * 3), // 過期時間預設為3天後
-            platformUid: this.selectedPlatformUid,
-            assigned_id: this.selectedAgentUserId,
+            platformUid: platformUid,
+            assigned_id: this.state.agentUserId,
             priority: this.ticketPriority,
             status: this.ticketStatus,
-            description: this.state.ticketDescription
+            description: ticketDescription
         };
 
         this.setState({ isProcessing: true });
@@ -249,37 +259,37 @@ class TicketInsertModal extends ModalCore {
                 <ModalBody>
                     <div className="ticket-content">
                         <FormGroup>
-                            <label>App</label>
+                            <label className="col-form-label font-weight-bold">目標機器人:</label>
                             <select className="form-control" onChange={this.appChanged}>
                                 {this.appOptions}
                             </select>
                         </FormGroup>
                         <FormGroup>
-                            <label className="col-form-label">客戶姓名</label>
+                            <label className="col-form-label font-weight-bold">客戶姓名:</label>
                             <select className="form-control" onChange={this.consumerChanged}>
                                 {this.state.consumerOptions}
                             </select>
                         </FormGroup>
                         <FormGroup>
-                            <label className="col-form-label">客戶ID</label>
+                            <label className="col-form-label font-weight-bold">客戶ID:</label>
                             <input type="text" className="form-control" value={this.state.platformUid} readOnly />
                         </FormGroup>
                         <FormGroup>
-                            <label className="col-form-label">電子郵件</label>
+                            <label className="col-form-label font-weight-bold">電子郵件:</label>
                             <input type="text" className="form-control" value={this.state.messagerEmail} readOnly />
                         </FormGroup>
                         <FormGroup>
-                            <label className="col-form-label">手機</label>
+                            <label className="col-form-label font-weight-bold">手機:</label>
                             <input type="text" className="form-control" value={this.state.messagerPhone} readOnly />
                         </FormGroup>
                         <FormGroup>
-                            <label className="col-form-label">指派人</label>
+                            <label className="col-form-label font-weight-bold">指派人:</label>
                             <select className="form-control" onChange={this.agentChanged}>
                                 {this.state.agentOptions}
                             </select>
                         </FormGroup>
                         <FormGroup>
-                            <label>優先</label>
+                            <label className="col-form-label font-weight-bold">優先度:</label>
                             <select className="form-control" onChange={this.priorityChanged}>
                                 <option value="1">低</option>
                                 <option value="2">中</option>
@@ -288,7 +298,7 @@ class TicketInsertModal extends ModalCore {
                             </select>
                         </FormGroup>
                         <FormGroup>
-                            <label>狀態</label>
+                            <label className="col-form-label font-weight-bold">處理狀態:</label>
                             <select className="form-control" onChange={this.statusChanged}>
                                 <option value="2">未處理</option>
                                 <option value="3">處理中</option>
@@ -297,9 +307,10 @@ class TicketInsertModal extends ModalCore {
                             </select>
                         </FormGroup>
                         <FormGroup>
-                            <label htmlFor="description">內容</label>
+                            <label className="col-form-label font-weight-bold">內容:</label>
                             <textarea
                                 className="form-control"
+                                placeholder={this.props.t('Fill the description')}
                                 rows="3"
                                 value={this.ticketDescription}
                                 onChange={this.descriptionChanged}>
@@ -317,4 +328,4 @@ class TicketInsertModal extends ModalCore {
     }
 }
 
-export default TicketInsertModal;
+export default withTranslate(TicketInsertModal);

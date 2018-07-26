@@ -579,25 +579,28 @@ class ControlPanel extends React.Component {
                             </ListGroup>}
 
                             <ListGroup className={('simple-list animated slideInRight ' + (isPutAway ? '' : 'd-none')).trim()}>
-                                <ListGroupItem className="mb-3 px-0 text-light">
+                                <ListGroupItem className="mb-5 p-0 text-light logo-item">
                                     <div className="p-1 mx-auto ctrl-panel-logo">
                                         <img className="w-100 h-100" src={logoSmallPng} alt="" />
                                     </div>
                                 </ListGroupItem>
-                                <ListGroupItem className="px-0 text-light text-center" onClick={this.putAwayControlPanel}>
+                                <ListGroupItem className="mb-3 px-0 text-light text-center" onClick={this.putAwayControlPanel}>
                                     <i className="fas fa-comment-dots fa-2x"></i>
                                 </ListGroupItem>
-                                <ListGroupItem className="mt-3 px-0 text-light text-center" onClick={() => this.linkTo(ROUTES.CALENDAR, true)}>
+                                <ListGroupItem className="mb-3 px-0 text-light text-center" onClick={() => this.linkTo(ROUTES.CALENDAR, true)}>
                                     <i className="far fa-calendar-alt fa-2x"></i>
                                 </ListGroupItem>
-                                <ListGroupItem className="mt-3 px-0 text-light text-center" onClick={() => this.linkTo(ROUTES.TICKETS, true)}>
+                                <ListGroupItem className="mb-3 px-0 text-light text-center" onClick={() => this.linkTo(ROUTES.TICKETS, true)}>
                                     <i className="fa fa-list-ul fa-2x"></i>
                                 </ListGroupItem>
-                                <ListGroupItem className="mt-3 px-0 text-light text-center" onClick={() => this.linkTo(ROUTES.ANALYSIS, true)}>
+                                <ListGroupItem className="mb-3 px-0 text-light text-center" onClick={() => this.linkTo(ROUTES.ANALYSIS, true)}>
                                     <i className="fa fa-chart-bar fa-2x"></i>
                                 </ListGroupItem>
-                                <ListGroupItem className="mt-3 px-0 text-light text-center" onClick={this.putAwayControlPanel}>
+                                <ListGroupItem className="mb-3 px-0 text-light text-center" onClick={this.putAwayControlPanel}>
                                     <i className="fa fa-envelope fa-2x"></i>
+                                </ListGroupItem>
+                                <ListGroupItem className="mb-3 px-0 text-light text-center" onClick={this.putAwayControlPanel}>
+                                    <i className="far fa-images fa-2x"></i>
                                 </ListGroupItem>
                             </ListGroup>
                         </div>

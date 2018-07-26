@@ -3,11 +3,18 @@
 $_toolbar-bg-color: $primary-color;
 
 .chsr.toolbar {
-    position: relative;
+    position: fixed;
     background-color: $_toolbar-bg-color;
+    width: calc(100% - #{$ctrl-panel-width});
     height: $toolbar-height;
     font-size: .9rem;
     z-index: 1030;
+
+    @media (max-width: 768px) {
+        & {
+            width: 100%;
+        }
+    }
 
     .navbar-header {
         display: flex;
@@ -55,6 +62,10 @@ $_toolbar-bg-color: $primary-color;
             display: block !important;
         }
     }
+}
+
+.put-away .chsr.toolbar {
+    width: calc(100% - #{$ctrl-panel-put-away-width});
 }
 
 .chsr .dropdown-menu {

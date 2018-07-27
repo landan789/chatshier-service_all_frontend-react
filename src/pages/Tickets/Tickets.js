@@ -14,6 +14,7 @@ import apiDatabase from '../../helpers/apiDatabase/index';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
+import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import TicketInsertModal from '../../components/Modals/TicketInsert/TicketInsert';
 import TicketContent from './TicketContent';
 
@@ -105,10 +106,12 @@ class Tickets extends React.Component {
             statusFilter: STATUS_TYPES.NONE,
             isInsertModalOpen: false,
             searchKeyword: '',
+            appId: '',
             appsAgents: {}
         };
 
         this.keywordChanged = this.keywordChanged.bind(this);
+        this.appChanged = this.appChanged.bind(this);
         this.openInsertModal = this.openInsertModal.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
 
@@ -135,6 +138,10 @@ class Tickets extends React.Component {
         this.setState({ searchKeyword: ev.target.value });
     }
 
+    appChanged(appId) {
+        this.setState({ appId: appId });
+    }
+
     openInsertModal(ev) {
         this.setState({ isInsertModalOpen: true });
     }
@@ -150,40 +157,40 @@ class Tickets extends React.Component {
                 <PageWrapper toolbarTitle={this.props.t('To-Do items')}>
                     <Fade in className="align-items-center mt-5 container ticket-wrapper">
                         <Card className="pb-5 chsr">
-                            <div className="mx-4 px-3 ticket-toolbar">
+                            <div className="mx-4 mb-3 px-3 ticket-toolbar">
                                 <ButtonGroup className="mr-auto">
-                                    <Button color="info" id="allTicketsFilter"
+                                    <Button color="light" id="allTicketsFilter"
                                         className={this.state.statusFilter === STATUS_TYPES.NONE ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.NONE })}>
-                                        <i className="fas fa-list-alt fa-1p5x"></i>
+                                        <i className="text-muted fas fa-list-alt fa-1p5x"></i>
                                     </Button>
                                     <UncontrolledTooltip placement="top" delay={0} target="allTicketsFilter">全部</UncontrolledTooltip>
 
-                                    <Button color="info" id="pendingFilter"
+                                    <Button color="light" id="pendingFilter"
                                         className={this.state.statusFilter === STATUS_TYPES.PENDING ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.PENDING })}>
-                                        <i className="fas fa-times-circle fa-1p5x"></i>
+                                        <i className="text-muted fas fa-times-circle fa-1p5x"></i>
                                     </Button>
                                     <UncontrolledTooltip placement="top" delay={0} target="pendingFilter">未處理</UncontrolledTooltip>
 
-                                    <Button color="info" id="processingFilter"
+                                    <Button color="light" id="processingFilter"
                                         className={this.state.statusFilter === STATUS_TYPES.PROCESSING ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.PROCESSING })}>
-                                        <i className="fas fa-play-circle fa-1p5x"></i>
+                                        <i className="text-muted fas fa-play-circle fa-1p5x"></i>
                                     </Button>
                                     <UncontrolledTooltip placement="top" delay={0} target="processingFilter">處理中</UncontrolledTooltip>
 
-                                    <Button color="info" id="resolvedFilter"
+                                    <Button color="light" id="resolvedFilter"
                                         className={this.state.statusFilter === STATUS_TYPES.RESOLVED ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.RESOLVED })}>
-                                        <i className="fas fa-check-circle fa-1p5x"></i>
+                                        <i className="text-muted fas fa-check-circle fa-1p5x"></i>
                                     </Button>
                                     <UncontrolledTooltip placement="top" delay={0} target="resolvedFilter">已處理</UncontrolledTooltip>
 
-                                    <Button color="info" id="closedFilter"
+                                    <Button color="light" id="closedFilter"
                                         className={this.state.statusFilter === STATUS_TYPES.CLOSED ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.CLOSED })}>
-                                        <i className="fas fa-minus-circle fa-1p5x"></i>
+                                        <i className="text-muted fas fa-minus-circle fa-1p5x"></i>
                                     </Button>
                                     <UncontrolledTooltip placement="top" delay={0} target="closedFilter">已關閉</UncontrolledTooltip>
                                 </ButtonGroup>
@@ -201,11 +208,15 @@ class Tickets extends React.Component {
                                 </Button>
                             </div>
 
+                            <AppsSelector className="mx-4 mb-3 px-3" onChange={this.appChanged} />
+
+                            {this.state.appId &&
                             <TicketContent className="mx-4"
+                                appId={this.state.appId}
                                 appsAgents={this.state.appsAgents}
                                 searchKeyword={this.state.searchKeyword}
                                 statusFilter={this.state.statusFilter}>
-                            </TicketContent>
+                            </TicketContent>}
                         </Card>
                     </Fade>
                 </PageWrapper>

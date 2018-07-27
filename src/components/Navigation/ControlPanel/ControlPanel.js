@@ -24,7 +24,7 @@ import { selectChatroom } from '../../../redux/actions/controlPanelStore/selecte
 import { updateSearchKeyword } from '../../../redux/actions/controlPanelStore/searchKeyword';
 
 import EdgeToggle from '../EdgeToggle/EdgeToggle';
-import { findChatroomMessager, findMessagerSelf } from '../../../containers/Chat/Chat';
+import { findChatroomMessager, findMessagerSelf } from '../../../pages/Chat/Chat';
 
 import logoPng from '../../../image/logo-no-transparent.png';
 import logoSmallPng from '../../../image/logo-small.png';

@@ -12,21 +12,21 @@ import ROUTES from './config/route';
 import mainStore from './redux/mainStore';
 
 import i18n from './i18n';
-import Analysis from './containers/Analysis/Analysis';
-import Autoreplies from './containers/Autoreplies/Autoreplies';
-import Calendar from './containers/Calendar/Calendar';
-import CategoriesProducts from './containers/CategoriesProducts/CategoriesProducts';
-import ChangePassword from './containers/ChangePassword/ChangePassword';
-import Chat from './containers/Chat/Chat';
-import Composes from './containers/Composes/Composes';
-import Greetings from './containers/Greetings/Greetings';
-import Keywordreplies from './containers/Keywordreplies/Keywordreplies';
-import ResetPassword from './containers/ResetPassword/ResetPassword';
-import Settings from './containers/Settings/Settings';
-import SignIn from './containers/SignIn/SignIn';
-import SignOut from './containers/SignOut/SignOut';
-import SignUp from './containers/SignUp/SignUp';
-import Tickets from './containers/Tickets/Tickets';
+import Analysis from './pages/Analysis/Analysis';
+import Autoreplies from './pages/Autoreplies/Autoreplies';
+import Calendar from './pages/Calendar/Calendar';
+import CategoriesProducts from './pages/CategoriesProducts/CategoriesProducts';
+import ChangePassword from './pages/ChangePassword/ChangePassword';
+import Chat from './pages/Chat/Chat';
+import Composes from './pages/Composes/Composes';
+import Greetings from './pages/Greetings/Greetings';
+import Keywordreplies from './pages/Keywordreplies/Keywordreplies';
+import ResetPassword from './pages/ResetPassword/ResetPassword';
+import Settings from './pages/Settings/Settings';
+import SignIn from './pages/SignIn/SignIn';
+import SignOut from './pages/SignOut/SignOut';
+import SignUp from './pages/SignUp/SignUp';
+import Tickets from './pages/Tickets/Tickets';
 
 // https://jquense.github.io/react-widgets/
 import 'react-widgets/dist/css/react-widgets.css';

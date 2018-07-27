@@ -11,7 +11,7 @@ import { formatDate, formatTime } from '../../../utils/unitTime';
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import authHelper from '../../../helpers/authentication';
 import gCalendarHelper from '../../../helpers/googleCalendar';
-import { CALENDAR_EVENT_TYPES, GoogleEventItem } from '../../../containers/Calendar/Calendar';
+import { CALENDAR_EVENT_TYPES, GoogleEventItem } from '../../../pages/Calendar/Calendar';
 
 import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';

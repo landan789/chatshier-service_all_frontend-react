@@ -12,7 +12,7 @@ class CalendarsEvents extends Core {
 
     /**
      * @param {string} userId
-     * @returns {Promise<CalendarsEventsResponse>}
+     * @returns {Promise<Chatshier.Response.CalendarsEvents>}
      */
     find(userId) {
         let calendarsEvents = mainStore.getState().calendarsEvents;
@@ -38,7 +38,7 @@ class CalendarsEvents extends Core {
     /**
      * @param {string} userId
      * @param {Chatshier.CalendarEvent} calendarEvent
-     * @returns {Promise<CalendarsEventsResponse>}
+     * @returns {Promise<Chatshier.Response.CalendarsEvents>}
      */
     insert(userId, calendarEvent) {
         let destUrl = this.apiEndPoint + 'users/' + userId;
@@ -58,7 +58,7 @@ class CalendarsEvents extends Core {
      * @param {string} eventId
      * @param {string} userId
      * @param {Chatshier.CalendarEvent} calendarEvent
-     * @returns {Promise<CalendarsEventsResponse>}
+     * @returns {Promise<Chatshier.Response.CalendarsEvents>}
      */
     update(calendarId, eventId, userId, calendarEvent) {
         let destUrl = this.apiEndPoint + 'calendars/' + calendarId + '/events/' + eventId + '/users/' + userId;
@@ -77,7 +77,7 @@ class CalendarsEvents extends Core {
      * @param {string} calendarId
      * @param {string} eventId
      * @param {string} userId
-     * @returns {Promise<CalendarsEventsResponse>}
+     * @returns {Promise<Chatshier.Response.CalendarsEvents>}
      */
     delete(calendarId, eventId, userId) {
         let destUrl = this.apiEndPoint + 'calendars/' + calendarId + '/events/' + eventId + '/users/' + userId;

@@ -13,7 +13,7 @@ class AppsCategories extends Core {
     /**
      * @param {string|null} appId
      * @param {string} userId
-     * @returns {Promise<AppsCategoriesResponse>}
+     * @returns {Promise<Chatshier.Response.AppsCategories>}
      */
     find(appId, userId) {
         let appsCategories = mainStore.getState().appsCategories;
@@ -40,7 +40,7 @@ class AppsCategories extends Core {
      * @param {string} appId
      * @param {string} userId
      * @param {Chatshier.Category} category
-     * @returns {Promise<AppsCategoriesResponse>}
+     * @returns {Promise<Chatshier.Response.AppsCategories>}
      */
     insert(appId, userId, category) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
@@ -59,8 +59,8 @@ class AppsCategories extends Core {
      * @param {string} appId
      * @param {string} categoryId
      * @param {string} userId
-     * @param {Chatshier.Category} category
-     * @returns {Promise<AppsCategoriesResponse>}
+     * @param {Chatshier.Models.Category} category
+     * @returns {Promise<Chatshier.Response.AppsCategories>}
      */
     update(appId, categoryId, userId, category) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/categories/' + categoryId + '/users/' + userId;
@@ -79,7 +79,7 @@ class AppsCategories extends Core {
      * @param {string} appId
      * @param {string} categoryId
      * @param {string} userId
-     * @returns {Promise<AppsCategoriesResponse>}
+     * @returns {Promise<Chatshier.Response.AppsCategories>}
      */
     delete(appId, categoryId, userId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/categories/' + categoryId + '/users/' + userId;

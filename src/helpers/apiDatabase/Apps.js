@@ -27,7 +27,7 @@ class Apps extends Core {
 
     /**
      * @param {string} userId
-     * @returns {Promise<AppsResponse>}
+     * @returns {Promise<Chatshier.Response.Apps>}
      */
     find(userId) {
         let apps = mainStore.getState().apps;
@@ -52,7 +52,7 @@ class Apps extends Core {
 
     /**
      * @param {string} userId
-     * @returns {Promise<AppsResponse>}
+     * @returns {Promise<Chatshier.Response.Apps>}
      */
     findOne(appId, userId) {
         let apps = mainStore.getState().apps;
@@ -78,7 +78,7 @@ class Apps extends Core {
     /**
      * @param {string} userId
      * @param {Chatshier.Model.App} app
-     * @returns {Promise<AppsResponse>}
+     * @returns {Promise<Chatshier.Response.Apps>}
      */
     insert(userId, app) {
         let destUrl = this.apiEndPoint + 'users/' + userId;
@@ -97,7 +97,7 @@ class Apps extends Core {
      * @param {string} appId
      * @param {string} userId
      * @param {Chatshier.Model.App} app
-     * @returns {Promise<AppsResponse>}
+     * @returns {Promise<Chatshier.Response.Apps>}
      */
     update(appId, userId, app) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;

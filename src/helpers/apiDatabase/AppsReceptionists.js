@@ -2,26 +2,26 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateKeywordreplies, deleteKeywordreply } from '../../redux/actions/mainStore/appsKeywordreplies';
+import { updateReceptionists, deleteReceptionist } from '../../redux/actions/mainStore/appsReceptionists';
 
-class AppsKeywordreplies extends Core {
+class AppsReceptionists extends Core {
     constructor() {
         super();
-        this.apiEndPoint += 'apps-keywordreplies/';
+        this.apiEndPoint += 'apps-receptionists/';
     }
 
     /**
      * @param {string} [appId]
      * @param {string} userId
-     * @returns {Promise<Chatshier.Response.AppsKeywordreplies>}
+     * @returns {Promise<Chatshier.Response.AppsReceptionists>}
      */
     find(appId, userId) {
-        let appsKeywordreplies = mainStore.getState().appsKeywordreplies;
-        if (Object.keys(appsKeywordreplies).length > 0) {
+        let appsReceptionists = mainStore.getState().appsReceptionists;
+        if (Object.keys(appsReceptionists).length > 0) {
             return Promise.resolve({
                 status: 1,
                 msg: '',
-                data: appsKeywordreplies
+                data: appsReceptionists
             });
         }
 
@@ -31,7 +31,7 @@ class AppsKeywordreplies extends Core {
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateKeywordreplies(resJson.data));
+            mainStore.dispatch(updateReceptionists(resJson.data));
             return resJson;
         });
     };
@@ -39,59 +39,59 @@ class AppsKeywordreplies extends Core {
     /**
      * @param {string} appId
      * @param {string} userId
-     * @param {Chatshier.Model.Keywordreply} keywordreply
-     * @returns {Promise<Chatshier.Response.AppsKeywordreplies>}
+     * @param {Chatshier.Models.Receptionist} receptionist
+     * @returns {Promise<Chatshier.Response.AppsReceptionists>}
      */
-    insert(appId, userId, keywordreply) {
+    insert(appId, userId, receptionist) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
-            body: JSON.stringify(keywordreply)
+            body: JSON.stringify(receptionist)
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateKeywordreplies(resJson.data));
+            mainStore.dispatch(updateReceptionists(resJson.data));
             return resJson;
         });
     };
 
     /**
      * @param {string} appId
-     * @param {string} keywordreplyId
+     * @param {string} receptionistId
      * @param {string} userId
-     * @param {Chatshier.Model.Autoreply} keywordreply
-     * @returns {Promise<Chatshier.Response.AppsKeywordreplies>}
+     * @param {Chatshier.Models.Receptionist} receptionist
+     * @returns {Promise<Chatshier.Response.AppsReceptionists>}
      */
-    update(appId, keywordreplyId, userId, keywordreply) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/keywordreplies/' + keywordreplyId + '/users/' + userId;
+    update(appId, receptionistId, userId, category) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/receptionists/' + receptionistId + '/users/' + userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
-            body: JSON.stringify(keywordreply)
+            body: JSON.stringify(category)
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateKeywordreplies(resJson.data));
+            mainStore.dispatch(updateReceptionists(resJson.data));
             return resJson;
         });
     };
 
     /**
      * @param {string} appId
-     * @param {string} keywordreplyId
+     * @param {string} receptionistId
      * @param {string} userId
-     * @returns {Promise<Chatshier.Response.AppsKeywordreplies>}
+     * @returns {Promise<Chatshier.Response.AppsReceptionists>}
      */
-    delete(appId, keywordreplyId, userId) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/keywordreplies/' + keywordreplyId + '/users/' + userId;
+    delete(appId, receptionistId, userId) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/receptionists/' + receptionistId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteKeywordreply(appId, keywordreplyId));
+            mainStore.dispatch(deleteReceptionist(appId, receptionistId));
             return resJson;
         });
     };
 }
 
-export default AppsKeywordreplies;
+export default AppsReceptionists;

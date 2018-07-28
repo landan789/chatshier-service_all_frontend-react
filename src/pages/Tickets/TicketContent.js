@@ -91,7 +91,7 @@ class TicketContent extends React.Component {
             return (
                 <div className="text-center">
                     <div className="mx-auto image-container" style={{ width: '8rem', height: '8rem' }}>
-                        <img className="w-100 h-100 p-2" src={logoSmall} />
+                        <img className="w-100 h-100 p-2" src={logoSmall} alt="" />
                     </div>
                     <h5>無待辦事項</h5>
                 </div>

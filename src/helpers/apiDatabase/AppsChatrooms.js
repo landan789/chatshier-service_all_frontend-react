@@ -12,7 +12,7 @@ class AppsChatrooms extends Core {
 
     /**
      * @param {string} userId
-     * @returns {Promise<AppsChatroomsResponse>}
+     * @returns {Promise<Chatshier.Response.AppsChatrooms>}
      */
     find(userId) {
         let appsChatrooms = mainStore.getState().appsChatrooms;

@@ -9,6 +9,8 @@ import { appsComposesReducer } from './reducers/mainStore/appsComposes';
 import { appsFieldsReducer } from './reducers/mainStore/appsFields';
 import { appsGreetingsReducer } from './reducers/mainStore/appsGreetings';
 import { appsKeywordrepliesReducer } from './reducers/mainStore/appsKeywordreplies';
+import { appsProductsReducer } from './reducers/mainStore/appsProducts';
+import { appsReceptionistsReducer } from './reducers/mainStore/appsReceptionists';
 import { appsTicketsReducer } from './reducers/mainStore/appsTickets';
 import { calendarsEventsReducer } from './reducers/mainStore/calendarsEvents';
 import { consumersReducer } from './reducers/mainStore/consumers';
@@ -26,6 +28,8 @@ const rootReducer = combineReducers({
     appsFields: appsFieldsReducer,
     appsGreetings: appsGreetingsReducer,
     appsKeywordreplies: appsKeywordrepliesReducer,
+    appsProducts: appsProductsReducer,
+    appsReceptionists: appsReceptionistsReducer,
     appsTickets: appsTicketsReducer,
     calendarsEvents: calendarsEventsReducer,
     consumers: consumersReducer,

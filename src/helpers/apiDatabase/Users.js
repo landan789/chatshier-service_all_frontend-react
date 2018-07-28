@@ -12,7 +12,7 @@ class Users extends Core {
 
     /**
      * @param {string} userId
-     * @returns {Promise<UsersResponse>}
+     * @returns {Promise<Chatshier.Response.Users>}
      */
     find(userId) {
         let users = mainStore.getState().users;
@@ -38,7 +38,7 @@ class Users extends Core {
     /**
      * @param {string} userId
      * @param {string} email
-     * @returns {Promise<UsersResponse>}
+     * @returns {Promise<Chatshier.Response.Users>}
      */
     search(userId, email) {
         let destUrl = this.apiEndPoint + 'users/' + userId + '?email=' + email + '&fuzzy=1';
@@ -51,8 +51,8 @@ class Users extends Core {
 
     /**
      * @param {string} userId
-     * @param {Chatshier.User} user
-     * @returns {Promise<UsersResponse>}
+     * @param {Chatshier.Models.User} user
+     * @returns {Promise<Chatshier.Response.Users>}
      */
     insert(userId, user) {
         let destUrl = this.apiEndPoint + 'users/' + userId;
@@ -69,8 +69,8 @@ class Users extends Core {
 
     /**
      * @param {string} userId
-     * @param {Chatshier.User} user
-     * @returns {Promise<UsersResponse>}
+     * @param {Chatshier.Models.User} user
+     * @returns {Promise<Chatshier.Response.Users>}
      */
     update(userId, user) {
         let destUrl = this.apiEndPoint + 'users/' + userId;

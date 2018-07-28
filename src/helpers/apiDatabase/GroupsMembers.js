@@ -18,7 +18,7 @@ class GroupsMembers extends Core {
 
     /**
      * @param {string} userId
-     * @returns {Promise<GroupsMembersResponse>}
+     * @returns {Promise<Chatshier.Response.GroupsMembers>}
      */
     find(userId) {
         let groupsMembers = mainStore.getState().groupsMembers;
@@ -44,8 +44,8 @@ class GroupsMembers extends Core {
     /**
      * @param {string} groupId
      * @param {string} userId
-     * @param {Chatshier.GroupMember} groupMember
-     * @returns {Promise<GroupsMembersResponse>}
+     * @param {Chatshier.Models.GroupMember} groupMember
+     * @returns {Promise<Chatshier.Response.GroupsMembers>}
      */
     insert(groupId, userId, groupMember) {
         let destUrl = this.apiEndPoint + 'groups/' + groupId + '/users/' + userId;
@@ -64,8 +64,8 @@ class GroupsMembers extends Core {
      * @param {string} groupId
      * @param {string} memberId
      * @param {string} userId
-     * @param {Chatshier.GroupMember} groupMember
-     * @returns {Promise<GroupsMembersResponse>}
+     * @param {Chatshier.Models.GroupMember} groupMember
+     * @returns {Promise<Chatshier.Response.GroupsMembers>}
      */
     update(groupId, memberId, userId, groupMember) {
         let destUrl = this.apiEndPoint + 'groups/' + groupId + '/members/' + memberId + '/users/' + userId;

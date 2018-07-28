@@ -13,7 +13,7 @@ class AppsGreetings extends Core {
     /**
      * @param {string} appId
      * @param {string} userId
-     * @returns {Promise<AppsGreetingsResponse>}
+     * @returns {Promise<Chatshier.Response.AppsGreetings>}
      */
     find(appId, userId) {
         let appsGreetings = mainStore.getState().appsGreetings;
@@ -40,7 +40,7 @@ class AppsGreetings extends Core {
      * @param {string} appId
      * @param {string} userId
      * @param {Chatshier.Greeting} greeting
-     * @returns {Promise<AppsGreetingsResponse>}
+     * @returns {Promise<Chatshier.Response.AppsGreetings>}
      */
     insert(appId, userId, greeting) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
@@ -59,7 +59,7 @@ class AppsGreetings extends Core {
      * @param {string} appId
      * @param {string} userId
      * @param {string} greetingId
-     * @returns {Promise<AppsGreetingsResponse>}
+     * @returns {Promise<Chatshier.Response.AppsGreetings>}
      */
     delete(appId, userId, greetingId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/greetings/' + greetingId + '/users/' + userId;

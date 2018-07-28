@@ -2,26 +2,26 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateKeywordreplies, deleteKeywordreply } from '../../redux/actions/mainStore/appsKeywordreplies';
+import { updateProducts, deleteProduct } from '../../redux/actions/mainStore/appsProducts';
 
-class AppsKeywordreplies extends Core {
+class AppsProducts extends Core {
     constructor() {
         super();
-        this.apiEndPoint += 'apps-keywordreplies/';
+        this.apiEndPoint += 'apps-products/';
     }
 
     /**
      * @param {string} [appId]
      * @param {string} userId
-     * @returns {Promise<Chatshier.Response.AppsKeywordreplies>}
+     * @returns {Promise<Chatshier.Response.AppsProducts>}
      */
     find(appId, userId) {
-        let appsKeywordreplies = mainStore.getState().appsKeywordreplies;
-        if (Object.keys(appsKeywordreplies).length > 0) {
+        let appsProducts = mainStore.getState().appsProducts;
+        if (Object.keys(appsProducts).length > 0) {
             return Promise.resolve({
                 status: 1,
                 msg: '',
-                data: appsKeywordreplies
+                data: appsProducts
             });
         }
 
@@ -31,7 +31,7 @@ class AppsKeywordreplies extends Core {
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateKeywordreplies(resJson.data));
+            mainStore.dispatch(updateProducts(resJson.data));
             return resJson;
         });
     };
@@ -39,59 +39,59 @@ class AppsKeywordreplies extends Core {
     /**
      * @param {string} appId
      * @param {string} userId
-     * @param {Chatshier.Model.Keywordreply} keywordreply
-     * @returns {Promise<Chatshier.Response.AppsKeywordreplies>}
+     * @param {Chatshier.Models.Product} product
+     * @returns {Promise<Chatshier.Response.AppsProducts>}
      */
-    insert(appId, userId, keywordreply) {
+    insert(appId, userId, product) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
-            body: JSON.stringify(keywordreply)
+            body: JSON.stringify(product)
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateKeywordreplies(resJson.data));
+            mainStore.dispatch(updateProducts(resJson.data));
             return resJson;
         });
     };
 
     /**
      * @param {string} appId
-     * @param {string} keywordreplyId
+     * @param {string} productId
      * @param {string} userId
-     * @param {Chatshier.Model.Autoreply} keywordreply
-     * @returns {Promise<Chatshier.Response.AppsKeywordreplies>}
+     * @param {Chatshier.Models.Product} product
+     * @returns {Promise<Chatshier.Response.AppsProducts>}
      */
-    update(appId, keywordreplyId, userId, keywordreply) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/keywordreplies/' + keywordreplyId + '/users/' + userId;
+    update(appId, productId, userId, category) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/products/' + productId + '/users/' + userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
-            body: JSON.stringify(keywordreply)
+            body: JSON.stringify(category)
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(updateKeywordreplies(resJson.data));
+            mainStore.dispatch(updateProducts(resJson.data));
             return resJson;
         });
     };
 
     /**
      * @param {string} appId
-     * @param {string} keywordreplyId
+     * @param {string} productId
      * @param {string} userId
-     * @returns {Promise<Chatshier.Response.AppsKeywordreplies>}
+     * @returns {Promise<Chatshier.Response.AppsProducts>}
      */
-    delete(appId, keywordreplyId, userId) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/keywordreplies/' + keywordreplyId + '/users/' + userId;
+    delete(appId, productId, userId) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/products/' + productId + '/users/' + userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteKeywordreply(appId, keywordreplyId));
+            mainStore.dispatch(deleteProduct(appId, productId));
             return resJson;
         });
     };
 }
 
-export default AppsKeywordreplies;
+export default AppsProducts;

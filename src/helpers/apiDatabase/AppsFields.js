@@ -29,7 +29,7 @@ class AppsFields extends Core {
 
     /**
      * @param {string} userId
-     * @returns {Promise<AppsFieldsResponse>}
+     * @returns {Promise<Chatshier.Response.AppsFields>}
      */
     find(userId) {
         let appsFields = mainStore.getState().appsFields;
@@ -56,7 +56,7 @@ class AppsFields extends Core {
      * @param {string} appId
      * @param {string} userId
      * @param {Chatshier.Field} field
-     * @returns {Promise<AppsFieldsResponse>}
+     * @returns {Promise<Chatshier.Response.AppsFields>}
      */
     insert(appId, userId, field) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
@@ -76,7 +76,7 @@ class AppsFields extends Core {
      * @param {string} keywordreplyId
      * @param {string} userId
      * @param {Chatshier.Field} field
-     * @returns {Promise<AppsFieldsResponse>}
+     * @returns {Promise<Chatshier.Response.AppsFields>}
      */
     update(appId, fieldId, userId, field) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/fields/' + fieldId + '/users/' + userId;

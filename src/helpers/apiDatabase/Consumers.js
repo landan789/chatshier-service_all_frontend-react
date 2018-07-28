@@ -12,7 +12,7 @@ class Consumers extends Core {
 
     /**
      * @param {string} userId
-     * @returns {Promise<ConsumersResponse>}
+     * @returns {Promise<Chatshier.Response.Consumers>}
      */
     find(userId) {
         let consumers = mainStore.getState().consumers;
@@ -38,7 +38,7 @@ class Consumers extends Core {
     /**
      * @param {string} platformUid
      * @param {string} userId
-     * @returns {Promise<ConsumersResponse>}
+     * @returns {Promise<Chatshier.Response.Consumers>}
      */
     findOne(platformUid, userId) {
         let consumers = mainStore.getState().consumers;
@@ -65,7 +65,7 @@ class Consumers extends Core {
      * @param {string} platformUid
      * @param {string} userId
      * @param {Chatshier.Model.Consumer} consumer
-     * @returns {Promise<ConsumerResponse>}
+     * @returns {Promise<Chatshier.Response.Consumer>}
      */
     update(platformUid, userId, consumer) {
         let destUrl = this.apiEndPoint + 'consumers/' + platformUid + '/users/' + userId;

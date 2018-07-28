@@ -13,7 +13,7 @@ class AppsTickets extends Core {
     /**
      * @param {string|null} appId
      * @param {string} userId
-     * @returns {Promise<AppsTicketsResponse>}
+     * @returns {Promise<Chatshier.Response.AppsTickets>}
      */
     find(appId, userId) {
         let appsTickets = mainStore.getState().appsTickets;
@@ -40,7 +40,7 @@ class AppsTickets extends Core {
      * @param {string} appId
      * @param {string} userId
      * @param {Chatshier.Model.Ticket} ticket
-     * @returns {Promise<AppsTicketsResponse>}
+     * @returns {Promise<Chatshier.Response.AppsTickets>}
      */
     insert(appId, userId, ticket) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
@@ -60,7 +60,7 @@ class AppsTickets extends Core {
      * @param {string} ticketId
      * @param {string} userId
      * @param {Chatshier.Model.Ticket} ticket
-     * @returns {Promise<AppsTicketsResponse>}
+     * @returns {Promise<Chatshier.Response.AppsTickets>}
      */
     update(appId, ticketId, userId, ticket) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/tickets/' + ticketId + '/users/' + userId;
@@ -79,7 +79,7 @@ class AppsTickets extends Core {
      * @param {string} appId
      * @param {string} ticketId
      * @param {string} userId
-     * @returns {Promise<AppsTicketsResponse>}
+     * @returns {Promise<Chatshier.Response.AppsTickets>}
      */
     delete(appId, ticketId, userId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/tickets/' + ticketId + '/users/' + userId;

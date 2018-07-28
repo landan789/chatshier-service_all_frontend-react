@@ -13,7 +13,7 @@ class AppsComposes extends Core {
     /**
      * @param {string|null} appId
      * @param {string} userId
-     * @returns {Promise<AppsComposesResponse>}
+     * @returns {Promise<Chatshier.Response.AppsComposes>}
      */
     find(appId, userId) {
         let appsComposes = mainStore.getState().appsComposes;
@@ -40,7 +40,7 @@ class AppsComposes extends Core {
      * @param {string} appId
      * @param {string} userId
      * @param {Chatshier.Compose} compose
-     * @returns {Promise<AppsComposesResponse>}
+     * @returns {Promise<Chatshier.Response.AppsComposes>}
      */
     insert(appId, userId, composes, usingRecursive) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
@@ -73,7 +73,7 @@ class AppsComposes extends Core {
      * @param {string} composeId
      * @param {string} userId
      * @param {Chatshier.Compose} compose
-     * @returns {Promise<AppscomposesResponse>}
+     * @returns {Promise<Chatshier.Response.Appscomposes>}
      */
     update(appId, composeId, userId, compose) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/composes/' + composeId + '/users/' + userId;

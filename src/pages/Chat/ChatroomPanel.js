@@ -95,7 +95,7 @@ class ChatroomPanel extends React.Component {
         // 發送給各平台時，文字訊息前面加上自己的名稱當成前輟
         let messagePrefix = app.type !== CHATSHIER ? '[' + this.props.users[userId].name + ']\n' : '';
 
-        /** @type {Chatshier.SocketMessage} */
+        /** @type {Chatshier.Socket.Message} */
         let messageToSend = {
             from: CHATSHIER,
             time: Date.now(),
@@ -105,7 +105,7 @@ class ChatroomPanel extends React.Component {
             messager_id: messagerSelf._id
         };
 
-        /** @type {Chatshier.SocketMessageBody} */
+        /** @type {Chatshier.Socket.MessageBody} */
         let socketBody = {
             app_id: appId,
             type: app.type,
@@ -179,7 +179,7 @@ class ChatroomPanel extends React.Component {
         // 傳送檔案時，帶上檔案大小當成文字訊息
         let fileText = 'file' === messageType ? '小幫手傳送檔案給你:\n檔案大小: ' + fileSize + '\n' : '';
 
-        /** @type {Chatshier.SocketMessage} */
+        /** @type {Chatshier.Socket.Message} */
         let messageToSend = {
             text: fileText,
             src: file,
@@ -190,7 +190,7 @@ class ChatroomPanel extends React.Component {
             messager_id: messagerSelf._id
         };
 
-        /** @type {Chatshier.SocketMessageBody} */
+        /** @type {Chatshier.Socket.MessageBody} */
         let socketBody = {
             app_id: appId,
             type: app.type,

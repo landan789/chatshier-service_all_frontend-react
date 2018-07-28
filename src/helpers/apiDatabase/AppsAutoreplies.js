@@ -13,7 +13,7 @@ class AppsAutoreplies extends Core {
     /**
      * @param {string} [appId]
      * @param {string} userId
-     * @returns {Promise<AppsAutorepliesResponse>}
+     * @returns {Promise<Chatshier.Response.AppsAutoreplies>}
      */
     find(appId, userId) {
         let appsAutoreplies = mainStore.getState().appsAutoreplies;
@@ -40,7 +40,7 @@ class AppsAutoreplies extends Core {
      * @param {string} appId
      * @param {string} userId
      * @param {Chatshier.Model.Autoreply} autoreply
-     * @returns {Promise<AppsAutorepliesResponse>}
+     * @returns {Promise<Chatshier.Response.AppsAutoreplies>}
      */
     insert(appId, userId, autoreply) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
@@ -60,7 +60,7 @@ class AppsAutoreplies extends Core {
      * @param {string} autoreplyId
      * @param {string} userId
      * @param {Chatshier.Model.Autoreply} autoreply
-     * @returns {Promise<AppsAutorepliesResponse>}
+     * @returns {Promise<Chatshier.Response.AppsAutoreplies>}
      */
     update(appId, autoreplyId, userId, autoreply) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/autoreplies/' + autoreplyId + '/users/' + userId;

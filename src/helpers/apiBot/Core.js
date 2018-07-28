@@ -39,63 +39,19 @@ class Core {
 
     /**
      * @param {string} url
-     * @param {RequestInit|RequestInit[]} [reqInits]
-     * @param {Boolean} [usingRecursive=false] If true, the processes will do step one by one
+     * @param {RequestInit} reqInit
      * @returns {Promise<any>}
      */
-    sendRequest(url, reqInits, usingRecursive) {
-        reqInits = reqInits || {};
-        reqInits.method = reqInits.method || 'GET';
-        usingRecursive = !!usingRecursive;
-
-        if (reqInits instanceof Array) {
-            if (usingRecursive) {
-                let _reqInits = reqInits;
-                let resJsons = [];
-
-                let nextPromise = (i) => {
-                    if (i >= _reqInits.length) {
-                        return Promise.resolve(resJsons);
-                    }
-                    let _reqInit = _reqInits[i];
-                    _reqInit.cache = 'no-cache';
-                    _reqInit.mode = 'cors';
-                    _reqInit.credentials = 'include';
-
-                    return window.fetch(url, _reqInit).then((res) => {
-                        return this.responseChecking(res);
-                    }).then(function(resJson) {
-                        resJsons.push(resJson);
-                        return nextPromise(i + 1);
-                    });
-                };
-                return nextPromise(0);
-            } else {
-                return Promise.all(reqInits.map((_reqInit) => {
-                    _reqInit.cache = 'no-cache';
-                    _reqInit.mode = 'cors';
-                    _reqInit.credentials = 'include';
-
-                    if ('POST' === reqInits.method.toUpperCase() ||
-                        'PUT' === reqInits.method.toUpperCase()) {
-                        reqInits.headers.set('Content-Type', 'application/json');
-                    }
-                    return window.fetch(url, _reqInit).then((res) => {
-                        return this.responseChecking(res);
-                    });
-                }));
-            }
+    sendRequest(url, reqInit) {
+        if ('POST' === reqInit.method.toUpperCase() ||
+            'PUT' === reqInit.method.toUpperCase()) {
+            reqInit.headers.set('Content-Type', 'application/json');
         }
+        reqInit.cache = 'no-cache';
+        reqInit.mode = 'cors';
+        reqInit.credentials = 'include';
 
-        if ('POST' === reqInits.method.toUpperCase() ||
-            'PUT' === reqInits.method.toUpperCase()) {
-            reqInits.headers.set('Content-Type', 'application/json');
-        }
-        reqInits.cache = 'no-cache';
-        reqInits.mode = 'cors';
-        reqInits.credentials = 'include';
-
-        return window.fetch(url, reqInits).then((res) => {
+        return window.fetch(url, reqInit).then((res) => {
             return this.responseChecking(res);
         });
     };

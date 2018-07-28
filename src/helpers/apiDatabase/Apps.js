@@ -10,6 +10,8 @@ import { deleteAllComposes } from '../../redux/actions/mainStore/appsComposes';
 import { deleteAllFields } from '../../redux/actions/mainStore/appsFields';
 import { deleteAllGreetings } from '../../redux/actions/mainStore/appsGreetings';
 import { deleteAllKeywordreplies } from '../../redux/actions/mainStore/appsKeywordreplies';
+import { deleteAllProducts } from '../../redux/actions/mainStore/appsProducts';
+import { deleteAllReceptionists } from '../../redux/actions/mainStore/appsReceptionists';
 import { deleteAllTickets } from '../../redux/actions/mainStore/appsTickets';
 
 class Apps extends Core {
@@ -26,10 +28,9 @@ class Apps extends Core {
     }
 
     /**
-     * @param {string} userId
      * @returns {Promise<Chatshier.Response.Apps>}
      */
-    find(userId) {
+    find() {
         let apps = mainStore.getState().apps;
         if (Object.keys(apps).length > 0) {
             return Promise.resolve({
@@ -39,7 +40,7 @@ class Apps extends Core {
             });
         }
 
-        let destUrl = this.apiEndPoint + 'users/' + userId;
+        let destUrl = this.apiEndPoint + 'users/' + this.userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -51,10 +52,10 @@ class Apps extends Core {
     };
 
     /**
-     * @param {string} userId
+     * @param {string} appId
      * @returns {Promise<Chatshier.Response.Apps>}
      */
-    findOne(appId, userId) {
+    findOne(appId) {
         let apps = mainStore.getState().apps;
         if (apps[appId]) {
             return Promise.resolve({
@@ -64,7 +65,7 @@ class Apps extends Core {
             });
         }
 
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + this.userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -76,12 +77,11 @@ class Apps extends Core {
     };
 
     /**
-     * @param {string} userId
      * @param {Chatshier.Model.App} app
      * @returns {Promise<Chatshier.Response.Apps>}
      */
-    insert(userId, app) {
-        let destUrl = this.apiEndPoint + 'users/' + userId;
+    insert(app) {
+        let destUrl = this.apiEndPoint + 'users/' + this.userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -95,12 +95,11 @@ class Apps extends Core {
 
     /**
      * @param {string} appId
-     * @param {string} userId
      * @param {Chatshier.Model.App} app
      * @returns {Promise<Chatshier.Response.Apps>}
      */
-    update(appId, userId, app) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
+    update(appId, app) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + this.userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -114,10 +113,9 @@ class Apps extends Core {
 
     /**
      * @param {string} appId
-     * @param {string} userId
      */
-    delete(appId, userId) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
+    delete(appId) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders
@@ -131,6 +129,8 @@ class Apps extends Core {
             mainStore.dispatch(deleteAllFields(appId));
             mainStore.dispatch(deleteAllGreetings(appId));
             mainStore.dispatch(deleteAllKeywordreplies(appId));
+            mainStore.dispatch(deleteAllProducts(appId));
+            mainStore.dispatch(deleteAllReceptionists(appId));
             mainStore.dispatch(deleteAllTickets(appId));
             return resJson;
         });

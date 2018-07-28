@@ -6,7 +6,6 @@ import { Button } from 'reactstrap';
 import Aux from 'react-aux';
 
 import apiDatabase from '../../../../helpers/apiDatabase/index';
-import authHelper from '../../../../helpers/authentication';
 import { notify } from '../../../../components/Notify/Notify';
 import '../GreetingTable.css';
 
@@ -42,14 +41,13 @@ class MessageInsert extends Component {
         }
 
         let appId = this.props.appId;
-        let userId = authHelper.userId;
         let greeting = {
             type: 'text',
             text: this.state.text
         };
 
         this.setState({ isInserting: true });
-        return apiDatabase.appsGreetings.insert(appId, userId, greeting).then(() => {
+        return apiDatabase.appsGreetings.insert(appId, greeting).then(() => {
             this.setState({ isInserting: false });
             this.props.delete(ev);
         });

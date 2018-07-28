@@ -74,9 +74,8 @@ class SocketHelper {
     }
 
     userRegistration() {
-        let userId = authHelper.userId;
         return new Promise((resolve) => {
-            this.socket.emit(SOCKET_EVENTS.USER_REGISTRATION, userId, resolve);
+            this.socket.emit(SOCKET_EVENTS.USER_REGISTRATION, authHelper.userId, resolve);
         });
     }
 

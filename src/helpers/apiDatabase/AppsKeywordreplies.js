@@ -12,10 +12,9 @@ class AppsKeywordreplies extends Core {
 
     /**
      * @param {string} [appId]
-     * @param {string} userId
      * @returns {Promise<Chatshier.Response.AppsKeywordreplies>}
      */
-    find(appId, userId) {
+    find(appId) {
         let appsKeywordreplies = mainStore.getState().appsKeywordreplies;
         if (Object.keys(appsKeywordreplies).length > 0) {
             return Promise.resolve({
@@ -25,7 +24,7 @@ class AppsKeywordreplies extends Core {
             });
         }
 
-        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
+        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + this.userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -38,12 +37,11 @@ class AppsKeywordreplies extends Core {
 
     /**
      * @param {string} appId
-     * @param {string} userId
      * @param {Chatshier.Model.Keywordreply} keywordreply
      * @returns {Promise<Chatshier.Response.AppsKeywordreplies>}
      */
-    insert(appId, userId, keywordreply) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
+    insert(appId, keywordreply) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + this.userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -58,12 +56,11 @@ class AppsKeywordreplies extends Core {
     /**
      * @param {string} appId
      * @param {string} keywordreplyId
-     * @param {string} userId
      * @param {Chatshier.Model.Autoreply} keywordreply
      * @returns {Promise<Chatshier.Response.AppsKeywordreplies>}
      */
-    update(appId, keywordreplyId, userId, keywordreply) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/keywordreplies/' + keywordreplyId + '/users/' + userId;
+    update(appId, keywordreplyId, keywordreply) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/keywordreplies/' + keywordreplyId + '/users/' + this.userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -78,11 +75,10 @@ class AppsKeywordreplies extends Core {
     /**
      * @param {string} appId
      * @param {string} keywordreplyId
-     * @param {string} userId
      * @returns {Promise<Chatshier.Response.AppsKeywordreplies>}
      */
-    delete(appId, keywordreplyId, userId) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/keywordreplies/' + keywordreplyId + '/users/' + userId;
+    delete(appId, keywordreplyId) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/keywordreplies/' + keywordreplyId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

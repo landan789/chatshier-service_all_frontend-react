@@ -47,11 +47,9 @@ class Keywordreplies extends React.Component {
     }
 
     componentDidMount() {
-        let userId = authHelper.userId;
-
         return Promise.all([
-            apiDatabase.apps.find(userId),
-            apiDatabase.appsKeywordreplies.find(null, userId)
+            apiDatabase.apps.find(),
+            apiDatabase.appsKeywordreplies.find()
         ]);
     }
 

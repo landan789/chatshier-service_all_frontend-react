@@ -46,6 +46,38 @@ class Analysis extends React.Component {
         history: PropTypes.object.isRequired
     }
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (prevState.prevProps === nextProps) {
+            return prevState;
+        }
+        let nextState = prevState;
+        nextState.prevProps = nextProps;
+
+        let appChatrooms = nextProps.appsChatrooms[prevState.selectedAppId];
+        if (!appChatrooms) {
+            return nextState;
+        }
+
+        nextState.startDatetime = nextState.endDatetime = Date.now();
+        for (let chatroomId in appChatrooms.chatrooms) {
+            let chatroom = appChatrooms.chatrooms[chatroomId];
+            let messages = chatroom.messages;
+
+            for (let messageId in messages) {
+                let message = messages[messageId];
+                let messageTime = new Date(message.time).getTime();
+                if (messageTime < nextState.startDatetime) {
+                    nextState.startDatetime = messageTime;
+                }
+
+                if (messageTime > nextState.endDatetime) {
+                    nextState.endDatetime = messageTime;
+                }
+            }
+        }
+        return nextState;
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
 
@@ -72,10 +104,11 @@ class Analysis extends React.Component {
         }];
 
         this.state = {
+            prevProps: null,
             selectedAppId: '',
             selectedDataType: this.dataTypes[0],
-            startDatetime: null,
-            endDatetime: null
+            startDatetime: 0,
+            endDatetime: Date.now()
         };
 
         this.onAppChanged = this.onAppChanged.bind(this);
@@ -84,7 +117,6 @@ class Analysis extends React.Component {
         this.toggleTypeDropdown = this.toggleTypeDropdown.bind(this);
 
         browserHelper.setTitle(this.props.t('Analysis'));
-
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
@@ -92,75 +124,37 @@ class Analysis extends React.Component {
     }
 
     componentDidMount() {
-        let userId = authHelper.userId;
-        let props = this.props;
-
-        return Promise.resolve().then(() => {
-            if (!userId) {
-                return;
-            }
-            return apiDatabase.appsChatrooms.find(userId);
-        }).then(() => {
-            let appChatrooms = props.appsChatrooms[this.state.selectedAppId];
-            if (!appChatrooms) {
-                return;
-            }
-
-            let startDatetime = Date.now();
-            let endDatetime = startDatetime;
-
-            for (let chatroomId in appChatrooms.chatrooms) {
-                let chatroom = appChatrooms.chatrooms[chatroomId];
-                let messages = chatroom.messages;
-
-                for (let messageId in messages) {
-                    let message = messages[messageId];
-                    let messageTime = new Date(message.time).getTime();
-                    if (messageTime < startDatetime) {
-                        startDatetime = messageTime;
-                    }
-
-                    if (messageTime > endDatetime) {
-                        endDatetime = messageTime;
-                    }
-                }
-            }
-
-            this.setState({
-                startDatetime: startDatetime,
-                endDatetime: endDatetime
-            });
-        });
+        return apiDatabase.appsChatrooms.find();
     }
 
     onAppChanged(appId) {
-        let newState = {
+        let nextState = {
             selectedAppId: appId
         };
 
         let appChatrooms = this.props.appsChatrooms[appId];
-        if (appChatrooms) {
-            newState.startDatetime = newState.endDatetime = Date.now();
+        if (!appChatrooms) {
+            return;
+        }
 
-            for (let chatroomId in appChatrooms.chatrooms) {
-                let chatroom = appChatrooms.chatrooms[chatroomId];
-                let messages = chatroom.messages;
+        nextState.startDatetime = nextState.endDatetime = Date.now();
+        for (let chatroomId in appChatrooms.chatrooms) {
+            let chatroom = appChatrooms.chatrooms[chatroomId];
+            let messages = chatroom.messages;
 
-                for (let messageId in messages) {
-                    let message = messages[messageId];
-                    let messageTime = new Date(message.time).getTime();
-                    if (messageTime < newState.startDatetime) {
-                        newState.startDatetime = messageTime;
-                    }
+            for (let messageId in messages) {
+                let message = messages[messageId];
+                let messageTime = new Date(message.time).getTime();
+                if (messageTime < nextState.startDatetime) {
+                    nextState.startDatetime = messageTime;
+                }
 
-                    if (messageTime > newState.endDatetime) {
-                        newState.endDatetime = messageTime;
-                    }
+                if (messageTime > nextState.endDatetime) {
+                    nextState.endDatetime = messageTime;
                 }
             }
         }
-
-        this.setState(newState);
+        this.setState(nextState);
     }
 
     onStartDatetimeChanged(date) {

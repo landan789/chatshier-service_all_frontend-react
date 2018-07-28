@@ -7,10 +7,9 @@ class Richmenus extends Core {
      *
      * @param {string} appId - 目標 Menu 的 App ID
      * @param {string} menuId - 目標 Menu 的 ID
-     * @param {string} userId
      */
-    activateMenu(appId, menuId, userId) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/menus/' + menuId + '/users/' + userId;
+    activateMenu(appId, menuId) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/menus/' + menuId + '/users/' + this.userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders
@@ -23,10 +22,9 @@ class Richmenus extends Core {
      *
      * @param {string} appId - 目標 Menu的 App ID
      * @param {string} menuId - 目標 Menu的 ID
-     * @param {string} userId
      */
-    deactivateMenu(appId, menuId, userId) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/menus/' + menuId + '/users/' + userId;
+    deactivateMenu(appId, menuId) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/menus/' + menuId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders
@@ -39,10 +37,9 @@ class Richmenus extends Core {
      *
      * @param {string} appId - 目標Menu的 App ID
      * @param {string} menuId - 目標Menu的 ID
-     * @param {string} userId
      */
-    deleteMenu(appId, menuId, userId) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/menus/' + menuId + '/users/' + userId + '/content/';
+    deleteMenu(appId, menuId) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/menus/' + menuId + '/users/' + this.userId + '/content/';
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

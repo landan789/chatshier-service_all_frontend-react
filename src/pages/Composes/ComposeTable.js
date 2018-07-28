@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { Table, Button } from 'reactstrap';
 
 import ComposeEditModal from '../../components/Modals/ComposeEdit/ComposeEdit';
-import authHelper from '../../helpers/authentication';
 import apiDatabase from '../../helpers/apiDatabase/index';
 import { notify } from '../../components/Notify/Notify';
 import timeHelper from '../../helpers/timer';
@@ -67,8 +66,7 @@ class ComposeTable extends React.Component {
     }
 
     removeCompose(appId, composeId) {
-        let userId = authHelper.userId;
-        return apiDatabase.appsComposes.delete(appId, composeId, userId).then(() => {
+        return apiDatabase.appsComposes.delete(appId, composeId).then(() => {
             return notify('刪除成功', { type: 'success' });
         }).catch(() => {
             return notify('刪除失敗', { type: 'danger' });

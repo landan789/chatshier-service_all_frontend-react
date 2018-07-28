@@ -1,4 +1,5 @@
 import Apps from './Apps';
+import AppsAppointments from './AppsAppointments';
 import AppsAutoreplies from './AppsAutoreplies';
 import AppsCategories from './AppsCategories';
 import AppsChatrooms from './AppsChatrooms';
@@ -6,6 +7,8 @@ import AppsComposes from './AppsComposes';
 import AppsFields from './AppsFields';
 import AppsGreetings from './AppsGreetings';
 import AppsKeywordreplies from './AppsKeywordreplies';
+import AppsProducts from './AppsProducts';
+import AppsReceptionists from './AppsReceptionists';
 import AppsTickets from './AppsTickets';
 import CalendarsEvents from './CalendarsEvents';
 import Consumers from './Consumers';
@@ -19,6 +22,7 @@ reqHeaders.set('Accept', 'application/json');
 class APIDatabase {
     constructor() {
         this.apps = new Apps();
+        this.appsAppointments = new AppsAppointments();
         this.appsAutoreplies = new AppsAutoreplies();
         this.appsCategories = new AppsCategories();
         this.appsChatrooms = new AppsChatrooms();
@@ -26,6 +30,8 @@ class APIDatabase {
         this.appsFields = new AppsFields();
         this.appsGreetings = new AppsGreetings();
         this.appsKeywordreplies = new AppsKeywordreplies();
+        this.appsProducts = new AppsProducts();
+        this.appsReceptionists = new AppsReceptionists();
         this.appsTickets = new AppsTickets();
         this.calendarsEvents = new CalendarsEvents();
         this.consumers = new Consumers();

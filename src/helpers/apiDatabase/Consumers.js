@@ -11,10 +11,9 @@ class Consumers extends Core {
     }
 
     /**
-     * @param {string} userId
      * @returns {Promise<Chatshier.Response.Consumers>}
      */
-    find(userId) {
+    find() {
         let consumers = mainStore.getState().consumers;
         if (Object.keys(consumers).length > 0) {
             return Promise.resolve({
@@ -24,7 +23,7 @@ class Consumers extends Core {
             });
         }
 
-        let destUrl = this.apiEndPoint + 'users/' + userId;
+        let destUrl = this.apiEndPoint + 'users/' + this.userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -37,10 +36,9 @@ class Consumers extends Core {
 
     /**
      * @param {string} platformUid
-     * @param {string} userId
      * @returns {Promise<Chatshier.Response.Consumers>}
      */
-    findOne(platformUid, userId) {
+    findOne(platformUid) {
         let consumers = mainStore.getState().consumers;
         if (consumers[platformUid]) {
             return Promise.resolve({
@@ -50,7 +48,7 @@ class Consumers extends Core {
             });
         }
 
-        let destUrl = this.apiEndPoint + 'consumers/' + platformUid + '/users/' + userId;
+        let destUrl = this.apiEndPoint + 'consumers/' + platformUid + '/users/' + this.userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -63,12 +61,11 @@ class Consumers extends Core {
 
     /**
      * @param {string} platformUid
-     * @param {string} userId
      * @param {Chatshier.Model.Consumer} consumer
      * @returns {Promise<Chatshier.Response.Consumer>}
      */
-    update(platformUid, userId, consumer) {
-        let destUrl = this.apiEndPoint + 'consumers/' + platformUid + '/users/' + userId;
+    update(platformUid, consumer) {
+        let destUrl = this.apiEndPoint + 'consumers/' + platformUid + '/users/' + this.userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,

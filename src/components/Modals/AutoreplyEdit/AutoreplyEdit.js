@@ -5,7 +5,6 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, I
 import { DateTimePicker } from 'react-widgets';
 
 import apiDatabase from '../../../helpers/apiDatabase/index';
-import authHelper from '../../../helpers/authentication';
 
 import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
@@ -66,7 +65,6 @@ class AutoreplyEditModal extends ModalCore {
 
         let appId = this.state.appId;
         let autoreplyId = this.state.autoreplyId;
-        let userId = authHelper.userId;
         let autoreply = {
             endedTime: this.state.endedTime,
             startedTime: this.state.startedTime,
@@ -76,7 +74,7 @@ class AutoreplyEditModal extends ModalCore {
         };
 
         this.setState({ isAsyncWorking: true });
-        return apiDatabase.appsAutoreplies.update(appId, autoreplyId, userId, autoreply).then(() => {
+        return apiDatabase.appsAutoreplies.update(appId, autoreplyId, autoreply).then(() => {
             this.setState({
                 isOpen: false,
                 isAsyncWorking: false

@@ -7,7 +7,6 @@ import { Button, Modal, ModalHeader, ModalBody,
 import { DateTimePicker } from 'react-widgets';
 
 import apiDatabase from '../../../helpers/apiDatabase/index';
-import authHelper from '../../../helpers/authentication';
 import timeHelper from '../../../helpers/timer';
 
 import ModalCore from '../ModalCore';
@@ -123,9 +122,7 @@ class ComposeInsertModal extends ModalCore {
         }
 
         let appId = this.state.appId;
-        let userId = authHelper.userId;
         let texts = [];
-        let usingRecursive = false;
 
         switch (this.state.count) {
             case 1:
@@ -133,11 +130,9 @@ class ComposeInsertModal extends ModalCore {
                 break;
             case 2:
                 texts = [this.state.text1, this.state.text2];
-                usingRecursive = true;
                 break;
             default:
                 texts = [this.state.text1, this.state.text2, this.state.text3];
-                usingRecursive = true;
         }
 
         let fieldIds = {};
@@ -173,8 +168,19 @@ class ComposeInsertModal extends ModalCore {
             return compose;
         });
 
+        let nextCompose = (i) => {
+            if (i >= composes.length) {
+                return Promise.resolve();
+            }
+
+            let compose = composes[i];
+            return apiDatabase.appsComposes.insert(appId, compose).then(() => {
+                return nextCompose(i + 1);
+            });
+        };
+
         this.setState({ isAsyncWorking: true });
-        return apiDatabase.appsComposes.insert(appId, userId, composes, usingRecursive).then(() => {
+        return nextCompose(0).then(() => {
             this.setState({
                 isOpen: false,
                 isAsyncWorking: false

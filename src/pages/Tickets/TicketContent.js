@@ -10,7 +10,6 @@ import { toDueDateSpan, toPriorityColor,
 import { formatDate, formatTime } from '../../utils/unitTime';
 import TicketEditModal from '../../components/Modals/TicketEdit/TicketEdit';
 import apiDatabase from '../../helpers/apiDatabase/index';
-import authHelper from '../../helpers/authentication';
 import { notify } from '../../components/Notify/Notify';
 
 import defaultAvatar from '../../image/defautlt-avatar.png';
@@ -72,9 +71,8 @@ class TicketContent extends React.Component {
         if (!window.confirm('確定要刪除嗎？')) {
             return;
         }
-        let userId = authHelper.userId;
 
-        return apiDatabase.appsTickets.delete(appId, ticketId, userId).then(() => {
+        return apiDatabase.appsTickets.delete(appId, ticketId).then(() => {
             return notify('刪除成功', { type: 'success' });
         }).catch(() => {
             return notify('刪除失敗', { type: 'danger' });

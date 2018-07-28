@@ -5,7 +5,6 @@ import { Button } from 'reactstrap';
 import Aux from 'react-aux';
 import { connect } from 'react-redux';
 
-import authHelper from '../../../../helpers/authentication';
 import apiDatabase from '../../../../helpers/apiDatabase/index';
 import { notify } from '../../../../components/Notify/Notify';
 import './Greeting.css';
@@ -28,11 +27,10 @@ class Greeting extends Component {
 
     deleteGreeting(ev) {
         let appId = this.props.appId;
-        let userId = authHelper.userId;
         let greetingId = this.props.greetingId;
 
         this.setState({ isDeleteing: true });
-        return apiDatabase.appsGreetings.delete(appId, userId, greetingId).then(() => {
+        return apiDatabase.appsGreetings.delete(appId, greetingId).then(() => {
             return notify('刪除成功', { type: 'success' });
         }).catch(() => {
             return notify('刪除失敗', { type: 'danger' });

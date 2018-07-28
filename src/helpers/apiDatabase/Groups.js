@@ -11,10 +11,9 @@ class Groups extends Core {
     }
 
     /**
-     * @param {string} userId
      * @returns {Promise<Chatshier.Response.Groups>}
      */
-    find(userId) {
+    find() {
         let groups = mainStore.getState().groups;
         if (Object.keys(groups).length > 0) {
             return Promise.resolve({
@@ -24,7 +23,7 @@ class Groups extends Core {
             });
         }
 
-        let destUrl = this.apiEndPoint + 'users/' + userId;
+        let destUrl = this.apiEndPoint + 'users/' + this.userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -36,12 +35,11 @@ class Groups extends Core {
     };
 
     /**
-     * @param {string} userId
      * @param {Chatshier.Models.Group} group
      * @returns {Promise<Chatshier.Response.Groups>}
      */
-    insert(userId, group) {
-        let destUrl = this.apiEndPoint + 'users/' + userId;
+    insert(group) {
+        let destUrl = this.apiEndPoint + 'users/' + this.userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -55,12 +53,11 @@ class Groups extends Core {
 
     /**
      * @param {string} groupId
-     * @param {string} userId
      * @param {Chatshier.Models.Group} group
      * @returns {Promise<Chatshier.Response.Groups>}
      */
-    update(groupId, userId, group) {
-        let destUrl = this.apiEndPoint + 'groups/' + groupId + '/users/' + userId;
+    update(groupId, group) {
+        let destUrl = this.apiEndPoint + 'groups/' + groupId + '/users/' + this.userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -74,10 +71,9 @@ class Groups extends Core {
 
     /**
      * @param {string} groupId
-     * @param {string} userId
      */
-    delete(groupId, userId) {
-        let destUrl = this.apiEndPoint + 'groups/' + groupId + '/users/' + userId;
+    delete(groupId) {
+        let destUrl = this.apiEndPoint + 'groups/' + groupId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

@@ -11,11 +11,10 @@ class AppsCategories extends Core {
     }
 
     /**
-     * @param {string|null} appId
-     * @param {string} userId
+     * @param {string} [appId]
      * @returns {Promise<Chatshier.Response.AppsCategories>}
      */
-    find(appId, userId) {
+    find(appId) {
         let appsCategories = mainStore.getState().appsCategories;
         if (Object.keys(appsCategories).length > 0) {
             return Promise.resolve({
@@ -25,7 +24,7 @@ class AppsCategories extends Core {
             });
         }
 
-        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
+        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + this.userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -42,8 +41,8 @@ class AppsCategories extends Core {
      * @param {Chatshier.Category} category
      * @returns {Promise<Chatshier.Response.AppsCategories>}
      */
-    insert(appId, userId, category) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
+    insert(appId, category) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + this.userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -58,12 +57,11 @@ class AppsCategories extends Core {
     /**
      * @param {string} appId
      * @param {string} categoryId
-     * @param {string} userId
      * @param {Chatshier.Models.Category} category
      * @returns {Promise<Chatshier.Response.AppsCategories>}
      */
-    update(appId, categoryId, userId, category) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/categories/' + categoryId + '/users/' + userId;
+    update(appId, categoryId, category) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/categories/' + categoryId + '/users/' + this.userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -78,11 +76,10 @@ class AppsCategories extends Core {
     /**
      * @param {string} appId
      * @param {string} categoryId
-     * @param {string} userId
      * @returns {Promise<Chatshier.Response.AppsCategories>}
      */
-    delete(appId, categoryId, userId) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/categories/' + categoryId + '/users/' + userId;
+    delete(appId, categoryId) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/categories/' + categoryId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

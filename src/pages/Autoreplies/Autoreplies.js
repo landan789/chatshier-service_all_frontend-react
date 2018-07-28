@@ -47,11 +47,9 @@ class Autoreplies extends React.Component {
     }
 
     componentDidMount() {
-        let userId = authHelper.userId;
-
         return Promise.all([
-            apiDatabase.apps.find(userId),
-            apiDatabase.appsAutoreplies.find(null, userId)
+            apiDatabase.apps.find(),
+            apiDatabase.appsAutoreplies.find()
         ]);
     }
 

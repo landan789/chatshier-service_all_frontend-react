@@ -12,10 +12,9 @@ class AppsProducts extends Core {
 
     /**
      * @param {string} [appId]
-     * @param {string} userId
      * @returns {Promise<Chatshier.Response.AppsProducts>}
      */
-    find(appId, userId) {
+    find(appId) {
         let appsProducts = mainStore.getState().appsProducts;
         if (Object.keys(appsProducts).length > 0) {
             return Promise.resolve({
@@ -25,7 +24,7 @@ class AppsProducts extends Core {
             });
         }
 
-        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
+        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + this.userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -38,12 +37,11 @@ class AppsProducts extends Core {
 
     /**
      * @param {string} appId
-     * @param {string} userId
      * @param {Chatshier.Models.Product} product
      * @returns {Promise<Chatshier.Response.AppsProducts>}
      */
-    insert(appId, userId, product) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
+    insert(appId, product) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + this.userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -58,16 +56,15 @@ class AppsProducts extends Core {
     /**
      * @param {string} appId
      * @param {string} productId
-     * @param {string} userId
      * @param {Chatshier.Models.Product} product
      * @returns {Promise<Chatshier.Response.AppsProducts>}
      */
-    update(appId, productId, userId, category) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/products/' + productId + '/users/' + userId;
+    update(appId, productId, product) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/products/' + productId + '/users/' + this.userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
-            body: JSON.stringify(category)
+            body: JSON.stringify(product)
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
             mainStore.dispatch(updateProducts(resJson.data));
@@ -78,11 +75,10 @@ class AppsProducts extends Core {
     /**
      * @param {string} appId
      * @param {string} productId
-     * @param {string} userId
      * @returns {Promise<Chatshier.Response.AppsProducts>}
      */
-    delete(appId, productId, userId) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/products/' + productId + '/users/' + userId;
+    delete(appId, productId) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/products/' + productId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

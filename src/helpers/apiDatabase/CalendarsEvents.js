@@ -11,10 +11,9 @@ class CalendarsEvents extends Core {
     }
 
     /**
-     * @param {string} userId
      * @returns {Promise<Chatshier.Response.CalendarsEvents>}
      */
-    find(userId) {
+    find() {
         let calendarsEvents = mainStore.getState().calendarsEvents;
         if (Object.keys(calendarsEvents).length > 0) {
             return Promise.resolve({
@@ -24,7 +23,7 @@ class CalendarsEvents extends Core {
             });
         }
 
-        let destUrl = this.apiEndPoint + 'users/' + userId;
+        let destUrl = this.apiEndPoint + 'users/' + this.userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -40,8 +39,8 @@ class CalendarsEvents extends Core {
      * @param {Chatshier.CalendarEvent} calendarEvent
      * @returns {Promise<Chatshier.Response.CalendarsEvents>}
      */
-    insert(userId, calendarEvent) {
-        let destUrl = this.apiEndPoint + 'users/' + userId;
+    insert(calendarEvent) {
+        let destUrl = this.apiEndPoint + 'users/' + this.userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -56,12 +55,11 @@ class CalendarsEvents extends Core {
     /**
      * @param {string} calendarId
      * @param {string} eventId
-     * @param {string} userId
      * @param {Chatshier.CalendarEvent} calendarEvent
      * @returns {Promise<Chatshier.Response.CalendarsEvents>}
      */
-    update(calendarId, eventId, userId, calendarEvent) {
-        let destUrl = this.apiEndPoint + 'calendars/' + calendarId + '/events/' + eventId + '/users/' + userId;
+    update(calendarId, eventId, calendarEvent) {
+        let destUrl = this.apiEndPoint + 'calendars/' + calendarId + '/events/' + eventId + '/users/' + this.userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -76,11 +74,10 @@ class CalendarsEvents extends Core {
     /**
      * @param {string} calendarId
      * @param {string} eventId
-     * @param {string} userId
      * @returns {Promise<Chatshier.Response.CalendarsEvents>}
      */
-    delete(calendarId, eventId, userId) {
-        let destUrl = this.apiEndPoint + 'calendars/' + calendarId + '/events/' + eventId + '/users/' + userId;
+    delete(calendarId, eventId) {
+        let destUrl = this.apiEndPoint + 'calendars/' + calendarId + '/events/' + eventId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

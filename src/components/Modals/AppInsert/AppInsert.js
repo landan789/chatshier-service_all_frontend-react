@@ -9,7 +9,6 @@ import { Button, Modal, ModalHeader,
 
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import fbHelper from '../../../helpers/facebook';
-import authHelper from '../../../helpers/authentication';
 
 import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
@@ -82,7 +81,7 @@ class AppInsertModal extends ModalCore {
             return notify(this.props.t('App secret can\'t be empty'), { type: 'warning' });
         }
 
-        let putApp = {
+        let postApp = {
             type: this.state.seletedAppType,
             group_id: this.state.seletedGroupId,
             name: this.state.appName,
@@ -90,12 +89,12 @@ class AppInsertModal extends ModalCore {
             secret: this.state.appSecret
         };
 
-        switch (putApp.type) {
+        switch (postApp.type) {
             case APP_TYPES.LINE:
                 if (!this.state.appToken1) {
                     return notify(this.props.t('Channel access token can\'t be empty'), { type: 'warning' });
                 }
-                putApp.token1 = this.state.appToken1;
+                postApp.token1 = this.state.appToken1;
                 break;
             case APP_TYPES.FACEBOOK:
                 return notify(this.props.t('An error occurred!'), { type: 'danger' });
@@ -104,9 +103,8 @@ class AppInsertModal extends ModalCore {
                 break;
         }
 
-        let userId = authHelper.userId;
         this.setState({ isProcessing: true });
-        return apiDatabase.apps.insert(userId, putApp).then(() => {
+        return apiDatabase.apps.insert(postApp).then(() => {
             this.setState({
                 isOpen: false,
                 isProcessing: false
@@ -191,8 +189,7 @@ class AppInsertModal extends ModalCore {
             }
 
             let app = appsList[i];
-            let userId = authHelper.userId;
-            return apiDatabase.apps.insert(userId, app).then(() => {
+            return apiDatabase.apps.insert(app).then(() => {
                 return fbHelper.setFanPageSubscribeApp(app.id1, app.token2);
             }).then((res) => {
                 responses.push(res);

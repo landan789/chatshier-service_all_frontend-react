@@ -9,7 +9,6 @@ import { currentLanguage } from '../../../i18n';
 import { toDueDateSpan } from '../../../utils/ticket';
 import { formatDate, formatTime } from '../../../utils/unitTime';
 import apiDatabase from '../../../helpers/apiDatabase/index';
-import authHelper from '../../../helpers/authentication';
 
 import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
@@ -87,7 +86,6 @@ class TicketEditModal extends ModalCore {
     updateTicket(ev) {
         let appId = this.props.modalData.appId;
         let ticketId = this.props.modalData.ticketId;
-        let userId = authHelper.userId;
 
         /** @type {Chatshier.Model.Ticket} */
         let ticket = {
@@ -114,7 +112,7 @@ class TicketEditModal extends ModalCore {
         }
 
         this.setState({ isProcessing: true });
-        return apiDatabase.appsTickets.update(appId, ticketId, userId, ticket).then(() => {
+        return apiDatabase.appsTickets.update(appId, ticketId, ticket).then(() => {
             this.setState({
                 isOpen: false,
                 isProcessing: false
@@ -137,10 +135,9 @@ class TicketEditModal extends ModalCore {
 
         let appId = this.props.modalData.appId;
         let ticketId = this.props.modalData.ticketId;
-        let userId = authHelper.userId;
 
         this.setState({ isProcessing: true });
-        return apiDatabase.appsTickets.delete(appId, ticketId, userId).then(() => {
+        return apiDatabase.appsTickets.delete(appId, ticketId).then(() => {
             this.setState({
                 isOpen: false,
                 isProcessing: false

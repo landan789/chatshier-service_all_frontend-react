@@ -158,16 +158,15 @@ class Calendar extends React.Component {
     }
 
     componentDidMount() {
-        let userId = authHelper.userId;
         this.gSignListenerId = gCalendarHelper.addSignChangeListener(this.onGoogleSignChange);
 
-        return userId && Promise.all([
-            apiDatabase.apps.find(userId),
-            apiDatabase.appsTickets.find(void 0, userId),
-            apiDatabase.calendarsEvents.find(userId),
-            apiDatabase.consumers.find(userId),
-            apiDatabase.groups.find(userId),
-            apiDatabase.users.find(userId),
+        return Promise.all([
+            apiDatabase.apps.find(),
+            apiDatabase.appsTickets.find(),
+            apiDatabase.calendarsEvents.find(),
+            apiDatabase.consumers.find(),
+            apiDatabase.groups.find(),
+            apiDatabase.users.find(),
             gCalendarHelper.loadCalendarApi().then(() => gCalendarHelper.findEvents())
         ]).catch(() => {});
     }

@@ -61,68 +61,72 @@ const linkItems = [
         text: 'Analysis',
         useReactRouter: true
     // }, {
-    //     icon: 'fas fa-shopping-cart fa-fw',
-    //     text: 'Product service',
-    //     dropdownItems: [
-    //         {
-    //             link: ROUTES.CATEGORY_PRODUCT,
-    //             icon: 'fas fa-cart-plus fa-fw',
-    //             text: 'Product management',
-    //             useReactRouter: true
-    //         }, {
-    //             link: ROUTES.APPOINTMENT,
-    //             icon: 'fas fa-calendar-check fa-fw',
-    //             text: 'Appointment system',
-    //             useReactRouter: true
-    //         }
-    //     ]
+    //     icon: 'fas fa-calendar fa-fw',
+    //     text: 'Appointment system',
+    //     dropdownItems: [{
+    //         link: ROUTES.APPOINTMENTS,
+    //         icon: 'fas fa-calendar-check fa-fw',
+    //         text: '檢視預約項目',
+    //         useReactRouter: true
+    //     }, {
+    //         link: ROUTES.RECEPTIONISTS,
+    //         icon: 'fas fa-user-clock fa-fw',
+    //         text: '服務人員管理',
+    //         useReactRouter: true
+    //     }, {
+    //         link: ROUTES.PRODUCTS,
+    //         icon: 'fas fa-cart-plus fa-fw',
+    //         text: 'Product management',
+    //         useReactRouter: true
+    //     }, {
+    //         link: ROUTES.CATEGORIES,
+    //         icon: 'fas fa-list-alt fa-fw',
+    //         text: '預約目錄',
+    //         useReactRouter: true
+    //     }]
     }, {
         icon: 'fas fa-envelope fa-fw',
         text: 'Messages',
-        dropdownItems: [
-            {
-                link: ROUTES.COMPOSES,
-                icon: 'fas fa-comments',
-                text: 'Composes',
-                useReactRouter: false
-            }, {
-                link: ROUTES.AUTOREPLIES,
-                icon: 'fas fa-comments',
-                text: 'Auto Replies',
-                useReactRouter: false
-            }, {
-                link: ROUTES.KEYWORDREPLIES,
-                icon: 'fas fa-comments',
-                text: 'Keyword Replies',
-                useReactRouter: false
-            }, {
-                link: ROUTES.GREETINGS,
-                icon: 'fas fa-comments',
-                text: 'Greetings',
-                useReactRouter: false
-            }
-        ]
+        dropdownItems: [{
+            link: ROUTES.COMPOSES,
+            icon: 'fas fa-comments',
+            text: 'Composes',
+            useReactRouter: false
+        }, {
+            link: ROUTES.AUTOREPLIES,
+            icon: 'fas fa-comments',
+            text: 'Auto Replies',
+            useReactRouter: false
+        }, {
+            link: ROUTES.KEYWORDREPLIES,
+            icon: 'fas fa-comments',
+            text: 'Keyword Replies',
+            useReactRouter: false
+        }, {
+            link: ROUTES.GREETINGS,
+            icon: 'fas fa-comments',
+            text: 'Greetings',
+            useReactRouter: false
+        }]
     }, {
         icon: 'far fa-images fa-fw',
         text: 'Graphic content',
-        dropdownItems: [
-            {
-                link: ROUTES.RICHMENU,
-                icon: 'fas fa-image',
-                text: 'Rich menu',
-                useReactRouter: false
-            }, {
-                link: ROUTES.IMAGEMAP,
-                icon: 'fas fa-comment',
-                text: 'Image map message',
-                useReactRouter: false
-            }, {
-                link: ROUTES.TEMPLATE,
-                icon: 'fas fa-clone',
-                text: 'Template message',
-                useReactRouter: false
-            }
-        ]
+        dropdownItems: [{
+            link: ROUTES.RICHMENU,
+            icon: 'fas fa-image',
+            text: 'Rich menu',
+            useReactRouter: false
+        }, {
+            link: ROUTES.IMAGEMAP,
+            icon: 'fas fa-comment',
+            text: 'Image map message',
+            useReactRouter: false
+        }, {
+            link: ROUTES.TEMPLATE,
+            icon: 'fas fa-clone',
+            text: 'Template message',
+            useReactRouter: false
+        }]
     }
 ];
 
@@ -191,8 +195,7 @@ class ControlPanel extends React.Component {
         });
         window.addEventListener('resize', this.widthChanged);
 
-        let userId = authHelper.userId;
-        return userId && apiDatabase.apps.find(userId);
+        return apiDatabase.apps.find();
     }
 
     componentWillUnmount() {

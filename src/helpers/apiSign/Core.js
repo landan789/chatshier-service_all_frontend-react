@@ -1,9 +1,15 @@
+import authHelper from '../../helpers/authentication';
+
 import chatshierCfg from '../../config/chatshier';
 
 class Core {
     constructor() {
         let URL = chatshierCfg.URL;
         this.apiEndPoint = URL.apiUrl + '/api/sign/';
+    }
+
+    get userId() {
+        return authHelper.userId;
     }
 
     /**

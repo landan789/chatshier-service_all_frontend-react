@@ -5,7 +5,6 @@ import { withTranslate } from '../../i18n';
 import PropTypes from 'prop-types';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
-import authHelper from '../../helpers/authentication';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 const ICONS = {
@@ -46,15 +45,8 @@ class AppsSelector extends React.Component {
     }
 
     componentDidMount() {
-        let userId = authHelper.userId;
         let props = this.props;
-
-        return Promise.resolve().then(() => {
-            if (!userId) {
-                return;
-            }
-            return apiDatabase.apps.find(userId);
-        }).then(() => {
+        return apiDatabase.apps.find().then(() => {
             let apps = props.apps || {};
             let appIds = Object.keys(apps).filter((appId) => {
                 return this.props.showAll || (!this.props.showAll && apiDatabase.apps.TYPES.CHATSHIER !== apps[appId].type);

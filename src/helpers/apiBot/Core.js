@@ -1,9 +1,15 @@
+import authHelper from '../../helpers/authentication';
+
 import chatshierCfg from '../../config/chatshier';
 
 class Core {
     constructor() {
         let URL = chatshierCfg.URL;
         this.apiEndPoint = URL.apiUrl + '/api/bot/';
+    }
+
+    get userId() {
+        return authHelper.userId;
     }
 
     /**
@@ -39,10 +45,13 @@ class Core {
 
     /**
      * @param {string} url
-     * @param {RequestInit} reqInit
+     * @param {RequestInit} [reqInit]
      * @returns {Promise<any>}
      */
     sendRequest(url, reqInit) {
+        reqInit = reqInit || {};
+        reqInit.method = reqInit.method || 'GET';
+
         if ('POST' === reqInit.method.toUpperCase() ||
             'PUT' === reqInit.method.toUpperCase()) {
             reqInit.headers.set('Content-Type', 'application/json');

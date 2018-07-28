@@ -12,10 +12,9 @@ class AppsReceptionists extends Core {
 
     /**
      * @param {string} [appId]
-     * @param {string} userId
      * @returns {Promise<Chatshier.Response.AppsReceptionists>}
      */
-    find(appId, userId) {
+    find(appId) {
         let appsReceptionists = mainStore.getState().appsReceptionists;
         if (Object.keys(appsReceptionists).length > 0) {
             return Promise.resolve({
@@ -25,7 +24,7 @@ class AppsReceptionists extends Core {
             });
         }
 
-        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
+        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + this.userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -38,12 +37,11 @@ class AppsReceptionists extends Core {
 
     /**
      * @param {string} appId
-     * @param {string} userId
      * @param {Chatshier.Models.Receptionist} receptionist
      * @returns {Promise<Chatshier.Response.AppsReceptionists>}
      */
-    insert(appId, userId, receptionist) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
+    insert(appId, receptionist) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + this.userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -58,16 +56,15 @@ class AppsReceptionists extends Core {
     /**
      * @param {string} appId
      * @param {string} receptionistId
-     * @param {string} userId
      * @param {Chatshier.Models.Receptionist} receptionist
      * @returns {Promise<Chatshier.Response.AppsReceptionists>}
      */
-    update(appId, receptionistId, userId, category) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/receptionists/' + receptionistId + '/users/' + userId;
+    update(appId, receptionistId, receptionist) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/receptionists/' + receptionistId + '/users/' + this.userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
-            body: JSON.stringify(category)
+            body: JSON.stringify(receptionist)
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
             mainStore.dispatch(updateReceptionists(resJson.data));
@@ -78,11 +75,10 @@ class AppsReceptionists extends Core {
     /**
      * @param {string} appId
      * @param {string} receptionistId
-     * @param {string} userId
      * @returns {Promise<Chatshier.Response.AppsReceptionists>}
      */
-    delete(appId, receptionistId, userId) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/receptionists/' + receptionistId + '/users/' + userId;
+    delete(appId, receptionistId) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/receptionists/' + receptionistId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

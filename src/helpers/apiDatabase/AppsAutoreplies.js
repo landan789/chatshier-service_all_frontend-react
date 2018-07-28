@@ -12,10 +12,9 @@ class AppsAutoreplies extends Core {
 
     /**
      * @param {string} [appId]
-     * @param {string} userId
      * @returns {Promise<Chatshier.Response.AppsAutoreplies>}
      */
-    find(appId, userId) {
+    find(appId) {
         let appsAutoreplies = mainStore.getState().appsAutoreplies;
         if (Object.keys(appsAutoreplies).length > 0) {
             return Promise.resolve({
@@ -25,7 +24,7 @@ class AppsAutoreplies extends Core {
             });
         }
 
-        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
+        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + this.userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -38,12 +37,11 @@ class AppsAutoreplies extends Core {
 
     /**
      * @param {string} appId
-     * @param {string} userId
      * @param {Chatshier.Model.Autoreply} autoreply
      * @returns {Promise<Chatshier.Response.AppsAutoreplies>}
      */
-    insert(appId, userId, autoreply) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
+    insert(appId, autoreply) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + this.userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -58,12 +56,11 @@ class AppsAutoreplies extends Core {
     /**
      * @param {string} appId
      * @param {string} autoreplyId
-     * @param {string} userId
      * @param {Chatshier.Model.Autoreply} autoreply
      * @returns {Promise<Chatshier.Response.AppsAutoreplies>}
      */
-    update(appId, autoreplyId, userId, autoreply) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/autoreplies/' + autoreplyId + '/users/' + userId;
+    update(appId, autoreplyId, autoreply) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/autoreplies/' + autoreplyId + '/users/' + this.userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -78,10 +75,9 @@ class AppsAutoreplies extends Core {
     /**
      * @param {string} appId
      * @param {string} autoreplyId
-     * @param {string} userId
      */
-    delete(appId, autoreplyId, userId) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/autoreplies/' + autoreplyId + '/users/' + userId;
+    delete(appId, autoreplyId) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/autoreplies/' + autoreplyId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

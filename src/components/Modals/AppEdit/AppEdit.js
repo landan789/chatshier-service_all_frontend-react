@@ -7,7 +7,6 @@ import { Trans } from 'react-i18next';
 import { withTranslate } from '../../../i18n';
 
 import apiDatabase from '../../../helpers/apiDatabase/index';
-import authHelper from '../../../helpers/authentication';
 
 import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
@@ -64,9 +63,8 @@ class AppEditModal extends ModalCore {
                 break;
         }
 
-        let userId = authHelper.userId;
         this.setState({ isProcessing: true });
-        return apiDatabase.apps.update(appId, userId, putApp).then(() => {
+        return apiDatabase.apps.update(appId, putApp).then(() => {
             this.setState({
                 isOpen: false,
                 isProcessing: false
@@ -86,9 +84,8 @@ class AppEditModal extends ModalCore {
         }
 
         let appId = this.props.appId;
-        let userId = authHelper.userId;
         this.setState({ isProcessing: true });
-        return apiDatabase.apps.delete(appId, userId).then(() => {
+        return apiDatabase.apps.delete(appId).then(() => {
             this.setState({
                 isOpen: false,
                 isProcessing: false

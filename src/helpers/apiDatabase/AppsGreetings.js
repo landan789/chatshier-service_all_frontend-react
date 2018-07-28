@@ -12,10 +12,9 @@ class AppsGreetings extends Core {
 
     /**
      * @param {string} appId
-     * @param {string} userId
      * @returns {Promise<Chatshier.Response.AppsGreetings>}
      */
-    find(appId, userId) {
+    find(appId) {
         let appsGreetings = mainStore.getState().appsGreetings;
         if (Object.keys(appsGreetings).length > 0) {
             return Promise.resolve({
@@ -25,7 +24,7 @@ class AppsGreetings extends Core {
             });
         }
 
-        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
+        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + this.userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -38,12 +37,11 @@ class AppsGreetings extends Core {
 
     /**
      * @param {string} appId
-     * @param {string} userId
      * @param {Chatshier.Greeting} greeting
      * @returns {Promise<Chatshier.Response.AppsGreetings>}
      */
-    insert(appId, userId, greeting) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
+    insert(appId, greeting) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + this.userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -57,12 +55,11 @@ class AppsGreetings extends Core {
 
     /**
      * @param {string} appId
-     * @param {string} userId
      * @param {string} greetingId
      * @returns {Promise<Chatshier.Response.AppsGreetings>}
      */
-    delete(appId, userId, greetingId) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/greetings/' + greetingId + '/users/' + userId;
+    delete(appId, greetingId) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/greetings/' + greetingId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

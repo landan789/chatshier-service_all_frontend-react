@@ -2,6 +2,7 @@ import { createStore, combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 
 import { appsReducer } from './reducers/mainStore/apps';
+import { appsAppointmentsReducer } from './reducers/mainStore/appsAppointments';
 import { appsAutorepliesReducer } from './reducers/mainStore/appsAutoreplies';
 import { appsCategoriesReducer } from './reducers/mainStore/appsCategories';
 import { appsChatroomsReducer } from './reducers/mainStore/appsChatrooms';
@@ -21,6 +22,7 @@ import { usersReducer } from './reducers/mainStore/users';
 const rootReducer = combineReducers({
     router: routerReducer,
     apps: appsReducer,
+    appsAppointments: appsAppointmentsReducer,
     appsAutoreplies: appsAutorepliesReducer,
     appsCategories: appsCategoriesReducer,
     appsChatrooms: appsChatroomsReducer,

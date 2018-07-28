@@ -205,7 +205,6 @@ class ProfilePanel extends React.Component {
     updateChatroomName(ev) {
         let appId = this.props.appId;
         let chatroomId = this.props.chatroomId;
-        let userId = authHelper.userId;
         let putChatroom = {
             name: this.state.chatroomNames[chatroomId]
         };
@@ -215,7 +214,7 @@ class ProfilePanel extends React.Component {
             if (!putChatroom.name || putChatroom.name === oldName) {
                 return;
             }
-            return apiDatabase.appsChatrooms.update(appId, chatroomId, putChatroom, userId).then(() => {
+            return apiDatabase.appsChatrooms.update(appId, chatroomId, putChatroom).then(() => {
                 return notify('更新成功', { type: 'success' });
             });
         }).catch(() => {
@@ -230,9 +229,7 @@ class ProfilePanel extends React.Component {
 
         let appId = this.props.appId;
         let chatroomId = this.props.chatroomId;
-        let userId = authHelper.userId;
-
-        return apiBot.chatrooms.leaveGroupRoom(appId, chatroomId, userId).then((resJson) => {
+        return apiBot.chatrooms.leaveGroupRoom(appId, chatroomId).then(() => {
             controlPanelStore.dispatch(selectChatroom('', ''));
             return notify('已成功離開群組', { type: 'success' });
         }).catch(() => {

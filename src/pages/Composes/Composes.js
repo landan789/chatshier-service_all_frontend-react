@@ -47,11 +47,10 @@ class Composes extends React.Component {
     }
 
     componentDidMount() {
-        let userId = authHelper.userId;
         return Promise.all([
-            apiDatabase.apps.find(userId),
-            apiDatabase.appsComposes.find(null, userId),
-            apiDatabase.appsFields.find(userId)
+            apiDatabase.apps.find(),
+            apiDatabase.appsComposes.find(),
+            apiDatabase.appsFields.find()
         ]);
     }
 

@@ -4,7 +4,6 @@ import { Button, Table } from 'reactstrap';
 import Aux from 'react-aux';
 import { connect } from 'react-redux';
 
-import authHelper from '../../../helpers/authentication';
 import apiDatabase from '../../../helpers/apiDatabase/index';
 
 import Greeting from './Greeting/Greeting';
@@ -30,8 +29,7 @@ class GreetingTable extends React.Component {
     }
 
     componentDidMount() {
-        let userId = authHelper.userId;
-        return apiDatabase.appsGreetings.find(null, userId);
+        return apiDatabase.appsGreetings.find();
     }
 
     addInsertMessage(ev) {

@@ -17,10 +17,9 @@ class GroupsMembers extends Core {
     }
 
     /**
-     * @param {string} userId
      * @returns {Promise<Chatshier.Response.GroupsMembers>}
      */
-    find(userId) {
+    find() {
         let groupsMembers = mainStore.getState().groupsMembers;
         if (Object.keys(groupsMembers).length > 0) {
             return Promise.resolve({
@@ -30,7 +29,7 @@ class GroupsMembers extends Core {
             });
         }
 
-        let destUrl = this.apiEndPoint + 'users/' + userId;
+        let destUrl = this.apiEndPoint + 'users/' + this.userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -43,12 +42,11 @@ class GroupsMembers extends Core {
 
     /**
      * @param {string} groupId
-     * @param {string} userId
      * @param {Chatshier.Models.GroupMember} groupMember
      * @returns {Promise<Chatshier.Response.GroupsMembers>}
      */
-    insert(groupId, userId, groupMember) {
-        let destUrl = this.apiEndPoint + 'groups/' + groupId + '/users/' + userId;
+    insert(groupId, groupMember) {
+        let destUrl = this.apiEndPoint + 'groups/' + groupId + '/users/' + this.userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -63,12 +61,11 @@ class GroupsMembers extends Core {
     /**
      * @param {string} groupId
      * @param {string} memberId
-     * @param {string} userId
      * @param {Chatshier.Models.GroupMember} groupMember
      * @returns {Promise<Chatshier.Response.GroupsMembers>}
      */
-    update(groupId, memberId, userId, groupMember) {
-        let destUrl = this.apiEndPoint + 'groups/' + groupId + '/members/' + memberId + '/users/' + userId;
+    update(groupId, memberId, groupMember) {
+        let destUrl = this.apiEndPoint + 'groups/' + groupId + '/members/' + memberId + '/users/' + this.userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -83,10 +80,9 @@ class GroupsMembers extends Core {
     /**
      * @param {string} groupId
      * @param {string} memberId
-     * @param {string} userId
      */
-    delete(groupId, memberId, userId) {
-        let destUrl = this.apiEndPoint + 'groups/' + groupId + '/members/' + memberId + '/users/' + userId;
+    delete(groupId, memberId) {
+        let destUrl = this.apiEndPoint + 'groups/' + groupId + '/members/' + memberId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

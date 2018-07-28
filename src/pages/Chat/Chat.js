@@ -71,14 +71,13 @@ class Chat extends React.Component {
         this.storeUnsubscribe && this.storeUnsubscribe();
         this.storeUnsubscribe = controlPanelStore.subscribe(this.onSelectChatroomChanged);
 
-        let userId = authHelper.userId;
-        return userId && Promise.all([
-            apiDatabase.appsChatrooms.find(userId),
-            apiDatabase.appsFields.find(userId),
-            apiDatabase.appsTickets.find(null, userId),
-            apiDatabase.consumers.find(userId),
-            apiDatabase.groups.find(userId),
-            apiDatabase.users.find(userId)
+        return Promise.all([
+            apiDatabase.appsChatrooms.find(),
+            apiDatabase.appsFields.find(),
+            apiDatabase.appsTickets.find(),
+            apiDatabase.consumers.find(),
+            apiDatabase.groups.find(),
+            apiDatabase.users.find()
         ]).then(() => {
             return !socketHelper.isConnected && socketHelper.connect();
         });

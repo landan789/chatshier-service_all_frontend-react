@@ -9,7 +9,6 @@ import { DateTimePicker } from 'react-widgets';
 
 import { formatDate, formatTime } from '../../../utils/unitTime';
 import apiDatabase from '../../../helpers/apiDatabase/index';
-import authHelper from '../../../helpers/authentication';
 import gCalendarHelper from '../../../helpers/googleCalendar';
 import { CALENDAR_EVENT_TYPES, GoogleEventItem } from '../../../pages/Calendar/Calendar';
 
@@ -114,9 +113,8 @@ class CalendarModal extends ModalCore {
             return notify(this.props.t('Start datetime must be earlier than end datetime'), { type: 'warning' });
         }
 
-        let userId = authHelper.userId;
         this.setState({ isAsyncWorking: true });
-        return apiDatabase.calendarsEvents.insert(userId, event).then(() => {
+        return apiDatabase.calendarsEvents.insert(event).then(() => {
             this.setState({
                 isOpen: false,
                 isAsyncWorking: false
@@ -157,10 +155,9 @@ class CalendarModal extends ModalCore {
         // 根據事件型態來判斷發送不同 API 進行資料更新動作
         this.setState({ isAsyncWorking: true });
         return Promise.resolve().then(() => {
-            let userId = authHelper.userId;
             switch (eventType) {
                 case CALENDAR_EVENT_TYPES.CALENDAR:
-                    return apiDatabase.calendarsEvents.update(calendarId, eventId, userId, event);
+                    return apiDatabase.calendarsEvents.update(calendarId, eventId, event);
                 case CALENDAR_EVENT_TYPES.GOOGLE:
                     let gEvent = {
                         summary: event.title,
@@ -221,12 +218,10 @@ class CalendarModal extends ModalCore {
 
         this.setState({ isAsyncWorking: true });
         return Promise.resolve().then(() => {
-            let userId = authHelper.userId;
-
             // 根據事件型態來判斷發送不同 API 進行資料更新動作
             switch (eventType) {
                 case CALENDAR_EVENT_TYPES.CALENDAR:
-                    return apiDatabase.calendarsEvents.delete(calendarId, eventId, userId);
+                    return apiDatabase.calendarsEvents.delete(calendarId, eventId);
                 case CALENDAR_EVENT_TYPES.GOOGLE:
                     return gCalendarHelper.deleteEvent(calendarId, eventId);
                 default:

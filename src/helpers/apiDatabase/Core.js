@@ -1,9 +1,9 @@
-import chatshierCfg from '../../config/chatshier';
+import CHATSHIER from '../../config/chatshier';
 
 class Core {
     constructor() {
-        let URL = chatshierCfg.URL;
-        this.apiEndPoint = URL.apiUrl + '/api/database/';
+        let URL = CHATSHIER.URL;
+        this.apiEndPoint = URL.API + '/api/database/';
     }
 
     /**

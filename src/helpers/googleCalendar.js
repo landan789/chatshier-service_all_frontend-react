@@ -1,4 +1,4 @@
-import chatshierCfg from '../config/chatshier';
+import CHATSHIER from '../config/chatshier';
 
 const GOOGLE_CLIENT_NOT_SIGNEDIN = 'GOOGLE_CLIENT_NOT_SIGNEDIN';
 const GOOGLE_API_ENDPOINT = 'https://apis.google.com/js/api.js';
@@ -36,10 +36,10 @@ class GoogleCalendarHelper {
             return new Promise((resolve) => window.gapi.load('client:auth2', resolve));
         }).then(() => {
             return window.gapi.client.init({
-                apiKey: chatshierCfg.GOOGLE.CALENDAR.API_KEY,
-                clientId: chatshierCfg.GOOGLE.CALENDAR.CLIENT_ID,
-                discoveryDocs: chatshierCfg.GOOGLE.CALENDAR.DISCOVERY_DOCS,
-                scope: chatshierCfg.GOOGLE.CALENDAR.SCOPES
+                apiKey: CHATSHIER.GOOGLE_CALENDAR.API_KEY,
+                clientId: CHATSHIER.GOOGLE_CALENDAR.CLIENT_ID,
+                discoveryDocs: CHATSHIER.GOOGLE_CALENDAR.DISCOVERY_DOCS,
+                scope: CHATSHIER.GOOGLE_CALENDAR.SCOPES
             });
         }).then(() => {
             return window.gapi.auth2.getAuthInstance();

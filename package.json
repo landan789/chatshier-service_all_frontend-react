@@ -1,6 +1,6 @@
 {
-  "name": "react.chatshier",
-  "version": "1.2.4",
+  "name": "chatshier",
+  "version": "1.4.3",
   "private": true,
   "engines": {
     "node": "^8.9.4",

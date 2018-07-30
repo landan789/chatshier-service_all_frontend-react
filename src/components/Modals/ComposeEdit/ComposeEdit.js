@@ -4,7 +4,6 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, I
 import { DateTimePicker } from 'react-widgets';
 
 import apiDatabase from '../../../helpers/apiDatabase/index';
-import authHelper from '../../../helpers/authentication';
 import timeHelper from '../../../helpers/timer';
 
 import ModalCore from '../ModalCore';
@@ -139,7 +138,6 @@ class ComposeEditModal extends ModalCore {
 
         let appId = this.state.appId;
         let composeId = this.state.composeId;
-        let userId = authHelper.userId;
         let fieldIds = {};
         let age, gender;
 
@@ -165,7 +163,7 @@ class ComposeEditModal extends ModalCore {
         };
 
         this.setState({ isAsyncWorking: true });
-        return apiDatabase.appsComposes.update(appId, composeId, userId, compose).then(() => {
+        return apiDatabase.appsComposes.update(appId, composeId, compose).then(() => {
             this.setState({
                 isOpen: false,
                 isAsyncWorking: false

@@ -11,11 +11,10 @@ class AppsTickets extends Core {
     }
 
     /**
-     * @param {string|null} appId
-     * @param {string} userId
-     * @returns {Promise<AppsTicketsResponse>}
+     * @param {string} [appId]
+     * @returns {Promise<Chatshier.Response.AppsTickets>}
      */
-    find(appId, userId) {
+    find(appId) {
         let appsTickets = mainStore.getState().appsTickets;
         if (Object.keys(appsTickets).length > 0) {
             return Promise.resolve({
@@ -25,7 +24,7 @@ class AppsTickets extends Core {
             });
         }
 
-        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
+        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + this.userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -38,12 +37,11 @@ class AppsTickets extends Core {
 
     /**
      * @param {string} appId
-     * @param {string} userId
      * @param {Chatshier.Model.Ticket} ticket
-     * @returns {Promise<AppsTicketsResponse>}
+     * @returns {Promise<Chatshier.Response.AppsTickets>}
      */
-    insert(appId, userId, ticket) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
+    insert(appId, ticket) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + this.userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -58,12 +56,11 @@ class AppsTickets extends Core {
     /**
      * @param {string} appId
      * @param {string} ticketId
-     * @param {string} userId
      * @param {Chatshier.Model.Ticket} ticket
-     * @returns {Promise<AppsTicketsResponse>}
+     * @returns {Promise<Chatshier.Response.AppsTickets>}
      */
-    update(appId, ticketId, userId, ticket) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/tickets/' + ticketId + '/users/' + userId;
+    update(appId, ticketId, ticket) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/tickets/' + ticketId + '/users/' + this.userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -78,11 +75,10 @@ class AppsTickets extends Core {
     /**
      * @param {string} appId
      * @param {string} ticketId
-     * @param {string} userId
-     * @returns {Promise<AppsTicketsResponse>}
+     * @returns {Promise<Chatshier.Response.AppsTickets>}
      */
-    delete(appId, ticketId, userId) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/tickets/' + ticketId + '/users/' + userId;
+    delete(appId, ticketId) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/tickets/' + ticketId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

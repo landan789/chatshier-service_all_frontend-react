@@ -43,9 +43,8 @@ class GroupEditModal extends ModalCore {
             groupName: this.state.groupName
         };
 
-        let userId = authHelper.userId;
         this.setState({ isProcessing: true });
-        return apiDatabase.groups.update(groupId, userId, group).then(() => {
+        return apiDatabase.groups.update(groupId, group).then(() => {
             this.setState({
                 isOpen: false,
                 isProcessing: false

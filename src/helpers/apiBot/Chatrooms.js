@@ -25,10 +25,9 @@ class Chatrooms extends Core {
     /**
      * @param {string} appId
      * @param {string} chatroomId
-     * @param {string} userId
      */
-    leaveGroupRoom(appId, chatroomId, userId) {
-        let destUrl = this.apiEndPoint + 'leave-group-room/apps/' + appId + '/chatrooms/' + chatroomId + '/users/' + userId;
+    leaveGroupRoom(appId, chatroomId) {
+        let destUrl = this.apiEndPoint + 'leave-group-room/apps/' + appId + '/chatrooms/' + chatroomId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

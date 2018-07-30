@@ -4,7 +4,7 @@ import { HOUR } from './unitTime';
 const statusText = {
     2: '未處理',
     3: '處理中',
-    4: '已解決',
+    4: '已處理',
     5: '已關閉'
 };
 

@@ -5,7 +5,6 @@ import { Button, Modal, ModalHeader, ModalBody,
     ModalFooter, FormGroup } from 'reactstrap';
 import { Trans } from 'react-i18next';
 
-import authHelper from '../../../helpers/authentication';
 import apiDatabase from '../../../helpers/apiDatabase/index';
 
 import ModalCore from '../ModalCore';
@@ -38,9 +37,8 @@ class GroupInsertModal extends ModalCore {
             return notify('Fill the group name', { type: 'warning' });
         }
 
-        let userId = authHelper.userId;
         this.setState({ isProcessing: true });
-        return apiDatabase.groups.insert(userId, group).then(() => {
+        return apiDatabase.groups.insert(group).then(() => {
             this.setState({
                 isOpen: false,
                 isProcessing: false

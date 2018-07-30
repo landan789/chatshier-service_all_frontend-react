@@ -9,7 +9,6 @@ import { currentLanguage } from '../../../i18n';
 import { toDueDateSpan } from '../../../utils/ticket';
 import { formatDate, formatTime } from '../../../utils/unitTime';
 import apiDatabase from '../../../helpers/apiDatabase/index';
-import authHelper from '../../../helpers/authentication';
 
 import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
@@ -28,12 +27,14 @@ class TicketEditModal extends ModalCore {
         /** @type {Chatshier.Model.Ticket} */
         let ticket = props.modalData ? props.modalData.ticket : {};
         let agentOptions = [];
+        let firstAgentId = '';
         if (Object.keys(props.appsAgents).length > 0) {
             let appId = props.modalData.appId;
             /** @type {Chatshier.Model.Users} */
             let agents = props.appsAgents[appId].agents;
 
             for (let userId in agents) {
+                firstAgentId = firstAgentId || userId;
                 let consumer = agents[userId];
                 agentOptions.push(
                     <option key={userId} value={userId}>{consumer.name}</option>
@@ -45,7 +46,7 @@ class TicketEditModal extends ModalCore {
             isOpen: this.props.isOpen,
             isProcessing: false,
             dueTime: ticket.dueTime || new Date(),
-            agentUserId: ticket.assigned_id,
+            agentUserId: ticket.assigned_id || firstAgentId,
             agentOptions: agentOptions,
             status: ticket.status || 0,
             priority: ticket.priority || 0,
@@ -87,7 +88,6 @@ class TicketEditModal extends ModalCore {
     updateTicket(ev) {
         let appId = this.props.modalData.appId;
         let ticketId = this.props.modalData.ticketId;
-        let userId = authHelper.userId;
 
         /** @type {Chatshier.Model.Ticket} */
         let ticket = {
@@ -114,14 +114,12 @@ class TicketEditModal extends ModalCore {
         }
 
         this.setState({ isProcessing: true });
-        return apiDatabase.appsTickets.update(appId, ticketId, userId, ticket).then(() => {
+        return apiDatabase.appsTickets.update(appId, ticketId, ticket).then(() => {
             this.setState({
                 isOpen: false,
                 isProcessing: false
             });
-
-            let agent = this.props.appsAgents[appId].agents[ticket.assigned_id];
-            return notify('待辦事項已更新，指派人: ' + agent.name, { type: 'success' });
+            return notify('待辦事項已更新', { type: 'success' });
         }).then(() => {
             return this.closeModal(ev);
         }).catch(() => {
@@ -137,10 +135,9 @@ class TicketEditModal extends ModalCore {
 
         let appId = this.props.modalData.appId;
         let ticketId = this.props.modalData.ticketId;
-        let userId = authHelper.userId;
 
         this.setState({ isProcessing: true });
-        return apiDatabase.appsTickets.delete(appId, ticketId, userId).then(() => {
+        return apiDatabase.appsTickets.delete(appId, ticketId).then(() => {
             this.setState({
                 isOpen: false,
                 isProcessing: false
@@ -190,7 +187,7 @@ class TicketEditModal extends ModalCore {
                                 onChange={this.statusChanged}>
                                 <option value="2">未處理</option>
                                 <option value="3">處理中</option>
-                                <option value="4">已解決</option>
+                                <option value="4">已處理</option>
                                 <option value="5">已關閉</option>
                             </select>
                         </div>

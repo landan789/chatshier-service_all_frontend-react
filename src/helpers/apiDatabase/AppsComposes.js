@@ -11,11 +11,10 @@ class AppsComposes extends Core {
     }
 
     /**
-     * @param {string|null} appId
-     * @param {string} userId
-     * @returns {Promise<AppsComposesResponse>}
+     * @param {string} [appId]
+     * @returns {Promise<Chatshier.Response.AppsComposes>}
      */
-    find(appId, userId) {
+    find(appId) {
         let appsComposes = mainStore.getState().appsComposes;
         if (Object.keys(appsComposes).length > 0) {
             return Promise.resolve({
@@ -25,7 +24,7 @@ class AppsComposes extends Core {
             });
         }
 
-        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + userId;
+        let destUrl = this.apiEndPoint + (appId ? ('apps/' + appId + '/') : '') + 'users/' + this.userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -38,31 +37,17 @@ class AppsComposes extends Core {
 
     /**
      * @param {string} appId
-     * @param {string} userId
      * @param {Chatshier.Compose} compose
-     * @returns {Promise<AppsComposesResponse>}
+     * @returns {Promise<Chatshier.Response.AppsComposes>}
      */
-    insert(appId, userId, composes, usingRecursive) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
-
-        let reqInit;
-        if (composes instanceof Array) {
-            reqInit = composes.map(function(compose) {
-                return {
-                    method: 'POST',
-                    headers: reqHeaders,
-                    body: JSON.stringify(compose)
-                };
-            });
-        } else {
-            reqInit = {
-                method: 'POST',
-                headers: reqHeaders,
-                body: JSON.stringify(composes)
-            };
-        }
-
-        return this.sendRequest(destUrl, reqInit, usingRecursive).then((resJson) => {
+    insert(appId, compose) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + this.userId;
+        let reqInit = {
+            method: 'POST',
+            headers: reqHeaders,
+            body: JSON.stringify(compose)
+        };
+        return this.sendRequest(destUrl, reqInit).then((resJson) => {
             mainStore.dispatch(updateComposes(resJson.data));
             return resJson;
         });
@@ -71,12 +56,11 @@ class AppsComposes extends Core {
     /**
      * @param {string} appId
      * @param {string} composeId
-     * @param {string} userId
      * @param {Chatshier.Compose} compose
-     * @returns {Promise<AppscomposesResponse>}
+     * @returns {Promise<Chatshier.Response.Appscomposes>}
      */
-    update(appId, composeId, userId, compose) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/composes/' + composeId + '/users/' + userId;
+    update(appId, composeId, compose) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/composes/' + composeId + '/users/' + this.userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -91,10 +75,9 @@ class AppsComposes extends Core {
     /**
      * @param {string} appId
      * @param {string} composeId
-     * @param {string} userId
      */
-    delete(appId, composeId, userId) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/composes/' + composeId + '/users/' + userId;
+    delete(appId, composeId) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/composes/' + composeId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

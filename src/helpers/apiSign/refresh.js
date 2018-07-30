@@ -7,11 +7,8 @@ class Refresh extends Core {
         this.apiEndPoint += 'refresh/';
     }
 
-    /**
-     * @param {string} userId
-     */
-    do(userId) {
-        let destUrl = this.apiEndPoint + 'users/' + userId;
+    do() {
+        let destUrl = this.apiEndPoint + 'users/' + this.userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders

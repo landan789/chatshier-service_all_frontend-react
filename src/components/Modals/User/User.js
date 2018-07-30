@@ -36,8 +36,7 @@ class User extends ModalCore {
     }
 
     componentDidMount() {
-        let userId = authHelper.userId;
-        return userId && apiDatabase.users.find(userId);
+        return apiDatabase.users.find();
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -56,7 +55,6 @@ class User extends ModalCore {
     }
 
     updateUser(ev) {
-        let userId = authHelper.userId;
         let user = {
             company: this.state.company,
             phone: this.state.phone,
@@ -64,7 +62,7 @@ class User extends ModalCore {
         };
 
         this.setState({ isAsyncWorking: true });
-        return apiDatabase.users.update(userId, user).then(() => {
+        return apiDatabase.users.update(user).then(() => {
             this.setState({
                 isOpen: false,
                 isAsyncWorking: false

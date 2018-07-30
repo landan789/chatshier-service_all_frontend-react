@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input } from 'reactstrap';
 
 import apiDatabase from '../../../helpers/apiDatabase/index';
-import authHelper from '../../../helpers/authentication';
 
 import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
@@ -64,7 +63,6 @@ class KeywordreplyEditModal extends ModalCore {
 
         let appId = this.state.appId;
         let keywordreplyId = this.state.keywordreplyId;
-        let userId = authHelper.userId;
         let keywordreply = {
             keyword: this.state.keyword,
             status: this.state.status ? 0 : 1,
@@ -73,7 +71,7 @@ class KeywordreplyEditModal extends ModalCore {
         };
 
         this.setState({ isAsyncWorking: true });
-        return apiDatabase.appsKeywordreplies.update(appId, keywordreplyId, userId, keywordreply).then(() => {
+        return apiDatabase.appsKeywordreplies.update(appId, keywordreplyId, keywordreply).then(() => {
             this.setState({
                 isOpen: false,
                 isAsyncWorking: false

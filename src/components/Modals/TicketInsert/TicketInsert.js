@@ -5,7 +5,6 @@ import { Button, Modal, ModalHeader,
     ModalBody, ModalFooter, FormGroup } from 'reactstrap';
 
 import apiDatabase from '../../../helpers/apiDatabase/index';
-import authHelper from '../../../helpers/authentication';
 import { DAY } from '../../../utils/unitTime';
 
 import ModalCore from '../ModalCore';
@@ -41,7 +40,8 @@ class TicketInsertModal extends ModalCore {
         let consumerOptions = this.consumersToOptions(this.defaultAppId);
         let agentOptions = this.agentsToOptions(this.defaultAppId);
 
-        let consumer = this.appsConsumers[this.defaultAppId].consumers[this.defaultPlatformUid];
+        let appConsumers = this.appsConsumers[this.defaultAppId] || { consumers: {} };
+        let consumer = appConsumers.consumers[this.defaultPlatformUid] || {};
         this.state = {
             appId: this.defaultAppId,
             platformUid: this.defaultPlatformUid,
@@ -226,7 +226,6 @@ class TicketInsertModal extends ModalCore {
             return notify('請輸入說明內容', { type: 'warning' });
         }
 
-        let userId = authHelper.userId;
         let ticket = {
             dueTime: Date.now() + (DAY * 3), // 過期時間預設為3天後
             platformUid: platformUid,
@@ -237,7 +236,7 @@ class TicketInsertModal extends ModalCore {
         };
 
         this.setState({ isProcessing: true });
-        return apiDatabase.appsTickets.insert(appId, userId, ticket).then(() => {
+        return apiDatabase.appsTickets.insert(appId, ticket).then(() => {
             this.setState({
                 isOpen: false,
                 isProcessing: false
@@ -302,7 +301,7 @@ class TicketInsertModal extends ModalCore {
                             <select className="form-control" onChange={this.statusChanged}>
                                 <option value="2">未處理</option>
                                 <option value="3">處理中</option>
-                                <option value="4">已解決</option>
+                                <option value="4">已處理</option>
                                 <option value="5">已關閉</option>
                             </select>
                         </FormGroup>

@@ -11,10 +11,9 @@ class AppsChatrooms extends Core {
     }
 
     /**
-     * @param {string} userId
-     * @returns {Promise<AppsChatroomsResponse>}
+     * @returns {Promise<Chatshier.Response.AppsChatrooms>}
      */
-    find(userId) {
+    find() {
         let appsChatrooms = mainStore.getState().appsChatrooms;
         if (Object.keys(appsChatrooms).length > 0) {
             return Promise.resolve({
@@ -24,7 +23,7 @@ class AppsChatrooms extends Core {
             });
         }
 
-        let destUrl = this.apiEndPoint + 'users/' + userId;
+        let destUrl = this.apiEndPoint + 'users/' + this.userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -39,10 +38,9 @@ class AppsChatrooms extends Core {
      * @param {string} appId
      * @param {string} chatroomId
      * @param {any} putChatroom
-     * @param {string} userId
      */
-    update(appId, chatroomId, putChatroom, userId) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/chatrooms/' + chatroomId + '/users/' + userId;
+    update(appId, chatroomId, putChatroom) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/chatrooms/' + chatroomId + '/users/' + this.userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,

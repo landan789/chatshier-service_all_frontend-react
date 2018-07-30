@@ -28,10 +28,9 @@ class AppsFields extends Core {
     }
 
     /**
-     * @param {string} userId
-     * @returns {Promise<AppsFieldsResponse>}
+     * @returns {Promise<Chatshier.Response.AppsFields>}
      */
-    find(userId) {
+    find() {
         let appsFields = mainStore.getState().appsFields;
         if (Object.keys(appsFields).length > 0) {
             return Promise.resolve({
@@ -41,7 +40,7 @@ class AppsFields extends Core {
             });
         }
 
-        let destUrl = this.apiEndPoint + 'users/' + userId;
+        let destUrl = this.apiEndPoint + 'users/' + this.userId;
         let reqInit = {
             method: 'GET',
             headers: reqHeaders
@@ -54,12 +53,11 @@ class AppsFields extends Core {
 
     /**
      * @param {string} appId
-     * @param {string} userId
      * @param {Chatshier.Field} field
-     * @returns {Promise<AppsFieldsResponse>}
+     * @returns {Promise<Chatshier.Response.AppsFields>}
      */
-    insert(appId, userId, field) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + userId;
+    insert(appId, field) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + this.userId;
         let reqInit = {
             method: 'POST',
             headers: reqHeaders,
@@ -74,12 +72,11 @@ class AppsFields extends Core {
     /**
      * @param {string} appId
      * @param {string} keywordreplyId
-     * @param {string} userId
      * @param {Chatshier.Field} field
-     * @returns {Promise<AppsFieldsResponse>}
+     * @returns {Promise<Chatshier.Response.AppsFields>}
      */
-    update(appId, fieldId, userId, field) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/fields/' + fieldId + '/users/' + userId;
+    update(appId, fieldId, field) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/fields/' + fieldId + '/users/' + this.userId;
         let reqInit = {
             method: 'PUT',
             headers: reqHeaders,
@@ -94,10 +91,9 @@ class AppsFields extends Core {
     /**
      * @param {string} appId
      * @param {string} keywordreplyId
-     * @param {string} userId
      */
-    delete(appId, fieldId, userId) {
-        let destUrl = this.apiEndPoint + 'apps/' + appId + '/fields/' + fieldId + '/users/' + userId;
+    delete(appId, fieldId) {
+        let destUrl = this.apiEndPoint + 'apps/' + appId + '/fields/' + fieldId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders

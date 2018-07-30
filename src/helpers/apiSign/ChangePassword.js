@@ -8,10 +8,9 @@ class ChangePassword extends Core {
     }
 
     /**
-     * @param {string} userId
      * @param {{ password: string, newPassword: string, newPasswordCfm: string }} user
      */
-    post(userId, user) {
+    post(user) {
         let destUrl = this.apiEndPoint;
         let reqInit = {
             method: 'PUT',

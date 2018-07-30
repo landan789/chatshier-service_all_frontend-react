@@ -27,12 +27,14 @@ class TicketEditModal extends ModalCore {
         /** @type {Chatshier.Model.Ticket} */
         let ticket = props.modalData ? props.modalData.ticket : {};
         let agentOptions = [];
+        let firstAgentId = '';
         if (Object.keys(props.appsAgents).length > 0) {
             let appId = props.modalData.appId;
             /** @type {Chatshier.Model.Users} */
             let agents = props.appsAgents[appId].agents;
 
             for (let userId in agents) {
+                firstAgentId = firstAgentId || userId;
                 let consumer = agents[userId];
                 agentOptions.push(
                     <option key={userId} value={userId}>{consumer.name}</option>
@@ -44,7 +46,7 @@ class TicketEditModal extends ModalCore {
             isOpen: this.props.isOpen,
             isProcessing: false,
             dueTime: ticket.dueTime || new Date(),
-            agentUserId: ticket.assigned_id,
+            agentUserId: ticket.assigned_id || firstAgentId,
             agentOptions: agentOptions,
             status: ticket.status || 0,
             priority: ticket.priority || 0,

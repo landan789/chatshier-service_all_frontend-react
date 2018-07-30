@@ -41,8 +41,19 @@ class TicketContent extends React.Component {
             editModalData: null
         };
 
+        this.noTicketsElem = (
+            <div className="w-100 text-center">
+                <div className="mx-auto image-container" style={{ width: '8rem', height: '8rem' }}>
+                    <img className="w-100 h-100 p-2" src={logoSmall} alt="" />
+                </div>
+                <h5>無待辦事項</h5>
+            </div>
+        );
+
         this.openEditModal = this.openEditModal.bind(this);
         this.closeEditModal = this.closeEditModal.bind(this);
+        this.doneTicket = this.doneTicket.bind(this);
+        this.deleteTicket = this.deleteTicket.bind(this);
     }
 
     openEditModal(appId, ticketId) {
@@ -67,6 +78,10 @@ class TicketContent extends React.Component {
         this.setState({ editModalData: null });
     }
 
+    doneTicket(appId, ticketId) {
+        return apiDatabase.appsTickets.update(appId, ticketId, { status: RESOLVED });
+    }
+
     deleteTicket(appId, ticketId) {
         if (!window.confirm('確定要刪除嗎？')) {
             return;
@@ -86,18 +101,11 @@ class TicketContent extends React.Component {
         let appId = this.props.appId;
         let tickets = appsTickets[appId] ? appsTickets[appId].tickets || {} : {};
         if (0 === Object.keys(tickets).length) {
-            return (
-                <div className="text-center">
-                    <div className="mx-auto image-container" style={{ width: '8rem', height: '8rem' }}>
-                        <img className="w-100 h-100 p-2" src={logoSmall} alt="" />
-                    </div>
-                    <h5>無待辦事項</h5>
-                </div>
-            );
+            return this.noTicketsElem;
         }
 
         let appsAgents = this.props.appsAgents;
-        let agents = appsAgents[appId].agents || {};
+        let agents = appsAgents[appId] ? appsAgents[appId].agents || {} : {};
 
         // 根據優先度排序待辦事項，由高至低
         // 過期的優先拉致前頭
@@ -194,6 +202,14 @@ class TicketContent extends React.Component {
                         </CardText>
 
                         <div className="d-flex w-100 buttons-container">
+                            {(ticket.status !== RESOLVED && ticket.ticket !== CLOSED) &&
+                            <Aux>
+                                <Button className="w-100 mr-1" color="light" id={'ticketDoneBtn_' + ticketId} onClick={() => this.doneTicket(appId, ticketId)}>
+                                    <i className="fas fa-user-check text-muted"></i>
+                                </Button>
+                                <UncontrolledTooltip placement="top" delay={0} target={'ticketDoneBtn_' + ticketId}>已完成</UncontrolledTooltip>
+                            </Aux>}
+
                             <Button className="w-100 mr-1" color="light" id={'ticketEditBtn_' + ticketId} onClick={() => this.openEditModal(appId, ticketId)}>
                                 <i className="fas fa-edit text-muted"></i>
                             </Button>
@@ -211,7 +227,9 @@ class TicketContent extends React.Component {
 
         return (
             <Aux>
-                <CardGroup className={this.props.className.trim()}>{ticketElems}</CardGroup>
+                <CardGroup className={this.props.className.trim()}>
+                    {ticketElems.length > 0 ? ticketElems : this.noTicketsElem}
+                </CardGroup>
 
                 {!!this.state.editModalData &&
                 <TicketEditModal

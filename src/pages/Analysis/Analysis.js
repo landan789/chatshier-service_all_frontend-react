@@ -103,14 +103,6 @@ class Analysis extends React.Component {
             text: this.props.t('Frequency of word')
         }];
 
-        this.state = {
-            prevProps: null,
-            selectedAppId: '',
-            selectedDataType: this.dataTypes[0],
-            startDatetime: 0,
-            endDatetime: Date.now()
-        };
-
         this.onAppChanged = this.onAppChanged.bind(this);
         this.onStartDatetimeChanged = this.onStartDatetimeChanged.bind(this);
         this.onEndDatetimeChanged = this.onEndDatetimeChanged.bind(this);
@@ -121,6 +113,14 @@ class Analysis extends React.Component {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }
+
+        this.state = Object.assign({
+            prevProps: null,
+            selectedAppId: '',
+            selectedDataType: this.dataTypes[0],
+            startDatetime: 0,
+            endDatetime: Date.now()
+        }, Analysis.getDerivedStateFromProps(props, {}));
     }
 
     componentDidMount() {

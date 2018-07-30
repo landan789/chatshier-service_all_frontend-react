@@ -101,15 +101,6 @@ class Tickets extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            prevProps: null,
-            statusFilter: STATUS_TYPES.NONE,
-            isInsertModalOpen: false,
-            searchKeyword: '',
-            appId: '',
-            appsAgents: {}
-        };
-
         this.keywordChanged = this.keywordChanged.bind(this);
         this.appChanged = this.appChanged.bind(this);
         this.openInsertModal = this.openInsertModal.bind(this);
@@ -120,6 +111,15 @@ class Tickets extends React.Component {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }
+
+        this.state = Object.assign({
+            prevProps: null,
+            statusFilter: STATUS_TYPES.NONE,
+            isInsertModalOpen: false,
+            searchKeyword: '',
+            appId: '',
+            appsAgents: {}
+        }, Tickets.getDerivedStateFromProps(props, {}));
     }
 
     componentDidMount() {
@@ -141,15 +141,33 @@ class Tickets extends React.Component {
         this.setState({ appId: appId });
     }
 
-    openInsertModal(ev) {
+    openInsertModal() {
         this.setState({ isInsertModalOpen: true });
     }
 
-    closeInsertModal(ev) {
+    closeInsertModal() {
         this.setState({ isInsertModalOpen: false });
     }
 
     render() {
+        let appId = this.state.appId;
+        let pendingCount = 0;
+        let processingCount = 0;
+        let resolvedCount = 0;
+        let closedCount = 0;
+
+        if (appId && this.props.appsTickets[appId]) {
+            let tickets = this.props.appsTickets[appId].tickets;
+            for (let ticketId in tickets) {
+                let ticket = tickets[ticketId];
+                (ticket.status === STATUS_TYPES.PENDING) && pendingCount++;
+                (ticket.status === STATUS_TYPES.PROCESSING) && processingCount++;
+                (ticket.status === STATUS_TYPES.RESOLVED) && resolvedCount++;
+                (ticket.status === STATUS_TYPES.CLOSED) && closedCount++;
+            }
+        }
+        let totalCount = pendingCount + processingCount + resolvedCount + closedCount;
+
         return (
             <Aux>
                 <ControlPanel />
@@ -162,6 +180,7 @@ class Tickets extends React.Component {
                                         className={this.state.statusFilter === STATUS_TYPES.NONE ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.NONE })}>
                                         <i className="text-muted fas fa-list-alt fa-1p5x"></i>
+                                        <span className="position-absolute badge badge-success ticket-badge">{totalCount > 99 ? '99+' : totalCount}</span>
                                     </Button>
                                     <UncontrolledTooltip placement="top" delay={0} target="allTicketsFilter">全部</UncontrolledTooltip>
 
@@ -169,6 +188,7 @@ class Tickets extends React.Component {
                                         className={this.state.statusFilter === STATUS_TYPES.PENDING ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.PENDING })}>
                                         <i className="text-muted fas fa-times-circle fa-1p5x"></i>
+                                        <span className="position-absolute badge badge-success ticket-badge">{pendingCount > 99 ? '99+' : pendingCount}</span>
                                     </Button>
                                     <UncontrolledTooltip placement="top" delay={0} target="pendingFilter">未處理</UncontrolledTooltip>
 
@@ -176,6 +196,7 @@ class Tickets extends React.Component {
                                         className={this.state.statusFilter === STATUS_TYPES.PROCESSING ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.PROCESSING })}>
                                         <i className="text-muted fas fa-play-circle fa-1p5x"></i>
+                                        <span className="position-absolute badge badge-success ticket-badge">{processingCount > 99 ? '99+' : processingCount}</span>
                                     </Button>
                                     <UncontrolledTooltip placement="top" delay={0} target="processingFilter">處理中</UncontrolledTooltip>
 
@@ -183,6 +204,7 @@ class Tickets extends React.Component {
                                         className={this.state.statusFilter === STATUS_TYPES.RESOLVED ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.RESOLVED })}>
                                         <i className="text-muted fas fa-check-circle fa-1p5x"></i>
+                                        <span className="position-absolute badge badge-success ticket-badge">{resolvedCount > 99 ? '99+' : resolvedCount}</span>
                                     </Button>
                                     <UncontrolledTooltip placement="top" delay={0} target="resolvedFilter">已處理</UncontrolledTooltip>
 
@@ -190,6 +212,7 @@ class Tickets extends React.Component {
                                         className={this.state.statusFilter === STATUS_TYPES.CLOSED ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.CLOSED })}>
                                         <i className="text-muted fas fa-minus-circle fa-1p5x"></i>
+                                        <span className="position-absolute badge badge-success ticket-badge">{closedCount > 99 ? '99+' : closedCount}</span>
                                     </Button>
                                     <UncontrolledTooltip placement="top" delay={0} target="closedFilter">已關閉</UncontrolledTooltip>
                                 </ButtonGroup>
@@ -211,7 +234,7 @@ class Tickets extends React.Component {
 
                             {this.state.appId &&
                             <TicketContent className="mx-4"
-                                appId={this.state.appId}
+                                appId={appId}
                                 appsAgents={this.state.appsAgents}
                                 searchKeyword={this.state.searchKeyword}
                                 statusFilter={this.state.statusFilter}>

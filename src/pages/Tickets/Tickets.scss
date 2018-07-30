@@ -49,4 +49,11 @@
     .due-date-text {
         font-size: 1rem;
     }
+
+    .ticket-badge {
+        top: 0;
+        right: 0;
+        transform: translate3d(25%, -50%, 0);
+        z-index: 10;
+    }
 }

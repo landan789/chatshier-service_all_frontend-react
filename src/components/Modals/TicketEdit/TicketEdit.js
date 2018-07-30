@@ -117,9 +117,7 @@ class TicketEditModal extends ModalCore {
                 isOpen: false,
                 isProcessing: false
             });
-
-            let agent = this.props.appsAgents[appId].agents[ticket.assigned_id];
-            return notify('待辦事項已更新，指派人: ' + agent.name, { type: 'success' });
+            return notify('待辦事項已更新', { type: 'success' });
         }).then(() => {
             return this.closeModal(ev);
         }).catch(() => {
@@ -187,7 +185,7 @@ class TicketEditModal extends ModalCore {
                                 onChange={this.statusChanged}>
                                 <option value="2">未處理</option>
                                 <option value="3">處理中</option>
-                                <option value="4">已解決</option>
+                                <option value="4">已處理</option>
                                 <option value="5">已關閉</option>
                             </select>
                         </div>

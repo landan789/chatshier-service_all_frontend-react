@@ -301,7 +301,7 @@ class TicketInsertModal extends ModalCore {
                             <select className="form-control" onChange={this.statusChanged}>
                                 <option value="2">未處理</option>
                                 <option value="3">處理中</option>
-                                <option value="4">已解決</option>
+                                <option value="4">已處理</option>
                                 <option value="5">已關閉</option>
                             </select>
                         </FormGroup>

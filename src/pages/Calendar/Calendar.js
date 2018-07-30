@@ -129,13 +129,6 @@ class Calendar extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            prevProps: null,
-            insertModalData: void 0,
-            editModalData: void 0,
-            appsAgents: {}
-        };
-
         /** @type {JQuery<HTMLElement>} */
         this.$calendar = void 0;
 
@@ -155,6 +148,13 @@ class Calendar extends React.Component {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }
+
+        this.state = Object.assign({
+            prevProps: null,
+            insertModalData: void 0,
+            editModalData: void 0,
+            appsAgents: {}
+        }, Calendar.getDerivedStateFromProps(props, {}));
     }
 
     componentDidMount() {

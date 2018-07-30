@@ -114,7 +114,9 @@ class TicketContent extends React.Component {
             let isDueA = (new Date(tickets[a].dueTime).getTime() > dateNow);
             let isDueB = (new Date(tickets[b].dueTime).getTime() > dateNow);
             let isPriorityHigh = tickets[a].priority < tickets[b].priority;
-            if (isDueA && !isDueB) {
+            if (tickets[a].status >= RESOLVED && tickets[b].status < RESOLVED) {
+                return 1;
+            } else if (isDueA && !isDueB) {
                 return 1;
             } else if (isDueB && !isDueA) {
                 return -1;
@@ -134,11 +136,10 @@ class TicketContent extends React.Component {
             // 當以下條件成立時，不顯示此筆待辦事項
             // 1. 此待辦事項指派的 consumer 不存在
             // 2. 當有設定狀態過濾時，不是指定狀態的待辦事項
-            // 3. 當沒有設定狀態過濾時，待辦事項狀態為已解決或已關閉
+            // 3. 當沒有設定狀態過濾時，待辦事項狀態為已處理或已關閉
             let shouldSkip =
                 !(platformUid && consumers[platformUid]) ||
-                (this.props.statusFilter && ticket.status !== this.props.statusFilter) ||
-                (!this.props.statusFilter && (ticket.status === RESOLVED || ticket.status === CLOSED));
+                (this.props.statusFilter && ticket.status !== this.props.statusFilter);
             if (shouldSkip) {
                 continue;
             }
@@ -149,7 +150,7 @@ class TicketContent extends React.Component {
             let priorityText = toPriorityText(ticket.priority);
             let dueTimeStr = formatDate(ticket.dueTime) + ' ' + formatTime(ticket.dueTime, false);
             let dueDateElem = toDueDateSpan(ticket.dueTime);
-            let agentName = ticket.assigned_id ? agents[ticket.assigned_id].name : '';
+            let agentName = ticket.assigned_id && agents[ticket.assigned_id] ? agents[ticket.assigned_id].name : '';
 
             let shouldShow = true;
             let searchKeyword = this.props.searchKeyword;

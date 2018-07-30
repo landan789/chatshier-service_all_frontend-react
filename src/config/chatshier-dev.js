@@ -1,4 +1,6 @@
-const CHATSHIER = window.CHATSHIER || {
+import regex from '../utils/regex';
+
+let CHATSHIER = window.CHATSHIER || {
     FILE: {
         // https://developers.line.me/en/docs/messaging-api/reference/#upload-rich-menu-image
         // According to LINE official document, the max size of richmenu image should set to 1 MB
@@ -25,7 +27,6 @@ const CHATSHIER = window.CHATSHIER || {
          * 指向 www.chatshier 專案的伺服器位址
          */
         WWW: 'https://www.dev.chatshier.com',
-        PORT: 80,
         /**
          * wwwUrl 伺服器的首頁路徑
          */
@@ -49,5 +50,7 @@ const CHATSHIER = window.CHATSHIER || {
         API: '..'
     }
 };
+
+CHATSHIER.URL.WWW = CHATSHIER.URL.WWW || window.location.protocol + '//' + document.domain.replace(regex.domainPrefix, 'www.');
 
 export default CHATSHIER;

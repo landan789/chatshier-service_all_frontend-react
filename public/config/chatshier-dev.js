@@ -25,7 +25,6 @@ window.CHATSHIER = {
          * 指向 www.chatshier 專案的伺服器位址
          */
         WWW: 'https://www.dev.chatshier.com',
-        PORT: 80,
         /**
          * wwwUrl 伺服器的首頁路徑
          */

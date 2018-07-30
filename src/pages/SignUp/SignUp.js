@@ -6,6 +6,7 @@ import { Trans } from 'react-i18next';
 import { withTranslate } from '../../i18n';
 
 import ROUTES from '../../config/route';
+import CHATSHIER_CFG from '../../config/chatshier';
 import browserHelper from '../../helpers/browser';
 import authHelper from '../../helpers/authentication';
 import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
@@ -239,9 +240,9 @@ class SignUp extends React.Component {
                     <div className="my-4 text-center">
                         <p>
                             <span><Trans i18nKey="I agree Chatshier" /></span>
-                            <a className="mx-1 link-text" href="https://www.chatshier.com/terms.html" target="_blank" rel="noopener noreferrer"><Trans i18nKey="Terms" /></a>
+                            <a className="mx-1 link-text" href={CHATSHIER_CFG.URL.WWW + CHATSHIER_CFG.URL.TERMS} target="_blank" rel="noopener noreferrer"><Trans i18nKey="Terms" /></a>
                             <span>&amp;</span>
-                            <a className="mx-1 link-text" href="https://www.chatshier.com/privacy.html" target="_blank" rel="noopener noreferrer"><Trans i18nKey="Privacy" /></a>
+                            <a className="mx-1 link-text" href={CHATSHIER_CFG.URL.WWW + CHATSHIER_CFG.URL.PRIVACY} target="_blank" rel="noopener noreferrer"><Trans i18nKey="Privacy" /></a>
                         </p>
                         <Route render={(router) => (
                             <p>

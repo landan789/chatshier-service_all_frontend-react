@@ -2,16 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Aux from 'react-aux';
 
-import CHATSHIER from '../../config/chatshier';
-import regex from '../../utils/regex';
+import CHATSHIER_CFG from '../../config/chatshier';
 
 import logoPng from '../../image/logo.png';
 import './SignForm.css';
-
-const URL = CHATSHIER.URL;
-const WWW = URL.WWW
-    ? URL.WWW + (80 !== URL.PORT ? ':' + URL.PORT : '')
-    : window.location.protocol + '//' + document.domain.replace(regex.domainPrefix, 'www.');
 
 class SignForm extends React.Component {
     static propTypes = {
@@ -30,7 +24,7 @@ class SignForm extends React.Component {
         return (
             <Aux>
                 <div className="col-12 text-center sign-logo-container">
-                    <a className="chatshier-logo" href={WWW}>
+                    <a className="chatshier-logo" href={CHATSHIER_CFG.URL.WWW}>
                         <img src={logoPng} alt="Chatshier" />
                     </a>
                 </div>

@@ -5,12 +5,14 @@ import { connect } from 'react-redux';
 import Aux from 'react-aux';
 import { Fade, Button, Card, CardBody, CardFooter, UncontrolledTooltip } from 'reactstrap';
 import { withTranslate } from '../../i18n';
+import { Trans } from 'react-i18next';
 import { HOUR } from '../../utils/unitTime';
 
 import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
+import regex from '../../utils/regex';
 
 import ReceptionistModal from '../../components/Modals/Receptionist/Receptionist';
 
@@ -44,7 +46,7 @@ class ReceptionistsPage extends React.Component {
         this.deleteReceptionist = this.deleteReceptionist.bind(this);
         this.closeModal = this.closeModal.bind(this);
 
-        browserHelper.setTitle(this.props.t('服務人員管理'));
+        browserHelper.setTitle(this.props.t('Receptionist management'));
         if (!authHelper.hasSignedin()) {
             authHelper.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
@@ -65,7 +67,7 @@ class ReceptionistsPage extends React.Component {
     insertReceptionist(receptionist) {
         let postReceptionist = Object.assign({
             timezoneOffset: new Date().getTimezoneOffset(),
-            maxNumber: 3,
+            maxNumber: 0,
             interval: HOUR
         }, receptionist);
 
@@ -73,15 +75,18 @@ class ReceptionistsPage extends React.Component {
             return notify('必須輸入服務人員的名稱', { type: 'warning' });
         } else if (!postReceptionist.gmail) {
             return notify('必須輸入服務人員的 Gmail', { type: 'warning' });
+        } else if (!regex.emailStrict.test(postReceptionist.gmail)) {
+            return notify(this.props.t('Invalid email'), { type: 'warning' });
         }
 
         let appId = this.state.appId;
         this.setState({ isAsyncProcessing: true });
         return apiDatabase.appsReceptionists.insert(appId, postReceptionist).then(() => {
-            return this.closeModal();
+            this.closeModal();
+            return notify(this.props.t('Add successful!'), { type: 'success' });
         }).catch(() => {
             this.setState({ isAsyncProcessing: false });
-            return notify('新增失敗', { type: 'danger' });
+            return notify(this.props.t('An error occurred!'), { type: 'danger' });
         });
     }
 
@@ -92,10 +97,11 @@ class ReceptionistsPage extends React.Component {
 
         this.setState({ isAsyncProcessing: true });
         return apiDatabase.appsReceptionists.update(appId, receptionistId, putReceptionist).then(() => {
-            return this.closeModal();
+            this.closeModal();
+            return notify(this.props.t('Update successful!'), { type: 'success' });
         }).catch(() => {
             this.setState({ isAsyncProcessing: false });
-            return notify('更新失敗', { type: 'danger' });
+            return notify(this.props.t('An error occurred!'), { type: 'danger' });
         });
     }
 
@@ -103,10 +109,11 @@ class ReceptionistsPage extends React.Component {
         let appId = this.state.appId;
         this.setState({ isAsyncProcessing: true });
         return apiDatabase.appsReceptionists.delete(appId, receptionistId).then(() => {
-            return this.closeModal();
+            this.closeModal();
+            return notify(this.props.t('Remove successful!'), { type: 'success' });
         }).catch(() => {
             this.setState({ isAsyncProcessing: false });
-            return notify('刪除失敗', { type: 'danger' });
+            return notify(this.props.t('An error occurred!'), { type: 'danger' });
         });
     }
 
@@ -143,8 +150,8 @@ class ReceptionistsPage extends React.Component {
                     <Fade in className="align-items-center mt-5 container category-wrapper">
                         <Card className="pb-3 chsr">
                             <div className="text-left table-title">
-                                <h3 className="mb-4 pt-3 px-3">服務人員管理</h3>
-                                <p className="mb-3 pt-0 px-3">首頁 / 預約系統 / 服務人員管理</p>
+                                <h3 className="mb-4 pt-3 px-3"><Trans i18nKey="Receptionist management" /></h3>
+                                <p className="mb-3 pt-0 px-3"><Trans i18nKey="Home" /> / <Trans i18nKey="Appointment system" /> / <Trans i18nKey="Receptionist management" /></p>
                                 <p className="mb-3 pt-0 px-3 text-muted small">新增、更新或刪除服務人員；向服務人員共享機器人預約行事曆</p>
                             </div>
 
@@ -192,7 +199,7 @@ class ReceptionistsPage extends React.Component {
                                                         onClick={() => {
                                                             this.setState({
                                                                 receptionistId: receptionistId,
-                                                                receptionist: this.props.appsReceptionists[appId].receptionists[receptionistId]
+                                                                receptionist: receptionists[receptionistId]
                                                             });
                                                         }}
                                                         disabled={this.state.isAsyncProcessing}>
@@ -200,12 +207,14 @@ class ReceptionistsPage extends React.Component {
                                                     </Button>
                                                     <UncontrolledTooltip placement="top" delay={0} target={'receptionistEditBtn_' + receptionistId}>編輯</UncontrolledTooltip>
 
+                                                    {!receptionist.gcalendarId &&
                                                     <Button color="light" id={'calendarLinkBtn_' + receptionistId}
                                                         onClick={() => this.updateReceptionist(receptionistId)}
-                                                        disabled={!!receptionist.gcalendarId || this.state.isAsyncProcessing}>
+                                                        disabled={this.state.isAsyncProcessing}>
                                                         <i className="fas fa-calendar-plus"></i>
-                                                    </Button>
-                                                    <UncontrolledTooltip placement="top" delay={0} target={'calendarLinkBtn_' + receptionistId}>連結行事曆</UncontrolledTooltip>
+                                                    </Button>}
+                                                    {!receptionist.gcalendarId &&
+                                                    <UncontrolledTooltip placement="top" delay={0} target={'calendarLinkBtn_' + receptionistId}>連結行事曆</UncontrolledTooltip>}
 
                                                     <Button color="light" id={'receptionistDeleteBtn_' + receptionistId}
                                                         onClick={() => this.deleteReceptionist(receptionistId)}

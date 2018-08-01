@@ -3,8 +3,9 @@
     "Add bot": "新增機器人",
     "Add calendar event": "新增行事曆事件",
     "Add group": "新增群組",
-    "Add To-Do item": "新增待辦",
+    "Add receptionist": "新增服務人員",
     "Add successful!": "新增成功！",
+    "Add To-Do item": "新增待辦",
     "Age": "年齡",
     "Already have an account?": "已經有帳號了嗎？請按",
     "Analysis": "訊息分析",
@@ -44,6 +45,7 @@
     "Edit bot": "編輯機器人",
     "Edit calendar event": "編輯行事曆事件",
     "Edit group": "編輯群組",
+    "Edit receptionist": "編輯服務人員",
     "Email": "電子郵件",
     "Email was empty!": "電子郵件未填寫！",
     "End datetime": "結束時間",
@@ -61,6 +63,8 @@
     "Fill the description": "請輸入描述內容",
     "Fill the event title": "請填入事件標題",
     "Fill the group name": "請輸入群組名稱",
+    "Fill the receptionist's name": "請輸入服務人員的姓名",
+    "Fill the receptionist's Gmail": "請輸入服務人員的 Gmail",
     "Fill the title": "請輸入標題",
     "Fill your email": "請輸入電子郵件",
     "Fill your name": "請輸入姓名",
@@ -75,6 +79,7 @@
     "Group name": "群組名稱",
     "Groups": "內部群組",
 
+    "Home": "首頁",
     "Hour": "小時",
 
     "I agree Chatshier": "我同意 Chatshier",
@@ -131,6 +136,7 @@
     "Product management": "產品管理",
 
     "Recent chat date": "最近聊天時間",
+    "Receptionist management": "服務人員管理",
     "Remark": "備註",
     "Remove": "刪除",
     "Remove successful!": "刪除成功！",

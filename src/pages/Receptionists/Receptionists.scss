@@ -19,7 +19,7 @@
             max-width: calc(50% - 30px);
         }
 
-        @include media-breakpoint-up(lg) {
+        @include media-breakpoint-up(xl) {
             max-width: calc(33% - 30px);
         }
     }

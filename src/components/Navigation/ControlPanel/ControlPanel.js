@@ -71,7 +71,7 @@ const linkItems = [
         }, {
             link: ROUTES.RECEPTIONISTS,
             icon: 'fas fa-user-clock fa-fw',
-            text: '服務人員管理',
+            text: 'Receptionist management',
             useReactRouter: true
         }, {
             link: ROUTES.PRODUCTS,

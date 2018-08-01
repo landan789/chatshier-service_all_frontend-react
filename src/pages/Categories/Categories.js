@@ -92,11 +92,13 @@ class Categories extends React.Component {
                             <div className="categories-wrapper">
                                 {Object.keys(categories).map((categoryId) => {
                                     let category = categories[categoryId];
+                                    let productIds = category.product_ids || [];
+
                                     return (
                                         <Aux key={categoryId}>
                                             <div>目錄名稱: {category.name}</div>
                                             <div>目錄描述: {category.description}</div>
-                                            <div>目錄商品數: {category.product_ids.length}</div>
+                                            <div>目錄商品數: {productIds.length}</div>
                                             <Button color="primary" onClick={() => this.updateCategory(categoryId)}>更新目錄</Button>
                                             <Button color="danger" onClick={() => this.deleteCategory(categoryId)}>刪除目錄</Button>
                                         </Aux>

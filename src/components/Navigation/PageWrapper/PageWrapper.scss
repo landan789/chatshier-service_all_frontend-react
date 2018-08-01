@@ -15,6 +15,11 @@
         padding-top: $toolbar-height;
     }
 
+    .table-title {
+        text-align: left;
+        background-color: #f4f4f4;
+    }
+
     @media (max-width: 768px) {
         & {
             max-width: 100%;

@@ -12,7 +12,7 @@ import TicketEditModal from '../../components/Modals/TicketEdit/TicketEdit';
 import apiDatabase from '../../helpers/apiDatabase/index';
 import { notify } from '../../components/Notify/Notify';
 
-import defaultAvatar from '../../image/defautlt-avatar.png';
+import defaultAvatar from '../../image/default-avatar.png';
 import logoSmall from '../../image/logo-small.png';
 
 const RESOLVED = 4;

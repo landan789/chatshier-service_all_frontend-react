@@ -29,7 +29,7 @@ import { findChatroomMessager, findMessagerSelf } from '../../../pages/Chat/Chat
 import logoPng from '../../../image/logo-no-transparent.png';
 import logoSmallPng from '../../../image/logo-small.png';
 import groupPng from '../../../image/group.png';
-import defaultAvatar from '../../../image/defautlt-avatar.png';
+import defaultAvatar from '../../../image/default-avatar.png';
 import './ControlPanel.css';
 
 const LINE = 'LINE';
@@ -60,30 +60,30 @@ const linkItems = [
         icon: 'fas fa-chart-bar fa-fw',
         text: 'Analysis',
         useReactRouter: true
-    // }, {
-    //     icon: 'fas fa-calendar fa-fw',
-    //     text: 'Appointment system',
-    //     dropdownItems: [{
-    //         link: ROUTES.APPOINTMENTS,
-    //         icon: 'fas fa-calendar-check fa-fw',
-    //         text: '檢視預約項目',
-    //         useReactRouter: true
-    //     }, {
-    //         link: ROUTES.RECEPTIONISTS,
-    //         icon: 'fas fa-user-clock fa-fw',
-    //         text: '服務人員管理',
-    //         useReactRouter: true
-    //     }, {
-    //         link: ROUTES.PRODUCTS,
-    //         icon: 'fas fa-cart-plus fa-fw',
-    //         text: 'Product management',
-    //         useReactRouter: true
-    //     }, {
-    //         link: ROUTES.CATEGORIES,
-    //         icon: 'fas fa-list-alt fa-fw',
-    //         text: '預約目錄',
-    //         useReactRouter: true
-    //     }]
+    }, {
+        icon: 'fas fa-calendar fa-fw',
+        text: 'Appointment system',
+        dropdownItems: [{
+            link: ROUTES.APPOINTMENTS,
+            icon: 'fas fa-calendar-check fa-fw',
+            text: '檢視預約項目',
+            useReactRouter: true
+        }, {
+            link: ROUTES.RECEPTIONISTS,
+            icon: 'fas fa-user-clock fa-fw',
+            text: '服務人員管理',
+            useReactRouter: true
+        }, {
+            link: ROUTES.PRODUCTS,
+            icon: 'fas fa-cart-plus fa-fw',
+            text: 'Product management',
+            useReactRouter: true
+        }, {
+            link: ROUTES.CATEGORIES,
+            icon: 'fas fa-list-alt fa-fw',
+            text: '預約目錄',
+            useReactRouter: true
+        }]
     }, {
         icon: 'fas fa-envelope fa-fw',
         text: 'Messages',

@@ -19,7 +19,7 @@ import controlPanelStore from '../../redux/controlPanelStore';
 import { selectChatroom } from '../../redux/actions/controlPanelStore/selectedChatroom';
 import { findChatroomMessager, findMessagerSelf } from './Chat';
 
-import defaultAvatarPng from '../../image/defautlt-avatar.png';
+import defaultAvatarPng from '../../image/default-avatar.png';
 import './ProfilePanel.css';
 
 const CHATSHIER = 'CHATSHIER';

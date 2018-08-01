@@ -72,7 +72,9 @@ class Appointments extends React.Component {
                                     return (
                                         <Aux key={appointmentId}>
                                             <div>platformUid: {appointment.platformUid}</div>
-                                            <div>product_id: {appointment.product_id}</div>
+                                            <div>receptionist_id: {appointment.receptionist_id}</div>
+                                            <div>startedTime: {appointment.startedTime}</div>
+                                            <div>endedTime: {appointment.endedTime}</div>
                                             <Button color="primary" onClick={() => this.updateAppointment(appointmentId)}>更新預約</Button>
                                             <Button color="danger" onClick={() => this.deleteAppointment(appointmentId)}>刪除預約</Button>
                                         </Aux>

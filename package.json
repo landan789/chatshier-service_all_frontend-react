@@ -29,7 +29,7 @@
     "react": "16.4.1",
     "react-aux": "1.1.0",
     "react-dom": " 16.4.1",
-    "react-i18next": "7.9.1",
+    "react-i18next": "7.10.1",
     "react-linkify": "0.2.2",
     "react-redux": "5.0.7",
     "react-router": "4.3.1",
@@ -42,7 +42,7 @@
     "reactstrap": "6.3.1",
     "redux": "4.0.0",
     "socket.io-client": "2.1.1",
-    "swiper": "4.3.3",
+    "swiper": "4.3.5",
     "wordcloud": "1.1.0"
   },
   "devDependencies": {

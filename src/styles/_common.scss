@@ -10,15 +10,36 @@
 }
 // #endregion
 
-// #region font-awesome custom classes
+
+// #region custom font-awesome style classes
 .fa-1p5x {
     font-size: 1.5em;
 }
 // #endregion
 
-.btn-border {
-    border: 1px solid #ced4da;
+
+// #region custom bootstrap style classes
+.bg-transparent {
+    background-color: transparent !important;
 }
+
+.border-circle {
+    border-radius: 50% !important;
+}
+
+.border-none {
+    border: none !important;
+}
+
+.btn-border {
+    border: 1px solid #ced4da !important;
+}
+
+.d-inherit {
+    display: inherit !important;
+}
+// #endregion
+
 
 .image-container {
     position: relative;

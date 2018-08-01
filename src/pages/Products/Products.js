@@ -3,32 +3,51 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Aux from 'react-aux';
-import { Fade, Button, Card } from 'reactstrap';
+import { Fade, Button, Card, CardBody, CardFooter, UncontrolledTooltip } from 'reactstrap';
+import { Trans } from 'react-i18next';
 import { withTranslate } from '../../i18n';
 
+import ROUTES from '../../config/route';
+import authHelper from '../../helpers/authentication';
+import browserHelper from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
+import ProductModal from '../../components/Modals/Product/Product';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
+import { notify } from '../../components/Notify/Notify';
+
+import logoPng from '../../image/logo.png';
 
 import './Products.css';
 
 class Products extends React.Component {
     static propTypes = {
         t: PropTypes.func.isRequired,
-        appsProducts: PropTypes.object
+        appsProducts: PropTypes.object,
+        history: PropTypes.object.isRequired
     }
 
     constructor(props, ctx) {
         super(props, ctx);
 
         this.state = {
-            appId: ''
+            appId: '',
+            isAsyncProcessing: false
         };
 
         this.appChanged = this.appChanged.bind(this);
         this.insertProduct = this.insertProduct.bind(this);
+        this.updateProduct = this.updateProduct.bind(this);
+        this.deleteProduct = this.deleteProduct.bind(this);
+        this.closeModal = this.closeModal.bind(this);
+
+        browserHelper.setTitle(this.props.t('Product management'));
+        if (!authHelper.hasSignedin()) {
+            authHelper.signOut();
+            this.props.history.replace(ROUTES.SIGNIN);
+        }
     }
 
     componentDidMount() {
@@ -42,39 +61,73 @@ class Products extends React.Component {
         this.setState({ appId: appId });
     }
 
-    insertProduct() {
-        let product = {
-            name: '測試產品',
-            description: '產品描述_' + Date.now(),
+    insertProduct(product) {
+        let postProduct = Object.assign({
             canAppoint: true
-        };
+        }, product);
 
         let appId = this.state.appId;
-        return apiDatabase.appsProducts.insert(appId, product);
+        this.setState({ isAsyncProcessing: true });
+        return apiDatabase.appsProducts.insert(appId, postProduct).then(() => {
+            this.closeModal();
+            return notify(this.props.t('Add successful!'), { type: 'success' });
+        }).catch(() => {
+            this.setState({ isAsyncProcessing: false });
+            return notify(this.props.t('An error occurred!'), { type: 'danger' });
+        });
     }
 
-    updateProduct(productId) {
-        let product = {
-            name: '測試類別_更新',
-            description: '類別描述_' + Date.now(),
-            canAppoint: true,
-            receptionist_ids: ['5b5c44caf0eeb21fe418c558', '5b5c44e4f0eeb21fe418c55e']
-        };
-
+    updateProduct(productId, product) {
         let appId = this.state.appId;
-        return apiDatabase.appsProducts.update(appId, productId, product);
+        let _product = this.props.appsProducts[appId].products[productId];
+        let putProduct = Object.assign({}, _product, product);
+
+        return apiDatabase.appsProducts.update(appId, productId, putProduct).then(() => {
+            this.closeModal();
+            return notify(this.props.t('Update successful!'), { type: 'success' });
+        }).catch(() => {
+            this.setState({ isAsyncProcessing: false });
+            return notify(this.props.t('An error occurred!'), { type: 'danger' });
+        });
     }
 
     deleteProduct(productId) {
         let appId = this.state.appId;
-        return apiDatabase.appsProducts.delete(appId, productId);
+        return apiDatabase.appsProducts.delete(appId, productId).then(() => {
+            this.closeModal();
+            return notify(this.props.t('Remove successful!'), { type: 'success' });
+        }).catch(() => {
+            this.setState({ isAsyncProcessing: false });
+            return notify(this.props.t('An error occurred!'), { type: 'danger' });
+        });
+    }
+
+    closeModal() {
+        this.setState({
+            isAsyncProcessing: false,
+            productId: void 0,
+            product: void 0
+        });
     }
 
     render() {
         let appId = this.state.appId;
         let appProducts = this.props.appsProducts[appId] || { products: {} };
+
         /** @type {Chatshier.Models.Products} */
         let products = appProducts.products;
+        let productIds = Object.keys(products).sort((a, b) => {
+            let tA = new Date(products[a].updatedTime);
+            let tB = new Date(products[b].updatedTime);
+
+            if (tA < tB) {
+                return 1;
+            } else if (tA > tB) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
 
         return (
             <Aux>
@@ -83,31 +136,81 @@ class Products extends React.Component {
                     <Fade in className="align-items-center mt-5 container category-wrapper">
                         <Card className="pb-3 chsr">
                             <div className="text-left table-title">
-                                <h3 className="mb-4 pt-3 px-3">產品管理</h3>
-                                <p className="mb-3 pt-0 px-3">首頁 / 預約系統 / 產品管理</p>
+                                <h3 className="mb-4 pt-3 px-3"><Trans i18nKey="Product management" /></h3>
+                                <p className="mb-3 pt-0 px-3"><Trans i18nKey="Home" /> / <Trans i18nKey="Appointment system" /> / <Trans i18nKey="Product management" /></p>
                                 <p className="mb-3 pt-0 px-3">新增、更新或刪除產品</p>
                             </div>
+
                             <AppsSelector className="px-3 my-3" onChange={this.appChanged} />
 
-                            <Button color="info" onClick={this.insertProduct}>新增產品</Button>
-                            <div className="products-wrapper">
-                                {Object.keys(products).map((productId) => {
+                            <div className="px-3 pt-0 d-flex flex-wrap products-wrapper">
+                                <Card className="w-100 m-2 add-btn" onClick={() => this.setState({ product: {} })}>
+                                    <i className="m-auto fas fa-plus fa-2x"></i>
+                                </Card>
+                                {productIds.map((productId) => {
                                     let product = products[productId];
+                                    let receptionistIds = product.receptionist_ids || [];
                                     return (
-                                        <Aux key={productId}>
-                                            <div>產品ID: {productId}</div>
-                                            <div>產品名稱: {product.name}</div>
-                                            <div>產品描述: {product.description}</div>
-                                            <div>服務人員數: {product.receptionist_ids.length}</div>
-                                            <Button color="primary" onClick={() => this.updateProduct(productId)}>更新產品</Button>
-                                            <Button color="danger" onClick={() => this.deleteProduct(productId)}>刪除產品</Button>
-                                        </Aux>
+                                        <Card key={productId} className="d-inline-block w-100 m-2 product-item">
+                                            <CardBody className="p-2 text-center bg-transparent">
+                                                <div className="mx-auto image-container border-circle">
+                                                    <img className="image-fit border-circle" src={product.src || logoPng} alt={product.name} />
+                                                </div>
+                                                <div className="mt-2 font-weight-bold text-info">{product.name}</div>
+                                                <div className="text-muted small">{product.description}</div>
+                                            </CardBody>
+
+                                            <CardFooter className="pb-4 card-footer flex-column d-inherit border-none bg-transparent">
+                                                <div className="d-flex align-items-center mb-2 text-muted">
+                                                    <i className="mr-2 fas fa-stopwatch fa-fw fa-1p5x"></i>
+                                                    <span className="small">服務人員數 {receptionistIds.length} 人</span>
+                                                </div>
+
+                                                <div className="d-flex align-items-center mb-2 text-muted">
+                                                    <i className="mr-2 fas fa-stopwatch fa-fw fa-1p5x"></i>
+                                                    <span className="small">上架狀態 {product.isOnShelves ? '已上架' : '未上架'}</span>
+                                                </div>
+
+                                                <div className="mt-2 d-flex justify-content-around">
+                                                    <Button color="light" id={'productEditBtn_' + productId}
+                                                        onClick={() => {
+                                                            this.setState({
+                                                                productId: productId,
+                                                                product: products[productId]
+                                                            });
+                                                        }}
+                                                        disabled={this.state.isAsyncProcessing}>
+                                                        <i className="fas fa-edit"></i>
+                                                    </Button>
+                                                    <UncontrolledTooltip placement="top" delay={0} target={'productEditBtn_' + productId}>編輯</UncontrolledTooltip>
+
+                                                    <Button color="light" id={'productDeleteBtn_' + productId}
+                                                        disabled={this.state.isAsyncProcessing}>
+                                                        <i className="fas fa-trash-alt"></i>
+                                                    </Button>
+                                                    <UncontrolledTooltip placement="top" delay={0} target={'productDeleteBtn_' + productId}>刪除</UncontrolledTooltip>
+                                                </div>
+                                            </CardFooter>
+                                        </Card>
                                     );
                                 })}
                             </div>
                         </Card>
                     </Fade>
                 </PageWrapper>
+
+                {this.state.product &&
+                <ProductModal
+                    isOpen={!!this.state.product}
+                    isUpdate={!!this.state.productId}
+                    appId={this.state.appId}
+                    productId={this.state.productId}
+                    product={this.state.product}
+                    insertHandler={this.insertProduct}
+                    updateHandler={this.updateProduct}
+                    deleteHandler={this.deleteProduct}
+                    onAppChange={this.appChanged}
+                    close={this.closeModal} />}
             </Aux>
         );
     }

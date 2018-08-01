@@ -11,6 +11,7 @@ import apiDatabase from '../../helpers/apiDatabase/index';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
+import { notify } from '../../components/Notify/Notify';
 
 import './Categories.css';
 
@@ -42,31 +43,44 @@ class Categories extends React.Component {
         this.setState({ appId: appId });
     }
 
-    insertCategory() {
-        let category = {
-            parent_id: '',
-            name: '測試類別',
-            description: '類別描述_' + Date.now()
-        };
+    insertCategory(category) {
+        let postCategory = Object.assign({
+            parent_id: ''
+        }, category);
 
         let appId = this.state.appId;
-        return apiDatabase.appsCategories.insert(appId, category);
+        return apiDatabase.appsCategories.insert(appId, postCategory).then(() => {
+            this.closeModal();
+            return notify(this.props.t('Add successful!'), { type: 'success' });
+        }).catch(() => {
+            this.setState({ isAsyncProcessing: false });
+            return notify(this.props.t('An error occurred!'), { type: 'danger' });
+        });
     }
 
-    updateCategory(categoryId) {
-        let category = {
-            name: '測試類別_更新',
-            description: '類別描述_' + Date.now(),
-            product_ids: ['5b5c40c51650cb1f8e1fd270', '5b5c40c91650cb1f8e1fd272']
-        };
-
+    updateCategory(categoryId, category) {
         let appId = this.state.appId;
-        return apiDatabase.appsCategories.update(appId, categoryId, category);
+        let _category = this.props.appsCategories[appId].categories[categoryId];
+        let putCategory = Object.assign({}, _category, category);
+
+        return apiDatabase.appsCategories.update(appId, categoryId, putCategory).then(() => {
+            this.closeModal();
+            return notify(this.props.t('Update successful!'), { type: 'success' });
+        }).catch(() => {
+            this.setState({ isAsyncProcessing: false });
+            return notify(this.props.t('An error occurred!'), { type: 'danger' });
+        });
     }
 
     deleteCategory(categoryId) {
         let appId = this.state.appId;
-        return apiDatabase.appsCategories.delete(appId, categoryId);
+        return apiDatabase.appsCategories.delete(appId, categoryId).then(() => {
+            this.closeModal();
+            return notify(this.props.t('Remove successful!'), { type: 'success' });
+        }).catch(() => {
+            this.setState({ isAsyncProcessing: false });
+            return notify(this.props.t('An error occurred!'), { type: 'danger' });
+        });
     }
 
     render() {

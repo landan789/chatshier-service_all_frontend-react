@@ -15,7 +15,6 @@ import apiDatabase from '../../helpers/apiDatabase/index';
 import regex from '../../utils/regex';
 
 import ReceptionistModal from '../../components/Modals/Receptionist/Receptionist';
-
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
@@ -128,6 +127,7 @@ class ReceptionistsPage extends React.Component {
     render() {
         let appId = this.state.appId;
         let appReceptionists = this.props.appsReceptionists[appId] || { receptionists: {} };
+
         /** @type {Chatshier.Models.Receptionists} */
         let receptionists = appReceptionists.receptionists;
         let receptionistIds = Object.keys(receptionists).sort((a, b) => {
@@ -155,30 +155,26 @@ class ReceptionistsPage extends React.Component {
                                 <p className="mb-3 pt-0 px-3 text-muted small">新增、更新或刪除服務人員；向服務人員共享機器人預約行事曆</p>
                             </div>
 
-                            <div className="d-flex flex-nowrap justify-content-between">
-                                <AppsSelector className="px-3 my-3" onChange={this.appChanged} />
-                                <div className="px-3 my-3 btn-group">
-                                    <Button color="light" className="btn-border" onClick={() => this.setState({ receptionist: {} })}>
-                                        <i className="fas fa-plus"></i>
-                                    </Button>
-                                </div>
-                            </div>
+                            <AppsSelector className="px-3 my-3" onChange={this.appChanged} />
 
-                            <div className="px-3 pt-0 card-deck receptionists-wrapper">
+                            <div className="px-3 pt-0 d-flex flex-wrap receptionists-wrapper">
+                                <Card className="w-100 m-2 add-btn" onClick={() => this.setState({ receptionist: {} })}>
+                                    <i className="m-auto fas fa-plus fa-2x"></i>
+                                </Card>
                                 {receptionistIds.map((receptionistId) => {
                                     let receptionist = receptionists[receptionistId];
                                     let appointmentIds = receptionist.appointment_ids || [];
                                     return (
-                                        <Card key={receptionistId} className="mt-3 receptionist-item">
-                                            <CardBody className="p-2 text-center">
-                                                <div className="mx-auto image-container">
-                                                    <img className="image-fit" src={receptionist.photo || defaultAvatarPng} alt={receptionist.name} />
+                                        <Card key={receptionistId} className="d-inline-block w-100 m-2 receptionist-item">
+                                            <CardBody className="p-2 text-center bg-transparent">
+                                                <div className="mx-auto image-container border-circle">
+                                                    <img className="image-fit border-circle" src={receptionist.photo || defaultAvatarPng} alt={receptionist.name} />
                                                 </div>
-                                                <div className="mt-2">{receptionist.name}</div>
-                                                <div className="small">{receptionist.gmail}</div>
+                                                <div className="mt-2 font-weight-bold text-info">{receptionist.name}</div>
+                                                <div className="text-muted small">{receptionist.gmail}</div>
                                             </CardBody>
 
-                                            <CardFooter className="pb-4 card-footer flex-column">
+                                            <CardFooter className="pb-4 card-footer flex-column d-inherit border-none bg-transparent">
                                                 <div className="d-flex align-items-center mb-2 text-muted">
                                                     <i className="mr-2 fas fa-stopwatch fa-fw fa-1p5x"></i>
                                                     <span className="small">預約間隔 {(receptionist.interval / HOUR).toFixed(1)} 小時</span>
@@ -191,7 +187,7 @@ class ReceptionistsPage extends React.Component {
 
                                                 <div className="d-flex align-items-center mb-2 text-muted">
                                                     <i className="mr-2 fas fa-handshake fa-fw fa-1p5x"></i>
-                                                    <span className="small">行事曆 {receptionist.gcalendarId ? '已連結' : '未連結'}</span>
+                                                    <span className="small">行事曆 {receptionist.gcalendarId ? '已分享' : '未分享'}</span>
                                                 </div>
 
                                                 <div className="mt-2 d-flex justify-content-around">
@@ -214,7 +210,7 @@ class ReceptionistsPage extends React.Component {
                                                         <i className="fas fa-calendar-plus"></i>
                                                     </Button>}
                                                     {!receptionist.gcalendarId &&
-                                                    <UncontrolledTooltip placement="top" delay={0} target={'calendarLinkBtn_' + receptionistId}>連結行事曆</UncontrolledTooltip>}
+                                                    <UncontrolledTooltip placement="top" delay={0} target={'calendarLinkBtn_' + receptionistId}>分享行事曆</UncontrolledTooltip>}
 
                                                     <Button color="light" id={'receptionistDeleteBtn_' + receptionistId}
                                                         onClick={() => this.deleteReceptionist(receptionistId)}

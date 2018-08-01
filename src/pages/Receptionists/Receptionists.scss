@@ -1,35 +1,37 @@
 @import '../../styles/mixins/_rwd';
 
 .receptionists-wrapper {
-    .card-footer {
-        display: inherit;
-        border: none;
-    }
-
-    .card-body,
-    .card-footer {
-        background-color: transparent;
-    }
-
-    .receptionist-item {
+    .receptionist-item,
+    .add-btn {
+        min-height: 20rem;
         min-width: 16rem;
-        max-width: 100%;
 
-        @include media-breakpoint-up(md) {
-            max-width: calc(50% - 30px);
+        @include media-breakpoint-up(lg) {
+            max-width: calc(50% - 1rem);
         }
 
         @include media-breakpoint-up(xl) {
-            max-width: calc(33% - 30px);
+            max-width: calc(33% - 1rem);
+        }
+    }
+
+    .add-btn {
+        cursor: pointer;
+
+        @include media-breakpoint-up(xl) {
+            min-width: calc(33% - 1rem);
+        }
+
+        &:hover {
+            background-color: #ddd;
+            -webkit-transition: background-color 300ms;
+            transition: background-color 300ms;
+            will-change: background-color;
         }
     }
 
     .image-container {
         width: 6rem;
         height: 6rem;
-
-        &, img {
-            border-radius: 50%;
-        }
     }
 }

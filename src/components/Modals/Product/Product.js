@@ -8,18 +8,16 @@ import { Button, Modal, ModalHeader, ModalBody, FormGroup } from 'reactstrap';
 
 import ModalCore from '../ModalCore';
 import apiDatabase from '../../../helpers/apiDatabase';
-import { HOUR } from '../../../utils/unitTime';
-import regex from '../../../utils/regex';
 
-class ReceptionistModal extends ModalCore {
+class ProductModal extends ModalCore {
     static propTypes = {
         t: PropTypes.func.isRequired,
         apps: PropTypes.object.isRequired,
-        appsReceptionists: PropTypes.object.isRequired,
+        appsProducts: PropTypes.object.isRequired,
         isUpdate: PropTypes.bool.isRequired,
         appId: PropTypes.string,
-        receptionistId: PropTypes.string,
-        receptionist: PropTypes.object,
+        productId: PropTypes.string,
+        product: PropTypes.object,
         insertHandler: PropTypes.func.isRequired,
         updateHandler: PropTypes.func.isRequired,
         deleteHandler: PropTypes.func.isRequired,
@@ -29,17 +27,14 @@ class ReceptionistModal extends ModalCore {
     constructor(props, ctx) {
         super(props, ctx);
 
-        /** @type {Chatshier.Models.Receptionist} */
-        let receptionist = props.receptionist || {};
+        /** @type {Chatshier.Models.Product} */
+        let product = props.product || {};
 
         this.state = {
             isOpen: props.isOpen,
             appId: props.appId || '',
-            name: receptionist.name || '',
-            gmail: receptionist.gmail || '',
-            interval: receptionist.interval || HOUR,
-            maxNumber: receptionist.maxNumber || 0,
-            schedules: receptionist.schedules || []
+            name: product.name,
+            description: product.description
         };
 
         this.onSubmitForm = this.onSubmitForm.bind(this);
@@ -49,14 +44,11 @@ class ReceptionistModal extends ModalCore {
     onSubmitForm(ev) {
         ev.preventDefault();
 
-        let receptionist = {
+        let product = {
             name: this.state.name,
-            gmail: this.state.gmail,
-            interval: this.state.interval,
-            maxNumber: this.state.maxNumber,
-            schedules: this.state.schedules
+            description: this.state.description
         };
-        return this.props.isUpdate ? this.props.updateHandler(this.props.receptionistId, receptionist) : this.props.insertHandler(receptionist);
+        return this.props.isUpdate ? this.props.updateHandler(this.props.productId, product) : this.props.insertHandler(product);
     }
 
     onAppChange(ev) {
@@ -65,14 +57,14 @@ class ReceptionistModal extends ModalCore {
     }
 
     render() {
-        if (!this.props.receptionist) {
+        if (!this.props.product) {
             return null;
         }
 
         return (
-            <Modal className="receptionist-modal" isOpen={this.state.isOpen} toggle={this.closeModal}>
+            <Modal className="product-modal" isOpen={this.state.isOpen} toggle={this.closeModal}>
                 <ModalHeader toggle={this.closeModal}>
-                    <Trans i18nKey={this.props.isUpdate ? 'Edit receptionist' : 'Add receptionist'} />
+                    <Trans i18nKey={this.props.isUpdate ? 'Edit product' : 'Add product'} />
                 </ModalHeader>
 
                 <ModalBody>
@@ -104,7 +96,7 @@ class ReceptionistModal extends ModalCore {
                             </label>
                             <input className="form-control"
                                 type="text"
-                                placeholder={this.props.t('Fill the receptionist\'s name')}
+                                placeholder={this.props.t('Fill the product name')}
                                 value={this.state.name}
                                 maxLength={50}
                                 onChange={(ev) => this.setState({ name: ev.target.value })}
@@ -113,41 +105,15 @@ class ReceptionistModal extends ModalCore {
 
                         <FormGroup>
                             <label className="form-check-label col-form-label font-weight-bold">
-                                {!this.props.isUpdate && <span className="mr-1 text-danger">*</span>}
-                                Gmail:
+                                <Trans i18nKey="Description" />:
                             </label>
-                            <input className="form-control"
+                            <textarea className="form-control"
                                 type="text"
-                                placeholder={this.props.t('Fill the receptionist\'s Gmail')}
-                                value={this.state.gmail}
-                                pattern={regex.emailWeak.source}
+                                placeholder={this.props.t('Fill the product description')}
+                                value={this.state.description}
                                 maxLength={50}
-                                onChange={(ev) => this.setState({ gmail: ev.target.value })}
-                                required />
-                        </FormGroup>
-
-                        <FormGroup>
-                            <label className="form-check-label col-form-label font-weight-bold">預約間隔 (小時):</label>
-                            <input className="form-control"
-                                type="number"
-                                placeholder={1.0}
-                                value={Math.floor(((this.state.interval || HOUR) / HOUR) * 10) / 10}
-                                min={1.0}
-                                max={24.0}
-                                step={0.5}
-                                onChange={(ev) => this.setState({ interval: ev.target.value * HOUR })} />
-                        </FormGroup>
-
-                        <FormGroup>
-                            <label className="form-check-label col-form-label font-weight-bold">預約數上限:</label>
-                            <input className="form-control"
-                                type="number"
-                                placeholder={0}
-                                value={this.state.maxNumber || 0}
-                                min={0}
-                                max={100000000}
-                                step={1}
-                                onChange={(ev) => this.setState({ maxNumber: ev.target.value })} />
+                                onChange={(ev) => this.setState({ description: ev.target.value })}>
+                            </textarea>
                         </FormGroup>
 
                         <div className="d-flex align-items-center justify-content-end">
@@ -165,7 +131,7 @@ class ReceptionistModal extends ModalCore {
 
                             {this.props.isUpdate &&
                             <Button className="mr-1" type="button" color="danger"
-                                onClick={() => this.props.deleteHandler && this.props.deleteHandler(this.props.receptionistId)}
+                                onClick={() => this.props.deleteHandler && this.props.deleteHandler(this.props.productId)}
                                 disabled={this.state.isAsyncWorking}>
                                 <Trans i18nKey="Remove" />
                             </Button>}
@@ -185,8 +151,8 @@ const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
     return Object.assign({}, ownProps, {
         apps: storeState.apps,
-        appsReceptionists: storeState.appsReceptionists
+        appsProducts: storeState.appsProducts
     });
 };
 
-export default withTranslate(connect(mapStateToProps)(ReceptionistModal));
+export default withTranslate(connect(mapStateToProps)(ProductModal));

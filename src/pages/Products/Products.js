@@ -82,11 +82,12 @@ class Products extends React.Component {
 
     updateProduct(productId, product) {
         let appId = this.state.appId;
+        /** @type {Chatshier.Models.Product} */
         let _product = this.props.appsProducts[appId].products[productId];
 
         let appReceptionists = this.props.appsReceptionists[appId] || { receptionists: {} };
         let receptionists = appReceptionists.receptionists;
-        _product.receptionistIds = (_product.receptionistIds || []).filter((receptionistId) => !!receptionists[receptionistId]);
+        _product.receptionist_ids = (_product.receptionist_ids || []).filter((receptionistId) => !!receptionists[receptionistId]);
 
         let putProduct = Object.assign({}, _product, product);
 
@@ -124,7 +125,10 @@ class Products extends React.Component {
 
         /** @type {Chatshier.Models.Products} */
         let products = appProducts.products;
-        let productIds = Object.keys(products).sort((a, b) => {
+        let productIds = Object.keys(products).filter((productId) => {
+            let _product = products[productId];
+            return _product && _product.canAppoint;
+        }).sort((a, b) => {
             let tA = new Date(products[a].updatedTime);
             let tB = new Date(products[b].updatedTime);
 
@@ -157,6 +161,7 @@ class Products extends React.Component {
                                 <Card className="w-100 m-2 add-btn" onClick={() => this.setState({ product: {} })}>
                                     <i className="m-auto fas fa-plus fa-2x"></i>
                                 </Card>
+
                                 {productIds.map((productId) => {
                                     let product = products[productId];
                                     let receptionistIds = (product.receptionist_ids || []).filter((receptionistId) => !!receptionists[receptionistId]);

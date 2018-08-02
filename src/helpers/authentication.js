@@ -42,13 +42,9 @@ class AuthenticationHelper {
      */
     set jwt(value = '') {
         this._jwt = value;
-        if (this._jwt) {
-            this.payload = jwtDecode(this._jwt) || {};
-            window.localStorage.setItem('jwt', this._jwt);
-        } else {
-            this.payload = {};
-            window.localStorage.removeItem('jwt');
-        }
+        this.payload = this._jwt ? jwtDecode(this._jwt) : {};
+
+        window.localStorage.setItem('jwt', this._jwt || '');
         apiBot.setJWT(this._jwt);
         apiDatabase.setJWT(this._jwt);
         apiSign.setJWT(this._jwt);

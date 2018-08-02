@@ -20,9 +20,7 @@ import CalendarModal from '../../components/Modals/Calendar/Calendar';
 import TicketEditModal from '../../components/Modals/TicketEdit/TicketEdit';
 
 import $ from 'jquery';
-import 'fullcalendar';
-import 'fullcalendar/dist/locale/zh-tw';
-import 'fullcalendar/dist/fullcalendar.min.css';
+
 import './Calendar.css';
 
 const CALENDAR_EVENT_TYPES = Object.freeze({

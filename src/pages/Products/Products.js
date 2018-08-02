@@ -220,8 +220,7 @@ class Products extends React.Component {
                 </PageWrapper>
 
                 {this.state.product &&
-                <ProductModal
-                    isOpen={!!this.state.product}
+                <ProductModal isOpen={!!this.state.product}
                     isUpdate={!!this.state.productId}
                     appId={this.state.appId}
                     productId={this.state.productId}

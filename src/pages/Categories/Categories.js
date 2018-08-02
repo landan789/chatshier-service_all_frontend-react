@@ -9,12 +9,17 @@ import SortableTree from 'react-sortable-tree';
 
 import apiDatabase from '../../helpers/apiDatabase/index';
 
+import CategoryModal from '../../components/Modals/Category/Category';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import { notify } from '../../components/Notify/Notify';
 
+import logoPng from '../../image/logo.png';
+
 import './Categories.css';
+
+const MAX_DEPTH = 2;
 
 class Categories extends React.Component {
     static propTypes = {
@@ -92,13 +97,17 @@ class Categories extends React.Component {
         this.state = Object.assign({
             prevProps: null,
             appId: '',
+            selectedCategoryId: '',
             treeData: []
         }, Categories.getDerivedStateFromProps(props, {}));
 
         this.appChanged = this.appChanged.bind(this);
         this.insertCategory = this.insertCategory.bind(this);
+        this.updateCategory = this.updateCategory.bind(this);
+        this.deleteCategory = this.deleteCategory.bind(this);
 
         this.generateNodeProps = this.generateNodeProps.bind(this);
+        this.closeModal = this.closeModal.bind(this);
     }
 
     componentDidMount() {
@@ -117,7 +126,7 @@ class Categories extends React.Component {
         let nextState = this.state;
         nextState.treeData && (nextState.treeData.length = 0);
         nextState.treeData = Categories.createTreeData(categories);
-        this.setState({ appId: appId });
+        this.setState({ appId: appId, selectedCategoryId: '' });
     }
 
     insertCategory(category) {
@@ -189,13 +198,23 @@ class Categories extends React.Component {
         let deleteId = 'categoryDelete_' + categoryId;
 
         let nodeProps = {
-            className: 'category-node',
-            buttons: [
+            className: 'cursor-pointer category-node' + (categoryId && this.state.selectedCategoryId === categoryId ? ' selected' : ''),
+            onClick: () => {
+                if (!categoryId || this.state.selectedCategoryId === categoryId) {
+                    return;
+                }
+                this.setState({ selectedCategoryId: categoryId });
+            },
+            buttons: []
+        };
+
+        if (categoryNode.path.length < MAX_DEPTH) {
+            nodeProps.buttons.push(
                 <Button color="light" size="sm" className={!categoryId ? ' absolute-stretch' : ''}
                     key={insertId}
                     id={insertId}
                     disabled={this.state.isAsyncProcessing}
-                    onClick={() => this.setState({ category: categories[categoryId] })}>
+                    onClick={() => this.setState({ category: { parent_id: categoryId } })}>
                     <i className="fas fa-plus"></i>
                 </Button>,
                 <UncontrolledTooltip placement="top" delay={0}
@@ -203,8 +222,8 @@ class Categories extends React.Component {
                     target={insertId}>
                     <span>{categoryId ? '新增子類別' : '新增'}</span>
                 </UncontrolledTooltip>
-            ]
-        };
+            );
+        }
 
         if (categoryId) {
             nodeProps.buttons.push(
@@ -212,7 +231,7 @@ class Categories extends React.Component {
                     key={updateId}
                     id={updateId}
                     disabled={this.state.isAsyncProcessing}
-                    onClick={() => this.setState({ category: { parent_id: categoryId } })}>
+                    onClick={() => this.setState({ category: categories[categoryId] })}>
                     <i className="fas fa-edit"></i>
                 </Button>,
                 <UncontrolledTooltip placement="top" delay={0}
@@ -233,10 +252,6 @@ class Categories extends React.Component {
                     <span>刪除</span>
                 </UncontrolledTooltip>
             );
-
-            if (this.state.selectedNodeId === categoryId) {
-                nodeProps.className = 'selected';
-            }
         }
         return nodeProps;
     }
@@ -246,6 +261,8 @@ class Categories extends React.Component {
         let appCategories = this.props.appsCategories[appId] || { categories: {} };
         /** @type {Chatshier.Models.Categories} */
         let categories = appCategories.categories;
+        let category = this.state.selectedCategoryId && categories[this.state.selectedCategoryId];
+        let categoryProductIds = category ? category.product_ids || [] : [];
 
         let appProducts = this.props.appsProducts[appId] || { products: {} };
         /** @type {Chatshier.Models.Products} */
@@ -270,17 +287,44 @@ class Categories extends React.Component {
                                     <SortableTree treeData={this.state.treeData}
                                         getNodeKey={(categoryNode) => categoryNode.node.categoryId}
                                         canDrag={false}
-                                        maxDepth={2}
+                                        maxDepth={MAX_DEPTH}
                                         style={{ height: '24rem' }}
                                         onChange={(treeData) => this.setState({ treeData: treeData })}
                                         generateNodeProps={this.generateNodeProps} />
                                 </Card>
-                                <Card className="col-12 col-md-6">
+                                <Card className="flex-row flex-wrap p-2 col-12 col-md-6">
+                                    {categoryProductIds.map((productId) => {
+                                        let product = products[productId];
+                                        let className = 'm-1 p-2 product-item';
+
+                                        return (
+                                            <div key={productId} className={className}>
+                                                <div className="image-container">
+                                                    <img className="image-fit" src={product.src || logoPng} alt={product.name} />
+                                                </div>
+                                                <div className="product-name text-center text-muted small">
+                                                    <span>{product.name}</span>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
                                 </Card>
                             </div>
                         </Card>
                     </Fade>
                 </PageWrapper>
+
+                {this.state.category &&
+                <CategoryModal isOpen={!!this.state.category}
+                    isUpdate={!!this.state.categoryId}
+                    appId={this.state.appId}
+                    categoryId={this.state.categoryId}
+                    category={this.state.category}
+                    insertHandler={this.insertCategory}
+                    updateHandler={this.updateCategory}
+                    deleteHandler={this.deleteCategory}
+                    onAppChange={this.appChanged}
+                    close={this.closeModal} />}
             </Aux>
         );
     }

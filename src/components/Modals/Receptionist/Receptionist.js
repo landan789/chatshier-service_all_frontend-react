@@ -19,7 +19,7 @@ class ReceptionistModal extends ModalCore {
         isUpdate: PropTypes.bool.isRequired,
         appId: PropTypes.string,
         receptionistId: PropTypes.string,
-        receptionist: PropTypes.object,
+        receptionist: PropTypes.object.isRequired,
         insertHandler: PropTypes.func.isRequired,
         updateHandler: PropTypes.func.isRequired,
         deleteHandler: PropTypes.func.isRequired,

@@ -4,15 +4,21 @@ import { Trans } from 'react-i18next';
 import { withTranslate } from '../../../i18n';
 import { connect } from 'react-redux';
 
-import { Button, Modal, ModalHeader, ModalBody, FormGroup } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody,
+    FormGroup, Card } from 'reactstrap';
 
 import ModalCore from '../ModalCore';
 import apiDatabase from '../../../helpers/apiDatabase';
+
+import defaultAvatarPng from '../../../image/default-avatar.png';
+
+import './Product.css';
 
 class ProductModal extends ModalCore {
     static propTypes = {
         t: PropTypes.func.isRequired,
         apps: PropTypes.object.isRequired,
+        appsReceptionists: PropTypes.object.isRequired,
         appsProducts: PropTypes.object.isRequired,
         isUpdate: PropTypes.bool.isRequired,
         appId: PropTypes.string,
@@ -33,8 +39,10 @@ class ProductModal extends ModalCore {
         this.state = {
             isOpen: props.isOpen,
             appId: props.appId || '',
-            name: product.name,
-            description: product.description
+            name: product.name || '',
+            description: product.description || '',
+            isOnShelves: !!product.isOnShelves,
+            receptionistIds: product.receptionist_ids || []
         };
 
         this.onSubmitForm = this.onSubmitForm.bind(this);
@@ -46,7 +54,9 @@ class ProductModal extends ModalCore {
 
         let product = {
             name: this.state.name,
-            description: this.state.description
+            description: this.state.description,
+            isOnShelves: this.state.isOnShelves,
+            receptionist_ids: this.state.receptionistIds
         };
         return this.props.isUpdate ? this.props.updateHandler(this.props.productId, product) : this.props.insertHandler(product);
     }
@@ -61,6 +71,13 @@ class ProductModal extends ModalCore {
             return null;
         }
 
+        let appReceptionists = this.props.appsReceptionists[this.state.appId] || { receptionists: {} };
+
+        /** @type {Chatshier.Models.Receptionists} */
+        let receptionists = appReceptionists.receptionists;
+        let receptionistIds = Object.keys(receptionists);
+        let productReceptionistIds = this.state.receptionistIds;
+
         return (
             <Modal className="product-modal" isOpen={this.state.isOpen} toggle={this.closeModal}>
                 <ModalHeader toggle={this.closeModal}>
@@ -71,7 +88,7 @@ class ProductModal extends ModalCore {
                     <form onSubmit={this.onSubmitForm}>
                         {!this.props.isUpdate &&
                         <FormGroup>
-                            <label className="form-check-label col-form-label font-weight-bold">
+                            <label className="col-form-label font-weight-bold">
                                 <Trans i18nKey="Bot" />:
                             </label>
                             <select className="form-control"
@@ -90,7 +107,7 @@ class ProductModal extends ModalCore {
                         </FormGroup>}
 
                         <FormGroup>
-                            <label className="form-check-label col-form-label font-weight-bold">
+                            <label className="col-form-label font-weight-bold">
                                 {!this.props.isUpdate && <span className="mr-1 text-danger">*</span>}
                                 <Trans i18nKey="Name" />:
                             </label>
@@ -104,16 +121,72 @@ class ProductModal extends ModalCore {
                         </FormGroup>
 
                         <FormGroup>
-                            <label className="form-check-label col-form-label font-weight-bold">
+                            <label className="col-form-label font-weight-bold">
                                 <Trans i18nKey="Description" />:
                             </label>
                             <textarea className="form-control"
                                 type="text"
                                 placeholder={this.props.t('Fill the product description')}
                                 value={this.state.description}
-                                maxLength={50}
+                                maxLength={200}
+                                rows={6}
+                                style={{ resize: 'none' }}
                                 onChange={(ev) => this.setState({ description: ev.target.value })}>
                             </textarea>
+                        </FormGroup>
+
+                        <FormGroup>
+                            <label className="col-form-label font-weight-bold">
+                                <span>上架狀態</span>:
+                            </label>
+                            <FormGroup check>
+                                <label className="form-check-label col-form-label">
+                                    <input className="form-check-input"
+                                        type="checkbox"
+                                        checked={this.state.isOnShelves}
+                                        onChange={(ev) => this.setState({ isOnShelves: ev.target.checked })} />
+                                    <span>已上架</span>
+                                </label>
+                            </FormGroup>
+                        </FormGroup>
+
+                        <FormGroup>
+                            <label className="col-form-label font-weight-bold">
+                                <span>服務人員</span>:
+                            </label>
+                            <Card className="flex-row flex-wrap p-2">
+                                {receptionistIds.map((receptionistId) => {
+                                    let receptionist = receptionists[receptionistId];
+                                    let isSelected = productReceptionistIds.indexOf(receptionistId) >= 0;
+                                    let className = 'm-1 p-2 receptionist-item cursor-pointer';
+
+                                    return (
+                                        <div key={receptionistId} className={className}
+                                            onClick={() => {
+                                                let _receptionistIds = this.state.receptionistIds.slice();
+                                                let idx = _receptionistIds.indexOf(receptionistId);
+                                                if (idx >= 0) {
+                                                    _receptionistIds.splice(idx, 1);
+                                                } else {
+                                                    _receptionistIds.push(receptionistId);
+                                                }
+                                                this.setState({ receptionistIds: _receptionistIds });
+                                            }}>
+                                            <div className="image-container">
+                                                <img className="image-fit border-circle" src={receptionist.photo || defaultAvatarPng} alt={receptionist.name} />
+                                            </div>
+                                            <div className="receptionist-name text-center text-muted small">
+                                                <span>{receptionist.name}</span>
+                                            </div>
+
+                                            {isSelected &&
+                                            <div className="selected-effect position-absolute d-flex w-100 h-100 animated fadeIn">
+                                                <i className="m-auto fas fa-check-circle fa-2x text-success"></i>
+                                            </div>}
+                                        </div>
+                                    );
+                                })}
+                            </Card>
                         </FormGroup>
 
                         <div className="d-flex align-items-center justify-content-end">
@@ -151,6 +224,7 @@ const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
     return Object.assign({}, ownProps, {
         apps: storeState.apps,
+        appsReceptionists: storeState.appsReceptionists,
         appsProducts: storeState.appsProducts
     });
 };

@@ -15,6 +15,7 @@ import apiDatabase from '../../helpers/apiDatabase/index';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
+import SearchBar from '../../components/SearchBar/SearchBar';
 import TicketInsertModal from '../../components/Modals/TicketInsert/TicketInsert';
 import TicketContent from './TicketContent';
 
@@ -218,15 +219,8 @@ class Tickets extends React.Component {
                                 </ButtonGroup>
 
                                 <div className="d-flex">
-                                    <div className="mx-0 search">
-                                        <input className="search-box"
-                                            type="text"
-                                            placeholder={this.props.t('Search')}
-                                            value={this.state.searchKeyword}
-                                            onChange={this.keywordChanged} />
-                                    </div>
-
-                                    <Button size="sm" className="ticket-insert" color="light" onClick={this.openInsertModal}>
+                                    <SearchBar onChange={this.keywordChanged} />
+                                    <Button size="sm" className="ml-2 my-auto ticket-insert" color="light" onClick={this.openInsertModal}>
                                         <i className="fas fa-plus fa-fw"></i>
                                     </Button>
                                 </div>

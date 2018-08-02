@@ -25,7 +25,9 @@ import './Products.css';
 class Products extends React.Component {
     static propTypes = {
         t: PropTypes.func.isRequired,
-        appsProducts: PropTypes.object,
+        apps: PropTypes.object.isRequired,
+        appsProducts: PropTypes.object.isRequired,
+        appsReceptionists: PropTypes.object.isRequired,
         history: PropTypes.object.isRequired
     }
 
@@ -53,6 +55,7 @@ class Products extends React.Component {
     componentDidMount() {
         return Promise.all([
             apiDatabase.apps.find(),
+            apiDatabase.appsReceptionists.find(),
             apiDatabase.appsProducts.find()
         ]);
     }
@@ -80,6 +83,11 @@ class Products extends React.Component {
     updateProduct(productId, product) {
         let appId = this.state.appId;
         let _product = this.props.appsProducts[appId].products[productId];
+
+        let appReceptionists = this.props.appsReceptionists[appId] || { receptionists: {} };
+        let receptionists = appReceptionists.receptionists;
+        _product.receptionistIds = (_product.receptionistIds || []).filter((receptionistId) => !!receptionists[receptionistId]);
+
         let putProduct = Object.assign({}, _product, product);
 
         return apiDatabase.appsProducts.update(appId, productId, putProduct).then(() => {
@@ -128,6 +136,8 @@ class Products extends React.Component {
                 return 0;
             }
         });
+        let appReceptionists = this.props.appsReceptionists[appId] || { receptionists: {} };
+        let receptionists = appReceptionists.receptionists;
 
         return (
             <Aux>
@@ -149,26 +159,31 @@ class Products extends React.Component {
                                 </Card>
                                 {productIds.map((productId) => {
                                     let product = products[productId];
-                                    let receptionistIds = product.receptionist_ids || [];
+                                    let receptionistIds = (product.receptionist_ids || []).filter((receptionistId) => !!receptionists[receptionistId]);
+                                    let description = (product.description || '無描述');
+                                    description = description.length > 30 ? description.substring(0, 30) + '...' : description;
+
                                     return (
                                         <Card key={productId} className="d-inline-block w-100 m-2 product-item">
                                             <CardBody className="p-2 text-center bg-transparent">
                                                 <div className="mx-auto image-container border-circle">
                                                     <img className="image-fit border-circle" src={product.src || logoPng} alt={product.name} />
                                                 </div>
-                                                <div className="mt-2 font-weight-bold text-info">{product.name}</div>
-                                                <div className="text-muted small">{product.description}</div>
+                                                <div className="mt-2 px-3 font-weight-bold text-info">{product.name}</div>
+                                                <div className="mt-1 px-3 text-muted small">{description}</div>
                                             </CardBody>
 
                                             <CardFooter className="pb-4 card-footer flex-column d-inherit border-none bg-transparent">
                                                 <div className="d-flex align-items-center mb-2 text-muted">
-                                                    <i className="mr-2 fas fa-stopwatch fa-fw fa-1p5x"></i>
+                                                    <i className="mr-2 fas fa-users fa-fw fa-1p5x"></i>
                                                     <span className="small">服務人員數 {receptionistIds.length} 人</span>
                                                 </div>
 
                                                 <div className="d-flex align-items-center mb-2 text-muted">
-                                                    <i className="mr-2 fas fa-stopwatch fa-fw fa-1p5x"></i>
-                                                    <span className="small">上架狀態 {product.isOnShelves ? '已上架' : '未上架'}</span>
+                                                    <i className="mr-2 fas fa-shopping-cart fa-fw fa-1p5x"></i>
+                                                    <span className="small">
+                                                        上架狀態 {product.isOnShelves ? <span className="text-success">已上架</span> : <span className="text-danger">未上架</span>}
+                                                    </span>
                                                 </div>
 
                                                 <div className="mt-2 d-flex justify-content-around">
@@ -220,6 +235,7 @@ const mapStateToProps = (storeState, ownProps) => {
     // 將此頁面需要使用的 store state 抓出，綁定至 props 中
     return Object.assign({}, ownProps, {
         apps: storeState.apps,
+        appsReceptionists: storeState.appsReceptionists,
         appsProducts: storeState.appsProducts
     });
 };

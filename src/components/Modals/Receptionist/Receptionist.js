@@ -79,7 +79,7 @@ class ReceptionistModal extends ModalCore {
                     <form onSubmit={this.onSubmitForm}>
                         {!this.props.isUpdate &&
                         <FormGroup>
-                            <label className="form-check-label col-form-label font-weight-bold">
+                            <label className="col-form-label font-weight-bold">
                                 <Trans i18nKey="Bot" />:
                             </label>
                             <select className="form-control"
@@ -98,7 +98,7 @@ class ReceptionistModal extends ModalCore {
                         </FormGroup>}
 
                         <FormGroup>
-                            <label className="form-check-label col-form-label font-weight-bold">
+                            <label className="col-form-label font-weight-bold">
                                 {!this.props.isUpdate && <span className="mr-1 text-danger">*</span>}
                                 <Trans i18nKey="Name" />:
                             </label>
@@ -112,7 +112,7 @@ class ReceptionistModal extends ModalCore {
                         </FormGroup>
 
                         <FormGroup>
-                            <label className="form-check-label col-form-label font-weight-bold">
+                            <label className="col-form-label font-weight-bold">
                                 {!this.props.isUpdate && <span className="mr-1 text-danger">*</span>}
                                 Gmail:
                             </label>

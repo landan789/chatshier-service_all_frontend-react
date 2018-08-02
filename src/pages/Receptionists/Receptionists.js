@@ -187,7 +187,9 @@ class ReceptionistsPage extends React.Component {
 
                                                 <div className="d-flex align-items-center mb-2 text-muted">
                                                     <i className="mr-2 fas fa-handshake fa-fw fa-1p5x"></i>
-                                                    <span className="small">行事曆 {receptionist.gcalendarId ? '已分享' : '未分享'}</span>
+                                                    <span className="small">
+                                                        行事曆 {receptionist.gcalendarId ? <span className="text-success">已分享</span> : <span className="text-danger">未分享</span>}
+                                                    </span>
                                                 </div>
 
                                                 <div className="mt-2 d-flex justify-content-around">

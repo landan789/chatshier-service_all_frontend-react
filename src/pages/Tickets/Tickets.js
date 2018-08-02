@@ -175,7 +175,7 @@ class Tickets extends React.Component {
                     <Fade in className="align-items-center mt-5 container ticket-wrapper">
                         <Card className="pb-5 chsr">
                             <div className="mx-4 mb-3 px-3 ticket-toolbar">
-                                <ButtonGroup className="mr-auto">
+                                <ButtonGroup className="mr-auto mb-2">
                                     <Button color="light" id="allTicketsFilter"
                                         className={this.state.statusFilter === STATUS_TYPES.NONE ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.NONE })}>
@@ -217,17 +217,19 @@ class Tickets extends React.Component {
                                     <UncontrolledTooltip placement="top" delay={0} target="closedFilter">已關閉</UncontrolledTooltip>
                                 </ButtonGroup>
 
-                                <div className="d-flex align-items-center w-25 mx-0 search">
-                                    <input className="search-box"
-                                        type="text"
-                                        placeholder={this.props.t('Search')}
-                                        value={this.state.searchKeyword}
-                                        onChange={this.keywordChanged} />
-                                </div>
+                                <div className="d-flex">
+                                    <div className="mx-0 search">
+                                        <input className="search-box"
+                                            type="text"
+                                            placeholder={this.props.t('Search')}
+                                            value={this.state.searchKeyword}
+                                            onChange={this.keywordChanged} />
+                                    </div>
 
-                                <Button size="sm" className="ticket-insert" color="light" onClick={this.openInsertModal}>
-                                    <i className="fas fa-plus fa-fw"></i>
-                                </Button>
+                                    <Button size="sm" className="ticket-insert" color="light" onClick={this.openInsertModal}>
+                                        <i className="fas fa-plus fa-fw"></i>
+                                    </Button>
+                                </div>
                             </div>
 
                             <AppsSelector className="mx-4 mb-3 px-3" onChange={this.appChanged} />

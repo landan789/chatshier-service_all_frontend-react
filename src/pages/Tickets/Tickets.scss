@@ -1,6 +1,8 @@
 .ticket-toolbar {
-    display: flex;
+    display: inherit;
+    flex-direction: flex-wrap;
     justify-content: flex-end;
+    align-items: center;
     margin: 1rem 0;
 
     .ticket-insert {

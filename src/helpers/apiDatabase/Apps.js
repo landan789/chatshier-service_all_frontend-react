@@ -18,6 +18,7 @@ class Apps extends Core {
     constructor() {
         super();
         this.apiEndPoint += 'apps/';
+
         this.TYPES = Object.freeze({
             SYSTEM: 'SYSTEM',
             CHATSHIER: 'CHATSHIER',

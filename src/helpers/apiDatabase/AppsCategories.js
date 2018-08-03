@@ -8,6 +8,11 @@ class AppsCategories extends Core {
     constructor() {
         super();
         this.apiEndPoint += 'apps-categories/';
+
+        this.TYPES = Object.freeze({
+            NORMAL: 'NORMAL',
+            APPOINTMENT: 'APPOINTMENT'
+        });
     }
 
     /**

@@ -39,21 +39,26 @@ class AppsSelector extends React.Component {
         let apps = this.props.apps || {};
         let appIds = Object.keys(apps);
         if (appIds.length > 0) {
-            this.state.selectedAppName = apps[appIds[0]].name;
-            this.props.onChange(appIds[0]);
+            let recentAppId = window.localStorage.getItem('recentAppId');
+            let appId = recentAppId && appIds.indexOf(recentAppId) >= 0 ? recentAppId : appIds[0];
+            this.state.selectedAppName = apps[appId].name;
+            this.props.onChange(appId);
         }
     }
 
     componentDidMount() {
-        let props = this.props;
         return apiDatabase.apps.find().then(() => {
+            let props = this.props;
             let apps = props.apps || {};
+
             let appIds = Object.keys(apps).filter((appId) => {
                 return this.props.showAll || (!this.props.showAll && apiDatabase.apps.TYPES.CHATSHIER !== apps[appId].type);
             });
 
             if (appIds.length > 0 && !this.state.selectedAppName) {
-                this.selectedApp(appIds[0], apps[appIds[0]].name);
+                let recentAppId = window.localStorage.getItem('recentAppId');
+                let appId = recentAppId && appIds.indexOf(recentAppId) >= 0 ? recentAppId : appIds[0];
+                this.selectedApp(appId, apps[appId].name);
             }
         });
     }
@@ -63,6 +68,7 @@ class AppsSelector extends React.Component {
     }
 
     selectedApp(appId, appName) {
+        window.localStorage.setItem('recentAppId', appId);
         this.setState({ selectedAppName: appName });
         this.props.onChange(appId);
     }

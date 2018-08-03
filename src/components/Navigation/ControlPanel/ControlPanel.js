@@ -81,7 +81,7 @@ const linkItems = [
         }, {
             link: ROUTES.CATEGORIES,
             icon: 'fas fa-list-alt fa-fw',
-            text: '預約目錄',
+            text: 'Appointment categoies',
             useReactRouter: true
         }]
     }, {

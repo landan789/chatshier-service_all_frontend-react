@@ -44,6 +44,11 @@
 }
 // #endregion
 
+.text-ellipsis {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+}
 
 .image-container {
     position: relative;

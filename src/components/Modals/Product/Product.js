@@ -175,7 +175,7 @@ class ProductModal extends ModalCore {
                                             <div className="image-container">
                                                 <img className="image-fit border-circle" src={receptionist.photo || defaultAvatarPng} alt={receptionist.name} />
                                             </div>
-                                            <div className="receptionist-name text-center text-muted small">
+                                            <div className="text-ellipsis text-center text-muted small">
                                                 <span>{receptionist.name}</span>
                                             </div>
 

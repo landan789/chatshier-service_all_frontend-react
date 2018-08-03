@@ -4,9 +4,13 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Aux from 'react-aux';
 import { Fade, Button, Card, UncontrolledTooltip } from 'reactstrap';
+import { Trans } from 'react-i18next';
 import { withTranslate } from '../../i18n';
 import SortableTree from 'react-sortable-tree';
 
+import ROUTES from '../../config/route';
+import authHelper from '../../helpers/authentication';
+import browserHelper from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import CategoryModal from '../../components/Modals/Category/Category';
@@ -26,7 +30,8 @@ class Categories extends React.Component {
         t: PropTypes.func.isRequired,
         apps: PropTypes.object.isRequired,
         appsCategories: PropTypes.object.isRequired,
-        appsProducts: PropTypes.object.isRequired
+        appsProducts: PropTypes.object.isRequired,
+        history: PropTypes.object.isRequired
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -64,15 +69,17 @@ class Categories extends React.Component {
         while (categoryIds.length > 0) {
             let categoryId = categoryIds.shift();
             let category = categories[categoryId];
+            if (apiDatabase.appsCategories.TYPES.APPOINTMENT !== category.type) {
+                continue;
+            }
+
             let node = {
                 categoryId: categoryId,
                 title: category.name || '',
-                subtitle: category.description || '',
                 expanded: true,
                 children: []
             };
-            node.title = node.title.length > 15 ? node.title.substring(0, 15) + '...' : node.title;
-            node.subtitle = node.subtitle.length > 30 ? node.subtitle.substring(0, 30) + '...' : node.subtitle;
+            node.title = node.title.length > 10 ? node.title.substring(0, 10) + '...' : node.title;
 
             if (!category.parent_id) {
                 // 沒有父類別，代表為根節點
@@ -108,6 +115,12 @@ class Categories extends React.Component {
 
         this.generateNodeProps = this.generateNodeProps.bind(this);
         this.closeModal = this.closeModal.bind(this);
+
+        browserHelper.setTitle(this.props.t('Appointment categoies'));
+        if (!authHelper.hasSignedin()) {
+            authHelper.signOut();
+            this.props.history.replace(ROUTES.SIGNIN);
+        }
     }
 
     componentDidMount() {
@@ -131,6 +144,7 @@ class Categories extends React.Component {
 
     insertCategory(category) {
         let postCategory = Object.assign({
+            type: apiDatabase.appsCategories.TYPES.APPOINTMENT,
             parent_id: ''
         }, category);
 
@@ -225,13 +239,13 @@ class Categories extends React.Component {
             );
         }
 
-        if (categoryId) {
+        if (categoryId && categories[categoryId]) {
             nodeProps.buttons.push(
                 <Button color="light" size="sm"
                     key={updateId}
                     id={updateId}
                     disabled={this.state.isAsyncProcessing}
-                    onClick={() => this.setState({ category: categories[categoryId] })}>
+                    onClick={() => this.setState({ categoryId: categoryId, category: categories[categoryId] })}>
                     <i className="fas fa-edit"></i>
                 </Button>,
                 <UncontrolledTooltip placement="top" delay={0}
@@ -252,17 +266,23 @@ class Categories extends React.Component {
                     <span>刪除</span>
                 </UncontrolledTooltip>
             );
+
+            let productCount = this._findProductIds(appId, categoryId).length;
+            nodeProps.buttons.unshift(
+                <div className="d-flex justify-content-center align-items-center text-center w-100 h-100 mr-2"
+                    key={'productIds_' + categoryId}>
+                    <span className="p-1 text-light bg-warning border-circle small count-badge">
+                        {productCount > 99 ? '99' : productCount}
+                    </span>
+                </div>
+            );
         }
         return nodeProps;
     }
 
     render() {
         let appId = this.state.appId;
-        let appCategories = this.props.appsCategories[appId] || { categories: {} };
-        /** @type {Chatshier.Models.Categories} */
-        let categories = appCategories.categories;
-        let category = this.state.selectedCategoryId && categories[this.state.selectedCategoryId];
-        let categoryProductIds = category ? category.product_ids || [] : [];
+        let categoryProductIds = this._findProductIds(appId, this.state.selectedCategoryId);
 
         let appProducts = this.props.appsProducts[appId] || { products: {} };
         /** @type {Chatshier.Models.Products} */
@@ -275,39 +295,60 @@ class Categories extends React.Component {
                     <Fade in className="align-items-center mt-5 container category-wrapper">
                         <Card className="pb-3 chsr">
                             <div className="text-left table-title">
-                                <h3 className="mb-4 pt-3 px-3">目錄管理</h3>
-                                <p className="mb-3 pt-0 px-3">首頁 / 預約系統 / 目錄管理</p>
-                                <p className="mb-3 pt-0 px-3">管理產品目錄</p>
+                                <h3 className="mb-4 pt-3 px-3"><Trans i18nKey="Appointment categoies" /></h3>
+                                <p className="mb-3 pt-0 px-3"><Trans i18nKey="Home" /> / <Trans i18nKey="Appointment system" /> / <Trans i18nKey="Appointment categoies" /></p>
+                                <p className="mb-3 pt-0 px-3">管理預約目錄</p>
                             </div>
 
-                            <AppsSelector className="px-3 my-3" onChange={this.appChanged} />
+                            <AppsSelector className="px-3 mt-3" onChange={this.appChanged} />
 
-                            <div className="d-flex flex-row px-3 justify-content-between categories-wrapper">
-                                <Card className="px-0 col-12 col-md-5">
+                            <div className="d-flex flex-wrap px-3 justify-content-between categories-wrapper">
+                                <Card className="mt-3 px-0 col-12 col-lg-5">
                                     <SortableTree treeData={this.state.treeData}
                                         getNodeKey={(categoryNode) => categoryNode.node.categoryId}
                                         canDrag={false}
                                         maxDepth={MAX_DEPTH}
-                                        style={{ height: '24rem' }}
                                         onChange={(treeData) => this.setState({ treeData: treeData })}
                                         generateNodeProps={this.generateNodeProps} />
                                 </Card>
-                                <Card className="flex-row flex-wrap p-2 col-12 col-md-6">
-                                    {categoryProductIds.map((productId) => {
-                                        let product = products[productId];
-                                        let className = 'm-1 p-2 product-item';
 
-                                        return (
-                                            <div key={productId} className={className}>
-                                                <div className="image-container">
-                                                    <img className="image-fit" src={product.src || logoPng} alt={product.name} />
-                                                </div>
-                                                <div className="product-name text-center text-muted small">
-                                                    <span>{product.name}</span>
-                                                </div>
+                                <Card className="mt-3 p-2 col-12 col-lg-6">
+                                    <div className="h-100 scoll-wrapper">
+                                        {this.state.selectedCategoryId &&
+                                        0 === categoryProductIds.length &&
+                                        <div className="d-flex absolute-stretch">
+                                            <div className="m-auto text-center text-muted">
+                                                <i className="mb-2 fas fa-meh fa-6x"></i>
+                                                <br />
+                                                <span>無任何產品</span>
                                             </div>
-                                        );
-                                    })}
+                                        </div>}
+
+                                        {categoryProductIds.map((productId) => {
+                                            let product = products[productId];
+                                            if (!product) {
+                                                return null;
+                                            }
+
+                                            let className = 'm-1 p-2 d-inline-block product-item';
+                                            let tooltipId = 'productTip_' + productId;
+                                            return (
+                                                <Aux key={productId}>
+                                                    <div id={tooltipId} className={className}>
+                                                        <div className="image-container">
+                                                            <img className="image-fit" src={product.src || logoPng} alt={product.name} />
+                                                        </div>
+                                                        <div className="text-ellipsis text-center text-muted small">
+                                                            <span>{product.name}</span>
+                                                        </div>
+                                                    </div>
+                                                    <UncontrolledTooltip placement="bottom" delay={0} target={tooltipId}>
+                                                        <span>{product.name}</span>
+                                                    </UncontrolledTooltip>
+                                                </Aux>
+                                            );
+                                        })}
+                                    </div>
                                 </Card>
                             </div>
                         </Card>
@@ -327,6 +368,46 @@ class Categories extends React.Component {
                     close={this.closeModal} />}
             </Aux>
         );
+    }
+
+    /**
+     * @param {string} appId
+     * @param {string} categoryId
+     * @returns {string[]}
+     */
+    _findProductIds(appId, categoryId) {
+        let appCategories = this.props.appsCategories[appId] || { categories: {} };
+        /** @type {Chatshier.Models.Categories} */
+        let categories = appCategories.categories;
+
+        let productIdsMap = {};
+        if (!(categoryId && categories[categoryId])) {
+            return Object.keys(productIdsMap);
+        }
+
+        let category = categories[categoryId];
+        let productIds = category.product_ids || [];
+        for (let i in productIds) { productIdsMap[productIds[i]] = productIds[i]; }
+        productIds = void 0;
+
+        let idFilter = (ids, id) => ids.filter((_id) => _id !== id);
+        let searchId = categoryId;
+        let categoryIds = idFilter(Object.keys(categories), searchId);
+        while (categoryIds.length > 0) {
+            let _categoryId = categoryIds.shift();
+            let _category = categories[_categoryId];
+            if (_category.parent_id && _category.parent_id === searchId) {
+                let _productIds = _category.product_ids || [];
+                for (let i in _productIds) { productIdsMap[_productIds[i]] = _productIds[i]; }
+                productIds = void 0;
+
+                searchId = _categoryId;
+                categoryIds.length = 0;
+                categoryIds = idFilter(Object.keys(categories), searchId);
+            }
+        }
+        searchId = categoryIds = void 0;
+        return Object.keys(productIdsMap);
     }
 }
 

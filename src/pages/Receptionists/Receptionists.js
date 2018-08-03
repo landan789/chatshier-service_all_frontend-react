@@ -207,7 +207,7 @@ class ReceptionistsPage extends React.Component {
 
                                                     {!receptionist.gcalendarId &&
                                                     <Button color="light" id={'calendarLinkBtn_' + receptionistId}
-                                                        onClick={() => this.updateReceptionist(receptionistId)}
+                                                        onClick={() => this.updateReceptionist(receptionistId, { runSharing: true })}
                                                         disabled={this.state.isAsyncProcessing}>
                                                         <i className="fas fa-calendar-plus"></i>
                                                     </Button>}

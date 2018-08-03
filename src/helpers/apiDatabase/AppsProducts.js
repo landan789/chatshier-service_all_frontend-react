@@ -8,6 +8,11 @@ class AppsProducts extends Core {
     constructor() {
         super();
         this.apiEndPoint += 'apps-products/';
+
+        this.TYPES = Object.freeze({
+            NORMAL: 'NORMAL',
+            APPOINTMENT: 'APPOINTMENT'
+        });
     }
 
     /**

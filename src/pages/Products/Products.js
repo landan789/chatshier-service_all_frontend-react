@@ -66,7 +66,7 @@ class Products extends React.Component {
 
     insertProduct(product) {
         let postProduct = Object.assign({
-            canAppoint: true
+            type: apiDatabase.appsProducts.TYPES.APPOINTMENT
         }, product);
 
         let appId = this.state.appId;
@@ -90,7 +90,7 @@ class Products extends React.Component {
         _product.receptionist_ids = (_product.receptionist_ids || []).filter((receptionistId) => !!receptionists[receptionistId]);
 
         let putProduct = Object.assign({}, _product, product);
-
+        this.setState({ isAsyncProcessing: true });
         return apiDatabase.appsProducts.update(appId, productId, putProduct).then(() => {
             this.closeModal();
             return notify(this.props.t('Update successful!'), { type: 'success' });
@@ -102,6 +102,7 @@ class Products extends React.Component {
 
     deleteProduct(productId) {
         let appId = this.state.appId;
+        this.setState({ isAsyncProcessing: true });
         return apiDatabase.appsProducts.delete(appId, productId).then(() => {
             this.closeModal();
             return notify(this.props.t('Remove successful!'), { type: 'success' });
@@ -127,7 +128,7 @@ class Products extends React.Component {
         let products = appProducts.products;
         let productIds = Object.keys(products).filter((productId) => {
             let _product = products[productId];
-            return _product && _product.canAppoint;
+            return _product && apiDatabase.appsProducts.TYPES.APPOINTMENT === _product.type;
         }).sort((a, b) => {
             let tA = new Date(products[a].updatedTime);
             let tB = new Date(products[b].updatedTime);
@@ -205,6 +206,7 @@ class Products extends React.Component {
                                                     <UncontrolledTooltip placement="top" delay={0} target={'productEditBtn_' + productId}>編輯</UncontrolledTooltip>
 
                                                     <Button color="light" id={'productDeleteBtn_' + productId}
+                                                        onClick={() => this.deleteProduct(productId)}
                                                         disabled={this.state.isAsyncProcessing}>
                                                         <i className="fas fa-trash-alt"></i>
                                                     </Button>

@@ -1,0 +1,31 @@
+$_product-item-size: 5.5rem;
+
+.category-modal {
+    .product-item {
+        position: relative;
+        max-width: $_product-item-size + 1rem;
+        border-radius: .5rem;
+
+        &.selected {
+            background-color: #eee;
+        }
+
+        .product-name {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow-x: hidden;
+        }
+
+        .selected-effect {
+            left: 0;
+            top: 0;
+            background-color: rgba(#000, .3);
+            border-radius: .5rem;
+        }
+    }
+
+    .image-container {
+        width: $_product-item-size;
+        height: $_product-item-size;
+    }
+}

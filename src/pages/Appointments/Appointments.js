@@ -11,6 +11,7 @@ import apiDatabase from '../../helpers/apiDatabase/index';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
+import { notify } from '../../components/Notify/Notify';
 
 import './Appointments.css';
 
@@ -35,16 +36,44 @@ class Appointments extends React.Component {
         ]);
     }
 
-    updateAppointment(appointmentId) {
-        let appointment = {};
-
+    updateAppointment(appointmentId, appointment) {
         let appId = this.state.appId;
-        return apiDatabase.appsAppointments.update(appId, appointmentId, appointment);
+
+        let appAppointments = this.props.appsAppointments[appId] || { appointments: {} };
+        let appointments = appAppointments.appointments;
+        /** @type {Chatshier.Models.Appointment} */
+        let _appointment = appointments[appointmentId];
+        let putAppointment = Object.assign({}, _appointment, appointment);
+
+        this.setState({ isAsyncProcessing: true });
+        return apiDatabase.appsAppointments.update(appId, appointmentId, putAppointment).then(() => {
+            this.closeModal();
+            return notify(this.props.t('Add successful!'), { type: 'success' });
+        }).catch(() => {
+            this.setState({ isAsyncProcessing: false });
+            return notify(this.props.t('An error occurred!'), { type: 'danger' });
+        });
     }
 
     deleteAppointment(appointmentId) {
         let appId = this.state.appId;
-        return apiDatabase.appsAppointments.delete(appId, appointmentId);
+
+        this.setState({ isAsyncProcessing: true });
+        return apiDatabase.appsAppointments.delete(appId, appointmentId).then(() => {
+            this.closeModal();
+            return notify(this.props.t('Add successful!'), { type: 'success' });
+        }).catch(() => {
+            this.setState({ isAsyncProcessing: false });
+            return notify(this.props.t('An error occurred!'), { type: 'danger' });
+        });
+    }
+
+    closeModal() {
+        this.setState({
+            isAsyncProcessing: false,
+            appointmentId: void 0,
+            appointment: void 0
+        });
     }
 
     render() {
@@ -75,8 +104,12 @@ class Appointments extends React.Component {
                                             <div>receptionist_id: {appointment.receptionist_id}</div>
                                             <div>startedTime: {appointment.startedTime}</div>
                                             <div>endedTime: {appointment.endedTime}</div>
-                                            <Button color="primary" onClick={() => this.updateAppointment(appointmentId)}>更新預約</Button>
-                                            <Button color="danger" onClick={() => this.deleteAppointment(appointmentId)}>刪除預約</Button>
+                                            <Button color="primary"
+                                                disabled={this.state.isAsyncProcessing}
+                                                onClick={() => this.updateAppointment(appointmentId)}>更新預約</Button>
+                                            <Button color="danger"
+                                                disabled={this.state.isAsyncProcessing}
+                                                onClick={() => this.deleteAppointment(appointmentId)}>刪除預約</Button>
                                         </Aux>
                                     );
                                 })}

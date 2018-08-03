@@ -13,7 +13,7 @@ declare module Chatshier {
         interface Receptionist extends BaseProperty {
             name: string,
             photo: string,
-            gmail: string,
+            email: string,
             phone: string,
             timezoneOffset: number,
             maxNumber: number,

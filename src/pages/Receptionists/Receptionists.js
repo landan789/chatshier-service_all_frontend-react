@@ -72,9 +72,9 @@ class ReceptionistsPage extends React.Component {
 
         if (!postReceptionist.name) {
             return notify('必須輸入服務人員的名稱', { type: 'warning' });
-        } else if (!postReceptionist.gmail) {
+        } else if (!postReceptionist.email) {
             return notify('必須輸入服務人員的 Gmail', { type: 'warning' });
-        } else if (!regex.emailStrict.test(postReceptionist.gmail)) {
+        } else if (!regex.emailStrict.test(postReceptionist.email)) {
             return notify(this.props.t('Invalid email'), { type: 'warning' });
         }
 
@@ -171,7 +171,7 @@ class ReceptionistsPage extends React.Component {
                                                     <img className="image-fit border-circle" src={receptionist.photo || defaultAvatarPng} alt={receptionist.name} />
                                                 </div>
                                                 <div className="mt-2 font-weight-bold text-info">{receptionist.name}</div>
-                                                <div className="text-muted small">{receptionist.gmail}</div>
+                                                <div className="text-muted small">{receptionist.email}</div>
                                             </CardBody>
 
                                             <CardFooter className="pb-4 card-footer flex-column d-inherit border-none bg-transparent">
@@ -183,13 +183,6 @@ class ReceptionistsPage extends React.Component {
                                                 <div className="d-flex align-items-center mb-2 text-muted">
                                                     <i className="mr-2 fas fa-calendar-check fa-fw fa-1p5x"></i>
                                                     <span className="small">被預約次數 {appointmentIds.length} 次</span>
-                                                </div>
-
-                                                <div className="d-flex align-items-center mb-2 text-muted">
-                                                    <i className="mr-2 fas fa-handshake fa-fw fa-1p5x"></i>
-                                                    <span className="small">
-                                                        行事曆 {receptionist.gcalendarId ? <span className="text-success">已分享</span> : <span className="text-danger">未分享</span>}
-                                                    </span>
                                                 </div>
 
                                                 <div className="mt-2 d-flex justify-content-around">
@@ -204,15 +197,6 @@ class ReceptionistsPage extends React.Component {
                                                         <i className="fas fa-edit"></i>
                                                     </Button>
                                                     <UncontrolledTooltip placement="top" delay={0} target={'receptionistEditBtn_' + receptionistId}>編輯</UncontrolledTooltip>
-
-                                                    {!receptionist.gcalendarId &&
-                                                    <Button color="light" id={'calendarLinkBtn_' + receptionistId}
-                                                        onClick={() => this.updateReceptionist(receptionistId, { runSharing: true })}
-                                                        disabled={this.state.isAsyncProcessing}>
-                                                        <i className="fas fa-calendar-plus"></i>
-                                                    </Button>}
-                                                    {!receptionist.gcalendarId &&
-                                                    <UncontrolledTooltip placement="top" delay={0} target={'calendarLinkBtn_' + receptionistId}>分享行事曆</UncontrolledTooltip>}
 
                                                     <Button color="light" id={'receptionistDeleteBtn_' + receptionistId}
                                                         onClick={() => this.deleteReceptionist(receptionistId)}

@@ -36,7 +36,7 @@ class ReceptionistModal extends ModalCore {
             isOpen: props.isOpen,
             appId: props.appId || '',
             name: receptionist.name || '',
-            gmail: receptionist.gmail || '',
+            email: receptionist.email || '',
             interval: receptionist.interval || HOUR,
             maxNumber: receptionist.maxNumber || 0,
             schedules: receptionist.schedules || []
@@ -51,7 +51,7 @@ class ReceptionistModal extends ModalCore {
 
         let receptionist = {
             name: this.state.name,
-            gmail: this.state.gmail,
+            email: this.state.email,
             interval: this.state.interval,
             maxNumber: this.state.maxNumber,
             schedules: this.state.schedules
@@ -119,10 +119,10 @@ class ReceptionistModal extends ModalCore {
                             <input className="form-control"
                                 type="text"
                                 placeholder={this.props.t('Fill the receptionist\'s Gmail')}
-                                value={this.state.gmail}
+                                value={this.state.email}
                                 pattern={regex.emailWeak.source}
                                 maxLength={50}
-                                onChange={(ev) => this.setState({ gmail: ev.target.value })}
+                                onChange={(ev) => this.setState({ email: ev.target.value })}
                                 required />
                         </FormGroup>
 

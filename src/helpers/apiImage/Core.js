@@ -5,7 +5,7 @@ import CHATSHIER from '../../config/chatshier';
 class Core {
     constructor() {
         let URL = CHATSHIER.URL;
-        this.apiEndPoint = URL.API + '/api/database/';
+        this.apiEndPoint = URL.API + '/api/image/';
     }
 
     get userId() {
@@ -44,12 +44,11 @@ class Core {
     };
 
     /**
-     * @param {string} url
-     * @param {RequestInit} [reqInit]
+     * @param {RequestInfo} reqInfo
+     * @param {RequestInit} reqInit
      * @param {boolean} [isFormData]
-     * @returns {Promise<any>}
      */
-    sendRequest(url, reqInit, isFormData) {
+    sendRequest(reqInfo, reqInit, isFormData) {
         reqInit = reqInit || {};
         reqInit.method = reqInit.method || 'GET';
 
@@ -61,7 +60,7 @@ class Core {
         reqInit.mode = 'cors';
         reqInit.credentials = 'include';
 
-        return window.fetch(url, reqInit).then((res) => {
+        return window.fetch(reqInfo, reqInit).then((res) => {
             return this.responseChecking(res);
         });
     };

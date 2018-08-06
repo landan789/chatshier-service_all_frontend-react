@@ -46,10 +46,11 @@ class Core {
     /**
      * @param {RequestInfo} reqInfo
      * @param {RequestInit} reqInit
+     * @param {boolean} [isFormData]
      */
-    sendRequest(reqInfo, reqInit) {
-        if ('POST' === reqInit.method.toUpperCase() ||
-            'PUT' === reqInit.method.toUpperCase()) {
+    sendRequest(reqInfo, reqInit, isFormData) {
+        let method = reqInit.method.toUpperCase();
+        if (('POST' === method || 'PUT' === method) && !isFormData) {
             reqInit.headers.set('Content-Type', 'application/json');
         }
         reqInit.cache = 'no-cache';

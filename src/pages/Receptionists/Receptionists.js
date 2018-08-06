@@ -12,6 +12,7 @@ import ROUTES from '../../config/route';
 import authHelper from '../../helpers/authentication';
 import browserHelper from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
+import apiImage from '../../helpers/apiImage/index';
 import regex from '../../utils/regex';
 
 import ReceptionistModal from '../../components/Modals/Receptionist/Receptionist';
@@ -79,8 +80,30 @@ class ReceptionistsPage extends React.Component {
         }
 
         let appId = this.state.appId;
+        let fromPath;
+
         this.setState({ isAsyncProcessing: true });
-        return apiDatabase.appsReceptionists.insert(appId, postReceptionist).then(() => {
+        return Promise.resolve().then(() => {
+            if (postReceptionist && postReceptionist.photo && postReceptionist.photo instanceof File) {
+                return apiImage.uploadFile.post(postReceptionist.photo).then((resJson) => {
+                    postReceptionist.photo = resJson.data.url;
+                    fromPath = resJson.data.originalFilePath;
+                    return postReceptionist;
+                });
+            }
+        }).then(() => {
+            return apiDatabase.appsReceptionists.insert(appId, postReceptionist);
+        }).then((resJson) => {
+            if (!fromPath) {
+                return;
+            }
+
+            let _appsReceptionists = resJson.data;
+            let receptionistId = Object.keys(_appsReceptionists[appId].receptionists).shift();
+            let fileName = fromPath.split('/').pop();
+            let toPath = '/apps/' + appId + '/receptionists/' + receptionistId + '/photo/' + fileName;
+            return apiImage.moveFile.post(fromPath, toPath);
+        }).then(() => {
             this.closeModal();
             return notify(this.props.t('Add successful!'), { type: 'success' });
         }).catch(() => {
@@ -91,11 +114,30 @@ class ReceptionistsPage extends React.Component {
 
     updateReceptionist(receptionistId, receptionist) {
         let appId = this.state.appId;
+        let fromPath;
         let _receptionist = this.props.appsReceptionists[appId].receptionists[receptionistId];
         let putReceptionist = Object.assign({}, _receptionist, receptionist);
 
         this.setState({ isAsyncProcessing: true });
-        return apiDatabase.appsReceptionists.update(appId, receptionistId, putReceptionist).then(() => {
+        return Promise.resolve().then(() => {
+            if (putReceptionist && putReceptionist.photo && putReceptionist.photo instanceof File) {
+                return apiImage.uploadFile.post(putReceptionist.photo).then((resJson) => {
+                    putReceptionist.photo = resJson.data.url;
+                    fromPath = resJson.data.originalFilePath;
+                    return putReceptionist;
+                });
+            }
+        }).then(() => {
+            return apiDatabase.appsReceptionists.update(appId, receptionistId, putReceptionist);
+        }).then(() => {
+            if (!fromPath) {
+                return;
+            }
+
+            let fileName = fromPath.split('/').pop();
+            let toPath = '/apps/' + appId + '/receptionists/' + receptionistId + '/photo/' + fileName;
+            return apiImage.moveFile.post(fromPath, toPath);
+        }).then(() => {
             this.closeModal();
             return notify(this.props.t('Update successful!'), { type: 'success' });
         }).catch(() => {
@@ -185,6 +227,13 @@ class ReceptionistsPage extends React.Component {
                                                     <span className="small">被預約次數 {appointmentIds.length} 次</span>
                                                 </div>
 
+                                                <div className="d-flex align-items-center mb-2 text-muted">
+                                                    <i className="mr-2 fas fa-handshake fa-fw fa-1p5x"></i>
+                                                    <span className="small">
+                                                        行事曆 {receptionist.isCalendarShared ? <span className="text-success">已分享</span> : <span className="text-danger">未分享</span>}
+                                                    </span>
+                                                </div>
+
                                                 <div className="mt-2 d-flex justify-content-around">
                                                     <Button color="light" id={'receptionistEditBtn_' + receptionistId}
                                                         onClick={() => {
@@ -197,6 +246,15 @@ class ReceptionistsPage extends React.Component {
                                                         <i className="fas fa-edit"></i>
                                                     </Button>
                                                     <UncontrolledTooltip placement="top" delay={0} target={'receptionistEditBtn_' + receptionistId}>編輯</UncontrolledTooltip>
+
+                                                    {!receptionist.isCalendarShared &&
+                                                    <Button color="light" id={'calendarShareBtn_' + receptionistId}
+                                                        onClick={() => this.updateReceptionist(receptionistId, { shareTo: receptionist.email })}
+                                                        disabled={this.state.isAsyncProcessing}>
+                                                        <i className="fas fa-calendar-plus"></i>
+                                                    </Button>}
+                                                    {!receptionist.isCalendarShared &&
+                                                    <UncontrolledTooltip placement="top" delay={0} target={'calendarShareBtn_' + receptionistId}>分享行事曆</UncontrolledTooltip>}
 
                                                     <Button color="light" id={'receptionistDeleteBtn_' + receptionistId}
                                                         onClick={() => this.deleteReceptionist(receptionistId)}

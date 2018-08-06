@@ -53,6 +53,7 @@
 .image-container {
     position: relative;
     background-color: transparent;
+    overflow: hidden;
 
     .image-fit {
         position: absolute;

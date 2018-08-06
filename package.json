@@ -49,6 +49,7 @@
   "devDependencies": {
     "@types/facebook-js-sdk": "2.8.6",
     "@types/grecaptcha": "2.0.35",
+    "@types/jquery": "3.3.5",
     "@types/react": "16.4.7",
     "@types/react-redux": "6.0.5",
     "@types/react-router-redux": "5.0.15",

@@ -8,8 +8,11 @@ import { Button, Modal, ModalHeader, ModalBody, FormGroup } from 'reactstrap';
 
 import ModalCore from '../ModalCore';
 import apiDatabase from '../../../helpers/apiDatabase';
+import { blobToBase64 } from '../../../utils/common';
 import { HOUR } from '../../../utils/unitTime';
 import regex from '../../../utils/regex';
+
+import defaultAvatarPng from '../../../image/default-avatar.png';
 
 class ReceptionistModal extends ModalCore {
     static propTypes = {
@@ -36,6 +39,7 @@ class ReceptionistModal extends ModalCore {
             isOpen: props.isOpen,
             appId: props.appId || '',
             name: receptionist.name || '',
+            photo: receptionist.photo || '',
             email: receptionist.email || '',
             interval: receptionist.interval || HOUR,
             maxNumber: receptionist.maxNumber || 0,
@@ -44,6 +48,7 @@ class ReceptionistModal extends ModalCore {
 
         this.onSubmitForm = this.onSubmitForm.bind(this);
         this.onAppChange = this.onAppChange.bind(this);
+        this.onFileChange = this.onFileChange.bind(this);
     }
 
     onSubmitForm(ev) {
@@ -51,17 +56,35 @@ class ReceptionistModal extends ModalCore {
 
         let receptionist = {
             name: this.state.name,
+            photo: (this.fileInput && this.fileInput.files.item(0)) || this.state.photo,
             email: this.state.email,
             interval: this.state.interval,
             maxNumber: this.state.maxNumber,
             schedules: this.state.schedules
         };
-        return this.props.isUpdate ? this.props.updateHandler(this.props.receptionistId, receptionist) : this.props.insertHandler(receptionist);
+
+        this.setState({ isAsyncWorking: true });
+        return Promise.resolve().then(() => {
+            if (this.props.isUpdate) {
+                return this.props.updateHandler(this.props.receptionistId, receptionist);
+            }
+            return this.props.insertHandler(receptionist);
+        }, () => {
+            this.setState({ isAsyncWorking: false });
+        });
     }
 
     onAppChange(ev) {
         this.setState({ appId: ev.target.value });
         return this.props.onAppChange(ev.target.value);
+    }
+
+    onFileChange(ev) {
+        /** @type {HTMLInputElement} */
+        let fileInput = ev.target;
+        return blobToBase64(fileInput.files.item(0)).then((base64Url) => {
+            this.setState({ photo: base64Url });
+        });
     }
 
     render() {
@@ -109,6 +132,21 @@ class ReceptionistModal extends ModalCore {
                                 maxLength={50}
                                 onChange={(ev) => this.setState({ name: ev.target.value })}
                                 required />
+                        </FormGroup>
+
+                        <FormGroup className="d-flex">
+                            <div className="w-50 photo-container">
+                                <div className="m-auto image-container" style={{ width: '8rem', height: '8rem' }}>
+                                    <img className="image-fit" src={this.state.photo || defaultAvatarPng} alt={this.state.name} />
+                                </div>
+                            </div>
+                            <div className="w-50 d-flex buttons-container">
+                                <Button type="button" color="light" className="m-auto" onClick={() => this.fileInput && this.fileInput.click()}>上傳頭像</Button>
+                                <input className="d-none" type="file"
+                                    accept="image/png,image/jpg,image/jpeg"
+                                    ref={(elem) => (this.fileInput = elem)}
+                                    onChange={this.onFileChange} />
+                            </div>
                         </FormGroup>
 
                         <FormGroup>

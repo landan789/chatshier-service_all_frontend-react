@@ -5,6 +5,7 @@ import { MINUTE } from '../utils/unitTime';
 import ROUTES from '../config/route';
 import apiBot from './apiBot/index';
 import apiDatabase from './apiDatabase/index';
+import apiImage from './apiImage/index';
 import apiSign from './apiSign/index';
 
 // token 過期 5 分鐘前更新 token
@@ -47,6 +48,7 @@ class AuthenticationHelper {
         window.localStorage.setItem('jwt', this._jwt || '');
         apiBot.setJWT(this._jwt);
         apiDatabase.setJWT(this._jwt);
+        apiImage.setJWT(this._jwt);
         apiSign.setJWT(this._jwt);
     }
 

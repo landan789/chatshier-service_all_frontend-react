@@ -18,14 +18,14 @@ import { notify } from '../../Notify/Notify';
 class CalendarModal extends ModalCore {
     static propTypes = {
         t: PropTypes.func.isRequired,
-        calendarData: PropTypes.object
+        modalData: PropTypes.object
     }
 
     constructor(props, ctx) {
         super(props, ctx);
 
         /** @type {Chatshier.Model.CalendarEvent} */
-        let event = this.props.calendarData.event || {};
+        let event = this.props.modalData.event || {};
 
         this.state = {
             isOpen: this.props.isOpen,
@@ -133,9 +133,9 @@ class CalendarModal extends ModalCore {
             return notify(this.props.t('Failed to update!'), { type: 'danger' });
         }
 
-        let calendarId = this.props.calendarData.calendarId;
-        let eventId = this.props.calendarData.eventId;
-        let eventType = this.props.calendarData.eventType;
+        let calendarId = this.props.modalData.calendarId;
+        let eventId = this.props.modalData.eventId;
+        let eventType = this.props.modalData.eventType;
 
         /** @type {Chatshier.CalendarEvent} */
         let event = {
@@ -212,9 +212,9 @@ class CalendarModal extends ModalCore {
             return Promise.resolve();
         }
 
-        let calendarId = this.props.calendarData.calendarId;
-        let eventId = this.props.calendarData.eventId;
-        let eventType = this.props.calendarData.eventType;
+        let calendarId = this.props.modalData.calendarId;
+        let eventId = this.props.modalData.eventId;
+        let eventType = this.props.modalData.eventType;
 
         this.setState({ isAsyncWorking: true });
         return Promise.resolve().then(() => {
@@ -242,7 +242,7 @@ class CalendarModal extends ModalCore {
     }
 
     render() {
-        if (!this.props.calendarData) {
+        if (!this.props.modalData) {
             return null;
         }
 

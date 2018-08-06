@@ -11,6 +11,7 @@ declare module Chatshier {
         }
 
         interface Receptionist extends BaseProperty {
+            gcalendarId: string,
             name: string,
             photo: string,
             email: string,
@@ -18,12 +19,19 @@ declare module Chatshier {
             timezoneOffset: number,
             maxNumber: number,
             interval: number,
+            timesOfAppointment: number,
+            isCalendarShared: boolean,
             schedules: ({
-                startedTime: Date | number,
-                endedTime: Date | number
-            } | void)[],
-            gcalendarId: string,
-            appointment_ids: string[]
+                start: {
+                    date: Date | number,
+                    dateTime: Date | number
+                },
+                end: {
+                    date: Date | number,
+                    dateTime: Date | number
+                },
+                recurrence: string[]
+            } | void)[]
         }
     }
 }

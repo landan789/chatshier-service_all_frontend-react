@@ -9,6 +9,7 @@ import AppsGreetings from './AppsGreetings';
 import AppsKeywordreplies from './AppsKeywordreplies';
 import AppsProducts from './AppsProducts';
 import AppsReceptionists from './AppsReceptionists';
+import AppsReceptionistsSchedules from './AppsReceptionistsSchedules';
 import AppsTickets from './AppsTickets';
 import CalendarsEvents from './CalendarsEvents';
 import Consumers from './Consumers';
@@ -32,6 +33,7 @@ class APIDatabase {
         this.appsKeywordreplies = new AppsKeywordreplies();
         this.appsProducts = new AppsProducts();
         this.appsReceptionists = new AppsReceptionists();
+        this.appsReceptionistsSchedules = new AppsReceptionistsSchedules();
         this.appsTickets = new AppsTickets();
         this.calendarsEvents = new CalendarsEvents();
         this.consumers = new Consumers();

@@ -1,7 +1,11 @@
 import { UPDATE_RECEPTIONISTS, DELETE_RECEPTIONIST,
-    DELETE_ALL_RECEPTIONISTS } from '../../actions/mainStore/appsReceptionists';
+    DELETE_ALL_RECEPTIONISTS, UPDATE_RECEPTIONISTS_SCHEDULES,
+    DELETE_RECEPTIONIST_SCHEDULE } from '../../actions/mainStore/appsReceptionists';
 
 export const appsReceptionistsReducer = (state = {}, action) => {
+    let appId;
+    let receptionistId;
+
     switch (action.type) {
         case UPDATE_RECEPTIONISTS:
             for (let appId in action.appsReceptionists) {
@@ -21,8 +25,8 @@ export const appsReceptionistsReducer = (state = {}, action) => {
             }
             return Object.assign({}, state);
         case DELETE_RECEPTIONIST:
-            let appId = action.appId;
-            let receptionistId = action.receptionistId;
+            appId = action.appId;
+            receptionistId = action.receptionistId;
 
             delete state[appId].receptionists[receptionistId];
             if (0 === Object.keys(state[appId].receptionists).length) {
@@ -37,6 +41,30 @@ export const appsReceptionistsReducer = (state = {}, action) => {
                 return Object.assign({}, state);
             }
             return state;
+        case UPDATE_RECEPTIONISTS_SCHEDULES:
+            appId = action.appId;
+            receptionistId = action.receptionistId;
+            state[appId] = state[appId] || { receptionists: {} };
+            state[appId].receptionists[receptionistId] = state[appId].receptionists[receptionistId] || { schedules: {} };
+
+            let schedules = action.schedules;
+            Object.assign(state[appId].receptionists[receptionistId].schedules, schedules || {});
+            return Object.assign({}, state);
+        case DELETE_RECEPTIONIST_SCHEDULE:
+            appId = action.appId;
+            receptionistId = action.receptionistId;
+            let scheduleId = action.scheduleId;
+
+            if (!(state[appId] &&
+                state[appId].receptionists &&
+                state[appId].receptionists[receptionistId] &&
+                state[appId].receptionists[receptionistId].schedules &&
+                state[appId].receptionists[receptionistId].schedules[scheduleId])) {
+                return state;
+            }
+
+            delete state[appId].receptionists[receptionistId].schedules[scheduleId];
+            return Object.assign({}, state);
         default:
             return state;
     }

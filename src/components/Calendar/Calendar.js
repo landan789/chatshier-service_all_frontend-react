@@ -19,28 +19,16 @@ class Calendar extends React.Component {
         events: []
     }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-        if (prevState.prevProps === nextProps) {
-            return prevState;
-        }
-        let nextState = prevState;
-        nextState.prevProps = nextProps;
-
-        nextState.events = nextProps.events || [];
-        return nextState;
-    }
-
     constructor(props, ctx) {
         super(props, ctx);
 
         /** @type {JQuery<HTMLElement>} */
         this.$calendar = void 0;
+        this.initCalendar = this.initCalendar.bind(this);
 
         this.state = {
             prevProps: null
         };
-
-        this.initCalendar = this.initCalendar.bind(this);
     }
 
     destroy() {
@@ -75,7 +63,7 @@ class Calendar extends React.Component {
                 // center: 'title',
                 right: 'month, agendaWeek, agendaDay'
             },
-            height: 'auto',
+            height: '100%',
             defaultDate: new Date(), // The initial date displayed when the calendar first loads.
             editable: true, // true allow user to edit events.
             eventLimit: true, // allow "more" link when too many events
@@ -90,6 +78,7 @@ class Calendar extends React.Component {
             eventDrop: this.props.onEventDrop,
             eventDurationEditable: true
         });
+        this.componentDidUpdate();
     }
 
     componentDidUpdate() {
@@ -97,7 +86,7 @@ class Calendar extends React.Component {
             return;
         }
         this.$calendar.fullCalendar('removeEvents');
-        this.state.events.length > 0 && this.$calendar.fullCalendar('renderEvents', this.state.events, true);
+        this.props.events.length > 0 && this.$calendar.fullCalendar('renderEvents', this.props.events, true);
     }
 
     render() {

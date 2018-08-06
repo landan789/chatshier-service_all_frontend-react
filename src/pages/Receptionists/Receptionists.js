@@ -23,6 +23,7 @@ import { notify } from '../../components/Notify/Notify';
 
 import defaultAvatarPng from '../../image/default-avatar.png';
 
+import SchedulePanel from './SchedulePanel';
 import './Receptionists.css';
 
 class ReceptionistsPage extends React.Component {
@@ -37,6 +38,7 @@ class ReceptionistsPage extends React.Component {
 
         this.state = {
             appId: '',
+            isOpenSchedulePanel: false,
             isAsyncProcessing: false
         };
 
@@ -45,6 +47,7 @@ class ReceptionistsPage extends React.Component {
         this.updateReceptionist = this.updateReceptionist.bind(this);
         this.deleteReceptionist = this.deleteReceptionist.bind(this);
         this.closeModal = this.closeModal.bind(this);
+        this.closeSchedulesPanel = this.closeSchedulesPanel.bind(this);
 
         browserHelper.setTitle(this.props.t('Receptionist management'));
         if (!authHelper.hasSignedin()) {
@@ -166,6 +169,13 @@ class ReceptionistsPage extends React.Component {
         });
     }
 
+    closeSchedulesPanel() {
+        this.setState({
+            isOpenSchedulePanel: false,
+            receptionistId: void 0
+        });
+    }
+
     render() {
         let appId = this.state.appId;
         let appReceptionists = this.props.appsReceptionists[appId] || { receptionists: {} };
@@ -247,6 +257,20 @@ class ReceptionistsPage extends React.Component {
                                                     </Button>
                                                     <UncontrolledTooltip placement="top" delay={0} target={'receptionistEditBtn_' + receptionistId}>編輯</UncontrolledTooltip>
 
+                                                    {receptionist.isCalendarShared &&
+                                                    <Button color="light" id={'schedulesBtn_' + receptionistId}
+                                                        onClick={() => {
+                                                            this.setState({
+                                                                isOpenSchedulePanel: true,
+                                                                receptionistId: receptionistId
+                                                            });
+                                                        }}
+                                                        disabled={this.state.isAsyncProcessing}>
+                                                        <i className="fas fa-calendar-alt"></i>
+                                                    </Button>}
+                                                    {receptionist.isCalendarShared &&
+                                                    <UncontrolledTooltip placement="top" delay={0} target={'schedulesBtn_' + receptionistId}>編輯行事曆</UncontrolledTooltip>}
+
                                                     {!receptionist.isCalendarShared &&
                                                     <Button color="light" id={'calendarShareBtn_' + receptionistId}
                                                         onClick={() => this.updateReceptionist(receptionistId, { shareTo: receptionist.email })}
@@ -270,6 +294,10 @@ class ReceptionistsPage extends React.Component {
                             </div>
                         </Card>
                     </Fade>
+                    {this.state.isOpenSchedulePanel &&
+                    <SchedulePanel appId={this.state.appId}
+                        receptionistId={this.state.receptionistId}
+                        onClose={this.closeSchedulesPanel} />}
                 </PageWrapper>
 
                 {this.state.receptionist &&

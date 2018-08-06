@@ -259,12 +259,12 @@ class CalendarPage extends React.Component {
         this.setState({ calendarModalData: calendarModalData });
     }
 
-    onEventClick(calendarEvent) {
-        let origin = calendarEvent.origin;
+    onEventClick(calendarData) {
+        let origin = calendarData.origin;
 
-        if (CALENDAR_EVENT_TYPES.TICKET === calendarEvent.eventType) {
-            let appId = calendarEvent.calendarId;
-            let ticketId = calendarEvent.id;
+        if (CALENDAR_EVENT_TYPES.TICKET === calendarData.eventType) {
+            let appId = calendarData.calendarId;
+            let ticketId = calendarData.id;
             /** @type {Chatshier.Model.Ticket} */
             let ticket = origin;
             /** @type {Chatshier.Model.Consumers} */
@@ -283,17 +283,17 @@ class CalendarPage extends React.Component {
 
         /** @type {Chatshier.CalendarEvent} */
         let event = {
-            title: calendarEvent.title,
-            description: calendarEvent.description,
-            isAllDay: calendarEvent.isAllDay,
-            startedTime: origin.startedTime || calendarEvent.start.toDate(),
-            endedTime: origin.endedTime || calendarEvent.end.toDate()
+            title: calendarData.title,
+            description: calendarData.description,
+            isAllDay: calendarData.isAllDay,
+            startedTime: origin.startedTime || calendarData.start.toDate(),
+            endedTime: origin.endedTime || calendarData.end.toDate()
         };
 
         let calendarModalData = {
-            calendarId: calendarEvent.calendarId,
-            eventId: calendarEvent.id,
-            eventType: calendarEvent.eventType,
+            calendarId: calendarData.calendarId,
+            eventId: calendarData.id,
+            eventType: calendarData.eventType,
             event: event,
             origin: origin
         };
@@ -398,8 +398,8 @@ class CalendarPage extends React.Component {
             <Aux>
                 <ControlPanel />
                 <PageWrapper toolbarTitle={this.props.t('Calendar')}>
-                    <Fade in className="container mt-5 calendar-wrapper">
-                        <Calendar className="mb-5 chsr"
+                    <Fade in className="container calendar-wrapper">
+                        <Calendar className="mt-5 chsr"
                             events={this.state.calendarEvents}
                             onSelect={this.onSelectDate}
                             onEventClick={this.onEventClick}

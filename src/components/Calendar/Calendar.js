@@ -4,6 +4,8 @@ import { withTranslate, currentLanguage } from '../../i18n';
 
 import $ from 'jquery';
 
+import './Calendar.css';
+
 class Calendar extends React.Component {
     static propTypes = {
         t: PropTypes.func.isRequired,
@@ -59,8 +61,8 @@ class Calendar extends React.Component {
             },
             // Defines the buttons and title position which is at the top of the calendar.
             header: {
-                left: 'today, prev, next, title',
-                // center: 'title',
+                left: 'today, prev, next',
+                center: 'title',
                 right: 'month, agendaWeek, agendaDay'
             },
             height: '100%',
@@ -90,7 +92,7 @@ class Calendar extends React.Component {
     }
 
     render() {
-        let className = this.props.className + ' card calendar';
+        let className = this.props.className + ' card chsr calendar';
         return <div className={className.trim()} ref={this.initCalendar}></div>;
     }
 }

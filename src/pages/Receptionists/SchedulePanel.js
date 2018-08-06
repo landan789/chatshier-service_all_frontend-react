@@ -43,8 +43,8 @@ class SchedulePanel extends React.Component {
                 id: scheduleId,
                 title: schedule.summary || '無標題',
                 description: schedule.description || '無描述',
-                start: new Date(schedule.start.date),
-                end: new Date(schedule.end.date)
+                start: new Date(schedule.start.dateTime),
+                end: new Date(schedule.end.dateTime)
             };
             calendarEvents.push(calendarEvent);
         }
@@ -80,10 +80,10 @@ class SchedulePanel extends React.Component {
         let postSchedule = {
             summary: formatDate(startedDate),
             start: {
-                date: startedDate.getTime()
+                dateTime: startedDate.getTime()
             },
             end: {
-                date: endedDate.getTime()
+                dateTime: endedDate.getTime()
             },
             recurrence: ''
         };
@@ -109,10 +109,10 @@ class SchedulePanel extends React.Component {
             summary: formatDate(startedDate),
             description: '',
             start: {
-                date: startedDate.getTime()
+                dateTime: startedDate.getTime()
             },
             end: {
-                date: endedDate.getTime()
+                dateTime: endedDate.getTime()
             },
             recurrence: ''
         };
@@ -130,12 +130,21 @@ class SchedulePanel extends React.Component {
     }
 
     render() {
+        let appId = this.props.appId;
+        let appReceptionists = this.props.appsReceptionists[appId] || {};
+        let receptionists = appReceptionists.receptionists || {};
+        let receptionist = receptionists[this.props.receptionistId] || {};
+
         let className = 'schedule-panel ' + this.state.animate + ' ' + this.props.className;
         return (
             <div className={className.trim()}>
+                {receptionist && receptionist.name &&
+                <h5 className="ml-5 receptionist-name">服務人員名稱: {receptionist.name}</h5>}
+
                 <Button className="p-2 border-circle close-btn" color="light" onClick={this.close}>
                     <i className="fas fa-times"></i>
                 </Button>
+
                 <Calendar className="p-5 chsr border-none"
                     events={this.state.calendarEvents}
                     onSelect={this.onSelectDate}

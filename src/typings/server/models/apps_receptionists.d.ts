@@ -32,11 +32,11 @@ declare module Chatshier {
             summary: string,
             description: string,
             start: {
-                date: Date | number,
+                date?: Date | number,
                 dateTime: Date | number
             },
             end: {
-                date: Date | number,
+                date?: Date | number,
                 dateTime: Date | number
             },
             recurrence: string[]

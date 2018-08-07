@@ -37,10 +37,13 @@
     "Confirm": "確認",
     "Confirm password": "確認密碼",
     "Confirm new password": "確認新密碼",
+    "Custom": "自訂",
 
+    "Daily": "每日",
     "Day": "日",
     "December": "十二月",
     "Description": "描述",
+    "Does not repeat": "不重複",
     "Don't have an account yet?": "還沒有帳號嗎？請按",
 
     "Edit bot": "編輯機器人",
@@ -51,6 +54,7 @@
     "Email was empty!": "電子郵件未填寫！",
     "End datetime": "結束時間",
     "Event description": "事件描述",
+    "Every weekday (Monday to Friday)": "平日 (星期一至星期五)",
 
     "Failed to add!": "新增失敗！",
     "Failed to remove!": "刪除失敗！",
@@ -176,6 +180,7 @@
     "Update successful!": "更新成功！",
     "User email had been signed up!": "電子郵件已被註冊！",
 
+    "Weekly on Saturday": "每週 星期六",
     "Welcome to Chatshier integration platform": "歡迎使用 錢掌櫃 整合平台",
     "Wrong password!": "密碼錯誤！",
 

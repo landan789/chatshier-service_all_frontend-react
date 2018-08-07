@@ -37,10 +37,13 @@
     "Confirm": "Confirm",
     "Confirm password": "Confirm password",
     "Confirm new password": "Confirm new password",
+    "Custom": "Custom",
 
+    "Daily": "Daily",
     "Day": "Day",
     "December": "December",
     "Description": "Description",
+    "Does not repeat": "Does not repeat",
     "Don't have an account yet?": "Don't have an account yet?",
 
     "Edit bot": "Edit bot",
@@ -51,6 +54,7 @@
     "Email was empty!": "Email was empty!",
     "End datetime": "End datetime",
     "Event description": "Event description",
+    "Every weekday (Monday to Friday)": "Every weekday (Monday to Friday)",
 
     "Failed to add!": "Failed to add!",
     "Failed to remove!": "Failed to remove!",
@@ -176,6 +180,7 @@
     "Update successful!": "Update successful!",
     "User email had been signed up!": "User email had been signed up!",
 
+    "Weekly on Saturday": "Weekly on Saturday",
     "Welcome to Chatshier integration platform": "Welcome to Chatshier integration platform",
     "Wrong password!": "Wrong password!",
 

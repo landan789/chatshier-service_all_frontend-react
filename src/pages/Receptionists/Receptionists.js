@@ -258,7 +258,7 @@ class ReceptionistsPage extends React.Component {
                                                     <UncontrolledTooltip placement="top" delay={0} target={'receptionistEditBtn_' + receptionistId}>編輯</UncontrolledTooltip>
 
                                                     {receptionist.isCalendarShared &&
-                                                    <Button color="light" id={'schedulesBtn_' + receptionistId}
+                                                    <Button color="light"
                                                         onClick={() => {
                                                             this.setState({
                                                                 isOpenSchedulePanel: true,
@@ -268,8 +268,6 @@ class ReceptionistsPage extends React.Component {
                                                         disabled={this.state.isAsyncProcessing}>
                                                         <i className="fas fa-calendar-alt"></i>
                                                     </Button>}
-                                                    {receptionist.isCalendarShared &&
-                                                    <UncontrolledTooltip placement="top" delay={0} target={'schedulesBtn_' + receptionistId}>編輯行事曆</UncontrolledTooltip>}
 
                                                     {!receptionist.isCalendarShared &&
                                                     <Button color="light" id={'calendarShareBtn_' + receptionistId}

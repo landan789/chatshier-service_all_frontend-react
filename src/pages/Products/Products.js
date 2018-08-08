@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Aux from 'react-aux';
 import { Fade, Button, Card, CardBody, CardFooter, UncontrolledTooltip } from 'reactstrap';
+import Toggle from 'react-toggle';
 import { Trans } from 'react-i18next';
 import { withTranslate } from '../../i18n';
 
@@ -188,11 +189,15 @@ class Products extends React.Component {
                                                 <div className="d-flex align-items-center mb-2 text-muted">
                                                     <i className="mr-2 fas fa-shopping-cart fa-fw fa-1p5x"></i>
                                                     <span className="small">
-                                                        上架狀態 {product.isOnShelves ? <span className="text-success">已上架</span> : <span className="text-danger">未上架</span>}
+                                                        上架狀態 {product.isOnShelf ? <span className="text-success">已上架</span> : <span className="text-danger">未上架</span>}
                                                     </span>
+                                                    <Toggle className="ml-auto"
+                                                        disabled={this.state.isAsyncProcessing}
+                                                        defaultChecked={product.isOnShelf}
+                                                        onChange={() => this.updateProduct(productId, { isOnShelf: !product.isOnShelf })} />
                                                 </div>
 
-                                                <div className="mt-2 d-flex justify-content-around">
+                                                <div className="mt-3 d-flex justify-content-around">
                                                     <Button color="light" id={'productEditBtn_' + productId}
                                                         onClick={() => {
                                                             this.setState({

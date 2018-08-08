@@ -41,7 +41,7 @@ class ProductModal extends ModalCore {
             appId: props.appId || '',
             name: product.name || '',
             description: product.description || '',
-            isOnShelves: !!product.isOnShelves,
+            isOnShelf: !!product.isOnShelf,
             receptionistIds: product.receptionist_ids || []
         };
 
@@ -55,7 +55,7 @@ class ProductModal extends ModalCore {
         let product = {
             name: this.state.name,
             description: this.state.description,
-            isOnShelves: this.state.isOnShelves,
+            isOnShelf: this.state.isOnShelf,
             receptionist_ids: this.state.receptionistIds
         };
         return this.props.isUpdate ? this.props.updateHandler(this.props.productId, product) : this.props.insertHandler(product);
@@ -143,8 +143,8 @@ class ProductModal extends ModalCore {
                                 <label className="form-check-label col-form-label">
                                     <input className="form-check-input"
                                         type="checkbox"
-                                        checked={this.state.isOnShelves}
-                                        onChange={(ev) => this.setState({ isOnShelves: ev.target.checked })} />
+                                        checked={this.state.isOnShelf}
+                                        onChange={(ev) => this.setState({ isOnShelf: ev.target.checked })} />
                                     <span>已上架</span>
                                 </label>
                             </FormGroup>

@@ -50,9 +50,18 @@ class ReceptionistModal extends ModalCore {
             schedules: receptionist.schedules || []
         };
 
+        this._isMounted = false;
         this.onSubmitForm = this.onSubmitForm.bind(this);
         this.onAppChange = this.onAppChange.bind(this);
         this.onFileChange = this.onFileChange.bind(this);
+    }
+
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     onSubmitForm(ev) {
@@ -74,7 +83,7 @@ class ReceptionistModal extends ModalCore {
             }
             return this.props.insertHandler(receptionist);
         }).then(() => {
-            this.setState({ isAsyncProcessing: false });
+            this._isMounted && this.setState({ isAsyncProcessing: false });
         });
     }
 

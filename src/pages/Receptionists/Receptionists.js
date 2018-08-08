@@ -88,11 +88,7 @@ class ReceptionistsPage extends React.Component {
         let fromPath;
 
         this.setState({ isAsyncProcessing: true });
-        return Promise.resolve().then((isAvailable) => {
-            if (!isAvailable) {
-                return Promise.reject(new Error(UNAVAILABLE_GMAIL));
-            }
-
+        return Promise.resolve().then(() => {
             if (postReceptionist && postReceptionist.photo && postReceptionist.photo instanceof File) {
                 return apiImage.uploadFile.post(postReceptionist.photo).then((resJson) => {
                     postReceptionist.photo = resJson.data.url;

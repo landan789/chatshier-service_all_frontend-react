@@ -1,4 +1,5 @@
 import CHATSHIER from '../config/chatshier';
+import { RRuleSet, rrulestr } from 'rrule';
 
 const GOOGLE_CLIENT_NOT_SIGNEDIN = 'GOOGLE_CLIENT_NOT_SIGNEDIN';
 const GOOGLE_API_ENDPOINT = 'https://apis.google.com/js/api.js';
@@ -216,6 +217,22 @@ class GoogleCalendarHelper {
                 return resJson;
             });
         });
+    }
+
+    /**
+     * @param {string[]} recurrence
+     * @param {Date} [dtstart]
+     * @param {number} [maxDates]
+     */
+    getEventDates(recurrence, dtstart = new Date(), maxDates = 250) {
+        let rruleSet = new RRuleSet();
+        for (let i in recurrence) {
+            let rrule = rrulestr(recurrence[i]);
+            rrule.options.dtstart = new Date(dtstart);
+            rrule.options.dtstart.setHours(0, 0, 0, 0);
+            rruleSet.rrule(rrule);
+        }
+        return rruleSet.all((d, len) => len <= maxDates);
     }
 
     _mapRes(res) {

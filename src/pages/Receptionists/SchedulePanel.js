@@ -5,14 +5,13 @@ import { Button } from 'reactstrap';
 import { withTranslate } from '../../i18n';
 
 import apiDatabase from '../../helpers/apiDatabase/index';
-import { RRule, RRuleSet, rrulestr } from 'rrule';
+import gcalendarHlp from '../../helpers/googleCalendar';
+import { RRuleSet, rrulestr } from 'rrule';
 
 import Calendar from '../../components/Calendar/Calendar';
 import ScheduleModal from '../../components/Modals/Schedule/Schedule';
 
 import './SchedulePanel.css';
-
-const MAX_DATES = 250;
 
 class SchedulePanel extends React.Component {
     static propTypes = {
@@ -69,16 +68,8 @@ class SchedulePanel extends React.Component {
             let mmEnd = endDateTime.getMinutes();
             let ssEnd = endDateTime.getSeconds();
 
-            let rruleSet = new RRuleSet();
-            for (let i in recurrence) {
-                let rrule = rrulestr(recurrence[i]);
-                rrule.options.dtstart = new Date(startDateTime);
-                rrule.options.dtstart.setHours(0, 0, 0, 0);
-                rruleSet.rrule(rrule);
-            }
-            let allDates = rruleSet.all((d, len) => len <= MAX_DATES);
-
-            calendarEvents = calendarEvents.concat(allDates.map((date) => {
+            let dates = gcalendarHlp.getEventDates(recurrence, startDateTime);
+            calendarEvents = calendarEvents.concat(dates.map((date) => {
                 let _startDateTime = new Date(date);
                 _startDateTime.setHours(hhStart, mmStart, ssStart);
 
@@ -169,7 +160,7 @@ class SchedulePanel extends React.Component {
             let rruleSet = new RRuleSet();
             for (let i in recurrence) {
                 let recurrenceStr = recurrence[i];
-                rruleSet.rrule(RRule.fromString(recurrenceStr));
+                rruleSet.rrule(rrulestr(recurrenceStr));
             }
             rruleSet.exdate(startedDate);
             rruleSet.rdate(endedDate);
@@ -214,7 +205,7 @@ class SchedulePanel extends React.Component {
         return (
             <div className={className.trim()}>
                 {receptionist && receptionist.name &&
-                <h5 className="ml-5 receptionist-name">服務人員行事曆 - {receptionist.name}</h5>}
+                <h5 className="ml-5 receptionist-name">服務人員行程 - {receptionist.name}</h5>}
 
                 <Button className="p-2 border-circle close-btn" color="light" onClick={this.hide}>
                     <i className="fas fa-times"></i>

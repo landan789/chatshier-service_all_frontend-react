@@ -3,14 +3,16 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Aux from 'react-aux';
-import { Fade, Button, Card } from 'reactstrap';
+import { Fade, Card } from 'reactstrap';
 import { withTranslate } from '../../i18n';
 
 import apiDatabase from '../../helpers/apiDatabase/index';
 
+import Calendar from '../../components/Calendar/Calendar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
+import AppointmentModal from '../../components/Modals/Appointment/Appointment';
 import { notify } from '../../components/Notify/Notify';
 
 import './Appointments.css';
@@ -21,19 +23,76 @@ class Appointments extends React.Component {
         appsAppointments: PropTypes.object
     }
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (prevState.prevProps === nextProps) {
+            return prevState;
+        }
+        let nextState = prevState;
+        nextState.prevProps = nextProps;
+
+        let appId = nextState.appId;
+        if (!appId) {
+            return nextState;
+        }
+
+        let appAppointments = nextProps.appsAppointments[appId] || {};
+        let appointments = appAppointments.appointments || {};
+        nextState.calendarEvents && (nextState.calendarEvents.length = 0);
+        nextState.calendarEvents = Appointments.getCalendarEvents(appointments);
+        return nextState;
+    }
+
+    /**
+     * @param {Chatshier.Models.Appointments} appointments
+     */
+    static getCalendarEvents(appointments) {
+        let calendarEvents = [];
+        for (let appointmentId in appointments) {
+            let appointment = appointments[appointmentId];
+            let calendarEvent = {
+                id: appointmentId,
+                title: appointment.summary || '無標題',
+                description: appointment.description || '無描述',
+                start: new Date(appointment.startedTime),
+                end: new Date(appointment.endedTime)
+            };
+            calendarEvents.push(calendarEvent);
+        }
+        return calendarEvents;
+    }
+
     constructor(props, ctx) {
         super(props, ctx);
 
-        this.state = {
+        this.state = Object.assign({
             appId: ''
-        };
+        }, Appointments.getDerivedStateFromProps(props, {}));
+
+        this.onAppChange = this.onAppChange.bind(this);
+        this.onEventClick = this.onEventClick.bind(this);
+        this.closeModal = this.closeModal.bind(this);
     }
 
     componentDidMount() {
         return Promise.all([
             apiDatabase.apps.find(),
-            apiDatabase.appsAppointments.find()
+            apiDatabase.appsAppointments.find(),
+            apiDatabase.appsReceptionists.find(),
+            apiDatabase.appsProducts.find(),
+            apiDatabase.consumers.find()
         ]);
+    }
+
+    onEventClick(calendarData) {
+        let appId = this.state.appId;
+        let appointmentId = calendarData.id;
+        /** @type {Chatshier.Models.Appointment} */
+        let appointment = this.props.appsAppointments[appId].appointments[appointmentId];
+
+        this.setState({
+            appointmentId: appointmentId,
+            appointment: appointment
+        });
     }
 
     updateAppointment(appointmentId, appointment) {
@@ -76,12 +135,17 @@ class Appointments extends React.Component {
         });
     }
 
-    render() {
-        let appId = this.state.appId;
-        let appAppointments = this.props.appsAppointments[appId] || { appointments: {} };
-        /** @type {Chatshier.Models.Appointments} */
-        let appointments = appAppointments.appointments;
+    onAppChange(appId) {
+        let appAppointments = this.props.appsAppointments[appId] || {};
+        let appointments = appAppointments.appointments || {};
+        let nextState = {
+            appId: appId,
+            calendarEvents: Appointments.getCalendarEvents(appointments)
+        };
+        this.setState(nextState);
+    }
 
+    render() {
         return (
             <Aux>
                 <ControlPanel />
@@ -93,30 +157,26 @@ class Appointments extends React.Component {
                                 <p className="mb-3 pt-0 px-3">首頁 / 預約系統 / 檢視預約項目</p>
                                 <p className="mb-3 pt-0 px-3">檢視所有已建立的預約</p>
                             </div>
-                            <AppsSelector className="px-3 my-3" onChange={(_appId) => this.setState({ appId: _appId })} />
 
-                            <div className="appointments-wrapper">
-                                {Object.keys(appointments).map((appointmentId) => {
-                                    let appointment = appointments[appointmentId];
-                                    return (
-                                        <Aux key={appointmentId}>
-                                            <div>platformUid: {appointment.platformUid}</div>
-                                            <div>receptionist_id: {appointment.receptionist_id}</div>
-                                            <div>startedTime: {appointment.startedTime}</div>
-                                            <div>endedTime: {appointment.endedTime}</div>
-                                            <Button color="primary"
-                                                disabled={this.state.isAsyncProcessing}
-                                                onClick={() => this.updateAppointment(appointmentId)}>更新預約</Button>
-                                            <Button color="danger"
-                                                disabled={this.state.isAsyncProcessing}
-                                                onClick={() => this.deleteAppointment(appointmentId)}>刪除預約</Button>
-                                        </Aux>
-                                    );
-                                })}
+                            <AppsSelector className="px-3 my-3" onChange={this.onAppChange} />
+
+                            <div className="appointments-wrapper" ref={(elem) => (this.wrapperElem = elem)}>
+                                <Calendar className="px-5 pb-3 chsr border-none"
+                                    canEdit={false}
+                                    agenda={['month', 'agendaWeek']}
+                                    events={this.state.calendarEvents}
+                                    onEventClick={this.onEventClick} />
                             </div>
                         </Card>
                     </Fade>
                 </PageWrapper>
+
+                {this.state.appointment &&
+                <AppointmentModal isOpen={!!this.state.appointment}
+                    appId={this.state.appId}
+                    appointmentId={this.state.appointmentId}
+                    appointment={this.state.appointment}
+                    close={this.closeModal} />}
             </Aux>
         );
     }

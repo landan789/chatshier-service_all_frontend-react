@@ -10,6 +10,8 @@ class Calendar extends React.Component {
     static propTypes = {
         t: PropTypes.func.isRequired,
         className: PropTypes.string,
+        agenda: PropTypes.array,
+        canEdit: PropTypes.bool,
         events: PropTypes.array,
         onSelect: PropTypes.func,
         onEventClick: PropTypes.func,
@@ -18,6 +20,8 @@ class Calendar extends React.Component {
 
     static defaultProps = {
         className: '',
+        agenda: ['month', 'agendaWeek', 'agendaDay'],
+        canEdit: true,
         events: []
     }
 
@@ -27,10 +31,6 @@ class Calendar extends React.Component {
         /** @type {JQuery<HTMLElement>} */
         this.$calendar = void 0;
         this.initCalendar = this.initCalendar.bind(this);
-
-        this.state = {
-            prevProps: null
-        };
     }
 
     destroy() {
@@ -63,24 +63,24 @@ class Calendar extends React.Component {
             header: {
                 left: 'today, prev, next',
                 center: 'title',
-                right: 'month, agendaWeek, agendaDay'
+                right: this.props.agenda.join(', ')
             },
             height: '100%',
             defaultDate: new Date(), // The initial date displayed when the calendar first loads.
-            editable: true, // true allow user to edit events.
+            editable: this.props.canEdit, // true allow user to edit events.
+            droppable: this.props.canEdit,
+            eventDurationEditable: this.props.canEdit,
             eventLimit: true, // allow "more" link when too many events
             selectable: true, // allows a user to highlight multiple days or timeslots by clicking and dragging.
             selectHelper: false, // whether to draw a "placeholder" event while the user is dragging.
             allDaySlot: false,
             // events is the main option for calendar.
-            events: [],
+            events: this.props.events,
             // execute after user select timeslots.
             select: this.props.onSelect,
             eventClick: this.props.onEventClick,
-            eventDrop: this.props.onEventDrop,
-            eventDurationEditable: true
+            eventDrop: this.props.onEventDrop
         });
-        this.componentDidUpdate();
     }
 
     componentDidUpdate() {

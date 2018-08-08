@@ -9,8 +9,8 @@ import { Trans } from 'react-i18next';
 import { HOUR } from '../../utils/unitTime';
 
 import ROUTES from '../../config/route';
-import authHelper from '../../helpers/authentication';
-import browserHelper from '../../helpers/browser';
+import authHlp from '../../helpers/authentication';
+import browserHlp from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 import apiImage from '../../helpers/apiImage/index';
 import regex from '../../utils/regex';
@@ -25,6 +25,8 @@ import defaultAvatarPng from '../../image/default-avatar.png';
 
 import SchedulePanel from './SchedulePanel';
 import './Receptionists.css';
+
+const UNAVAILABLE_GMAIL = '1.30';
 
 class ReceptionistsPage extends React.Component {
     static propTypes = {
@@ -49,9 +51,9 @@ class ReceptionistsPage extends React.Component {
         this.closeModal = this.closeModal.bind(this);
         this.closeSchedulesPanel = this.closeSchedulesPanel.bind(this);
 
-        browserHelper.setTitle(this.props.t('Receptionist management'));
-        if (!authHelper.hasSignedin()) {
-            authHelper.signOut();
+        browserHlp.setTitle(this.props.t('Receptionist management'));
+        if (!authHlp.hasSignedin()) {
+            authHlp.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }
     }
@@ -86,7 +88,11 @@ class ReceptionistsPage extends React.Component {
         let fromPath;
 
         this.setState({ isAsyncProcessing: true });
-        return Promise.resolve().then(() => {
+        return Promise.resolve().then((isAvailable) => {
+            if (!isAvailable) {
+                return Promise.reject(new Error(UNAVAILABLE_GMAIL));
+            }
+
             if (postReceptionist && postReceptionist.photo && postReceptionist.photo instanceof File) {
                 return apiImage.uploadFile.post(postReceptionist.photo).then((resJson) => {
                     postReceptionist.photo = resJson.data.url;
@@ -94,6 +100,7 @@ class ReceptionistsPage extends React.Component {
                     return postReceptionist;
                 });
             }
+            return postReceptionist;
         }).then(() => {
             return apiDatabase.appsReceptionists.insert(appId, postReceptionist);
         }).then((resJson) => {
@@ -109,8 +116,11 @@ class ReceptionistsPage extends React.Component {
         }).then(() => {
             this.closeModal();
             return notify(this.props.t('Add successful!'), { type: 'success' });
-        }).catch(() => {
+        }).catch((err) => {
             this.setState({ isAsyncProcessing: false });
+            if (err && UNAVAILABLE_GMAIL === err.code) {
+                return notify('必須使用有註冊的 Gmail 帳號', { type: 'danger' });
+            }
             return notify(this.props.t('An error occurred!'), { type: 'danger' });
         });
     }
@@ -143,8 +153,11 @@ class ReceptionistsPage extends React.Component {
         }).then(() => {
             this.closeModal();
             return notify(this.props.t('Update successful!'), { type: 'success' });
-        }).catch(() => {
+        }).catch((err) => {
             this.setState({ isAsyncProcessing: false });
+            if (err && UNAVAILABLE_GMAIL === err.code) {
+                return notify('必須使用有註冊的 Gmail 帳號', { type: 'danger' });
+            }
             return notify(this.props.t('An error occurred!'), { type: 'danger' });
         });
     }

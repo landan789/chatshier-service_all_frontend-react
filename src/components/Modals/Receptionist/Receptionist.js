@@ -7,12 +7,16 @@ import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, FormGroup } from 'reactstrap';
 
 import ModalCore from '../ModalCore';
+import CHATSHIER_CFG from '../../../config/chatshier';
 import apiDatabase from '../../../helpers/apiDatabase';
 import { blobToBase64 } from '../../../utils/common';
 import { HOUR } from '../../../utils/unitTime';
 import regex from '../../../utils/regex';
 
 import defaultAvatarPng from '../../../image/default-avatar.png';
+import { notify } from '../../Notify/Notify';
+
+import './Receptionist.css';
 
 class ReceptionistModal extends ModalCore {
     static propTypes = {
@@ -63,14 +67,14 @@ class ReceptionistModal extends ModalCore {
             schedules: this.state.schedules
         };
 
-        this.setState({ isAsyncWorking: true });
+        this.setState({ isAsyncProcessing: true });
         return Promise.resolve().then(() => {
             if (this.props.isUpdate) {
                 return this.props.updateHandler(this.props.receptionistId, receptionist);
             }
             return this.props.insertHandler(receptionist);
-        }, () => {
-            this.setState({ isAsyncWorking: false });
+        }).then(() => {
+            this.setState({ isAsyncProcessing: false });
         });
     }
 
@@ -82,7 +86,12 @@ class ReceptionistModal extends ModalCore {
     onFileChange(ev) {
         /** @type {HTMLInputElement} */
         let fileInput = ev.target;
-        return blobToBase64(fileInput.files.item(0)).then((base64Url) => {
+        let imageFile = fileInput.files.item(0);
+
+        if (imageFile.size > CHATSHIER_CFG.FILE.MEGA_BYTE) {
+            return notify('圖片大小不能超過 1 MB', { type: 'warning' });
+        }
+        return blobToBase64(imageFile).then((base64Url) => {
             this.setState({ photo: base64Url });
         });
     }
@@ -135,18 +144,26 @@ class ReceptionistModal extends ModalCore {
                         </FormGroup>
 
                         <FormGroup className="d-flex">
-                            <div className="w-50 photo-container">
+                            <Button type="button" color="light" className="position-relative p-0 photo-container"
+                                onClick={() => this.fileInput && this.fileInput.click()}>
+                                {!this.state.photo &&
+                                <div className="d-flex w-100 h-100 image-upload">
+                                    <div className="m-auto text-muted">
+                                        <i className="fas fa-image"></i>
+                                        <br />
+                                        <span>上傳頭像</span>
+                                        <br />
+                                        <span className="text-danger small">檔案不能超過 1 MB</span>
+                                    </div>
+                                </div>}
                                 <div className="m-auto image-container" style={{ width: '8rem', height: '8rem' }}>
                                     <img className="image-fit" src={this.state.photo || defaultAvatarPng} alt={this.state.name} />
                                 </div>
-                            </div>
-                            <div className="w-50 d-flex buttons-container">
-                                <Button type="button" color="light" className="m-auto" onClick={() => this.fileInput && this.fileInput.click()}>上傳頭像</Button>
-                                <input className="d-none" type="file"
-                                    accept="image/png,image/jpg,image/jpeg"
-                                    ref={(elem) => (this.fileInput = elem)}
-                                    onChange={this.onFileChange} />
-                            </div>
+                            </Button>
+                            <input className="d-none" type="file"
+                                accept="image/png,image/jpg,image/jpeg"
+                                ref={(elem) => (this.fileInput = elem)}
+                                onChange={this.onFileChange} />
                         </FormGroup>
 
                         <FormGroup>
@@ -191,20 +208,20 @@ class ReceptionistModal extends ModalCore {
                         <div className="d-flex align-items-center justify-content-end">
                             {!this.props.isUpdate &&
                             <Button className="mr-1" type="submit" color="primary"
-                                disabled={this.state.isAsyncWorking}>
+                                disabled={this.state.isAsyncProcessing}>
                                 <Trans i18nKey="Add" />
                             </Button>}
 
                             {this.props.isUpdate &&
                             <Button className="mr-1" type="submit" color="primary"
-                                disabled={this.state.isAsyncWorking}>
+                                disabled={this.state.isAsyncProcessing}>
                                 <Trans i18nKey="Update" />
                             </Button>}
 
                             {this.props.isUpdate &&
                             <Button className="mr-1" type="button" color="danger"
                                 onClick={() => this.props.deleteHandler && this.props.deleteHandler(this.props.receptionistId)}
-                                disabled={this.state.isAsyncWorking}>
+                                disabled={this.state.isAsyncProcessing}>
                                 <Trans i18nKey="Remove" />
                             </Button>}
 

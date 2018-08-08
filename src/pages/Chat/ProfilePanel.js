@@ -7,8 +7,8 @@ import { Dropdown, DropdownItem, DropdownMenu,
 import { Trans } from 'react-i18next';
 import { withTranslate } from '../../i18n';
 
-import authHelper from '../../helpers/authentication';
-import socketHelper from '../../helpers/socket';
+import authHlp from '../../helpers/authentication';
+import socketHlp from '../../helpers/socket';
 import apiDatabase from '../../helpers/apiDatabase/index';
 import apiBot from '../../helpers/apiBot/index';
 import regex from '../../utils/regex';
@@ -187,7 +187,7 @@ class ProfilePanel extends React.Component {
 
         let socketBody = {
             params: {
-                userid: authHelper.userId,
+                userid: authHlp.userId,
                 appid: this.props.appId,
                 chatroomid: this.props.chatroomId,
                 platformuid: platformUid
@@ -195,7 +195,7 @@ class ProfilePanel extends React.Component {
             body: putField
         };
 
-        return socketHelper.updateMessagerToServer(socketBody).then(() => {
+        return socketHlp.updateMessagerToServer(socketBody).then(() => {
             return notify('用戶資料更新成功', { type: 'success' });
         }).catch(() => {
             return notify('用戶資料更新失敗', { type: 'danger' });
@@ -580,7 +580,7 @@ class ProfilePanel extends React.Component {
         let person;
 
         if (isGroupChatroom) {
-            let userId = authHelper.userId;
+            let userId = authHlp.userId;
             platformUid = userId;
             person = Object.assign({}, this.props.users[userId]);
             person.photo = logos[this.app.type];

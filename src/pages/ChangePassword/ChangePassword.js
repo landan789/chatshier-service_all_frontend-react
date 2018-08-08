@@ -6,10 +6,10 @@ import { withTranslate } from '../../i18n';
 import jwtDecode from 'jwt-decode';
 
 import ROUTES from '../../config/route';
-import browserHelper from '../../helpers/browser';
+import browserHlp from '../../helpers/browser';
 import apiSign from '../../helpers/apiSign/index';
-import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
-import authHelper from '../../helpers/authentication';
+import cookieHlp, { CHSR_COOKIE } from '../../helpers/cookie';
+import authHlp from '../../helpers/authentication';
 
 import SignForm from '../../components/SignForm/SignForm';
 import { notify } from '../../components/Notify/Notify';
@@ -59,8 +59,8 @@ class ChangePassword extends React.Component {
             this.props.history.replace(ROUTES.SIGNIN);
         }
 
-        browserHelper.setTitle(this.props.t('Change password'));
-        if (authHelper.hasSignedin()) {
+        browserHlp.setTitle(this.props.t('Change password'));
+        if (authHlp.hasSignedin()) {
             return window.location.replace(ROUTES.CHAT);
         }
     }
@@ -116,10 +116,10 @@ class ChangePassword extends React.Component {
             let users = resJson.data;
             let _user = users[userId];
 
-            cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
-            cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
-            authHelper.jwt = jwt;
-            authHelper.activateRefreshToken();
+            cookieHlp.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
+            cookieHlp.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
+            authHlp.jwt = jwt;
+            authHlp.activateRefreshToken();
 
             return notify(this.props.t('Password update successful!'), { type: 'success' });
         }).then(() => {

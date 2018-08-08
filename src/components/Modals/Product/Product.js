@@ -192,20 +192,20 @@ class ProductModal extends ModalCore {
                         <div className="d-flex align-items-center justify-content-end">
                             {!this.props.isUpdate &&
                             <Button className="mr-1" type="submit" color="primary"
-                                disabled={this.state.isAsyncWorking}>
+                                disabled={this.state.isAsyncProcessing}>
                                 <Trans i18nKey="Add" />
                             </Button>}
 
                             {this.props.isUpdate &&
                             <Button className="mr-1" type="submit" color="primary"
-                                disabled={this.state.isAsyncWorking}>
+                                disabled={this.state.isAsyncProcessing}>
                                 <Trans i18nKey="Update" />
                             </Button>}
 
                             {this.props.isUpdate &&
                             <Button className="mr-1" type="button" color="danger"
                                 onClick={() => this.props.deleteHandler && this.props.deleteHandler(this.props.productId)}
-                                disabled={this.state.isAsyncWorking}>
+                                disabled={this.state.isAsyncProcessing}>
                                 <Trans i18nKey="Remove" />
                             </Button>}
 

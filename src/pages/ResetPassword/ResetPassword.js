@@ -6,9 +6,9 @@ import { Trans } from 'react-i18next';
 import { withTranslate } from '../../i18n';
 
 import ROUTES from '../../config/route';
-import browserHelper from '../../helpers/browser';
+import browserHlp from '../../helpers/browser';
 import apiSign from '../../helpers/apiSign/index';
-import authHelper from '../../helpers/authentication';
+import authHlp from '../../helpers/authentication';
 import regex from '../../utils/regex';
 
 import SignForm from '../../components/SignForm/SignForm';
@@ -45,8 +45,8 @@ class ResetPassword extends React.Component {
         this.recaptchaResponseChanged = this.recaptchaResponseChanged.bind(this);
         this.checkInputs = this.checkInputs.bind(this);
 
-        browserHelper.setTitle(this.props.t('Reset password'));
-        if (authHelper.hasSignedin()) {
+        browserHlp.setTitle(this.props.t('Reset password'));
+        if (authHlp.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }
     }

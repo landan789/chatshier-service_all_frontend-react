@@ -6,8 +6,8 @@ import Aux from 'react-aux';
 import { Fade, Jumbotron, Row, Col, InputGroup, Input, Button } from 'reactstrap';
 
 import ROUTES from '../../config/route';
-import authHelper from '../../helpers/authentication';
-import browserHelper from '../../helpers/browser';
+import authHlp from '../../helpers/authentication';
+import browserHlp from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
@@ -39,9 +39,9 @@ class Composes extends React.Component {
         this.openInsertModal = this.openInsertModal.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
 
-        browserHelper.setTitle('群發');
-        if (!authHelper.hasSignedin()) {
-            authHelper.signOut();
+        browserHlp.setTitle('群發');
+        if (!authHlp.hasSignedin()) {
+            authHlp.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }
     }

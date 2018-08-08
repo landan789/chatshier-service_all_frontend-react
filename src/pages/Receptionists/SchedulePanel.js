@@ -69,8 +69,14 @@ class SchedulePanel extends React.Component {
             let mmEnd = endDateTime.getMinutes();
             let ssEnd = endDateTime.getSeconds();
 
-            let rruleSet = rrulestr(recurrence.join('\n'), { forceset: true });
-            let allDates = rruleSet.all((d, len) => len <= MAX_DATES).filter((d) => d >= startDateTime && d <= endDateTime);
+            let rruleSet = new RRuleSet();
+            for (let i in recurrence) {
+                let rrule = rrulestr(recurrence[i]);
+                rrule.options.dtstart = new Date(startDateTime);
+                rrule.options.dtstart.setHours(0, 0, 0, 0);
+                rruleSet.rrule(rrule);
+            }
+            let allDates = rruleSet.all((d, len) => len <= MAX_DATES);
 
             calendarEvents = calendarEvents.concat(allDates.map((date) => {
                 let _startDateTime = new Date(date);

@@ -8,8 +8,8 @@ import { Fade, Card, ButtonGroup, Button, UncontrolledTooltip } from 'reactstrap
 import { withTranslate } from '../../i18n';
 
 import ROUTES from '../../config/route';
-import authHelper from '../../helpers/authentication';
-import browserHelper from '../../helpers/browser';
+import authHlp from '../../helpers/authentication';
+import browserHlp from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
@@ -107,9 +107,9 @@ class Tickets extends React.Component {
         this.openInsertModal = this.openInsertModal.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
 
-        browserHelper.setTitle(this.props.t('To-Do items'));
-        if (!authHelper.hasSignedin()) {
-            authHelper.signOut();
+        browserHlp.setTitle(this.props.t('To-Do items'));
+        if (!authHlp.hasSignedin()) {
+            authHlp.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }
 

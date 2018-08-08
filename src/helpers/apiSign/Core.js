@@ -1,4 +1,4 @@
-import authHelper from '../../helpers/authentication';
+import authHlp from '../../helpers/authentication';
 
 import CHATSHIER from '../../config/chatshier';
 
@@ -9,7 +9,7 @@ class Core {
     }
 
     get userId() {
-        return authHelper.userId;
+        return authHlp.userId;
     }
 
     /**

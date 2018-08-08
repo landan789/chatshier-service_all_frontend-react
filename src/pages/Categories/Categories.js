@@ -9,8 +9,8 @@ import { withTranslate } from '../../i18n';
 import SortableTree from 'react-sortable-tree';
 
 import ROUTES from '../../config/route';
-import authHelper from '../../helpers/authentication';
-import browserHelper from '../../helpers/browser';
+import authHlp from '../../helpers/authentication';
+import browserHlp from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import CategoryModal from '../../components/Modals/Category/Category';
@@ -116,9 +116,9 @@ class Categories extends React.Component {
         this.generateNodeProps = this.generateNodeProps.bind(this);
         this.closeModal = this.closeModal.bind(this);
 
-        browserHelper.setTitle(this.props.t('Appointment categoies'));
-        if (!authHelper.hasSignedin()) {
-            authHelper.signOut();
+        browserHlp.setTitle(this.props.t('Appointment categoies'));
+        if (!authHlp.hasSignedin()) {
+            authHlp.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }
     }

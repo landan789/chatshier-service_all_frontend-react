@@ -25,7 +25,7 @@ class AutoreplyEditModal extends ModalCore {
             startedTime: '',
             endedTime: '',
             text: '',
-            isAsyncWorking: false
+            isAsyncProcessing: false
         };
 
         this.updateAutoreply = this.updateAutoreply.bind(this);
@@ -73,17 +73,17 @@ class AutoreplyEditModal extends ModalCore {
             updatedTime: Date.now()
         };
 
-        this.setState({ isAsyncWorking: true });
+        this.setState({ isAsyncProcessing: true });
         return apiDatabase.appsAutoreplies.update(appId, autoreplyId, autoreply).then(() => {
             this.setState({
                 isOpen: false,
-                isAsyncWorking: false
+                isAsyncProcessing: false
             });
             return notify('修改成功', { type: 'success' });
         }).then(() => {
             return this.closeModal(ev);
         }).catch(() => {
-            this.setState({ isAsyncWorking: false });
+            this.setState({ isAsyncProcessing: false });
             return notify('修改失敗', { type: 'danger' });
         });
     }
@@ -130,7 +130,7 @@ class AutoreplyEditModal extends ModalCore {
                     </FormGroup>
                 </ModalBody>
                 <ModalFooter>
-                    <Button outline color="success" onClick={this.updateAutoreply} disabled={this.state.isAsyncWorking}>修改</Button>{' '}
+                    <Button outline color="success" onClick={this.updateAutoreply} disabled={this.state.isAsyncProcessing}>修改</Button>{' '}
                     <Button outline color="danger" onClick={this.closeModal}>取消</Button>
                 </ModalFooter>
             </Modal>

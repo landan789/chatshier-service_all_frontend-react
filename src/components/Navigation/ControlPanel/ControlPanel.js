@@ -9,8 +9,8 @@ import { withTranslate } from '../../../i18n';
 import { Collapse, ListGroup, ListGroupItem, Badge } from 'reactstrap';
 import Swiper from 'swiper/dist/js/swiper.js';
 
-import authHelper from '../../../helpers/authentication';
-import socketHelper from '../../../helpers/socket';
+import authHlp from '../../../helpers/authentication';
+import socketHlp from '../../../helpers/socket';
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import apiBot from '../../../helpers/apiBot';
 import ROUTES from '../../../config/route';
@@ -293,7 +293,7 @@ class ControlPanel extends React.Component {
     selectChatroom(appId, chatroomId) {
         controlPanelStore.dispatch(selectChatroom(appId, chatroomId));
 
-        return socketHelper.readChatroomUnRead(appId, chatroomId).then(() => {
+        return socketHlp.readChatroomUnRead(appId, chatroomId).then(() => {
             let chatroom = this.props.appsChatrooms[appId].chatrooms[chatroomId];
             let messagerSelf = findMessagerSelf(chatroom.messagers);
             messagerSelf.unRead = 0;
@@ -355,7 +355,7 @@ class ControlPanel extends React.Component {
             );
         }
 
-        let userId = authHelper.userId;
+        let userId = authHlp.userId;
         let itemCollapse = this.state.itemCollapse;
 
         let unreadItems = [];

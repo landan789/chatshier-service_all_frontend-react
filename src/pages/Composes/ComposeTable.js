@@ -7,7 +7,7 @@ import { Table, Button } from 'reactstrap';
 import ComposeEditModal from '../../components/Modals/ComposeEdit/ComposeEdit';
 import apiDatabase from '../../helpers/apiDatabase/index';
 import { notify } from '../../components/Notify/Notify';
-import timeHelper from '../../helpers/timer';
+import timeHlp from '../../helpers/timer';
 
 class ComposeTable extends React.Component {
     static propTypes = {
@@ -80,10 +80,10 @@ class ComposeTable extends React.Component {
         let newIdList;
         switch (determineSentTime) {
             case this.RESERVED:
-                statusList = statusList.filter((composeId) => Date.now() < timeHelper.toMilliseconds(composes[composeId].time));
+                statusList = statusList.filter((composeId) => Date.now() < timeHlp.toMilliseconds(composes[composeId].time));
                 break;
             case this.SENT:
-                statusList = statusList.filter((composeId) => Date.now() >= timeHelper.toMilliseconds(composes[composeId].time));
+                statusList = statusList.filter((composeId) => Date.now() >= timeHlp.toMilliseconds(composes[composeId].time));
                 break;
             default:
         }
@@ -100,7 +100,7 @@ class ComposeTable extends React.Component {
             return (
                 <tr key={index}>
                     <td className="text">{compose.text}</td>
-                    <td className="time">{timeHelper.toLocalTimeString(compose.time)}</td>
+                    <td className="time">{timeHlp.toLocalTimeString(compose.time)}</td>
                     <td className="cata">{0 < compose.ageRange || compose.gender || 0 < Object.keys(compose.field_ids) ? '有' : '無'}</td>
                     <td className="edit">
                         <Button color="secondary" onClick={() => this.openEditModal(appId, composeId, composes[composeId], this.props.appsFields[appId])}><i className="fas fa-pencil-alt"></i></Button>

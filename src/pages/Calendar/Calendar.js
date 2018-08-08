@@ -7,10 +7,10 @@ import { Fade } from 'reactstrap';
 import { withTranslate } from '../../i18n';
 
 import ROUTES from '../../config/route';
-import authHelper from '../../helpers/authentication';
-import browserHelper from '../../helpers/browser';
+import authHlp from '../../helpers/authentication';
+import browserHlp from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
-import gCalendarHelper from '../../helpers/googleCalendar';
+import gcalendarHlp from '../../helpers/googleCalendar';
 import { formatDate } from '../../utils/unitTime';
 
 import { notify } from '../../components/Notify/Notify';
@@ -173,8 +173,8 @@ class CalendarPage extends React.Component {
             }
         }
 
-        let gCalendarItems = gCalendarHelper.eventCaches.items;
-        calendarEvents = calendarEvents.concat(gCalendarItems.map((googleEvent) => {
+        let gcalendarItems = gcalendarHlp.eventCaches.items;
+        calendarEvents = calendarEvents.concat(gcalendarItems.map((googleEvent) => {
             let isAllDay = !!(googleEvent.start.date && googleEvent.end.date);
             let startDate = isAllDay ? new Date(googleEvent.start.date) : new Date(googleEvent.start.dateTime);
             isAllDay && startDate.setHours(0, 0, 0, 0);
@@ -202,9 +202,9 @@ class CalendarPage extends React.Component {
     constructor(props) {
         super(props);
 
-        browserHelper.setTitle(props.t('Calendar'));
-        if (!authHelper.hasSignedin()) {
-            authHelper.signOut();
+        browserHlp.setTitle(props.t('Calendar'));
+        if (!authHlp.hasSignedin()) {
+            authHlp.signOut();
             props.history.replace(ROUTES.SIGNIN);
             return;
         }
@@ -235,12 +235,12 @@ class CalendarPage extends React.Component {
             apiDatabase.consumers.find(),
             apiDatabase.groups.find(),
             apiDatabase.users.find(),
-            gCalendarHelper.loadCalendarApi().then(() => gCalendarHelper.findEvents())
+            gcalendarHlp.loadCalendarApi().then(() => gcalendarHlp.findEvents())
         ]).catch(() => {});
     }
 
     componentWillUnmount() {
-        gCalendarHelper.removeSignChangeListener(this.gSignListenerId);
+        gcalendarHlp.removeSignChangeListener(this.gSignListenerId);
         this.gSignListenerId = void 0;
     }
 
@@ -359,7 +359,7 @@ class CalendarPage extends React.Component {
                     }
                 };
 
-                return gCalendarHelper.updateEvent('primary', eventId, gEvent).then((googleEvent) => {
+                return gcalendarHlp.updateEvent('primary', eventId, gEvent).then((googleEvent) => {
                     let isAllDay = !!(googleEvent.start.date && googleEvent.end.date);
                     let startDate = isAllDay ? new Date(googleEvent.start.date) : new Date(googleEvent.start.dateTime);
                     isAllDay && startDate.setHours(0, 0, 0, 0);

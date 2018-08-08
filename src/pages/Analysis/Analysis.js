@@ -10,8 +10,8 @@ import { Trans } from 'react-i18next';
 import { withTranslate, currentLanguage } from '../../i18n';
 
 import ROUTES from '../../config/route';
-import authHelper from '../../helpers/authentication';
-import browserHelper from '../../helpers/browser';
+import authHlp from '../../helpers/authentication';
+import browserHlp from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 import { formatDate, formatTime } from '../../utils/unitTime';
 
@@ -108,9 +108,9 @@ class Analysis extends React.Component {
         this.onEndDatetimeChanged = this.onEndDatetimeChanged.bind(this);
         this.toggleTypeDropdown = this.toggleTypeDropdown.bind(this);
 
-        browserHelper.setTitle(this.props.t('Analysis'));
-        if (!authHelper.hasSignedin()) {
-            authHelper.signOut();
+        browserHlp.setTitle(this.props.t('Analysis'));
+        if (!authHlp.hasSignedin()) {
+            authHlp.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }
 

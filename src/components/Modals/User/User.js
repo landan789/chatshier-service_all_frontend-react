@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input } from 'reactstrap';
 
-import authHelper from '../../../helpers/authentication';
+import authHlp from '../../../helpers/authentication';
 import apiDatabase from '../../../helpers/apiDatabase/index';
 
 import ModalCore from '../ModalCore';
@@ -20,7 +20,7 @@ class User extends ModalCore {
         super(props);
         this.state = {
             isOpen: this.props.isOpen,
-            isAsyncWorking: false,
+            isAsyncProcessing: false,
             id: '',
             email: '',
             company: '',
@@ -40,7 +40,7 @@ class User extends ModalCore {
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
-        let userId = authHelper.userId;
+        let userId = authHlp.userId;
         let user = nextProps.users ? nextProps.users[userId] : {};
         let userLength = Object.keys(user).length;
         if (0 < userLength) {
@@ -61,17 +61,17 @@ class User extends ModalCore {
             address: this.state.address
         };
 
-        this.setState({ isAsyncWorking: true });
+        this.setState({ isAsyncProcessing: true });
         return apiDatabase.users.update(user).then(() => {
             this.setState({
                 isOpen: false,
-                isAsyncWorking: false
+                isAsyncProcessing: false
             });
             return notify('修改成功', { type: 'success' });
         }).then(() => {
             return this.closeModal(ev);
         }).catch(() => {
-            this.setState({ isAsyncWorking: false });
+            this.setState({ isAsyncProcessing: false });
             return notify('修改失敗', { type: 'danger' });
         });
     }
@@ -115,7 +115,7 @@ class User extends ModalCore {
                     </FormGroup>
                 </ModalBody>
                 <ModalFooter>
-                    <Button outline color="success" onClick={this.updateUser} disabled={this.state.isAsyncWorking}>修改</Button>
+                    <Button outline color="success" onClick={this.updateUser} disabled={this.state.isAsyncProcessing}>修改</Button>
                     <Button outline color="danger" onClick={this.closeModal}>取消</Button>
                 </ModalFooter>
             </Modal>

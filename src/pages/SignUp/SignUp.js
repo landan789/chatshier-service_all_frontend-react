@@ -7,9 +7,9 @@ import { withTranslate } from '../../i18n';
 
 import ROUTES from '../../config/route';
 import CHATSHIER_CFG from '../../config/chatshier';
-import browserHelper from '../../helpers/browser';
-import authHelper from '../../helpers/authentication';
-import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
+import browserHlp from '../../helpers/browser';
+import authHlp from '../../helpers/authentication';
+import cookieHlp, { CHSR_COOKIE } from '../../helpers/cookie';
 import apiSign from '../../helpers/apiSign/index';
 import regex from '../../utils/regex';
 
@@ -48,8 +48,8 @@ class SignUp extends React.Component {
         this.pwConfirmChanged = this.pwConfirmChanged.bind(this);
         this.checkInputs = this.checkInputs.bind(this);
 
-        browserHelper.setTitle(this.props.t('Sign up'));
-        if (authHelper.hasSignedin()) {
+        browserHlp.setTitle(this.props.t('Sign up'));
+        if (authHlp.hasSignedin()) {
             window.location.replace(ROUTES.CHAT);
         }
     }
@@ -125,10 +125,10 @@ class SignUp extends React.Component {
             let users = response.data;
             let userId = Object.keys(users).shift();
             let _user = users[userId];
-            cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
-            cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
-            authHelper.jwt = jwt;
-            authHelper.activateRefreshToken();
+            cookieHlp.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
+            cookieHlp.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
+            authHlp.jwt = jwt;
+            authHlp.activateRefreshToken();
 
             // this.props.history.replace(ROUTES.SETTINGS);
             window.location.replace(ROUTES.SETTINGS);

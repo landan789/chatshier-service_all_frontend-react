@@ -8,8 +8,8 @@ import { Trans } from 'react-i18next';
 import { withTranslate } from '../../i18n';
 
 import ROUTES from '../../config/route';
-import authHelper from '../../helpers/authentication';
-import browserHelper from '../../helpers/browser';
+import authHlp from '../../helpers/authentication';
+import browserHlp from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import ProductModal from '../../components/Modals/Product/Product';
@@ -45,9 +45,9 @@ class Products extends React.Component {
         this.deleteProduct = this.deleteProduct.bind(this);
         this.closeModal = this.closeModal.bind(this);
 
-        browserHelper.setTitle(this.props.t('Product management'));
-        if (!authHelper.hasSignedin()) {
-            authHelper.signOut();
+        browserHlp.setTitle(this.props.t('Product management'));
+        if (!authHlp.hasSignedin()) {
+            authHlp.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }
     }

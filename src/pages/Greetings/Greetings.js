@@ -5,8 +5,8 @@ import Aux from 'react-aux';
 import { Fade, Jumbotron } from 'reactstrap';
 
 import ROUTES from '../../config/route';
-import authHelper from '../../helpers/authentication';
-import browserHelper from '../../helpers/browser';
+import authHlp from '../../helpers/authentication';
+import browserHlp from '../../helpers/browser';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
@@ -29,9 +29,9 @@ class Greetings extends React.Component {
 
         this.appChanged = this.appChanged.bind(this);
 
-        browserHelper.setTitle('加好友回覆');
-        if (!authHelper.hasSignedin()) {
-            authHelper.signOut();
+        browserHlp.setTitle('加好友回覆');
+        if (!authHlp.hasSignedin()) {
+            authHlp.signOut();
             this.props.history.replace(ROUTES.SIGNIN);
         }
     }

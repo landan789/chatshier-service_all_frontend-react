@@ -4,8 +4,8 @@ import Aux from 'react-aux';
 import { connect } from 'react-redux';
 
 import chatshierCfg from '../../config/chatshier';
-import authHelper from '../../helpers/authentication';
-import socketHelper from '../../helpers/socket';
+import authHlp from '../../helpers/authentication';
+import socketHlp from '../../helpers/socket';
 import { MINUTE } from '../../utils/unitTime';
 
 import { notify } from '../../components/Notify/Notify';
@@ -90,7 +90,7 @@ class ChatroomPanel extends React.Component {
         let chatroom = this.props.appsChatrooms[appId].chatrooms[chatroomId];
         let platformMessager = findChatroomMessager(chatroom.messagers, app.type);
         let messagerSelf = findMessagerSelf(chatroom.messagers);
-        let userId = authHelper.userId;
+        let userId = authHlp.userId;
 
         // 發送給各平台時，文字訊息前面加上自己的名稱當成前輟
         let messagePrefix = app.type !== CHATSHIER ? '[' + this.props.users[userId].name + ']\n' : '';
@@ -116,7 +116,7 @@ class ChatroomPanel extends React.Component {
         };
 
         this.setState({ messageText: '', isProcessing: true });
-        return socketHelper.sendMessageToServer(socketBody).then(() => {
+        return socketHlp.sendMessageToServer(socketBody).then(() => {
             this.setState({ isProcessing: false });
         }).catch(() => {
             this.setState({ isProcessing: false });
@@ -170,7 +170,7 @@ class ChatroomPanel extends React.Component {
 
         let appId = this.props.appId;
         let chatroomId = this.props.chatroomId;
-        let userId = authHelper.userId;
+        let userId = authHlp.userId;
         let app = this.props.apps[appId];
         let chatroom = this.props.appsChatrooms[appId].chatrooms[chatroomId];
         let messagerSelf = findMessagerSelf(chatroom.messagers);
@@ -201,7 +201,7 @@ class ChatroomPanel extends React.Component {
         };
 
         this.setState({ isProcessing: true });
-        return socketHelper.sendMessageToServer(socketBody).then(() => {
+        return socketHlp.sendMessageToServer(socketBody).then(() => {
             this.setState({ isProcessing: false });
         }).catch(() => {
             this.setState({ isProcessing: false });
@@ -230,7 +230,7 @@ class ChatroomPanel extends React.Component {
 
         let messagers = chatroom.messagers;
         let messages = chatroom.messages;
-        let userId = authHelper.userId;
+        let userId = authHlp.userId;
 
         let messagerSelf = findMessagerSelf(messagers);
         let className = (this.props.className || '') + ' chatroom-panel';

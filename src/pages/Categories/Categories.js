@@ -331,21 +331,15 @@ class Categories extends React.Component {
                                             }
 
                                             let className = 'm-1 p-2 d-inline-block product-item';
-                                            let tooltipId = 'productTip_' + productId;
                                             return (
-                                                <Aux key={productId}>
-                                                    <div id={tooltipId} className={className}>
-                                                        <div className="image-container">
-                                                            <img className="image-fit" src={product.src || logoPng} alt={product.name} />
-                                                        </div>
-                                                        <div className="text-ellipsis text-center text-muted small">
-                                                            <span>{product.name}</span>
-                                                        </div>
+                                                <div key={productId} className={className}>
+                                                    <div className="image-container">
+                                                        <img className="image-fit" src={product.src || logoPng} alt={product.name} />
                                                     </div>
-                                                    <UncontrolledTooltip placement="bottom" delay={0} target={tooltipId}>
+                                                    <div className="text-ellipsis text-center text-muted small">
                                                         <span>{product.name}</span>
-                                                    </UncontrolledTooltip>
-                                                </Aux>
+                                                    </div>
+                                                </div>
                                             );
                                         })}
                                     </div>

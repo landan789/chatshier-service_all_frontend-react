@@ -61,6 +61,7 @@ class SchedulePanel extends React.Component {
 
             let startDateTime = new Date(schedule.start.dateTime);
             let endDateTime = new Date(schedule.end.dateTime);
+            let offset = endDateTime.getTime() - startDateTime.getTime();
             let hhStart = startDateTime.getHours();
             let mmStart = startDateTime.getMinutes();
             let ssStart = startDateTime.getSeconds();
@@ -75,6 +76,7 @@ class SchedulePanel extends React.Component {
 
                 let _endDateTime = new Date(date);
                 _endDateTime.setHours(hhEnd, mmEnd, ssEnd);
+                _endDateTime = new Date(_endDateTime.getTime() + offset);
 
                 return {
                     id: scheduleId,

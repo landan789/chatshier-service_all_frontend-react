@@ -142,6 +142,8 @@
 
     "Recent chat date": "最近聊天時間",
     "Receptionist management": "服務人員管理",
+    "Repeat every": "重複間隔",
+    "Repeat on": "重複日期",
     "Remark": "備註",
     "Remove": "刪除",
     "Remove successful!": "刪除成功！",
@@ -172,6 +174,8 @@
     "To-Do items": "待辦事項",
     "Token expired, please perform the reset password procedure again!": "令牌已過期，請重新執行重設密碼流程！",
     "Total count of messages per hour": "每時段總訊息數",
+
+    "View Appointments": "檢視預約",
 
     "Unassigned": "未指派",
     "Unit": "單位",

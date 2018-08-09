@@ -1,3 +1,8 @@
+@import "node_modules/bootstrap/scss/_functions";
+// https://getbootstrap.com/docs/4.0/getting-started/theming/
+// https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/_variables.scss
+@import 'node_modules/bootstrap/scss/_variables';
+
 $toolbar-height: 50px;
 
 // variables for Controll Panel
@@ -14,3 +19,9 @@ $line-color: #43b901;
 $line-dev-color: #262a2e;
 $facebook-color: #4267b2;
 $facebook-messsenger-color: #407fff;
+
+$_pc-break-point: 1024px;
+$_mobile-break-point: 768px;
+
+$_phone-portrait-bp-min: 320px;
+$_phone-portrait-bp-max: 480px;

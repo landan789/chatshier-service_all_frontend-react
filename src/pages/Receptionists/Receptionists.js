@@ -54,7 +54,7 @@ class ReceptionistsPage extends React.Component {
         browserHlp.setTitle(this.props.t('Receptionist management'));
         if (!authHlp.hasSignedin()) {
             authHlp.signOut();
-            this.props.history.replace(ROUTES.SIGNIN);
+            props.history.replace(ROUTES.SIGNIN);
         }
     }
 

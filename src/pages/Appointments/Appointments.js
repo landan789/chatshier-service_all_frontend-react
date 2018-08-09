@@ -6,6 +6,9 @@ import Aux from 'react-aux';
 import { Fade, Card } from 'reactstrap';
 import { withTranslate } from '../../i18n';
 
+import ROUTES from '../../config/route';
+import authHlp from '../../helpers/authentication';
+import browserHlp from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import Calendar from '../../components/Calendar/Calendar';
@@ -20,7 +23,8 @@ import './Appointments.css';
 class Appointments extends React.Component {
     static propTypes = {
         t: PropTypes.func.isRequired,
-        appsAppointments: PropTypes.object
+        appsAppointments: PropTypes.object,
+        history: PropTypes.object.isRequired
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -71,6 +75,12 @@ class Appointments extends React.Component {
         this.onAppChange = this.onAppChange.bind(this);
         this.onEventClick = this.onEventClick.bind(this);
         this.closeModal = this.closeModal.bind(this);
+
+        browserHlp.setTitle(this.props.t('View Appointments'));
+        if (!authHlp.hasSignedin()) {
+            authHlp.signOut();
+            props.history.replace(ROUTES.SIGNIN);
+        }
     }
 
     componentDidMount() {
@@ -149,7 +159,7 @@ class Appointments extends React.Component {
         return (
             <Aux>
                 <ControlPanel />
-                <PageWrapper toolbarTitle={this.props.t('Appointment management')}>
+                <PageWrapper toolbarTitle={this.props.t('View Appointments')}>
                     <Fade in className="align-items-center mt-5 container category-wrapper">
                         <Card className="pb-3 chsr">
                             <div className="text-left table-title">

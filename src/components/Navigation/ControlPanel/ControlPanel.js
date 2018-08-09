@@ -66,7 +66,7 @@ const linkItems = [
         dropdownItems: [{
             link: ROUTES.APPOINTMENTS,
             icon: 'fas fa-calendar-check fa-fw',
-            text: '檢視預約項目',
+            text: 'View Appointments',
             useReactRouter: true
         }, {
             link: ROUTES.RECEPTIONISTS,

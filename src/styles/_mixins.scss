@@ -1,0 +1,26 @@
+@import './_variables';
+@import 'node_modules/bootstrap/scss/_mixins';
+
+@mixin scrollable($direct: '') {
+    @if $direct == 'x' {
+        overflow-x: auto;
+    } @else if $direct == 'y' {
+        overflow-y: auto;
+    } @else {
+        overflow: auto;
+    }
+    -webkit-overflow-scrolling: touch;
+}
+
+// https://getbootstrap.com/docs/4.0/layout/overview/
+@mixin media-pad() {
+    @media only screen and (min-width: $_phone-portrait-bp-max) and (max-width: $_mobile-break-point) {
+        @content;
+    }
+}
+
+@mixin media-phone() {
+    @media only screen and (max-width: $_phone-portrait-bp-max) {
+        @content;
+    }
+}

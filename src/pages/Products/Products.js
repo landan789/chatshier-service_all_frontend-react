@@ -130,17 +130,6 @@ class Products extends React.Component {
         let productIds = Object.keys(products).filter((productId) => {
             let _product = products[productId];
             return _product && apiDatabase.appsProducts.TYPES.APPOINTMENT === _product.type;
-        }).sort((a, b) => {
-            let tA = new Date(products[a].updatedTime);
-            let tB = new Date(products[b].updatedTime);
-
-            if (tA < tB) {
-                return 1;
-            } else if (tA > tB) {
-                return -1;
-            } else {
-                return 0;
-            }
         });
         let appReceptionists = this.props.appsReceptionists[appId] || { receptionists: {} };
         let receptionists = appReceptionists.receptionists;

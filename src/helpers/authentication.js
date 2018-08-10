@@ -87,9 +87,6 @@ class AuthenticationHelper {
         let email = cookieHlp.getCookie(CHSR_COOKIE.USER_EMAIL);
         let jwt = window.localStorage.getItem('jwt');
         return !!(userName && email && jwt);
-        // return !!(cookieHlp.getCookie(CHSR_COOKIE.USER_NAME) &&
-        //     cookieHlp.getCookie(CHSR_COOKIE.USER_EMAIL) &&
-        //     window.localStorage.getItem('jwt'));
     }
 
     /**

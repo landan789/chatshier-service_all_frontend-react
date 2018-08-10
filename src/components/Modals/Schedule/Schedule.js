@@ -14,6 +14,7 @@ import { Button, ButtonGroup, Modal, ModalHeader, ModalBody,
 import ModalCore from '../ModalCore';
 import apiDatabase from '../../../helpers/apiDatabase';
 import { formatDate, formatTime } from '../../../utils/unitTime';
+import confirmDialog from '../Confirm/Confirm';
 import { notify } from '../../Notify/Notify';
 
 import './Schedule.css';
@@ -54,7 +55,7 @@ const UNTIL_TYPES = Object.freeze({
     COUNT: 'COUNT'
 });
 
-const DAYS_TEXTS = Object.freeze({
+const RRULE_DAYS_TEXTS = Object.freeze({
     0: '日',
     1: '一',
     2: '二',
@@ -74,21 +75,27 @@ class ScheduleModal extends ModalCore {
     }
 
     static dailyRuleStr = new RRule({
-        freq: RRule.DAILY
+        freq: RRule.DAILY,
+        wkst: RRule.SU
     }).toString();
 
-    static satRuleStr = new RRule({
+    static saRuleStr = new RRule({
         freq: RRule.DAILY,
-        byweekday: [RRule.SA]
+        byweekday: [RRule.SA],
+        wkst: RRule.SU
     }).toString();
 
     static mofrRuleStr = new RRule({
         freq: RRule.DAILY,
-        byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR]
+        byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
+        wkst: RRule.SU
     }).toString();
 
     constructor(props, ctx) {
         super(props, ctx);
+
+        this.jsDaysMapping = [ RRule.SU, RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA ];
+        this.rruleDaysMapping = [1, 2, 3, 4, 5, 6, 0];
 
         let schedule = props.schedule || { start: {}, end: {} };
         let recurrence = schedule.recurrence || [];
@@ -101,9 +108,9 @@ class ScheduleModal extends ModalCore {
             let ruleStr = firstRule.toString();
             if (ScheduleModal.dailyRuleStr === ruleStr) {
                 repeatDropdownKey = RECURRENCE_OPTIONS.DAILY;
-            } else if (ScheduleModal.satRule === ruleStr) {
+            } else if (ScheduleModal.saRuleStr === ruleStr) {
                 repeatDropdownKey = RECURRENCE_OPTIONS.WEEKLY_ON_SATURDAY;
-            } else if (ScheduleModal.mofrRule === ruleStr) {
+            } else if (ScheduleModal.mofrRuleStr === ruleStr) {
                 repeatDropdownKey = RECURRENCE_OPTIONS.EVERY_WEEKDAY_MO_TO_FR;
             } else {
                 repeatDropdownKey = RECURRENCE_OPTIONS.CUSTOM;
@@ -117,6 +124,8 @@ class ScheduleModal extends ModalCore {
             untilType = UNTIL_TYPES.COUNT;
         }
 
+        let byweekday = firstRule && firstRule.options.byweekday ? firstRule.options.byweekday : [];
+
         this.state = {
             isOpen: this.props.isOpen,
             summary: schedule.summary || '',
@@ -127,7 +136,7 @@ class ScheduleModal extends ModalCore {
 
             // Custom recurrence states
             isIntervalDropdownOpen: false,
-            repeatDays: firstRule && firstRule.options.byweekday ? firstRule.options.byweekday : [],
+            repeatDays: byweekday.map((day) => this.rruleDaysMapping[day]),
             intervalValue: firstRule && firstRule.options.interval ? firstRule.options.interval : 1,
             intervalDropdownKey: (firstRule && INTERVAL_OPTIONS[RRule.FREQUENCIES[firstRule.options.freq]]) || INTERVAL_OPTIONS.DAILY,
             untilType: untilType,
@@ -187,8 +196,6 @@ class ScheduleModal extends ModalCore {
         let appId = this.props.appId;
         let receptionistId = this.props.receptionistId;
 
-        console.log(schedule);
-
         this.setState({ isAsyncProcessing: true });
         return apiDatabase.appsReceptionistsSchedules.update(appId, receptionistId, scheduleId, schedule).then(() => {
             this.setState({ isAsyncProcessing: false });
@@ -201,17 +208,28 @@ class ScheduleModal extends ModalCore {
     }
 
     deleteSchedule(scheduleId) {
-        let appId = this.props.appId;
-        let receptionistId = this.props.receptionistId;
+        return confirmDialog({
+            title: '刪除確認',
+            message: '確定要刪除這個行程嗎？',
+            confirmText: this.props.t('Confirm'),
+            confirmColor: 'danger',
+            cancelText: this.props.t('Cancel')
+        }).then((isConfirm) => {
+            if (!isConfirm) {
+                return;
+            }
 
-        this.setState({ isAsyncProcessing: true });
-        return apiDatabase.appsReceptionistsSchedules.delete(appId, receptionistId, scheduleId).then(() => {
-            this.setState({ isAsyncProcessing: false });
-            this.closeModal();
-            return notify(this.props.t('Remove successful!'), { type: 'success' });
-        }).catch(() => {
-            this.setState({ isAsyncProcessing: false });
-            return notify(this.props.t('An error occurred!'), { type: 'danger' });
+            let appId = this.props.appId;
+            let receptionistId = this.props.receptionistId;
+            this.setState({ isAsyncProcessing: true });
+            return apiDatabase.appsReceptionistsSchedules.delete(appId, receptionistId, scheduleId).then(() => {
+                this.setState({ isAsyncProcessing: false });
+                this.closeModal();
+                return notify(this.props.t('Remove successful!'), { type: 'success' });
+            }).catch(() => {
+                this.setState({ isAsyncProcessing: false });
+                return notify(this.props.t('An error occurred!'), { type: 'danger' });
+            });
         });
     }
 
@@ -301,22 +319,25 @@ class ScheduleModal extends ModalCore {
                             <FormGroup>
                                 <Label className="mb-3"><Trans i18nKey="Repeat on" /></Label>
                                 <ButtonGroup className="w-100 flex-wrap repeat-days">
-                                    {[0, 1, 2, 3, 4, 5, 6].map((day) => (
-                                        <Button key={day} color="light"
-                                            className={'mx-1 border-circle day' + (this.state.repeatDays.indexOf(day) >= 0 ? ' active' : '')}
-                                            onClick={() => {
-                                                let _repeatDays = this.state.repeatDays.slice();
-                                                let idx = _repeatDays.indexOf(day);
-                                                if (idx < 0) {
-                                                    _repeatDays.push(day);
-                                                } else {
-                                                    _repeatDays.splice(idx, 1);
-                                                }
-                                                return this.setState({ repeatDays: _repeatDays });
-                                            }}>
-                                            <span>{DAYS_TEXTS[day]}</span>
-                                        </Button>
-                                    ))}
+                                    {this.jsDaysMapping.map((weekday, day) => {
+                                        return (
+                                            <Button key={day} color="light"
+                                                className={'mx-1 border-circle day' + (this.state.repeatDays.indexOf(day) >= 0 ? ' active' : '')}
+                                                onClick={() => {
+                                                    let _repeatDays = this.state.repeatDays.slice();
+                                                    let idx = _repeatDays.indexOf(day);
+                                                    if (idx < 0) {
+                                                        _repeatDays.push(day);
+                                                        _repeatDays.sort((a, b) => a - b);
+                                                    } else {
+                                                        _repeatDays.splice(idx, 1);
+                                                    }
+                                                    return this.setState({ repeatDays: _repeatDays });
+                                                }}>
+                                                <span>{RRULE_DAYS_TEXTS[day]}</span>
+                                            </Button>
+                                        );
+                                    })}
                                 </ButtonGroup>
                             </FormGroup>}
 
@@ -412,22 +433,11 @@ class ScheduleModal extends ModalCore {
 
         let rruleSet = new RRuleSet();
         if (key === RECURRENCE_OPTIONS.DAILY) {
-            let rrule = new RRule({
-                freq: RRule.DAILY
-            });
-            rruleSet.rrule(rrule);
+            rruleSet.rrule(rrulestr(ScheduleModal.dailyRuleStr));
         } else if (key === RECURRENCE_OPTIONS.WEEKLY_ON_SATURDAY) {
-            let rrule = new RRule({
-                freq: RRule.DAILY,
-                byweekday: [RRule.SA]
-            });
-            rruleSet.rrule(rrule);
+            rruleSet.rrule(rrulestr(ScheduleModal.saRuleStr));
         } else if (key === RECURRENCE_OPTIONS.EVERY_WEEKDAY_MO_TO_FR) {
-            let rrule = new RRule({
-                freq: RRule.DAILY,
-                byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR]
-            });
-            rruleSet.rrule(rrule);
+            rruleSet.rrule(rrulestr(ScheduleModal.mofrRuleStr));
         } else if (key === RECURRENCE_OPTIONS.CUSTOM) {
             let freqMapping = {
                 [INTERVAL_OPTIONS.DAILY]: RRule.DAILY,
@@ -438,22 +448,14 @@ class ScheduleModal extends ModalCore {
 
             let options = {
                 interval: this.state.intervalValue,
-                freq: freqMapping[this.state.intervalDropdownKey]
+                freq: freqMapping[this.state.intervalDropdownKey],
+                wkst: RRule.SU
             };
 
             if (this.state.intervalDropdownKey === INTERVAL_OPTIONS.WEEKLY &&
                 this.state.repeatDays.length > 0) {
-                let daysMapping = {
-                    0: RRule.SU,
-                    1: RRule.MO,
-                    2: RRule.TU,
-                    3: RRule.WE,
-                    4: RRule.TH,
-                    5: RRule.FR,
-                    6: RRule.SA
-                };
-                let repeatDays = this.state.repeatDays.slice().sort((a, b) => a - b);
-                options.byweekday = repeatDays.map((day) => daysMapping[day]);
+                let repeatDays = this.state.repeatDays;
+                options.byweekday = repeatDays.map((day) => this.jsDaysMapping[day]);
             }
 
             if (this.state.untilType === UNTIL_TYPES.UNTIL) {
@@ -461,12 +463,12 @@ class ScheduleModal extends ModalCore {
             } else if (this.state.untilType === UNTIL_TYPES.COUNT) {
                 options.count = this.state.repeatCount;
             }
-            options.wkst = RRule.SU;
 
             let rrule = new RRule(options);
             rruleSet.rrule(rrule);
         }
-        return rruleSet.valueOf();
+        let recurrence = rruleSet.valueOf();
+        return recurrence;
     }
 }
 

@@ -102,16 +102,15 @@ class Tickets extends React.Component {
     constructor(props) {
         super(props);
 
+        browserHlp.setTitle(props.t('To-Do items'));
+        if (!authHlp.hasSignedin()) {
+            return props.history.replace(ROUTES.SIGNOUT);
+        }
+
         this.keywordChanged = this.keywordChanged.bind(this);
         this.appChanged = this.appChanged.bind(this);
         this.openInsertModal = this.openInsertModal.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
-
-        browserHlp.setTitle(this.props.t('To-Do items'));
-        if (!authHlp.hasSignedin()) {
-            authHlp.signOut();
-            this.props.history.replace(ROUTES.SIGNIN);
-        }
 
         this.state = Object.assign({
             prevProps: null,

@@ -13,6 +13,7 @@ import authHlp from '../../helpers/authentication';
 import browserHlp from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
+import confirmDialog from '../../components/Modals/Confirm/Confirm';
 import ProductModal from '../../components/Modals/Product/Product';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
@@ -35,6 +36,11 @@ class Products extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
 
+        browserHlp.setTitle(props.t('Product management'));
+        if (!authHlp.hasSignedin()) {
+            return props.history.replace(ROUTES.SIGNOUT);
+        }
+
         this.state = {
             appId: '',
             isAsyncProcessing: false
@@ -45,12 +51,6 @@ class Products extends React.Component {
         this.updateProduct = this.updateProduct.bind(this);
         this.deleteProduct = this.deleteProduct.bind(this);
         this.closeModal = this.closeModal.bind(this);
-
-        browserHlp.setTitle(this.props.t('Product management'));
-        if (!authHlp.hasSignedin()) {
-            authHlp.signOut();
-            this.props.history.replace(ROUTES.SIGNIN);
-        }
     }
 
     componentDidMount() {
@@ -102,14 +102,26 @@ class Products extends React.Component {
     }
 
     deleteProduct(productId) {
-        let appId = this.state.appId;
-        this.setState({ isAsyncProcessing: true });
-        return apiDatabase.appsProducts.delete(appId, productId).then(() => {
-            this.closeModal();
-            return notify(this.props.t('Remove successful!'), { type: 'success' });
-        }).catch(() => {
-            this.setState({ isAsyncProcessing: false });
-            return notify(this.props.t('An error occurred!'), { type: 'danger' });
+        return confirmDialog({
+            title: '刪除確認',
+            message: '確定要刪除這個產品嗎？',
+            confirmText: this.props.t('Confirm'),
+            confirmColor: 'danger',
+            cancelText: this.props.t('Cancel')
+        }).then((isConfirm) => {
+            if (!isConfirm) {
+                return;
+            }
+
+            let appId = this.state.appId;
+            this.setState({ isAsyncProcessing: true });
+            return apiDatabase.appsProducts.delete(appId, productId).then(() => {
+                this.closeModal();
+                return notify(this.props.t('Remove successful!'), { type: 'success' });
+            }).catch(() => {
+                this.setState({ isAsyncProcessing: false });
+                return notify(this.props.t('An error occurred!'), { type: 'danger' });
+            });
         });
     }
 

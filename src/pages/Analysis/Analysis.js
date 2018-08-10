@@ -81,6 +81,11 @@ class Analysis extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
 
+        browserHlp.setTitle(props.t('Analysis'));
+        if (!authHlp.hasSignedin()) {
+            return props.history.replace(ROUTES.SIGNOUT);
+        }
+
         this.dataTypes = [{
             className: 'view-time',
             type: ANALYSIS_TYPES.TIME,
@@ -107,12 +112,6 @@ class Analysis extends React.Component {
         this.onStartDatetimeChanged = this.onStartDatetimeChanged.bind(this);
         this.onEndDatetimeChanged = this.onEndDatetimeChanged.bind(this);
         this.toggleTypeDropdown = this.toggleTypeDropdown.bind(this);
-
-        browserHlp.setTitle(this.props.t('Analysis'));
-        if (!authHlp.hasSignedin()) {
-            authHlp.signOut();
-            this.props.history.replace(ROUTES.SIGNIN);
-        }
 
         this.state = Object.assign({
             prevProps: null,

@@ -28,6 +28,11 @@ class Autoreplies extends React.Component {
     constructor(props) {
         super(props);
 
+        browserHlp.setTitle('自動回覆');
+        if (!authHlp.hasSignedin()) {
+            return props.history.replace(ROUTES.SIGNOUT);
+        }
+
         this.state = {
             isInsertModalOpen: false,
             searchKeyword: '',
@@ -38,12 +43,6 @@ class Autoreplies extends React.Component {
         this.openInsertModal = this.openInsertModal.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
         this.appChanged = this.appChanged.bind(this);
-
-        browserHlp.setTitle('自動回覆');
-        if (!authHlp.hasSignedin()) {
-            authHlp.signOut();
-            this.props.history.replace(ROUTES.SIGNIN);
-        }
     }
 
     componentDidMount() {

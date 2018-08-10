@@ -202,7 +202,7 @@ class ReceptionistModal extends ModalCore {
                                 onChange={(ev) => this.setState({ interval: ev.target.value * HOUR })} />
                         </FormGroup>
 
-                        <FormGroup>
+                        {/* <FormGroup>
                             <label className="form-check-label col-form-label font-weight-bold">預約數上限:</label>
                             <input className="form-control"
                                 type="number"
@@ -212,7 +212,7 @@ class ReceptionistModal extends ModalCore {
                                 max={100000000}
                                 step={1}
                                 onChange={(ev) => this.setState({ maxNumber: ev.target.value })} />
-                        </FormGroup>
+                        </FormGroup> */}
 
                         <div className="d-flex align-items-center justify-content-end">
                             {!this.props.isUpdate &&

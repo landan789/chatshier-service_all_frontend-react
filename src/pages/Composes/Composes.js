@@ -28,6 +28,12 @@ class Composes extends React.Component {
 
     constructor(props) {
         super(props);
+
+        browserHlp.setTitle('群發');
+        if (!authHlp.hasSignedin()) {
+            return props.history.replace(ROUTES.SIGNOUT);
+        }
+
         this.state = {
             isInsertModalOpen: false,
             appId: '',
@@ -38,12 +44,6 @@ class Composes extends React.Component {
         this.keywordChanged = this.keywordChanged.bind(this);
         this.openInsertModal = this.openInsertModal.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
-
-        browserHlp.setTitle('群發');
-        if (!authHlp.hasSignedin()) {
-            authHlp.signOut();
-            this.props.history.replace(ROUTES.SIGNIN);
-        }
     }
 
     componentDidMount() {

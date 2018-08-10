@@ -4,9 +4,7 @@ import { connect } from 'react-redux';
 import { Button } from 'reactstrap';
 import { withTranslate } from '../../i18n';
 
-import apiDatabase from '../../helpers/apiDatabase/index';
 import gcalendarHlp from '../../helpers/googleCalendar';
-import { RRuleSet, rrulestr } from 'rrule';
 
 import Calendar from '../../components/Calendar/Calendar';
 import ScheduleModal from '../../components/Modals/Schedule/Schedule';
@@ -99,7 +97,6 @@ class SchedulePanel extends React.Component {
 
         this.onSelectDate = this.onSelectDate.bind(this);
         this.onEventClick = this.onEventClick.bind(this);
-        this.onEventDrop = this.onEventDrop.bind(this);
 
         this.hide = this.hide.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -145,43 +142,6 @@ class SchedulePanel extends React.Component {
         });
     }
 
-    onEventDrop(calendarData, delta, revertFunc) {
-        let startedDate = calendarData.start.toDate();
-        let endedDate = calendarData.end ? calendarData.end.toDate() : startedDate;
-
-        let appId = this.props.appId;
-        let receptionistId = this.props.receptionistId;
-        let receptionist = this.props.appsReceptionists[appId].receptionists[receptionistId];
-
-        let scheduleId = calendarData.id;
-        let schedule = receptionist.schedules[scheduleId];
-
-        let putSchedule = {};
-        if (calendarData.isRecurrence) {
-            let recurrence = (schedule.recurrence || []).filter((str) => !!str);
-            let rruleSet = new RRuleSet();
-            for (let i in recurrence) {
-                let recurrenceStr = recurrence[i];
-                rruleSet.rrule(rrulestr(recurrenceStr));
-            }
-            rruleSet.exdate(startedDate);
-            rruleSet.rdate(endedDate);
-            putSchedule.recurrence = rruleSet.valueOf();
-        } else {
-            putSchedule.start = {
-                dateTime: startedDate.getTime()
-            };
-
-            putSchedule.end = {
-                dateTime: endedDate.getTime()
-            };
-        }
-
-        return apiDatabase.appsReceptionistsSchedules.update(appId, receptionistId, scheduleId, putSchedule).catch(() => {
-            return revertFunc();
-        });
-    }
-
     hide() {
         return new Promise((resolve) => {
             this.setState({ animate: 'animated zoomOut' });
@@ -214,10 +174,10 @@ class SchedulePanel extends React.Component {
                 </Button>
 
                 <Calendar className="p-5 chsr border-none"
+                    canEdit={false}
                     events={this.state.calendarEvents}
                     onSelect={this.onSelectDate}
-                    onEventClick={this.onEventClick}
-                    onEventDrop={this.onEventDrop} />
+                    onEventClick={this.onEventClick} />
 
                 {this.state.schedule &&
                 <ScheduleModal

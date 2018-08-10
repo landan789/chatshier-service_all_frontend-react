@@ -11,6 +11,7 @@ import authHlp from '../../helpers/authentication';
 import browserHlp from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
+import confirmDialog from '../../components/Modals/Confirm/Confirm';
 import Calendar from '../../components/Calendar/Calendar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
@@ -68,6 +69,11 @@ class Appointments extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
 
+        browserHlp.setTitle(this.props.t('View Appointments'));
+        if (!authHlp.hasSignedin()) {
+            return props.history.replace(ROUTES.SIGNOUT);
+        }
+
         this.state = Object.assign({
             appId: ''
         }, Appointments.getDerivedStateFromProps(props, {}));
@@ -75,12 +81,6 @@ class Appointments extends React.Component {
         this.onAppChange = this.onAppChange.bind(this);
         this.onEventClick = this.onEventClick.bind(this);
         this.closeModal = this.closeModal.bind(this);
-
-        browserHlp.setTitle(this.props.t('View Appointments'));
-        if (!authHlp.hasSignedin()) {
-            authHlp.signOut();
-            props.history.replace(ROUTES.SIGNIN);
-        }
     }
 
     componentDidMount() {
@@ -125,15 +125,26 @@ class Appointments extends React.Component {
     }
 
     deleteAppointment(appointmentId) {
-        let appId = this.state.appId;
+        return confirmDialog({
+            title: '刪除確認',
+            message: '確定要取消這個預約嗎？',
+            confirmText: this.props.t('Confirm'),
+            confirmColor: 'danger',
+            cancelText: this.props.t('Cancel')
+        }).then((isConfirm) => {
+            if (!isConfirm) {
+                return;
+            }
 
-        this.setState({ isAsyncProcessing: true });
-        return apiDatabase.appsAppointments.delete(appId, appointmentId).then(() => {
-            this.closeModal();
-            return notify(this.props.t('Add successful!'), { type: 'success' });
-        }).catch(() => {
-            this.setState({ isAsyncProcessing: false });
-            return notify(this.props.t('An error occurred!'), { type: 'danger' });
+            let appId = this.state.appId;
+            this.setState({ isAsyncProcessing: true });
+            return apiDatabase.appsAppointments.delete(appId, appointmentId).then(() => {
+                this.closeModal();
+                return notify(this.props.t('Add successful!'), { type: 'success' });
+            }).catch(() => {
+                this.setState({ isAsyncProcessing: false });
+                return notify(this.props.t('An error occurred!'), { type: 'danger' });
+            });
         });
     }
 

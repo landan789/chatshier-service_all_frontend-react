@@ -226,18 +226,24 @@ class GoogleCalendarHelper {
      */
     getEventDates(recurrence, dtstart = new Date(), maxDates = 250) {
         let rruleSet = new RRuleSet();
+        let _dtstart = new Date(dtstart);
+        _dtstart.setHours(0, 0, 0, 0);
+
         for (let i in recurrence) {
             let _rrule = rrulestr(recurrence[i]);
             let options = Object.assign({}, _rrule.options);
-            // rrule.js 目前 v2.3.3 在 WEEKLY 的規則中處理有 bugs 因此轉為使用 DAILY 規則來達到相同結果
+            if (null === options.freq) {
+                continue;
+            }
+
+            // rrule.js 在 WEEKLY 的規則中處理有 bugs 因此轉為使用 DAILY 規則來達到相同結果
             options.freq === RRule.WEEKLY && (options.freq = RRule.DAILY);
             options.wkst = RRule.SU;
-            options.byweekday && _rrule.options.byweekday.sort((a, b) => a - b);
-
-            let _dtstart = new Date(dtstart);
-            _dtstart.setHours(0, 0, 0, 0);
+            options.byhour = options.byminute = options.bysecond = null;
             options.dtstart = _dtstart;
-            rruleSet.rrule(new RRule(options));
+
+            let rrule = new RRule(options);
+            rruleSet.rrule(rrule);
         }
         return rruleSet.all((d, len) => len <= maxDates);
     }

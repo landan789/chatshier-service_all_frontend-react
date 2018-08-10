@@ -13,6 +13,7 @@ import authHlp from '../../helpers/authentication';
 import browserHlp from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
+import confirmDialog from '../../components/Modals/Confirm/Confirm';
 import CategoryModal from '../../components/Modals/Category/Category';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
@@ -101,6 +102,11 @@ class Categories extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
 
+        browserHlp.setTitle(props.t('Appointment categoies'));
+        if (!authHlp.hasSignedin()) {
+            return props.history.replace(ROUTES.SIGNOUT);
+        }
+
         this.state = Object.assign({
             prevProps: null,
             appId: '',
@@ -115,12 +121,6 @@ class Categories extends React.Component {
 
         this.generateNodeProps = this.generateNodeProps.bind(this);
         this.closeModal = this.closeModal.bind(this);
-
-        browserHlp.setTitle(this.props.t('Appointment categoies'));
-        if (!authHlp.hasSignedin()) {
-            authHlp.signOut();
-            this.props.history.replace(ROUTES.SIGNIN);
-        }
     }
 
     componentDidMount() {
@@ -181,14 +181,26 @@ class Categories extends React.Component {
     }
 
     deleteCategory(categoryId) {
-        let appId = this.state.appId;
-        this.setState({ isAsyncProcessing: true });
-        return apiDatabase.appsCategories.delete(appId, categoryId).then(() => {
-            this.closeModal();
-            return notify(this.props.t('Remove successful!'), { type: 'success' });
-        }).catch(() => {
-            this.setState({ isAsyncProcessing: false });
-            return notify(this.props.t('An error occurred!'), { type: 'danger' });
+        return confirmDialog({
+            title: '刪除確認',
+            message: '確定要刪除這個目錄嗎？',
+            confirmText: this.props.t('Confirm'),
+            confirmColor: 'danger',
+            cancelText: this.props.t('Cancel')
+        }).then((isConfirm) => {
+            if (!isConfirm) {
+                return;
+            }
+
+            let appId = this.state.appId;
+            this.setState({ isAsyncProcessing: true });
+            return apiDatabase.appsCategories.delete(appId, categoryId).then(() => {
+                this.closeModal();
+                return notify(this.props.t('Remove successful!'), { type: 'success' });
+            }).catch(() => {
+                this.setState({ isAsyncProcessing: false });
+                return notify(this.props.t('An error occurred!'), { type: 'danger' });
+            });
         });
     }
 
@@ -314,8 +326,7 @@ class Categories extends React.Component {
 
                                 <Card className="mt-3 p-2 col-12 col-lg-6">
                                     <div className="h-100 scoll-wrapper">
-                                        {this.state.selectedCategoryId &&
-                                        0 === categoryProductIds.length &&
+                                        {(!this.state.selectedCategoryId || 0 === categoryProductIds.length) &&
                                         <div className="d-flex absolute-stretch">
                                             <div className="m-auto text-center text-muted">
                                                 <i className="mb-2 fas fa-meh fa-6x"></i>

@@ -30,6 +30,11 @@ class ResetPassword extends React.Component {
     constructor(props, context) {
         super(props, context);
 
+        browserHlp.setTitle(this.props.t('Reset password'));
+        if (authHlp.hasSignedin()) {
+            return window.location.replace(ROUTES.CHAT);
+        }
+
         this.state = {
             email: '',
             recaptchaResponse: '',
@@ -44,11 +49,6 @@ class ResetPassword extends React.Component {
         this.emailChanged = this.emailChanged.bind(this);
         this.recaptchaResponseChanged = this.recaptchaResponseChanged.bind(this);
         this.checkInputs = this.checkInputs.bind(this);
-
-        browserHlp.setTitle(this.props.t('Reset password'));
-        if (authHlp.hasSignedin()) {
-            window.location.replace(ROUTES.CHAT);
-        }
     }
 
     emailChanged(ev) {

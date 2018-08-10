@@ -32,6 +32,11 @@ class SignUp extends React.Component {
     constructor(props) {
         super(props);
 
+        browserHlp.setTitle(this.props.t('Sign up'));
+        if (authHlp.hasSignedin()) {
+            return window.location.replace(ROUTES.CHAT);
+        }
+
         this.state = {
             isInputReady: false,
             isSignUping: false,
@@ -47,11 +52,6 @@ class SignUp extends React.Component {
         this.pwChanged = this.pwChanged.bind(this);
         this.pwConfirmChanged = this.pwConfirmChanged.bind(this);
         this.checkInputs = this.checkInputs.bind(this);
-
-        browserHlp.setTitle(this.props.t('Sign up'));
-        if (authHlp.hasSignedin()) {
-            window.location.replace(ROUTES.CHAT);
-        }
     }
 
     nameChanged(ev) {

@@ -15,6 +15,7 @@ import apiDatabase from '../../helpers/apiDatabase/index';
 import apiImage from '../../helpers/apiImage/index';
 import regex from '../../utils/regex';
 
+import confirmDialog from '../../components/Modals/Confirm/Confirm';
 import ReceptionistModal from '../../components/Modals/Receptionist/Receptionist';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
@@ -26,7 +27,7 @@ import defaultAvatarPng from '../../image/default-avatar.png';
 import SchedulePanel from './SchedulePanel';
 import './Receptionists.css';
 
-const UNAVAILABLE_GMAIL = '1.30';
+const UNAVAILABLE_GMAIL = '2.6';
 
 class ReceptionistsPage extends React.Component {
     static propTypes = {
@@ -37,6 +38,11 @@ class ReceptionistsPage extends React.Component {
 
     constructor(props, ctx) {
         super(props, ctx);
+
+        browserHlp.setTitle(props.t('Receptionist management'));
+        if (!authHlp.hasSignedin()) {
+            return props.history.replace(ROUTES.SIGNOUT);
+        }
 
         this.state = {
             appId: '',
@@ -50,12 +56,6 @@ class ReceptionistsPage extends React.Component {
         this.deleteReceptionist = this.deleteReceptionist.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.closeSchedulesPanel = this.closeSchedulesPanel.bind(this);
-
-        browserHlp.setTitle(this.props.t('Receptionist management'));
-        if (!authHlp.hasSignedin()) {
-            authHlp.signOut();
-            props.history.replace(ROUTES.SIGNIN);
-        }
     }
 
     componentDidMount() {
@@ -159,14 +159,26 @@ class ReceptionistsPage extends React.Component {
     }
 
     deleteReceptionist(receptionistId) {
-        let appId = this.state.appId;
-        this.setState({ isAsyncProcessing: true });
-        return apiDatabase.appsReceptionists.delete(appId, receptionistId).then(() => {
-            this.closeModal();
-            return notify(this.props.t('Remove successful!'), { type: 'success' });
-        }).catch(() => {
-            this.setState({ isAsyncProcessing: false });
-            return notify(this.props.t('An error occurred!'), { type: 'danger' });
+        return confirmDialog({
+            title: '刪除確認',
+            message: '確定要刪除這個服務人員嗎？',
+            confirmText: this.props.t('Confirm'),
+            confirmColor: 'danger',
+            cancelText: this.props.t('Cancel')
+        }).then((isConfirm) => {
+            if (!isConfirm) {
+                return;
+            }
+
+            let appId = this.state.appId;
+            this.setState({ isAsyncProcessing: true });
+            return apiDatabase.appsReceptionists.delete(appId, receptionistId).then(() => {
+                this.closeModal();
+                return notify(this.props.t('Remove successful!'), { type: 'success' });
+            }).catch(() => {
+                this.setState({ isAsyncProcessing: false });
+                return notify(this.props.t('An error occurred!'), { type: 'danger' });
+            });
         });
     }
 
@@ -224,7 +236,7 @@ class ReceptionistsPage extends React.Component {
                                 </Card>
                                 {receptionistIds.map((receptionistId) => {
                                     let receptionist = receptionists[receptionistId];
-                                    let appointmentIds = receptionist.appointment_ids || [];
+
                                     return (
                                         <Card key={receptionistId} className="d-inline-block w-100 m-2 receptionist-item">
                                             <CardBody className="p-2 text-center bg-transparent">
@@ -243,7 +255,7 @@ class ReceptionistsPage extends React.Component {
 
                                                 <div className="d-flex align-items-center mb-2 text-muted">
                                                     <i className="mr-2 fas fa-calendar-check fa-fw fa-1p5x"></i>
-                                                    <span className="small">被預約次數 {appointmentIds.length} 次</span>
+                                                    <span className="small">被預約次數 {receptionist.timesOfAppointment} 次</span>
                                                 </div>
 
                                                 <div className="d-flex align-items-center mb-2 text-muted">

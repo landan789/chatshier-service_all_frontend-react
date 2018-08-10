@@ -29,6 +29,11 @@ class SignIn extends React.Component {
     constructor(props, context) {
         super(props, context);
 
+        browserHlp.setTitle(this.props.t('Sign in'));
+        if (authHlp.hasSignedin()) {
+            return window.location.replace(ROUTES.CHAT);
+        }
+
         this.state = {
             isInputReady: false,
             isSignIning: false,
@@ -40,11 +45,6 @@ class SignIn extends React.Component {
         this.emailChanged = this.emailChanged.bind(this);
         this.pwChanged = this.pwChanged.bind(this);
         this.checkInputs = this.checkInputs.bind(this);
-
-        browserHlp.setTitle(this.props.t('Sign in'));
-        if (authHlp.hasSignedin()) {
-            window.location.replace(ROUTES.CHAT);
-        }
     }
 
     emailChanged(ev) {

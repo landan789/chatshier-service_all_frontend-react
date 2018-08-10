@@ -23,17 +23,16 @@ class Greetings extends React.Component {
     constructor(props, context) {
         super(props, context);
 
+        browserHlp.setTitle('加好友回覆');
+        if (!authHlp.hasSignedin()) {
+            return props.history.replace(ROUTES.SIGNOUT);
+        }
+
         this.state = {
             selectedAppId: ''
         };
 
         this.appChanged = this.appChanged.bind(this);
-
-        browserHlp.setTitle('加好友回覆');
-        if (!authHlp.hasSignedin()) {
-            authHlp.signOut();
-            this.props.history.replace(ROUTES.SIGNIN);
-        }
     }
 
     appChanged(appId) {

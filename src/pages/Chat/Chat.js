@@ -44,12 +44,17 @@ class Chat extends React.Component {
     constructor(props) {
         super(props);
 
+        browserHlp.setTitle(props.t('Chatroom'));
+        if (!authHlp.hasSignedin()) {
+            return props.history.replace(ROUTES.SIGNOUT);
+        }
+
         this.storeUnsubscribe = null;
         this.state = {
             isOpenChatroom: true,
             isOpenProfile: false,
             isOpenTicket: false,
-            chatroomTitle: this.props.t('Chatroom'),
+            chatroomTitle: props.t('Chatroom'),
             selectedAppId: '',
             selectedChatroomId: '',
             searchKeyword: ''
@@ -59,12 +64,6 @@ class Chat extends React.Component {
         this.toggleChatroom = this.toggleChatroom.bind(this);
         this.toggleProfle = this.toggleProfle.bind(this);
         this.toggleTicket = this.toggleTicket.bind(this);
-
-        browserHlp.setTitle(this.props.t('Chatroom'));
-        if (!authHlp.hasSignedin()) {
-            authHlp.signOut();
-            this.props.history.replace(ROUTES.SIGNIN);
-        }
     }
 
     componentDidMount() {

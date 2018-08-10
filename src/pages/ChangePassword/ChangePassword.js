@@ -29,6 +29,11 @@ class ChangePassword extends React.Component {
     constructor(props, context) {
         super(props, context);
 
+        browserHlp.setTitle(this.props.t('Change password'));
+        if (authHlp.hasSignedin()) {
+            return window.location.replace(ROUTES.CHAT);
+        }
+
         this.state = {
             password: '',
             passwordCfm: '',
@@ -57,11 +62,6 @@ class ChangePassword extends React.Component {
             }
         } catch (ex) {
             this.props.history.replace(ROUTES.SIGNIN);
-        }
-
-        browserHlp.setTitle(this.props.t('Change password'));
-        if (authHlp.hasSignedin()) {
-            return window.location.replace(ROUTES.CHAT);
         }
     }
 

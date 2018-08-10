@@ -204,9 +204,7 @@ class CalendarPage extends React.Component {
 
         browserHlp.setTitle(props.t('Calendar'));
         if (!authHlp.hasSignedin()) {
-            authHlp.signOut();
-            props.history.replace(ROUTES.SIGNIN);
-            return;
+            return props.history.replace(ROUTES.SIGNOUT);
         }
 
         this.gSignListenerId = void 0;

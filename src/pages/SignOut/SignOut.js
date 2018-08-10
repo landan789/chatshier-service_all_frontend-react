@@ -17,14 +17,15 @@ class SignOut extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
 
-        browserHlp.setTitle(this.props.t('Sign out'));
-        this.isSignedOut = authHlp.signOut().then(() => {
-            return gcalendarHlp.signOut();
-        });
+        browserHlp.setTitle(props.t('Sign out'));
+        this.signOutPromise = Promise.all([
+            authHlp.signOut(),
+            gcalendarHlp.signOut()
+        ]).catch(() => void 0);
     }
 
     componentDidMount() {
-        return this.isSignedOut.then(() => this.props.history.replace(ROUTES.SIGNIN));
+        return this.signOutPromise.then(() => this.props.history.replace(ROUTES.SIGNIN));
     }
 
     render() {

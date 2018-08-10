@@ -1,5 +1,5 @@
 import CHATSHIER from '../config/chatshier';
-import { RRule, RRuleSet, rrulestr } from 'rrule';
+import { RRule, RRuleSet, rrulestr } from 'rrule/dist/es5/rrule';
 
 const GOOGLE_CLIENT_NOT_SIGNEDIN = 'GOOGLE_CLIENT_NOT_SIGNEDIN';
 const GOOGLE_API_ENDPOINT = 'https://apis.google.com/js/api.js';
@@ -227,7 +227,7 @@ class GoogleCalendarHelper {
     getEventDates(recurrence, dtstart = new Date(), maxDates = 250) {
         let rruleSet = new RRuleSet();
         let _dtstart = new Date(dtstart);
-        _dtstart.setHours(0, 0, 0, 0);
+        _dtstart.setMinutes(0, 0, 0);
 
         for (let i in recurrence) {
             let _rrule = rrulestr(recurrence[i]);

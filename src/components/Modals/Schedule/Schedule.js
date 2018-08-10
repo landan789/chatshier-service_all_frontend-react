@@ -4,7 +4,7 @@ import { Trans } from 'react-i18next';
 import { withTranslate, currentLanguage } from '../../../i18n';
 import { DateTimePicker } from 'react-widgets';
 
-import { RRule, RRuleSet, rrulestr } from 'rrule';
+import { RRule, RRuleSet, rrulestr } from 'rrule/dist/es5/rrule';
 
 import { Button, ButtonGroup, Modal, ModalHeader, ModalBody,
     FormGroup, Dropdown, DropdownToggle, DropdownMenu,

@@ -176,7 +176,7 @@ class Appointments extends React.Component {
                             <div className="text-left table-title">
                                 <h3 className="mb-4 pt-3 px-3">檢視預約項目</h3>
                                 <p className="mb-3 pt-0 px-3">首頁 / 預約系統 / 檢視預約項目</p>
-                                <p className="mb-3 pt-0 px-3">檢視所有已建立的預約</p>
+                                <p className="mb-3 pt-0 px-3 text-muted small">檢視所有已建立的預約</p>
                             </div>
 
                             <AppsSelector className="px-3 my-3" onChange={this.onAppChange} />

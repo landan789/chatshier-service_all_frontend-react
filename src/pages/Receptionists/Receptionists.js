@@ -225,7 +225,7 @@ class ReceptionistsPage extends React.Component {
                             <div className="text-left table-title">
                                 <h3 className="mb-4 pt-3 px-3"><Trans i18nKey="Receptionist management" /></h3>
                                 <p className="mb-3 pt-0 px-3"><Trans i18nKey="Home" /> / <Trans i18nKey="Appointment system" /> / <Trans i18nKey="Receptionist management" /></p>
-                                <p className="mb-3 pt-0 px-3 text-muted small">新增、更新或刪除服務人員；向服務人員共享機器人預約行事曆</p>
+                                <p className="mb-3 pt-0 px-3 text-muted small">新增、更新或刪除服務人員</p>
                             </div>
 
                             <AppsSelector className="px-3 my-3" onChange={this.appChanged} />

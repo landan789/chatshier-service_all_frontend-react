@@ -155,7 +155,7 @@ class Products extends React.Component {
                             <div className="text-left table-title">
                                 <h3 className="mb-4 pt-3 px-3"><Trans i18nKey="Product management" /></h3>
                                 <p className="mb-3 pt-0 px-3"><Trans i18nKey="Home" /> / <Trans i18nKey="Appointment system" /> / <Trans i18nKey="Product management" /></p>
-                                <p className="mb-3 pt-0 px-3">新增、更新或刪除產品</p>
+                                <p className="mb-3 pt-0 px-3 text-muted small">新增、更新或刪除產品</p>
                             </div>
 
                             <AppsSelector className="px-3 my-3" onChange={this.appChanged} />

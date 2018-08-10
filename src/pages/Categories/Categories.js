@@ -309,7 +309,7 @@ class Categories extends React.Component {
                             <div className="text-left table-title">
                                 <h3 className="mb-4 pt-3 px-3"><Trans i18nKey="Appointment categoies" /></h3>
                                 <p className="mb-3 pt-0 px-3"><Trans i18nKey="Home" /> / <Trans i18nKey="Appointment system" /> / <Trans i18nKey="Appointment categoies" /></p>
-                                <p className="mb-3 pt-0 px-3">管理預約目錄</p>
+                                <p className="mb-3 pt-0 px-3 text-muted small">管理預約目錄</p>
                             </div>
 
                             <AppsSelector className="px-3 mt-3" onChange={this.appChanged} />

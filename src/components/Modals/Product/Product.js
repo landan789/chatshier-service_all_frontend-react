@@ -8,9 +8,13 @@ import { Button, Modal, ModalHeader, ModalBody,
     FormGroup, Card } from 'reactstrap';
 
 import ModalCore from '../ModalCore';
+import CHATSHIER_CFG from '../../../config/chatshier';
 import apiDatabase from '../../../helpers/apiDatabase';
+import { blobToBase64 } from '../../../utils/common';
+import { notify } from '../../Notify/Notify';
 
-import defaultAvatarPng from '../../../image/default-avatar.png';
+import defaultAvatarImg from '../../../image/default-avatar.png';
+import defaultProductImg from '../../../image/default-product.png';
 
 import './Product.css';
 
@@ -40,6 +44,7 @@ class ProductModal extends ModalCore {
             isOpen: props.isOpen,
             appId: props.appId || '',
             name: product.name || '',
+            src: product.src || '',
             description: product.description || '',
             isOnShelf: !!product.isOnShelf,
             receptionistIds: product.receptionist_ids || []
@@ -47,6 +52,7 @@ class ProductModal extends ModalCore {
 
         this.onSubmitForm = this.onSubmitForm.bind(this);
         this.onAppChange = this.onAppChange.bind(this);
+        this.onFileChange = this.onFileChange.bind(this);
     }
 
     onSubmitForm(ev) {
@@ -64,6 +70,19 @@ class ProductModal extends ModalCore {
     onAppChange(ev) {
         this.setState({ appId: ev.target.value });
         return this.props.onAppChange(ev.target.value);
+    }
+
+    onFileChange(ev) {
+        /** @type {HTMLInputElement} */
+        let fileInput = ev.target;
+        let imageFile = fileInput.files.item(0);
+
+        if (imageFile.size > CHATSHIER_CFG.FILE.MEGA_BYTE) {
+            return notify('圖片大小不能超過 1 MB', { type: 'warning' });
+        }
+        return blobToBase64(imageFile).then((base64Url) => {
+            this.setState({ src: base64Url });
+        });
     }
 
     render() {
@@ -106,14 +125,41 @@ class ProductModal extends ModalCore {
                             </select>
                         </FormGroup>}
 
+                        <FormGroup className="d-flex flex-wrap">
+                            <label className="w-100 col-form-label font-weight-bold">
+                                產品圖像:
+                            </label>
+                            <Button type="button" color="light" className="position-relative p-0 photo-container"
+                                onClick={() => this.fileInput && this.fileInput.click()}>
+                                {!this.state.src &&
+                                <div className="d-flex w-100 h-100 image-upload">
+                                    <div className="m-auto text-muted">
+                                        <i className="fas fa-image"></i>
+                                        <br />
+                                        <span>上傳商品圖像</span>
+                                        <br />
+                                        <span className="text-danger small">檔案不能超過 1 MB</span>
+                                    </div>
+                                </div>}
+                                <div className="m-auto image-container" style={{ width: '8rem', height: '8rem' }}>
+                                    <img className="image-fit" style={{ opacity: !this.state.src ? '.3' : '1' }}
+                                        src={this.state.src || defaultProductImg} alt={this.state.name} />
+                                </div>
+                            </Button>
+                            <input className="d-none" type="file"
+                                accept="image/png,image/jpg,image/jpeg"
+                                ref={(elem) => (this.fileInput = elem)}
+                                onChange={this.onFileChange} />
+                        </FormGroup>
+
                         <FormGroup>
                             <label className="col-form-label font-weight-bold">
                                 {!this.props.isUpdate && <span className="mr-1 text-danger">*</span>}
-                                <Trans i18nKey="Name" />:
+                                產品名稱:
                             </label>
                             <input className="form-control"
                                 type="text"
-                                placeholder={this.props.t('Fill the product name')}
+                                placeholder="請輸入產品名稱"
                                 value={this.state.name}
                                 maxLength={50}
                                 onChange={(ev) => this.setState({ name: ev.target.value })}
@@ -126,7 +172,7 @@ class ProductModal extends ModalCore {
                             </label>
                             <textarea className="form-control"
                                 type="text"
-                                placeholder={this.props.t('Fill the product description')}
+                                placeholder="請輸入產品描述"
                                 value={this.state.description}
                                 maxLength={200}
                                 rows={6}
@@ -173,7 +219,7 @@ class ProductModal extends ModalCore {
                                                 this.setState({ receptionistIds: _receptionistIds });
                                             }}>
                                             <div className="image-container">
-                                                <img className="image-fit border-circle" src={receptionist.photo || defaultAvatarPng} alt={receptionist.name} />
+                                                <img className="image-fit border-circle" src={receptionist.photo || defaultAvatarImg} alt={receptionist.name} />
                                             </div>
                                             <div className="text-ellipsis text-center text-muted small">
                                                 <span>{receptionist.name}</span>

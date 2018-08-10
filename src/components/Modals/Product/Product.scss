@@ -1,3 +1,4 @@
+$_product-item-size: 8rem;
 $_receptionist-item-size: 3rem;
 
 .product-modal {
@@ -21,5 +22,25 @@ $_receptionist-item-size: 3rem;
     .image-container {
         width: $_receptionist-item-size;
         height: $_receptionist-item-size;
+    }
+
+    .photo-container {
+        width: $_product-item-size;
+        height: $_product-item-size;
+        border: none;
+
+        .image-upload {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 1;
+            white-space: pre-line;
+            opacity: .33;
+            font-size: .9rem;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
     }
 }

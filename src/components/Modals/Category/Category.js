@@ -10,7 +10,7 @@ import { Button, Modal, ModalHeader, ModalBody,
 import ModalCore from '../ModalCore';
 import apiDatabase from '../../../helpers/apiDatabase';
 
-import logoPng from '../../../image/logo.png';
+import defaultProductImg from '../../../image/default-product.png';
 
 import './Category.css';
 
@@ -112,31 +112,31 @@ class CategoryModal extends ModalCore {
                             </label>
                             <input className="form-control"
                                 type="text"
-                                placeholder={this.props.t('Fill the category name')}
+                                placeholder="請輸入類別名稱"
                                 value={this.state.name}
                                 maxLength={50}
                                 onChange={(ev) => this.setState({ name: ev.target.value })}
                                 required />
                         </FormGroup>
 
-                        <FormGroup>
+                        {/* <FormGroup>
                             <label className="col-form-label font-weight-bold">
                                 <Trans i18nKey="Description" />:
                             </label>
                             <textarea className="form-control"
                                 type="text"
-                                placeholder={this.props.t('Fill the category description')}
+                                placeholder="請輸入類別描述"
                                 value={this.state.description}
                                 maxLength={200}
                                 rows={6}
                                 style={{ resize: 'none' }}
                                 onChange={(ev) => this.setState({ description: ev.target.value })}>
                             </textarea>
-                        </FormGroup>
+                        </FormGroup> */}
 
                         <FormGroup>
                             <label className="col-form-label font-weight-bold">
-                                <span>產品</span>:
+                                <span>選取產品</span>:
                             </label>
                             <Card className="flex-row flex-wrap p-2">
                                 {0 === productIds.length &&
@@ -162,7 +162,7 @@ class CategoryModal extends ModalCore {
                                                 this.setState({ productIds: _productIds });
                                             }}>
                                             <div className="image-container">
-                                                <img className="image-fit border-circle" src={product.src || logoPng} alt={product.name} />
+                                                <img className="image-fit border-circle" src={product.src || defaultProductImg} alt={product.name} />
                                             </div>
                                             <div className="product-name text-center text-muted small">
                                                 <span>{product.name}</span>

@@ -12,7 +12,7 @@ import ModalCore from '../ModalCore';
 import apiDatabase from '../../../helpers/apiDatabase';
 import { formatDate, formatTime } from '../../../utils/unitTime';
 
-import logoSmallPng from '../../../image/logo-small.png';
+import defaultProductImg from '../../../image/default-product.png';
 import defaultAvatarPng from '../../../image/default-avatar.png';
 import { notify } from '../../Notify/Notify';
 
@@ -134,7 +134,7 @@ class AppointmentModal extends ModalCore {
                                 <Card className="p-2">
                                     <label className="col-form-label font-weight-bold">產品</label>
                                     <div className="m-auto image-container" style={{ width: '3rem', height: '3rem' }}>
-                                        <img className="image-fit" src={product.src || logoSmallPng} alt={product.name} />
+                                        <img className="image-fit" src={product.src || defaultProductImg} alt={product.name} />
                                     </div>
                                     <div className="w-100 text-muted small">{product.name}</div>
                                 </Card>}

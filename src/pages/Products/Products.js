@@ -20,7 +20,7 @@ import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel'
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import { notify } from '../../components/Notify/Notify';
 
-import logoPng from '../../image/logo.png';
+import defaultProductImg from '../../image/default-product.png';
 
 import './Products.css';
 
@@ -175,7 +175,7 @@ class Products extends React.Component {
                                         <Card key={productId} className="d-inline-block w-100 m-2 product-item">
                                             <CardBody className="p-2 text-center bg-transparent">
                                                 <div className="mx-auto image-container border-circle">
-                                                    <img className="image-fit border-circle" src={product.src || logoPng} alt={product.name} />
+                                                    <img className="image-fit border-circle" src={product.src || defaultProductImg} alt={product.name} />
                                                 </div>
                                                 <div className="mt-2 px-3 font-weight-bold text-info">{product.name}</div>
                                                 <div className="mt-1 px-3 text-muted small">{description}</div>

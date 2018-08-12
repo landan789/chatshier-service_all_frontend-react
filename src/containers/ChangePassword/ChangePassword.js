@@ -18,7 +18,7 @@ import './ChangePassword.css';
 
 const JWT_HAD_EXPIRED = '-2';
 const USER_FAILED_TO_FIND = '3.1';
-const NEW_PASSWORD_WAS_INCONSISTENT = '2.4';
+const USER_NEW_PASSWORD_WAS_INCONSISTENT = '2.4';
 
 class ChangePassword extends React.Component {
     static propTypes = {
@@ -140,7 +140,7 @@ class ChangePassword extends React.Component {
                     notify(this.props.t('Invalid token, please perform the reset password procedure again!'), { type: 'danger' }),
                     this.props.history.replace(ROUTES.RESET_PASSWORD)
                 ]);
-            } else if (NEW_PASSWORD_WAS_INCONSISTENT === err.code) {
+            } else if (USER_NEW_PASSWORD_WAS_INCONSISTENT === err.code) {
                 return notify(this.props.t('New password was inconsistent'), { type: 'danger' });
             } else if (USER_FAILED_TO_FIND === err.code) {
                 return notify(this.props.t('No user found'), { type: 'danger' });

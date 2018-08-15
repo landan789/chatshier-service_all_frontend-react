@@ -134,30 +134,27 @@ class AppointmentModal extends ModalCore {
                                     <div className="w-100 text-muted small">{consumer.name}</div>
                                 </Card>
 
-                                {(product || receptionist) &&
                                 <Card className="border-none">
                                     <div className="m-auto">
                                         <i className="fas fa-long-arrow-alt-right fa-2x"></i>
                                     </div>
-                                </Card>}
+                                </Card>
 
-                                {product &&
                                 <Card className="p-2">
                                     <label className="col-form-label font-weight-bold">產品</label>
                                     <div className="m-auto image-container" style={{ width: '3rem', height: '3rem' }}>
-                                        <img className="image-fit" src={product.src || defaultProductImg} alt={product.name} />
+                                        <img className="image-fit" src={(product && product.src) || defaultProductImg} alt={(product && product.name) || '查無此產品'} />
                                     </div>
-                                    <div className="w-100 text-muted small">{product.name}</div>
-                                </Card>}
+                                    <div className="w-100 text-muted small">{(product && product.name) || '查無此產品'}</div>
+                                </Card>
 
-                                {receptionist &&
                                 <Card className="p-2">
                                     <label className="col-form-label font-weight-bold">服務人員</label>
                                     <div className="m-auto image-container" style={{ width: '3rem', height: '3rem' }}>
-                                        <img className="image-fit" src={receptionist.photo || defaultConsumerImg} alt={receptionist.name} />
+                                        <img className="image-fit" src={(receptionist && receptionist.photo) || defaultConsumerImg} alt={(receptionist && receptionist.name) || '查無此人員'} />
                                     </div>
-                                    <div className="w-100 text-muted small">{receptionist.name}</div>
-                                </Card>}
+                                    <div className="w-100 text-muted small">{(receptionist && receptionist.name) || '查無此人員'}</div>
+                                </Card>
                             </CardDeck>
                         </FormGroup>
 
@@ -197,7 +194,7 @@ class AppointmentModal extends ModalCore {
 
                         <div className="d-flex align-items-center justify-content-end">
                             <Button className="mr-1" type="button" color="danger"
-                                onClick={this.removeAppointment}
+                                onClick={() => this.removeAppointment(this.props.appointmentId)}
                                 disabled={this.state.isAsyncProcessing}>
                                 刪除預約
                             </Button>

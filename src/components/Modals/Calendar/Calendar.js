@@ -50,7 +50,7 @@ class CalendarModal extends ModalCore {
         this.allDayChanged = this.allDayChanged.bind(this);
         this.insertEvent = this.insertEvent.bind(this);
         this.updateEvent = this.updateEvent.bind(this);
-        this.deleteEvent = this.deleteEvent.bind(this);
+        this.removeEvent = this.removeEvent.bind(this);
     }
 
     titleChanged(ev) {
@@ -207,7 +207,7 @@ class CalendarModal extends ModalCore {
         });
     }
 
-    deleteEvent(ev) {
+    removeEvent(ev) {
         if (!window.confirm(this.props.t('Are you sure want to delete it?'))) {
             return Promise.resolve();
         }
@@ -223,7 +223,7 @@ class CalendarModal extends ModalCore {
                 case CALENDAR_EVENT_TYPES.CALENDAR:
                     return apiDatabase.calendarsEvents.delete(calendarId, eventId);
                 case CALENDAR_EVENT_TYPES.GOOGLE:
-                    return gcalendarHlp.deleteEvent(calendarId, eventId);
+                    return gcalendarHlp.removeEvent(calendarId, eventId);
                 default:
                     return Promise.reject(new Error('UNKNOWN_EVENT_TYPE'));
             }
@@ -325,7 +325,7 @@ class CalendarModal extends ModalCore {
                         <Trans i18nKey="Update" />
                     </Button>}
                     {this.props.isUpdate && <Button color="danger"
-                        onClick={this.deleteEvent}
+                        onClick={this.removeEvent}
                         disabled={this.state.isAsyncProcessing}>
                         <Trans i18nKey="Remove" />
                     </Button>}

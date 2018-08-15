@@ -117,7 +117,7 @@ class Categories extends React.Component {
         this.appChanged = this.appChanged.bind(this);
         this.insertCategory = this.insertCategory.bind(this);
         this.updateCategory = this.updateCategory.bind(this);
-        this.deleteCategory = this.deleteCategory.bind(this);
+        this.removeCategory = this.removeCategory.bind(this);
 
         this.generateNodeProps = this.generateNodeProps.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -180,7 +180,7 @@ class Categories extends React.Component {
         });
     }
 
-    deleteCategory(categoryId) {
+    removeCategory(categoryId) {
         return confirmDialog({
             title: '刪除確認',
             message: '確定要刪除這個目錄嗎？',
@@ -221,7 +221,7 @@ class Categories extends React.Component {
         let categoryId = categoryNode.node.categoryId;
         let insertId = 'categoryInsert_' + categoryId;
         let updateId = 'categoryUpdate_' + categoryId;
-        let deleteId = 'categoryDelete_' + categoryId;
+        let removeId = 'categoryDelete_' + categoryId;
 
         let nodeProps = {
             className: 'cursor-pointer category-node' + (categoryId && this.state.selectedCategoryId === categoryId ? ' selected' : ''),
@@ -266,15 +266,15 @@ class Categories extends React.Component {
                     <span>編輯</span>
                 </UncontrolledTooltip>,
                 <Button color="light" size="sm"
-                    key={deleteId}
-                    id={deleteId}
+                    key={removeId}
+                    id={removeId}
                     disabled={this.state.isAsyncProcessing}
-                    onClick={() => this.deleteCategory(categoryId)}>
+                    onClick={() => this.removeCategory(categoryId)}>
                     <i className="fas fa-trash-alt"></i>
                 </Button>,
                 <UncontrolledTooltip placement="top" delay={0}
-                    key={deleteId + '_tooltip'}
-                    target={deleteId}>
+                    key={removeId + '_tooltip'}
+                    target={removeId}>
                     <span>刪除</span>
                 </UncontrolledTooltip>
             );
@@ -372,7 +372,7 @@ class Categories extends React.Component {
                     category={this.state.category}
                     insertHandler={this.insertCategory}
                     updateHandler={this.updateCategory}
-                    deleteHandler={this.deleteCategory}
+                    removeHandler={this.removeCategory}
                     onAppChange={this.appChanged}
                     close={this.closeModal} />}
             </Aux>

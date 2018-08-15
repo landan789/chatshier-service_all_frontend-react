@@ -1,6 +1,6 @@
 export const UPDATE_PRODUCTS = 'UPDATE_PRODUCTS';
-export const DELETE_PRODUCT = 'DELETE_PRODUCT';
-export const DELETE_ALL_PRODUCTS = 'DELETE_ALL_PRODUCTS';
+export const REMOVE_PRODUCT = 'REMOVE_PRODUCT';
+export const REMOVE_ALL_PRODUCTS = 'REMOVE_ALL_PRODUCTS';
 
 /**
  * @param {Chatshier.Model.AppsProducts} appsProducts
@@ -13,13 +13,13 @@ export const updateProducts = (appsProducts) => {
  * @param {string} appId
  * @param {string} productId
  */
-export const deleteProduct = (appId, productId) => {
-    return { type: DELETE_PRODUCT, appId, productId };
+export const removeProduct = (appId, productId) => {
+    return { type: REMOVE_PRODUCT, appId, productId };
 };
 
 /**
  * @param {string} appId
  */
-export const deleteAllProducts = (appId) => {
-    return { type: DELETE_ALL_PRODUCTS, appId };
+export const removeAllProducts = (appId) => {
+    return { type: REMOVE_ALL_PRODUCTS, appId };
 };

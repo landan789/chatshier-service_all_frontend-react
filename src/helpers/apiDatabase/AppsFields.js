@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateFields, deleteField } from '../../redux/actions/mainStore/appsFields';
+import { updateFields, removeField } from '../../redux/actions/mainStore/appsFields';
 
 class AppsFields extends Core {
     static TYPES = Object.freeze({
@@ -99,7 +99,7 @@ class AppsFields extends Core {
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteField(appId, fieldId));
+            mainStore.dispatch(removeField(appId, fieldId));
             return resJson;
         });
     };

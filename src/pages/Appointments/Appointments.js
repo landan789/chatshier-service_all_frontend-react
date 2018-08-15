@@ -11,7 +11,6 @@ import authHlp from '../../helpers/authentication';
 import browserHlp from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
-import confirmDialog from '../../components/Modals/Confirm/Confirm';
 import Calendar from '../../components/Calendar/Calendar';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
@@ -121,30 +120,6 @@ class Appointments extends React.Component {
         }).catch(() => {
             this.setState({ isAsyncProcessing: false });
             return notify(this.props.t('An error occurred!'), { type: 'danger' });
-        });
-    }
-
-    deleteAppointment(appointmentId) {
-        return confirmDialog({
-            title: '刪除確認',
-            message: '確定要取消這個預約嗎？',
-            confirmText: this.props.t('Confirm'),
-            confirmColor: 'danger',
-            cancelText: this.props.t('Cancel')
-        }).then((isConfirm) => {
-            if (!isConfirm) {
-                return;
-            }
-
-            let appId = this.state.appId;
-            this.setState({ isAsyncProcessing: true });
-            return apiDatabase.appsAppointments.delete(appId, appointmentId).then(() => {
-                this.closeModal();
-                return notify(this.props.t('Add successful!'), { type: 'success' });
-            }).catch(() => {
-                this.setState({ isAsyncProcessing: false });
-                return notify(this.props.t('An error occurred!'), { type: 'danger' });
-            });
         });
     }
 

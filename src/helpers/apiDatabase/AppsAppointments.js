@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateAppointments, deleteAppointment } from '../../redux/actions/mainStore/appsAppointments';
+import { updateAppointments, removeAppointment } from '../../redux/actions/mainStore/appsAppointments';
 
 class AppsAppointments extends Core {
     constructor() {
@@ -66,7 +66,7 @@ class AppsAppointments extends Core {
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteAppointment(appId, appointmentId));
+            mainStore.dispatch(removeAppointment(appId, appointmentId));
             return resJson;
         });
     };

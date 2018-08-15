@@ -1,6 +1,6 @@
 export const UPDATE_FIELDS = 'UPDATE_FIELDS';
-export const DELETE_FIELD = 'DELETE_FIELD';
-export const DELETE_ALL_FIELDS = 'DELETE_ALL_FIELDS';
+export const REMOVE_FIELD = 'REMOVE_FIELD';
+export const REMOVE_ALL_FIELDS = 'REMOVE_ALL_FIELDS';
 
 /**
  * @param {Chatshier.Model.AppsFields} appsFields
@@ -13,13 +13,13 @@ export const updateFields = (appsFields) => {
  * @param {string} appId
  * @param {string} fieldId
  */
-export const deleteField = (appId, fieldId) => {
-    return { type: DELETE_FIELD, appId, fieldId };
+export const removeField = (appId, fieldId) => {
+    return { type: REMOVE_FIELD, appId, fieldId };
 };
 
 /**
  * @param {string} appId
  */
-export const deleteAllFields = (appId) => {
-    return { type: DELETE_ALL_FIELDS, appId };
+export const removeAllFields = (appId) => {
+    return { type: REMOVE_ALL_FIELDS, appId };
 };

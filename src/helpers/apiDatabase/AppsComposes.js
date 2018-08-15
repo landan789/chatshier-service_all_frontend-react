@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateComposes, deleteCompose } from '../../redux/actions/mainStore/appsComposes';
+import { updateComposes, removeCompose } from '../../redux/actions/mainStore/appsComposes';
 
 class AppsComposes extends Core {
     constructor() {
@@ -83,7 +83,7 @@ class AppsComposes extends Core {
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteCompose(appId, composeId));
+            mainStore.dispatch(removeCompose(appId, composeId));
             return resJson;
         });
     };

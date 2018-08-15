@@ -13,7 +13,7 @@ class MessageInsert extends Component {
     static propTypes = {
         appId: PropTypes.string.isRequired,
         message: PropTypes.object.isRequired,
-        delete: PropTypes.func.isRequired
+        remove: PropTypes.func.isRequired
     }
 
     constructor(props, ctx) {
@@ -49,7 +49,7 @@ class MessageInsert extends Component {
         this.setState({ isInserting: true });
         return apiDatabase.appsGreetings.insert(appId, greeting).then(() => {
             this.setState({ isInserting: false });
-            this.props.delete(ev);
+            this.props.remove(ev);
         });
     }
 
@@ -74,7 +74,7 @@ class MessageInsert extends Component {
                         <span className="fas fa-check fa-fw"></span></Button>
                     <Button disabled={this.state.isInserting}
                         color="secondary"
-                        onClick={this.props.delete}>
+                        onClick={this.props.remove}>
                         <span className="fas fa-times fa-fw"></span></Button>
                 </td>
             </Aux>

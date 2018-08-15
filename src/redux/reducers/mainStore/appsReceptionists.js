@@ -1,6 +1,6 @@
-import { UPDATE_RECEPTIONISTS, DELETE_RECEPTIONIST,
-    DELETE_ALL_RECEPTIONISTS, UPDATE_RECEPTIONISTS_SCHEDULES,
-    DELETE_RECEPTIONIST_SCHEDULE } from '../../actions/mainStore/appsReceptionists';
+import { UPDATE_RECEPTIONISTS, REMOVE_RECEPTIONIST,
+    REMOVE_ALL_RECEPTIONISTS, UPDATE_RECEPTIONISTS_SCHEDULES,
+    REMOVE_RECEPTIONIST_SCHEDULE } from '../../actions/mainStore/appsReceptionists';
 
 export const appsReceptionistsReducer = (state = {}, action) => {
     let appId;
@@ -24,7 +24,7 @@ export const appsReceptionistsReducer = (state = {}, action) => {
                 }
             }
             return Object.assign({}, state);
-        case DELETE_RECEPTIONIST:
+        case REMOVE_RECEPTIONIST:
             appId = action.appId;
             receptionistId = action.receptionistId;
 
@@ -34,7 +34,7 @@ export const appsReceptionistsReducer = (state = {}, action) => {
                 delete state[appId];
             }
             return Object.assign({}, state);
-        case DELETE_ALL_RECEPTIONISTS:
+        case REMOVE_ALL_RECEPTIONISTS:
             appId = action.appId;
             if (state[appId]) {
                 delete state[appId];
@@ -50,7 +50,7 @@ export const appsReceptionistsReducer = (state = {}, action) => {
             let schedules = action.schedules;
             Object.assign(state[appId].receptionists[receptionistId].schedules, schedules || {});
             return Object.assign({}, state);
-        case DELETE_RECEPTIONIST_SCHEDULE:
+        case REMOVE_RECEPTIONIST_SCHEDULE:
             appId = action.appId;
             receptionistId = action.receptionistId;
             let scheduleId = action.scheduleId;

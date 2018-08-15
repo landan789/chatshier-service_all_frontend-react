@@ -13,7 +13,7 @@ import apiDatabase from '../../../helpers/apiDatabase';
 import { blobToBase64 } from '../../../utils/common';
 import { notify } from '../../Notify/Notify';
 
-import defaultAvatarImg from '../../../image/default-avatar.png';
+import defaultConsumerImg from '../../../image/default-consumer.png';
 import defaultProductImg from '../../../image/default-product.png';
 
 import './Product.css';
@@ -30,7 +30,7 @@ class ProductModal extends ModalCore {
         product: PropTypes.object.isRequired,
         insertHandler: PropTypes.func.isRequired,
         updateHandler: PropTypes.func.isRequired,
-        deleteHandler: PropTypes.func.isRequired,
+        removeHandler: PropTypes.func.isRequired,
         onAppChange: PropTypes.func.isRequired
     }
 
@@ -224,7 +224,7 @@ class ProductModal extends ModalCore {
                                                 this.setState({ receptionistIds: _receptionistIds });
                                             }}>
                                             <div className="image-container">
-                                                <img className="image-fit border-circle" src={receptionist.photo || defaultAvatarImg} alt={receptionist.name} />
+                                                <img className="image-fit border-circle" src={receptionist.photo || defaultConsumerImg} alt={receptionist.name} />
                                             </div>
                                             <div className="text-ellipsis text-center text-muted small">
                                                 <span>{receptionist.name}</span>
@@ -255,7 +255,7 @@ class ProductModal extends ModalCore {
 
                             {this.props.isUpdate &&
                             <Button className="mr-1" type="button" color="danger"
-                                onClick={() => this.props.deleteHandler && this.props.deleteHandler(this.props.productId)}
+                                onClick={() => this.props.removeHandler && this.props.removeHandler(this.props.productId)}
                                 disabled={this.state.isAsyncProcessing}>
                                 <Trans i18nKey="Remove" />
                             </Button>}

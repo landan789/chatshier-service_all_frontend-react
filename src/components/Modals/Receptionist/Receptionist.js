@@ -13,7 +13,7 @@ import { blobToBase64 } from '../../../utils/common';
 import { HOUR } from '../../../utils/unitTime';
 import regex from '../../../utils/regex';
 
-import defaultAvatarPng from '../../../image/default-avatar.png';
+import defaultConsumerImg from '../../../image/default-consumer.png';
 import { notify } from '../../Notify/Notify';
 
 import './Receptionist.css';
@@ -29,7 +29,7 @@ class ReceptionistModal extends ModalCore {
         receptionist: PropTypes.object.isRequired,
         insertHandler: PropTypes.func.isRequired,
         updateHandler: PropTypes.func.isRequired,
-        deleteHandler: PropTypes.func.isRequired,
+        removeHandler: PropTypes.func.isRequired,
         onAppChange: PropTypes.func.isRequired
     }
 
@@ -166,7 +166,7 @@ class ReceptionistModal extends ModalCore {
                                     </div>
                                 </div>}
                                 <div className="m-auto image-container" style={{ width: '8rem', height: '8rem' }}>
-                                    <img className="image-fit" src={this.state.photo || defaultAvatarPng} alt={this.state.name} />
+                                    <img className="image-fit" src={this.state.photo || defaultConsumerImg} alt={this.state.name} />
                                 </div>
                             </Button>
                             <input className="d-none" type="file"
@@ -229,7 +229,7 @@ class ReceptionistModal extends ModalCore {
 
                             {this.props.isUpdate &&
                             <Button className="mr-1" type="button" color="danger"
-                                onClick={() => this.props.deleteHandler && this.props.deleteHandler(this.props.receptionistId)}
+                                onClick={() => this.props.removeHandler && this.props.removeHandler(this.props.receptionistId)}
                                 disabled={this.state.isAsyncProcessing}>
                                 <Trans i18nKey="Remove" />
                             </Button>}

@@ -26,7 +26,7 @@ class CategoryModal extends ModalCore {
         category: PropTypes.object.isRequired,
         insertHandler: PropTypes.func.isRequired,
         updateHandler: PropTypes.func.isRequired,
-        deleteHandler: PropTypes.func.isRequired,
+        removeHandler: PropTypes.func.isRequired,
         onAppChange: PropTypes.func.isRequired
     }
 
@@ -193,7 +193,7 @@ class CategoryModal extends ModalCore {
 
                             {this.props.isUpdate &&
                             <Button className="mr-1" type="button" color="danger"
-                                onClick={() => this.props.deleteHandler && this.props.deleteHandler(this.props.productId)}
+                                onClick={() => this.props.removeHandler && this.props.removeHandler(this.props.productId)}
                                 disabled={this.state.isAsyncProcessing}>
                                 <Trans i18nKey="Remove" />
                             </Button>}

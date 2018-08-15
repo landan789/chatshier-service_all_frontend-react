@@ -1,5 +1,5 @@
-import { UPDATE_PRODUCTS, DELETE_PRODUCT,
-    DELETE_ALL_PRODUCTS } from '../../actions/mainStore/appsProducts';
+import { UPDATE_PRODUCTS, REMOVE_PRODUCT,
+    REMOVE_ALL_PRODUCTS } from '../../actions/mainStore/appsProducts';
 
 export const appsProductsReducer = (state = {}, action) => {
     switch (action.type) {
@@ -20,7 +20,7 @@ export const appsProductsReducer = (state = {}, action) => {
                 }
             }
             return Object.assign({}, state);
-        case DELETE_PRODUCT:
+        case REMOVE_PRODUCT:
             let appId = action.appId;
             let productId = action.productId;
 
@@ -30,7 +30,7 @@ export const appsProductsReducer = (state = {}, action) => {
                 delete state[appId];
             }
             return Object.assign({}, state);
-        case DELETE_ALL_PRODUCTS:
+        case REMOVE_ALL_PRODUCTS:
             appId = action.appId;
             if (state[appId]) {
                 delete state[appId];

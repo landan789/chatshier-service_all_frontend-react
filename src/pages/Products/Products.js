@@ -49,7 +49,7 @@ class Products extends React.Component {
         this.appChanged = this.appChanged.bind(this);
         this.insertProduct = this.insertProduct.bind(this);
         this.updateProduct = this.updateProduct.bind(this);
-        this.deleteProduct = this.deleteProduct.bind(this);
+        this.removeProduct = this.removeProduct.bind(this);
         this.closeModal = this.closeModal.bind(this);
     }
 
@@ -101,7 +101,7 @@ class Products extends React.Component {
         });
     }
 
-    deleteProduct(productId) {
+    removeProduct(productId) {
         return confirmDialog({
             title: '刪除確認',
             message: '確定要刪除這個產品嗎？',
@@ -216,7 +216,7 @@ class Products extends React.Component {
                                                     <UncontrolledTooltip placement="top" delay={0} target={'productEditBtn_' + productId}>編輯</UncontrolledTooltip>
 
                                                     <Button color="light" id={'productDeleteBtn_' + productId}
-                                                        onClick={() => this.deleteProduct(productId)}
+                                                        onClick={() => this.removeProduct(productId)}
                                                         disabled={this.state.isAsyncProcessing}>
                                                         <i className="fas fa-trash-alt"></i>
                                                     </Button>
@@ -239,7 +239,7 @@ class Products extends React.Component {
                     product={this.state.product}
                     insertHandler={this.insertProduct}
                     updateHandler={this.updateProduct}
-                    deleteHandler={this.deleteProduct}
+                    removeHandler={this.removeProduct}
                     onAppChange={this.appChanged}
                     close={this.closeModal} />}
             </Aux>

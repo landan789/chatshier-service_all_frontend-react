@@ -59,7 +59,7 @@ class TicketEditModal extends ModalCore {
         this.descriptionChanged = this.descriptionChanged.bind(this);
         this.dueTimeChanged = this.dueTimeChanged.bind(this);
         this.updateTicket = this.updateTicket.bind(this);
-        this.deleteTicket = this.deleteTicket.bind(this);
+        this.removeTicket = this.removeTicket.bind(this);
     }
 
     agentChanged(ev) {
@@ -128,7 +128,7 @@ class TicketEditModal extends ModalCore {
         });
     }
 
-    deleteTicket(ev) {
+    removeTicket(ev) {
         if (!window.confirm('確定要刪除嗎？')) {
             return;
         }
@@ -237,7 +237,7 @@ class TicketEditModal extends ModalCore {
 
                 <ModalFooter>
                     <Button color="primary" onClick={this.updateTicket} disabled={this.state.isProcessing}>更新</Button>
-                    <Button color="danger" onClick={this.deleteTicket} disabled={this.state.isProcessing}>刪除</Button>
+                    <Button color="danger" onClick={this.removeTicket} disabled={this.state.isProcessing}>刪除</Button>
                     <Button color="secondary" onClick={this.closeModal}>取消</Button>
                 </ModalFooter>
             </Modal>

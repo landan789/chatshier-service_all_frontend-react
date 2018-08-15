@@ -2,17 +2,17 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateApps, deleteApp } from '../../redux/actions/mainStore/apps';
-import { deleteAllAutoreplies } from '../../redux/actions/mainStore/appsAutoreplies';
-import { deleteAllCategories } from '../../redux/actions/mainStore/appsCategories';
-import { deleteAllChatrooms } from '../../redux/actions/mainStore/appsChatrooms';
-import { deleteAllComposes } from '../../redux/actions/mainStore/appsComposes';
-import { deleteAllFields } from '../../redux/actions/mainStore/appsFields';
-import { deleteAllGreetings } from '../../redux/actions/mainStore/appsGreetings';
-import { deleteAllKeywordreplies } from '../../redux/actions/mainStore/appsKeywordreplies';
-import { deleteAllProducts } from '../../redux/actions/mainStore/appsProducts';
-import { deleteAllReceptionists } from '../../redux/actions/mainStore/appsReceptionists';
-import { deleteAllTickets } from '../../redux/actions/mainStore/appsTickets';
+import { updateApps, removeApp } from '../../redux/actions/mainStore/apps';
+import { removeAllAutoreplies } from '../../redux/actions/mainStore/appsAutoreplies';
+import { removeAllCategories } from '../../redux/actions/mainStore/appsCategories';
+import { removeAllChatrooms } from '../../redux/actions/mainStore/appsChatrooms';
+import { removeAllComposes } from '../../redux/actions/mainStore/appsComposes';
+import { removeAllFields } from '../../redux/actions/mainStore/appsFields';
+import { removeAllGreetings } from '../../redux/actions/mainStore/appsGreetings';
+import { removeAllKeywordreplies } from '../../redux/actions/mainStore/appsKeywordreplies';
+import { removeAllProducts } from '../../redux/actions/mainStore/appsProducts';
+import { removeAllReceptionists } from '../../redux/actions/mainStore/appsReceptionists';
+import { removeAllTickets } from '../../redux/actions/mainStore/appsTickets';
 
 class Apps extends Core {
     constructor() {
@@ -122,17 +122,17 @@ class Apps extends Core {
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteApp(appId));
-            mainStore.dispatch(deleteAllAutoreplies(appId));
-            mainStore.dispatch(deleteAllCategories(appId));
-            mainStore.dispatch(deleteAllChatrooms(appId));
-            mainStore.dispatch(deleteAllComposes(appId));
-            mainStore.dispatch(deleteAllFields(appId));
-            mainStore.dispatch(deleteAllGreetings(appId));
-            mainStore.dispatch(deleteAllKeywordreplies(appId));
-            mainStore.dispatch(deleteAllProducts(appId));
-            mainStore.dispatch(deleteAllReceptionists(appId));
-            mainStore.dispatch(deleteAllTickets(appId));
+            mainStore.dispatch(removeApp(appId));
+            mainStore.dispatch(removeAllAutoreplies(appId));
+            mainStore.dispatch(removeAllCategories(appId));
+            mainStore.dispatch(removeAllChatrooms(appId));
+            mainStore.dispatch(removeAllComposes(appId));
+            mainStore.dispatch(removeAllFields(appId));
+            mainStore.dispatch(removeAllGreetings(appId));
+            mainStore.dispatch(removeAllKeywordreplies(appId));
+            mainStore.dispatch(removeAllProducts(appId));
+            mainStore.dispatch(removeAllReceptionists(appId));
+            mainStore.dispatch(removeAllTickets(appId));
             return resJson;
         });
     };

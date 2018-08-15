@@ -1,5 +1,5 @@
-import { UPDATE_KEYWORDREPLIES, DELETE_KEYWORDREPLY,
-    DELETE_ALL_KEYWORDREPLIES } from '../../actions/mainStore/appsKeywordreplies';
+import { UPDATE_KEYWORDREPLIES, REMOVE_KEYWORDREPLY,
+    REMOVE_ALL_KEYWORDREPLIES } from '../../actions/mainStore/appsKeywordreplies';
 
 export const appsKeywordrepliesReducer = (state = {}, action) => {
     switch (action.type) {
@@ -20,7 +20,7 @@ export const appsKeywordrepliesReducer = (state = {}, action) => {
                 }
             }
             return Object.assign({}, state);
-        case DELETE_KEYWORDREPLY:
+        case REMOVE_KEYWORDREPLY:
             let appId = action.appId;
             let keywordreplyId = action.keywordreplyId;
 
@@ -30,7 +30,7 @@ export const appsKeywordrepliesReducer = (state = {}, action) => {
                 delete state[appId];
             }
             return Object.assign({}, state);
-        case DELETE_ALL_KEYWORDREPLIES:
+        case REMOVE_ALL_KEYWORDREPLIES:
             appId = action.appId;
             if (state[appId]) {
                 delete state[appId];

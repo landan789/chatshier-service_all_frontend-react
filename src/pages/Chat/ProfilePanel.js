@@ -19,7 +19,7 @@ import controlPanelStore from '../../redux/controlPanelStore';
 import { selectChatroom } from '../../redux/actions/controlPanelStore/selectedChatroom';
 import { findChatroomMessager, findMessagerSelf } from './Chat';
 
-import defaultAvatarPng from '../../image/default-avatar.png';
+import defaultConsumerImg from '../../image/default-consumer.png';
 import './ProfilePanel.css';
 
 const CHATSHIER = 'CHATSHIER';
@@ -96,7 +96,7 @@ class ProfilePanel extends React.Component {
     }
 
     onPhotoLoadError(ev) {
-        ev.target.src = defaultAvatarPng;
+        ev.target.src = defaultConsumerImg;
     }
 
     onChatroomNameChanged(ev) {
@@ -274,7 +274,7 @@ class ProfilePanel extends React.Component {
                                         let memberUser = this.props.users[memberUserId];
                                         memberUser && elems.push(
                                             <div className="person-chip">
-                                                <img className="person-avatar" src={memberUser.photo || defaultAvatarPng} alt="" />
+                                                <img className="person-avatar" src={memberUser.photo || defaultConsumerImg} alt="" />
                                                 <span>{memberUser.name}</span>
                                             </div>
                                         );
@@ -290,7 +290,7 @@ class ProfilePanel extends React.Component {
                                         let consumer = this.props.consumers[messager.platformUid];
                                         consumer && elems.push(
                                             <div key={messagerId} className="person-chip">
-                                                <img className="person-avatar" src={consumer.photo || defaultAvatarPng} alt="" onError={this.onPhotoLoadError} />
+                                                <img className="person-avatar" src={consumer.photo || defaultConsumerImg} alt="" onError={this.onPhotoLoadError} />
                                                 <span>{consumer.name}</span>
                                             </div>
                                         );
@@ -588,7 +588,7 @@ class ProfilePanel extends React.Component {
             let platformMessager = findChatroomMessager(this.chatroom.messagers, this.app.type);
             platformUid = platformMessager.platformUid;
             person = this.props.consumers[platformUid];
-            person && (person.photo = person.photo || defaultAvatarPng);
+            person && (person.photo = person.photo || defaultConsumerImg);
         }
 
         if (!person) {

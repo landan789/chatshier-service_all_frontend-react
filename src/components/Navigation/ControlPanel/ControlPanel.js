@@ -29,7 +29,7 @@ import { findChatroomMessager, findMessagerSelf } from '../../../pages/Chat/Chat
 import logoPng from '../../../image/logo-no-transparent.png';
 import logoSmallPng from '../../../image/logo-small.png';
 import groupPng from '../../../image/group.png';
-import defaultAvatar from '../../../image/default-avatar.png';
+import defaultConsumerImg from '../../../image/default-consumer.png';
 import './ControlPanel.css';
 
 const LINE = 'LINE';
@@ -402,7 +402,7 @@ class ControlPanel extends React.Component {
 
                         itemElem = (
                             <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
-                                <img className="app-icon consumer-photo" src={consumer.photo || defaultAvatar} alt="" onError={() => apiBot.chatrooms.getProfile(appId, platformUid)} />
+                                <img className="app-icon consumer-photo" src={consumer.photo || defaultConsumerImg} alt="" onError={() => apiBot.chatrooms.getProfile(appId, platformUid)} />
                                 <span className="app-name">{(messagerSelf.namings && messagerSelf.namings[platformUid]) || consumer.name}</span>
                                 <Badge className={'unread-msg ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')} pill>{unReadStr}</Badge>
                             </ListGroupItem>

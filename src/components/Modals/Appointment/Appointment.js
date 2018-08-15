@@ -11,9 +11,10 @@ import { Button, Modal, ModalHeader, ModalBody,
 import ModalCore from '../ModalCore';
 import apiDatabase from '../../../helpers/apiDatabase';
 import { formatDate, formatTime } from '../../../utils/unitTime';
+import confirmDialog from '../Confirm/Confirm';
 
 import defaultProductImg from '../../../image/default-product.png';
-import defaultAvatarPng from '../../../image/default-avatar.png';
+import defaultConsumerImg from '../../../image/default-consumer.png';
 import { notify } from '../../Notify/Notify';
 
 import './Appointment.css';
@@ -41,25 +42,35 @@ class AppointmentModal extends ModalCore {
             appId: props.appId || '',
             summary: appointment.summary || '',
             description: appointment.description || '',
-            startDateTime: new Date(appointment.startedTime) || new Date(),
-            endDateTime: new Date(appointment.endedTime) || new Date()
+            startedDateTime: new Date(appointment.startedTime) || new Date(),
+            endedDateTime: new Date(appointment.endedTime) || new Date()
         };
 
-        this.deleteAppointment = this.deleteAppointment.bind(this);
+        this.removeAppointment = this.removeAppointment.bind(this);
     }
 
-    deleteAppointment() {
-        let appId = this.props.appId;
-        let appointmentId = this.props.appointmentId;
+    removeAppointment(appointmentId) {
+        return confirmDialog({
+            title: '刪除確認',
+            message: '確定要刪除這個預約嗎？',
+            confirmText: this.props.t('Confirm'),
+            confirmColor: 'danger',
+            cancelText: this.props.t('Cancel')
+        }).then((isConfirm) => {
+            if (!isConfirm) {
+                return;
+            }
 
-        this.setState({ isAsyncProcessing: true });
-        return apiDatabase.appsAppointments.delete(appId, appointmentId).then(() => {
-            this.setState({ isAsyncProcessing: false });
-            this.closeModal();
-            return notify(this.props.t('Remove successful!'), { type: 'success' });
-        }).catch(() => {
-            this.setState({ isAsyncProcessing: false });
-            return notify(this.props.t('An error occurred!'), { type: 'danger' });
+            let appId = this.state.appId;
+            this.setState({ isAsyncProcessing: true });
+            return apiDatabase.appsAppointments.delete(appId, appointmentId).then(() => {
+                this.setState({ isAsyncProcessing: false });
+                this.closeModal();
+                return notify(this.props.t('Remove successful!'), { type: 'success' });
+            }).catch(() => {
+                this.setState({ isAsyncProcessing: false });
+                return notify(this.props.t('An error occurred!'), { type: 'danger' });
+            });
         });
     }
 
@@ -118,7 +129,7 @@ class AppointmentModal extends ModalCore {
                                 <Card className="p-2">
                                     <label className="col-form-label font-weight-bold">預約人</label>
                                     <div className="m-auto image-container" style={{ width: '3rem', height: '3rem' }}>
-                                        <img className="image-fit" src={consumer.photo || defaultAvatarPng} alt={consumer.name} />
+                                        <img className="image-fit" src={consumer.photo || defaultConsumerImg} alt={consumer.name} />
                                     </div>
                                     <div className="w-100 text-muted small">{consumer.name}</div>
                                 </Card>
@@ -143,7 +154,7 @@ class AppointmentModal extends ModalCore {
                                 <Card className="p-2">
                                     <label className="col-form-label font-weight-bold">服務人員</label>
                                     <div className="m-auto image-container" style={{ width: '3rem', height: '3rem' }}>
-                                        <img className="image-fit" src={receptionist.photo || defaultAvatarPng} alt={receptionist.name} />
+                                        <img className="image-fit" src={receptionist.photo || defaultConsumerImg} alt={receptionist.name} />
                                     </div>
                                     <div className="w-100 text-muted small">{receptionist.name}</div>
                                 </Card>}
@@ -158,7 +169,7 @@ class AppointmentModal extends ModalCore {
                                 culture={currentLanguage}
                                 format={(datetime) => formatDate(datetime) + ' ' + formatTime(datetime, false)}
                                 timeFormat={(time) => formatTime(time, false)}
-                                defaultValue={this.state.startDateTime}
+                                defaultValue={this.state.startedDateTime}
                                 readOnly>
                             </DateTimePicker>
                         </FormGroup>
@@ -171,7 +182,7 @@ class AppointmentModal extends ModalCore {
                                 culture={currentLanguage}
                                 format={(datetime) => formatDate(datetime) + ' ' + formatTime(datetime, false)}
                                 timeFormat={(time) => formatTime(time, false)}
-                                defaultValue={this.state.endDateTime}
+                                defaultValue={this.state.endedDateTime}
                                 readOnly>
                             </DateTimePicker>
                         </FormGroup>
@@ -186,9 +197,9 @@ class AppointmentModal extends ModalCore {
 
                         <div className="d-flex align-items-center justify-content-end">
                             <Button className="mr-1" type="button" color="danger"
-                                onClick={this.deleteAppointment}
+                                onClick={this.removeAppointment}
                                 disabled={this.state.isAsyncProcessing}>
-                                取消預約
+                                刪除預約
                             </Button>
 
                             <Button className="ml-1" type="button" color="secondary" onClick={this.closeModal}>

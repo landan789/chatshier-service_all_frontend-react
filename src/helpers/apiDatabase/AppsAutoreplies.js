@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateAutoreplies, deleteAutoreply } from '../../redux/actions/mainStore/appsAutoreplies';
+import { updateAutoreplies, removeAutoreply } from '../../redux/actions/mainStore/appsAutoreplies';
 
 class AppsAutoreplies extends Core {
     constructor() {
@@ -83,7 +83,7 @@ class AppsAutoreplies extends Core {
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteAutoreply(appId, autoreplyId));
+            mainStore.dispatch(removeAutoreply(appId, autoreplyId));
             return resJson;
         });
     };

@@ -99,8 +99,8 @@ class ScheduleModal extends ModalCore {
 
         let schedule = props.schedule || { start: {}, end: {} };
         let recurrence = schedule.recurrence || [];
-        let startDateTime = new Date(schedule.start.dateTime || Date.now());
-        let endDateTime = new Date(schedule.end.dateTime || Date.now());
+        let startedDateTime = new Date(schedule.start.dateTime || Date.now());
+        let endedDateTime = new Date(schedule.end.dateTime || Date.now());
 
         let repeatDropdownKey = RECURRENCE_OPTIONS.DOES_NOT_REPEAT;
         let firstRule = recurrence[0] ? rrulestr(recurrence[0]) : void 0;
@@ -129,8 +129,8 @@ class ScheduleModal extends ModalCore {
         this.state = {
             isOpen: this.props.isOpen,
             summary: schedule.summary || '',
-            startDateTime: startDateTime,
-            endDateTime: endDateTime,
+            startedDateTime: startedDateTime,
+            endedDateTime: endedDateTime,
             isRepeatDropdownOpen: false,
             repeatDropdownKey: repeatDropdownKey,
 
@@ -140,14 +140,14 @@ class ScheduleModal extends ModalCore {
             intervalValue: firstRule && firstRule.options.interval ? firstRule.options.interval : 1,
             intervalDropdownKey: (firstRule && INTERVAL_OPTIONS[RRule.FREQUENCIES[firstRule.options.freq]]) || INTERVAL_OPTIONS.DAILY,
             untilType: untilType,
-            untilDateTime: firstRule && firstRule.options.until ? firstRule.options.until : endDateTime,
+            untilDateTime: firstRule && firstRule.options.until ? firstRule.options.until : endedDateTime,
             repeatCount: firstRule && firstRule.options.count ? firstRule.options.count : 1
         };
 
         this.onSubmitForm = this.onSubmitForm.bind(this);
         this.insertSchedule = this.insertSchedule.bind(this);
         this.updateSchedule = this.updateSchedule.bind(this);
-        this.deleteSchedule = this.deleteSchedule.bind(this);
+        this.removeSchedule = this.removeSchedule.bind(this);
     }
 
     onSubmitForm(ev) {
@@ -156,10 +156,10 @@ class ScheduleModal extends ModalCore {
         let schedule = {
             summary: this.state.summary,
             start: {
-                dateTime: this.state.startDateTime
+                dateTime: this.state.startedDateTime
             },
             end: {
-                dateTime: this.state.endDateTime
+                dateTime: this.state.endedDateTime
             },
             recurrence: this._getRecurrence(this.state.repeatDropdownKey)
         };
@@ -207,7 +207,7 @@ class ScheduleModal extends ModalCore {
         });
     }
 
-    deleteSchedule(scheduleId) {
+    removeSchedule(scheduleId) {
         return confirmDialog({
             title: '刪除確認',
             message: '確定要刪除這個行程嗎？',
@@ -257,9 +257,9 @@ class ScheduleModal extends ModalCore {
                                 culture={currentLanguage}
                                 format={(datetime) => formatDate(datetime) + ' ' + formatTime(datetime, false)}
                                 timeFormat={(time) => formatTime(time, false)}
-                                max={this.state.endDateTime}
-                                value={this.state.startDateTime}
-                                onChange={(dateTime) => this.setState({ startDateTime: dateTime })}>
+                                max={this.state.endedDateTime}
+                                value={this.state.startedDateTime}
+                                onChange={(dateTime) => this.setState({ startedDateTime: dateTime })}>
                             </DateTimePicker>
                         </FormGroup>
 
@@ -269,9 +269,9 @@ class ScheduleModal extends ModalCore {
                                 culture={currentLanguage}
                                 format={(datetime) => formatDate(datetime) + ' ' + formatTime(datetime, false)}
                                 timeFormat={(time) => formatTime(time, false)}
-                                min={this.state.startDateTime}
-                                value={this.state.endDateTime}
-                                onChange={(dateTime) => this.setState({ endDateTime: dateTime })}>
+                                min={this.state.startedDateTime}
+                                value={this.state.endedDateTime}
+                                onChange={(dateTime) => this.setState({ endedDateTime: dateTime })}>
                             </DateTimePicker>
                         </FormGroup>
 
@@ -366,7 +366,7 @@ class ScheduleModal extends ModalCore {
                                             culture={currentLanguage}
                                             format={(datetime) => formatDate(datetime)}
                                             time={false}
-                                            min={this.state.startDateTime}
+                                            min={this.state.startedDateTime}
                                             value={this.state.untilDateTime}
                                             onChange={(dateTime) => this.setState({ untilDateTime: dateTime })}>
                                         </DateTimePicker>
@@ -408,7 +408,7 @@ class ScheduleModal extends ModalCore {
 
                             {this.props.isUpdate &&
                             <Button className="mr-1" type="button" color="danger"
-                                onClick={() => this.deleteSchedule(this.props.scheduleId)}
+                                onClick={() => this.removeSchedule(this.props.scheduleId)}
                                 disabled={this.state.isAsyncProcessing}>
                                 <Trans i18nKey="Remove" />
                             </Button>}

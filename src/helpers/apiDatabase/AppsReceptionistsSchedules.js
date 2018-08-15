@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateReceptionistsSchedules, deleteReceptionistSchedule } from '../../redux/actions/mainStore/appsReceptionists';
+import { updateReceptionistsSchedules, removeReceptionistSchedule } from '../../redux/actions/mainStore/appsReceptionists';
 
 class AppsReceptionistsSchedules extends Core {
     constructor() {
@@ -62,7 +62,7 @@ class AppsReceptionistsSchedules extends Core {
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteReceptionistSchedule(appId, receptionistId, scheduleId));
+            mainStore.dispatch(removeReceptionistSchedule(appId, receptionistId, scheduleId));
             return resJson;
         });
     };

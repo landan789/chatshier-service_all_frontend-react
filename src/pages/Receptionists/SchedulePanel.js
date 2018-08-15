@@ -57,31 +57,31 @@ class SchedulePanel extends React.Component {
                 continue;
             }
 
-            let startDateTime = new Date(schedule.start.dateTime);
-            let endDateTime = new Date(schedule.end.dateTime);
-            let offset = endDateTime.getTime() - startDateTime.getTime();
-            let hhStart = startDateTime.getHours();
-            let mmStart = startDateTime.getMinutes();
-            let ssStart = startDateTime.getSeconds();
-            let hhEnd = endDateTime.getHours();
-            let mmEnd = endDateTime.getMinutes();
-            let ssEnd = endDateTime.getSeconds();
+            let startedDateTime = new Date(schedule.start.dateTime);
+            let endedDateTime = new Date(schedule.end.dateTime);
+            let offset = endedDateTime.getTime() - startedDateTime.getTime();
+            let hhStart = startedDateTime.getHours();
+            let mmStart = startedDateTime.getMinutes();
+            let ssStart = startedDateTime.getSeconds();
+            let hhEnd = endedDateTime.getHours();
+            let mmEnd = endedDateTime.getMinutes();
+            let ssEnd = endedDateTime.getSeconds();
 
-            let dates = gcalendarHlp.getEventDates(recurrence, startDateTime);
+            let dates = gcalendarHlp.getEventDates(recurrence, startedDateTime);
             calendarEvents = calendarEvents.concat(dates.map((date) => {
-                let _startDateTime = new Date(date);
-                _startDateTime.setHours(hhStart, mmStart, ssStart);
+                let _startedDateTime = new Date(date);
+                _startedDateTime.setHours(hhStart, mmStart, ssStart);
 
-                let _endDateTime = new Date(date);
-                _endDateTime.setHours(hhEnd, mmEnd, ssEnd);
-                _endDateTime = new Date(_endDateTime.getTime() + offset);
+                let _endedDateTime = new Date(date);
+                _endedDateTime.setHours(hhEnd, mmEnd, ssEnd);
+                _endedDateTime = new Date(_endedDateTime.getTime() + offset);
 
                 return {
                     id: scheduleId,
                     title: schedule.summary || '無標題',
                     description: schedule.description || '無描述',
-                    start: _startDateTime,
-                    end: _endDateTime,
+                    start: _startedDateTime,
+                    end: _endedDateTime,
                     isRecurrence: true
                 };
             }));
@@ -95,7 +95,7 @@ class SchedulePanel extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
 
-        this.onSelectDate = this.onSelectDate.bind(this);
+        this.onDateSelect = this.onDateSelect.bind(this);
         this.onEventClick = this.onEventClick.bind(this);
 
         this.hide = this.hide.bind(this);
@@ -108,21 +108,21 @@ class SchedulePanel extends React.Component {
         }, SchedulePanel.getDerivedStateFromProps(props, {}));
     }
 
-    onSelectDate(start) {
+    onDateSelect(start) {
         let dateNow = new Date();
-        let startDateTime = start.toDate();
-        startDateTime.setHours(dateNow.getHours(), 0, 0, 0);
+        let startedDateTime = start.toDate();
+        startedDateTime.setHours(dateNow.getHours(), 0, 0, 0);
 
-        let endDateTime = new Date(startDateTime);
-        endDateTime.setHours(dateNow.getHours() + 1, 0, 0, 0);
+        let endedDateTime = new Date(startedDateTime);
+        endedDateTime.setHours(dateNow.getHours() + 1, 0, 0, 0);
 
         this.setState({
             schedule: {
                 start: {
-                    dateTime: startDateTime
+                    dateTime: startedDateTime
                 },
                 end: {
-                    dateTime: endDateTime
+                    dateTime: endedDateTime
                 }
             }
         });
@@ -176,7 +176,7 @@ class SchedulePanel extends React.Component {
                 <Calendar className="p-5 chsr border-none"
                     canEdit={false}
                     events={this.state.calendarEvents}
-                    onSelect={this.onSelectDate}
+                    onSelect={this.onDateSelect}
                     onEventClick={this.onEventClick} />
 
                 {this.state.schedule &&

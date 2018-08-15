@@ -1,5 +1,5 @@
-import { UPDATE_AUTOREPLIES, DELETE_AUTOREPLY,
-    DELETE_ALL_AUTOREPLIES } from '../../actions/mainStore/appsAutoreplies';
+import { UPDATE_AUTOREPLIES, REMOVE_AUTOREPLY,
+    REMOVE_ALL_AUTOREPLIES } from '../../actions/mainStore/appsAutoreplies';
 
 export const appsAutorepliesReducer = (state = {}, action) => {
     let appId;
@@ -22,7 +22,7 @@ export const appsAutorepliesReducer = (state = {}, action) => {
                 }
             }
             return Object.assign({}, state);
-        case DELETE_AUTOREPLY:
+        case REMOVE_AUTOREPLY:
             appId = action.appId;
             let autoreplyId = action.autoreplyId;
 
@@ -32,7 +32,7 @@ export const appsAutorepliesReducer = (state = {}, action) => {
                 delete state[appId];
             }
             return Object.assign({}, state);
-        case DELETE_ALL_AUTOREPLIES:
+        case REMOVE_ALL_AUTOREPLIES:
             appId = action.appId;
             if (state[appId]) {
                 delete state[appId];

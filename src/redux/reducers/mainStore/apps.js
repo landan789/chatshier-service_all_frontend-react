@@ -1,4 +1,4 @@
-import { UPDATE_APPS, DELETE_APP } from '../../actions/mainStore/apps';
+import { UPDATE_APPS, REMOVE_APP } from '../../actions/mainStore/apps';
 
 export const appsReducer = (state = {}, action) => {
     switch (action.type) {
@@ -12,7 +12,7 @@ export const appsReducer = (state = {}, action) => {
                 state[appId] = action.apps[appId];
             }
             return Object.assign({}, state);
-        case DELETE_APP:
+        case REMOVE_APP:
             let appId = action.appId;
 
             delete state[appId];

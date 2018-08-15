@@ -193,7 +193,7 @@ class GoogleCalendarHelper {
      * @param {string} calendarId
      * @param {string} eventId
      */
-    deleteEvent(calendarId, eventId) {
+    removeEvent(calendarId, eventId) {
         return this.googleReady.then(() => {
             if (!this.isSignedIn) {
                 return Promise.reject(new Error(GOOGLE_CLIENT_NOT_SIGNEDIN));

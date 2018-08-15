@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { deleteChatroom } from '../../redux/actions/mainStore/appsChatrooms';
+import { removeChatroom } from '../../redux/actions/mainStore/appsChatrooms';
 import { updateConsumers } from '../../redux/actions/mainStore/consumers';
 
 class Chatrooms extends Core {
@@ -33,7 +33,7 @@ class Chatrooms extends Core {
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteChatroom(appId, chatroomId));
+            mainStore.dispatch(removeChatroom(appId, chatroomId));
             return resJson;
         });
     };

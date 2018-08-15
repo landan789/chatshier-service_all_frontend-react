@@ -209,7 +209,7 @@ class CalendarPage extends React.Component {
 
         this.gSignListenerId = void 0;
 
-        this.onSelectDate = this.onSelectDate.bind(this);
+        this.onDateSelect = this.onDateSelect.bind(this);
         this.onEventClick = this.onEventClick.bind(this);
         this.onEventDrop = this.onEventDrop.bind(this);
         this.updateCalendarEvent = this.updateCalendarEvent.bind(this);
@@ -242,7 +242,7 @@ class CalendarPage extends React.Component {
         this.gSignListenerId = void 0;
     }
 
-    onSelectDate(start, end) {
+    onDateSelect(start) {
         let startedTime = start.toDate();
         startedTime.setHours(0, 0, 0, 0);
         let endedTime = new Date(startedTime);
@@ -403,7 +403,7 @@ class CalendarPage extends React.Component {
                     <Fade in className="container calendar-wrapper">
                         <Calendar className="mt-5 chsr"
                             events={this.state.calendarEvents}
-                            onSelect={this.onSelectDate}
+                            onSelect={this.onDateSelect}
                             onEventClick={this.onEventClick}
                             onEventDrop={this.onEventDrop} />
                     </Fade>

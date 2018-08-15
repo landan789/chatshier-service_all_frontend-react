@@ -25,7 +25,7 @@ class GreetingTable extends React.Component {
         };
 
         this.addInsertMessage = this.addInsertMessage.bind(this);
-        this.deleteInsertMessage = this.deleteInsertMessage.bind(this);
+        this.removeInsertMessage = this.removeInsertMessage.bind(this);
     }
 
     componentDidMount() {
@@ -40,7 +40,7 @@ class GreetingTable extends React.Component {
         this.setState({ insertList: this.state.insertList });
     }
 
-    deleteInsertMessage(ev, i) {
+    removeInsertMessage(ev, i) {
         this.state.insertList.splice(i, 1);
         this.setState({ insertList: this.state.insertList });
     }
@@ -80,7 +80,7 @@ class GreetingTable extends React.Component {
                                 <MessageInsert
                                     appId={this.props.appId}
                                     message={message}
-                                    delete={(ev) => this.deleteInsertMessage(ev, i)}>
+                                    remove={(ev) => this.removeInsertMessage(ev, i)}>
                                 </MessageInsert>
                             </tr>
                         ))}

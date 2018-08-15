@@ -22,7 +22,7 @@ import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel'
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import { notify } from '../../components/Notify/Notify';
 
-import defaultAvatarPng from '../../image/default-avatar.png';
+import defaultConsumerImg from '../../image/default-consumer.png';
 
 import SchedulePanel from './SchedulePanel';
 import './Receptionists.css';
@@ -53,7 +53,7 @@ class ReceptionistsPage extends React.Component {
         this.appChanged = this.appChanged.bind(this);
         this.insertReceptionist = this.insertReceptionist.bind(this);
         this.updateReceptionist = this.updateReceptionist.bind(this);
-        this.deleteReceptionist = this.deleteReceptionist.bind(this);
+        this.removeReceptionist = this.removeReceptionist.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.closeSchedulesPanel = this.closeSchedulesPanel.bind(this);
     }
@@ -158,7 +158,7 @@ class ReceptionistsPage extends React.Component {
         });
     }
 
-    deleteReceptionist(receptionistId) {
+    removeReceptionist(receptionistId) {
         return confirmDialog({
             title: '刪除確認',
             message: '確定要刪除這個服務人員嗎？',
@@ -245,7 +245,7 @@ class ReceptionistsPage extends React.Component {
                                         <Card key={receptionistId} className="d-inline-block w-100 m-2 receptionist-item">
                                             <CardBody className="p-2 text-center bg-transparent">
                                                 <div className="mx-auto image-container border-circle">
-                                                    <img className="image-fit border-circle" src={receptionist.photo || defaultAvatarPng} alt={receptionist.name} />
+                                                    <img className="image-fit border-circle" src={receptionist.photo || defaultConsumerImg} alt={receptionist.name} />
                                                 </div>
                                                 <div className="mt-2 font-weight-bold text-info">{receptionist.name}</div>
                                                 <div className="text-muted small">{receptionist.email}</div>
@@ -303,12 +303,12 @@ class ReceptionistsPage extends React.Component {
                                                     {!receptionist.isCalendarShared &&
                                                     <UncontrolledTooltip placement="top" delay={0} target={'calendarShareBtn_' + receptionistId}>分享行事曆</UncontrolledTooltip>}
 
-                                                    <Button color="light" id={'receptionistDeleteBtn_' + receptionistId}
-                                                        onClick={() => this.deleteReceptionist(receptionistId)}
+                                                    <Button color="light" id={'receptionistRemoveBtn_' + receptionistId}
+                                                        onClick={() => this.removeReceptionist(receptionistId)}
                                                         disabled={this.state.isAsyncProcessing}>
                                                         <i className="fas fa-trash-alt"></i>
                                                     </Button>
-                                                    <UncontrolledTooltip placement="top" delay={0} target={'receptionistDeleteBtn_' + receptionistId}>刪除</UncontrolledTooltip>
+                                                    <UncontrolledTooltip placement="top" delay={0} target={'receptionistRemoveBtn_' + receptionistId}>刪除</UncontrolledTooltip>
                                                 </div>
                                             </CardFooter>
                                         </Card>
@@ -332,7 +332,7 @@ class ReceptionistsPage extends React.Component {
                     receptionist={this.state.receptionist}
                     insertHandler={this.insertReceptionist}
                     updateHandler={this.updateReceptionist}
-                    deleteHandler={this.deleteReceptionist}
+                    removeHandler={this.removeReceptionist}
                     onAppChange={this.appChanged}
                     close={this.closeModal} />}
             </Aux>

@@ -1,4 +1,4 @@
-import { UPDATE_MEMBERS, DELETE_MEMBER } from '../../actions/mainStore/groupsMembers';
+import { UPDATE_MEMBERS, REMOVE_MEMBER } from '../../actions/mainStore/groupsMembers';
 
 export const groupsMembersReducer = (state = {}, action) => {
     switch (action.type) {
@@ -19,7 +19,7 @@ export const groupsMembersReducer = (state = {}, action) => {
                 }
             }
             return Object.assign({}, state);
-        case DELETE_MEMBER:
+        case REMOVE_MEMBER:
             let groupId = action.groupId;
             let memberId = action.memberId;
 

@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateGreetings, deleteGreeting } from '../../redux/actions/mainStore/appsGreetings';
+import { updateGreetings, removeGreeting } from '../../redux/actions/mainStore/appsGreetings';
 
 class AppsGreetings extends Core {
     constructor() {
@@ -65,7 +65,7 @@ class AppsGreetings extends Core {
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteGreeting(appId, greetingId));
+            mainStore.dispatch(removeGreeting(appId, greetingId));
             return resJson;
         });
     };

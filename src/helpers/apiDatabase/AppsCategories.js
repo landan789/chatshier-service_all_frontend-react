@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateCategories, deleteCategory } from '../../redux/actions/mainStore/appsCategories';
+import { updateCategories, removeCategory } from '../../redux/actions/mainStore/appsCategories';
 
 class AppsCategories extends Core {
     constructor() {
@@ -90,7 +90,7 @@ class AppsCategories extends Core {
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteCategory(appId, categoryId));
+            mainStore.dispatch(removeCategory(appId, categoryId));
             return resJson;
         });
     };

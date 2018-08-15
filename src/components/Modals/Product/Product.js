@@ -62,9 +62,19 @@ class ProductModal extends ModalCore {
             name: this.state.name,
             description: this.state.description,
             isOnShelf: this.state.isOnShelf,
-            receptionist_ids: this.state.receptionistIds
+            receptionist_ids: this.state.receptionistIds,
+            src: (this.fileInput && this.fileInput.files.item(0)) || this.state.src
         };
-        return this.props.isUpdate ? this.props.updateHandler(this.props.productId, product) : this.props.insertHandler(product);
+
+        this.setState({ isAsyncProcessing: true });
+        return Promise.resolve().then(() => {
+            if (this.props.isUpdate) {
+                return this.props.updateHandler(this.props.productId, product);
+            }
+            return this.props.insertHandler(product);
+        }).then(() => {
+            this._isMounted && this.setState({ isAsyncProcessing: false });
+        });
     }
 
     onAppChange(ev) {

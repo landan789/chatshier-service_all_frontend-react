@@ -89,14 +89,14 @@ class ReceptionistsPage extends React.Component {
 
         this.setState({ isAsyncProcessing: true });
         return Promise.resolve().then(() => {
-            if (postReceptionist && postReceptionist.photo && postReceptionist.photo instanceof File) {
-                return apiImage.uploadFile.post(postReceptionist.photo).then((resJson) => {
-                    postReceptionist.photo = resJson.data.url;
-                    fromPath = resJson.data.originalFilePath;
-                    return postReceptionist;
-                });
+            if (!(postReceptionist && postReceptionist.photo && postReceptionist.photo instanceof File)) {
+                return;
             }
-            return postReceptionist;
+
+            return apiImage.uploadFile.post(postReceptionist.photo).then((resJson) => {
+                postReceptionist.photo = resJson.data.url;
+                fromPath = resJson.data.originalFilePath;
+            });
         }).then(() => {
             return apiDatabase.appsReceptionists.insert(appId, postReceptionist);
         }).then((resJson) => {

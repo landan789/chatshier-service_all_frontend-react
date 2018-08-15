@@ -18,7 +18,16 @@ class ModalCore extends React.Component {
             isOpen: this.props.isOpen
         };
 
+        this._isMounted = false;
         this.closeModal = this.closeModal.bind(this);
+    }
+
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     closeModal(data) {

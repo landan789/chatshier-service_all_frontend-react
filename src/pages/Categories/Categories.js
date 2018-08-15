@@ -20,7 +20,7 @@ import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel'
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import { notify } from '../../components/Notify/Notify';
 
-import logoPng from '../../image/logo.png';
+import defaultProductImg from '../../image/default-product.png';
 
 import './Categories.css';
 
@@ -349,9 +349,9 @@ class Categories extends React.Component {
                                             return (
                                                 <div key={productId} className={className}>
                                                     <div className="image-container">
-                                                        <img className="image-fit" src={product.src || logoPng} alt={product.name} />
+                                                        <img className="image-fit" src={product.src || defaultProductImg} alt={product.name} />
                                                     </div>
-                                                    <div className="text-ellipsis text-center text-muted small">
+                                                    <div className="mt-1 text-ellipsis text-center text-muted small">
                                                         <span>{product.name}</span>
                                                     </div>
                                                 </div>

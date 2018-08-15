@@ -164,11 +164,14 @@ class ScheduleModal extends ModalCore {
             recurrence: this._getRecurrence(this.state.repeatDropdownKey)
         };
 
+        this.setState({ isAsyncProcessing: true });
         return Promise.resolve().then(() => {
             if (this.props.isUpdate) {
                 return this.updateSchedule(this.props.scheduleId, schedule);
             }
             return this.insertSchedule(schedule);
+        }).then(() => {
+            this._isMounted && this.setState({ isAsyncProcessing: false });
         });
     }
 

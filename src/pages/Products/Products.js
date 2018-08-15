@@ -12,6 +12,7 @@ import ROUTES from '../../config/route';
 import authHlp from '../../helpers/authentication';
 import browserHlp from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
+import apiImage from '../../helpers/apiImage/index';
 
 import confirmDialog from '../../components/Modals/Confirm/Confirm';
 import ProductModal from '../../components/Modals/Product/Product';
@@ -70,9 +71,35 @@ class Products extends React.Component {
             type: apiDatabase.appsProducts.TYPES.APPOINTMENT
         }, product);
 
+        if (!postProduct.name) {
+            return notify('必須輸入產品名稱', { type: 'warning' });
+        }
         let appId = this.state.appId;
+        let fromPath;
+
         this.setState({ isAsyncProcessing: true });
-        return apiDatabase.appsProducts.insert(appId, postProduct).then(() => {
+        return Promise.resolve().then(() => {
+            if (!(postProduct && postProduct.src && postProduct.src instanceof File)) {
+                return;
+            }
+
+            return apiImage.uploadFile.post(postProduct.src).then((resJson) => {
+                postProduct.src = resJson.data.url;
+                fromPath = resJson.data.originalFilePath;
+            });
+        }).then(() => {
+            return apiDatabase.appsProducts.insert(appId, postProduct);
+        }).then((resJson) => {
+            if (!fromPath) {
+                return;
+            }
+
+            let _appsProducts = resJson.data;
+            let productId = Object.keys(_appsProducts[appId].products).shift();
+            let fileName = fromPath.split('/').pop();
+            let toPath = '/apps/' + appId + '/products/' + productId + '/src/' + fileName;
+            return apiImage.moveFile.post(fromPath, toPath);
+        }).then(() => {
             this.closeModal();
             return notify(this.props.t('Add successful!'), { type: 'success' });
         }).catch(() => {
@@ -83,6 +110,7 @@ class Products extends React.Component {
 
     updateProduct(productId, product) {
         let appId = this.state.appId;
+        let fromPath;
         /** @type {Chatshier.Models.Product} */
         let _product = this.props.appsProducts[appId].products[productId];
 
@@ -92,7 +120,27 @@ class Products extends React.Component {
 
         let putProduct = Object.assign({}, _product, product);
         this.setState({ isAsyncProcessing: true });
-        return apiDatabase.appsProducts.update(appId, productId, putProduct).then(() => {
+
+        return Promise.resolve().then(() => {
+            if (!(putProduct && putProduct.src && putProduct.src instanceof File)) {
+                return;
+            }
+
+            return apiImage.uploadFile.post(putProduct.src).then((resJson) => {
+                putProduct.src = resJson.data.url;
+                fromPath = resJson.data.originalFilePath;
+            });
+        }).then(() => {
+            return apiDatabase.appsProducts.update(appId, productId, putProduct);
+        }).then(() => {
+            if (!fromPath) {
+                return;
+            }
+
+            let fileName = fromPath.split('/').pop();
+            let toPath = '/apps/' + appId + '/products/' + productId + '/src/' + fileName;
+            return apiImage.moveFile.post(fromPath, toPath);
+        }).then(() => {
             this.closeModal();
             return notify(this.props.t('Update successful!'), { type: 'success' });
         }).catch(() => {

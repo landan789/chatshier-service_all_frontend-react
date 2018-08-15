@@ -175,6 +175,10 @@ class Analysis extends React.Component {
     }
 
     render() {
+        if (!this.state) {
+            return null;
+        }
+
         return (
             <Aux>
                 <ControlPanel />

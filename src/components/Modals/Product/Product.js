@@ -201,6 +201,11 @@ class ProductModal extends ModalCore {
                                 <span>服務人員</span>:
                             </label>
                             <Card className="flex-row flex-wrap p-2">
+                                {0 === receptionistIds.length &&
+                                <div className="m-auto">
+                                    <span className="py-3 text-muted small">沒有可選擇的服務人員</span>
+                                </div>}
+
                                 {receptionistIds.map((receptionistId) => {
                                     let receptionist = receptionists[receptionistId];
                                     let isSelected = productReceptionistIds.indexOf(receptionistId) >= 0;

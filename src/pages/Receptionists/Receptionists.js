@@ -198,6 +198,10 @@ class ReceptionistsPage extends React.Component {
     }
 
     render() {
+        if (!this.state) {
+            return null;
+        }
+
         let appId = this.state.appId;
         let appReceptionists = this.props.appsReceptionists[appId] || { receptionists: {} };
 

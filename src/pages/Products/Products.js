@@ -134,6 +134,10 @@ class Products extends React.Component {
     }
 
     render() {
+        if (!this.state) {
+            return null;
+        }
+
         let appId = this.state.appId;
         let appProducts = this.props.appsProducts[appId] || { products: {} };
 

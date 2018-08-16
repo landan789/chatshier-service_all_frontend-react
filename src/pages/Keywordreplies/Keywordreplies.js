@@ -3,18 +3,18 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Aux from 'react-aux';
-import { Fade, Jumbotron, Row, Col, InputGroup, Input, Button } from 'reactstrap';
+import { Fade, Card } from 'reactstrap';
 
 import ROUTES from '../../config/route';
 import authHlp from '../../helpers/authentication';
 import browserHlp from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
+import KeywordreplyModal from '../../components/Modals/KeywordreplyInsert/KeywordreplyInsert';
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
 import KeywordreplyTable from '../Keywordreplies/KeywordreplyTable';
-import KeywordreplyInsertModal from '../../components/Modals/KeywordreplyInsert/KeywordreplyInsert';
 
 import './Keywordreplies.css';
 
@@ -36,13 +36,10 @@ class Keywordreplies extends React.Component {
         this.state = {
             searchKeyword: '',
             appId: '',
-            isInsertModalOpen: false
+            isModalOpen: false
         };
 
-        this.appChanged = this.appChanged.bind(this);
-        this.keywordChanged = this.keywordChanged.bind(this);
-        this.openInsertModal = this.openInsertModal.bind(this);
-        this.closeInsertModal = this.closeInsertModal.bind(this);
+        this.onKeywordChanged = this.onKeywordChanged.bind(this);
     }
 
     componentDidMount() {
@@ -52,20 +49,8 @@ class Keywordreplies extends React.Component {
         ]);
     }
 
-    appChanged(appId) {
-        this.setState({ appId });
-    }
-
-    keywordChanged(event) {
-        this.setState({ searchKeyword: event.target.value });
-    }
-
-    openInsertModal() {
-        this.setState({ isInsertModalOpen: true });
-    }
-
-    closeInsertModal() {
-        this.setState({ isInsertModalOpen: false });
+    onKeywordChanged(ev) {
+        this.setState({ searchKeyword: ev.target.value });
     }
 
     render() {
@@ -73,40 +58,27 @@ class Keywordreplies extends React.Component {
             <Aux>
                 <ControlPanel />
                 <PageWrapper toolbarTitle="關鍵字回覆">
-                    <Fade in className="keywordreplies-wrapper">
-                        <div className="keywordreplies">
-                            <Jumbotron>
-                                <h1 className="display-3">關鍵字回覆</h1>
-                                <Row>
-                                    <Col>
-                                        <AppsSelector onChange={this.appChanged} />
-                                    </Col>
-                                    <Col>
-                                        <InputGroup>
-                                            <Input
-                                                type="text"
-                                                className="ticket-search-bar lean-right"
-                                                placeholder="搜尋"
-                                                value={this.state.searchKeyword}
-                                                onChange={this.keywordChanged} />
-                                            <Button color="primary" className="pointer lean-right" onClick={this.openInsertModal}>
-                                                <i className="fas fa-plus"></i>
-                                            </Button>
-                                        </InputGroup>
-                                    </Col>
-                                </Row>
-                            </Jumbotron>
+                    <Fade in className="align-items-center mt-5 pb-4 container keywordreplies-wrapper">
+                        <Card className="pb-3 shadow chsr">
+                            <div className="text-left table-title">
+                                <h3 className="mb-4 pt-3 px-3">關鍵字回覆訊息</h3>
+                                <p className="mb-3 pt-0 px-3">首頁 / 訊息 / 關鍵字回覆</p>
+                                <p className="mb-3 pt-0 px-3 text-muted small">當您的客戶對機器人傳送訊息時，符合設定之關鍵字訊息將自動回覆</p>
+                            </div>
+
+                            <AppsSelector className="px-3 my-3" onChange={(appId) => this.setState({ appId: appId })} />
+
                             <KeywordreplyTable appId={this.state.appId} keyword={this.state.searchKeyword} />
-                        </div>
+                        </Card>
                     </Fade>
                 </PageWrapper>
 
-                {this.state.isInsertModalOpen &&
-                <KeywordreplyInsertModal
+                {this.state.isModalOpen &&
+                <KeywordreplyModal
                     apps={this.props.apps}
-                    isOpen={this.state.isInsertModalOpen}
-                    close={this.closeInsertModal}>
-                </KeywordreplyInsertModal>}
+                    isOpen={this.state.isModalOpen}
+                    close={this.closeModal}>
+                </KeywordreplyModal>}
             </Aux>
         );
     }

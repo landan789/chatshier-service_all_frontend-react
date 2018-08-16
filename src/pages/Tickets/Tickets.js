@@ -176,8 +176,8 @@ class Tickets extends React.Component {
             <Aux>
                 <ControlPanel />
                 <PageWrapper toolbarTitle={this.props.t('To-Do items')}>
-                    <Fade in className="align-items-center mt-5 container ticket-wrapper">
-                        <Card className="pb-5 chsr">
+                    <Fade in className="align-items-center mt-5 pb-4 container ticket-wrapper">
+                        <Card className="pb-5 shadow chsr">
                             <div className="mx-4 mb-3 px-3 ticket-toolbar">
                                 <ButtonGroup className="mr-auto mb-2">
                                     <Button color="light" id="allTicketsFilter"

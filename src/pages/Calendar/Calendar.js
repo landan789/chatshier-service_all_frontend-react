@@ -401,7 +401,7 @@ class CalendarPage extends React.Component {
                 <ControlPanel />
                 <PageWrapper toolbarTitle={this.props.t('Calendar')}>
                     <Fade in className="container calendar-wrapper">
-                        <Calendar className="mt-5 chsr"
+                        <Calendar className="mt-5 shadow chsr"
                             events={this.state.calendarEvents}
                             onSelect={this.onDateSelect}
                             onEventClick={this.onEventClick}

@@ -308,8 +308,8 @@ class Categories extends React.Component {
             <Aux>
                 <ControlPanel />
                 <PageWrapper toolbarTitle={this.props.t('Product management')}>
-                    <Fade in className="align-items-center mt-5 container category-wrapper">
-                        <Card className="pb-3 chsr">
+                    <Fade in className="align-items-center mt-5 pb-4 container category-wrapper">
+                        <Card className="pb-3 shadow chsr">
                             <div className="text-left table-title">
                                 <h3 className="mb-4 pt-3 px-3"><Trans i18nKey="Appointment categoies" /></h3>
                                 <p className="mb-3 pt-0 px-3"><Trans i18nKey="Home" /> / <Trans i18nKey="Appointment system" /> / <Trans i18nKey="Appointment categoies" /></p>

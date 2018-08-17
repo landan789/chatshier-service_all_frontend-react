@@ -226,8 +226,8 @@ class Products extends React.Component {
                                     return (
                                         <Card key={productId} className="d-inline-block w-100 m-2 shadow-sm product-item">
                                             <CardBody className="p-2 text-center bg-transparent">
-                                                <div className="mx-auto image-container border-circle">
-                                                    <img className="image-fit border-circle" src={product.src || defaultProductImg} alt={product.name} />
+                                                <div className="mx-auto image-container">
+                                                    <img className="image-fit" src={product.src || defaultProductImg} alt={product.name} />
                                                 </div>
                                                 <div className="mt-2 px-3 font-weight-bold text-info">{product.name}</div>
                                                 <div className="mt-1 px-3 text-muted small">{description}</div>

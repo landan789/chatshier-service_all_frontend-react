@@ -1,4 +1,5 @@
 $_product-item-size: 5.5rem;
+$_category-image-size: 8rem;
 
 .category-modal {
     .product-item {
@@ -27,5 +28,28 @@ $_product-item-size: 5.5rem;
     .image-container {
         width: $_product-item-size;
         height: $_product-item-size;
+    }
+
+    .photo-container {
+        border: none;
+
+        &, .image-container {
+            width: $_category-image-size;
+            height: $_category-image-size;
+        }
+
+        .image-upload {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 1;
+            white-space: pre-line;
+            opacity: .33;
+            font-size: .9rem;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
     }
 }

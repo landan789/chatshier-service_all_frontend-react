@@ -234,7 +234,7 @@ class Categories extends React.Component {
             buttons: []
         };
 
-        if (categoryNode.path.length < MAX_DEPTH) {
+        if (!categoryId && categoryNode.path.length < MAX_DEPTH) {
             nodeProps.buttons.push(
                 <Button color="light" size="sm" className={!categoryId ? ' absolute-stretch' : ''}
                     key={insertId}
@@ -246,7 +246,7 @@ class Categories extends React.Component {
                 <UncontrolledTooltip placement="top" delay={0}
                     key={insertId + '_tooltip'}
                     target={insertId}>
-                    <span>{categoryId ? '新增子類別' : '新增'}</span>
+                    <span>新增</span>
                 </UncontrolledTooltip>
             );
         }
@@ -394,8 +394,9 @@ class Categories extends React.Component {
             return Object.keys(productIdsMap);
         }
 
+        let products = (this.props.appsProducts[appId] || { products: {} }).products;
         let category = categories[categoryId];
-        let productIds = category.product_ids || [];
+        let productIds = (category.product_ids || []).filter((productId) => !!products[productId]);
         for (let i in productIds) { productIdsMap[productIds[i]] = productIds[i]; }
         productIds = void 0;
 

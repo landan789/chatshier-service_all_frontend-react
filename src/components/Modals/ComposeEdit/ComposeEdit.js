@@ -132,7 +132,7 @@ class ComposeEditModal extends ModalCore {
             return notify('請選擇時間', { type: 'warning' });
         } else if (!this.state.text) {
             return notify('請輸入要送出的訊息', { type: 'warning' });
-        } else if (Date.now() > timeHlp.toMilliseconds(this.state.time)) {
+        } else if (Date.now() > new Date(this.state.time).getTime()) {
             return notify('不能選擇過去的時間', { type: 'warning' });
         }
 

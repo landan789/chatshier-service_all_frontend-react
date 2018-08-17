@@ -80,10 +80,10 @@ class ComposeTable extends React.Component {
         let newIdList;
         switch (determineSentTime) {
             case this.RESERVED:
-                statusList = statusList.filter((composeId) => Date.now() < timeHlp.toMilliseconds(composes[composeId].time));
+                statusList = statusList.filter((composeId) => Date.now() < new Date(composes[composeId].time).getTime());
                 break;
             case this.SENT:
-                statusList = statusList.filter((composeId) => Date.now() >= timeHlp.toMilliseconds(composes[composeId].time));
+                statusList = statusList.filter((composeId) => Date.now() >= new Date(composes[composeId].time).getTime());
                 break;
             default:
         }

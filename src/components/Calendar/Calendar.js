@@ -30,24 +30,18 @@ class Calendar extends React.Component {
 
         /** @type {JQuery<HTMLElement>} */
         this.$calendar = void 0;
-        this.initCalendar = this.initCalendar.bind(this);
+        this.setCalendarRef = (element) => (this.calendarRef = element);
     }
 
-    destroy() {
-        if (!this.$calendar) {
-            return;
+    componentWillUnmount() {
+        if (this.$calendar) {
+            this.$calendar.fullCalendar('destroy');
+            delete this.$calendar;
         }
-        this.$calendar.fullCalendar('destroy');
-        delete this.$calendar;
     }
 
-    initCalendar(refElem) {
-        if (!refElem) {
-            this.destroy();
-            return;
-        }
-
-        this.$calendar = $(refElem);
+    componentDidMount() {
+        this.$calendar = $(this.calendarRef);
         this.$calendar.fullCalendar({
             locale: currentLanguage,
             timezone: 'local',
@@ -93,7 +87,7 @@ class Calendar extends React.Component {
 
     render() {
         let className = this.props.className + ' card chsr calendar';
-        return <div className={className.trim()} ref={this.initCalendar}></div>;
+        return <div className={className.trim()} ref={this.setCalendarRef}></div>;
     }
 }
 

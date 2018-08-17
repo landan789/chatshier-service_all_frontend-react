@@ -7,7 +7,6 @@ import { Button, Modal, ModalHeader, ModalBody,
 import { DateTimePicker } from 'react-widgets';
 
 import apiDatabase from '../../../helpers/apiDatabase/index';
-import timeHlp from '../../../helpers/timer';
 
 import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';

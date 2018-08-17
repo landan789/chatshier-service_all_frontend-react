@@ -87,7 +87,7 @@ class TicketContent extends React.Component {
             return;
         }
 
-        return apiDatabase.appsTickets.delete(appId, ticketId).then(() => {
+        return apiDatabase.appsTickets.remove(appId, ticketId).then(() => {
             return notify('刪除成功', { type: 'success' });
         }).catch(() => {
             return notify('刪除失敗', { type: 'danger' });

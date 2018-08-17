@@ -92,7 +92,7 @@ class AppsFields extends Core {
      * @param {string} appId
      * @param {string} keywordreplyId
      */
-    delete(appId, fieldId) {
+    remove(appId, fieldId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/fields/' + fieldId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',

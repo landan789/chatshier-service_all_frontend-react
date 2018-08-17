@@ -163,7 +163,7 @@ class Products extends React.Component {
 
             let appId = this.state.appId;
             this.setState({ isAsyncProcessing: true });
-            return apiDatabase.appsProducts.delete(appId, productId).then(() => {
+            return apiDatabase.appsProducts.remove(appId, productId).then(() => {
                 this.closeModal();
                 return notify(this.props.t('Remove successful!'), { type: 'success' });
             }).catch(() => {

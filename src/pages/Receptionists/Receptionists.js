@@ -170,7 +170,7 @@ class ReceptionistsPage extends React.Component {
 
             let appId = this.state.appId;
             this.setState({ isAsyncProcessing: true });
-            return apiDatabase.appsReceptionists.delete(appId, receptionistId).then(() => {
+            return apiDatabase.appsReceptionists.remove(appId, receptionistId).then(() => {
                 this.closeModal();
                 return notify(this.props.t('Remove successful!'), { type: 'success' });
             }).catch(() => {

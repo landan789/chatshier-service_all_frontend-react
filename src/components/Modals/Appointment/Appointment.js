@@ -63,7 +63,7 @@ class AppointmentModal extends ModalCore {
 
             let appId = this.state.appId;
             this.setState({ isAsyncProcessing: true });
-            return apiDatabase.appsAppointments.delete(appId, appointmentId).then(() => {
+            return apiDatabase.appsAppointments.remove(appId, appointmentId).then(() => {
                 this.setState({ isAsyncProcessing: false });
                 this.closeModal();
                 return notify(this.props.t('Remove successful!'), { type: 'success' });

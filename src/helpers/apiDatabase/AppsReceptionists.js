@@ -77,7 +77,7 @@ class AppsReceptionists extends Core {
      * @param {string} receptionistId
      * @returns {Promise<Chatshier.Response.AppsReceptionists>}
      */
-    delete(appId, receptionistId) {
+    remove(appId, receptionistId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/receptionists/' + receptionistId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',

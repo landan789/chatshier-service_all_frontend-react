@@ -76,7 +76,7 @@ class AppsComposes extends Core {
      * @param {string} appId
      * @param {string} composeId
      */
-    delete(appId, composeId) {
+    remove(appId, composeId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/composes/' + composeId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',

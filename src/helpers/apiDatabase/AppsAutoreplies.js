@@ -76,7 +76,7 @@ class AppsAutoreplies extends Core {
      * @param {string} appId
      * @param {string} autoreplyId
      */
-    delete(appId, autoreplyId) {
+    remove(appId, autoreplyId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/autoreplies/' + autoreplyId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',

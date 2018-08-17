@@ -137,7 +137,7 @@ class TicketEditModal extends ModalCore {
         let ticketId = this.props.modalData.ticketId;
 
         this.setState({ isProcessing: true });
-        return apiDatabase.appsTickets.delete(appId, ticketId).then(() => {
+        return apiDatabase.appsTickets.remove(appId, ticketId).then(() => {
             this.setState({
                 isOpen: false,
                 isProcessing: false

@@ -83,7 +83,7 @@ class AppsCategories extends Core {
      * @param {string} categoryId
      * @returns {Promise<Chatshier.Response.AppsCategories>}
      */
-    delete(appId, categoryId) {
+    remove(appId, categoryId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/categories/' + categoryId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',

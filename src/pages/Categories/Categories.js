@@ -194,7 +194,7 @@ class Categories extends React.Component {
 
             let appId = this.state.appId;
             this.setState({ isAsyncProcessing: true });
-            return apiDatabase.appsCategories.delete(appId, categoryId).then(() => {
+            return apiDatabase.appsCategories.remove(appId, categoryId).then(() => {
                 this.closeModal();
                 return notify(this.props.t('Remove successful!'), { type: 'success' });
             }).catch(() => {

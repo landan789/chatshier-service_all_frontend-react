@@ -77,7 +77,7 @@ class AppsKeywordreplies extends Core {
      * @param {string} keywordreplyId
      * @returns {Promise<Chatshier.Response.AppsKeywordreplies>}
      */
-    delete(appId, keywordreplyId) {
+    remove(appId, keywordreplyId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/keywordreplies/' + keywordreplyId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',

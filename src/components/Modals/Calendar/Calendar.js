@@ -221,7 +221,7 @@ class CalendarModal extends ModalCore {
             // 根據事件型態來判斷發送不同 API 進行資料更新動作
             switch (eventType) {
                 case CALENDAR_EVENT_TYPES.CALENDAR:
-                    return apiDatabase.calendarsEvents.delete(calendarId, eventId);
+                    return apiDatabase.calendarsEvents.remove(calendarId, eventId);
                 case CALENDAR_EVENT_TYPES.GOOGLE:
                     return gcalendarHlp.removeEvent(calendarId, eventId);
                 default:

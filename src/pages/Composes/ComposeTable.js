@@ -66,7 +66,7 @@ class ComposeTable extends React.Component {
     }
 
     removeCompose(appId, composeId) {
-        return apiDatabase.appsComposes.delete(appId, composeId).then(() => {
+        return apiDatabase.appsComposes.remove(appId, composeId).then(() => {
             return notify('刪除成功', { type: 'success' });
         }).catch(() => {
             return notify('刪除失敗', { type: 'danger' });

@@ -77,7 +77,7 @@ class AppsTickets extends Core {
      * @param {string} ticketId
      * @returns {Promise<Chatshier.Response.AppsTickets>}
      */
-    delete(appId, ticketId) {
+    remove(appId, ticketId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/tickets/' + ticketId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',

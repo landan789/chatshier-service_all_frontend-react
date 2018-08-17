@@ -30,7 +30,7 @@ class Greeting extends Component {
         let greetingId = this.props.greetingId;
 
         this.setState({ isDeleteing: true });
-        return apiDatabase.appsGreetings.delete(appId, greetingId).then(() => {
+        return apiDatabase.appsGreetings.remove(appId, greetingId).then(() => {
             return notify('刪除成功', { type: 'success' });
         }).catch(() => {
             return notify('刪除失敗', { type: 'danger' });

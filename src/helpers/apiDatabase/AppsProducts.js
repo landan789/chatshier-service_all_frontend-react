@@ -82,7 +82,7 @@ class AppsProducts extends Core {
      * @param {string} productId
      * @returns {Promise<Chatshier.Response.AppsProducts>}
      */
-    delete(appId, productId) {
+    remove(appId, productId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/products/' + productId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',

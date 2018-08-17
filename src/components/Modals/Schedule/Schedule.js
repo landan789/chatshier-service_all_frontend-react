@@ -225,7 +225,7 @@ class ScheduleModal extends ModalCore {
             let appId = this.props.appId;
             let receptionistId = this.props.receptionistId;
             this.setState({ isAsyncProcessing: true });
-            return apiDatabase.appsReceptionistsSchedules.delete(appId, receptionistId, scheduleId).then(() => {
+            return apiDatabase.appsReceptionistsSchedules.remove(appId, receptionistId, scheduleId).then(() => {
                 this.setState({ isAsyncProcessing: false });
                 this.closeModal();
                 return notify(this.props.t('Remove successful!'), { type: 'success' });

@@ -58,7 +58,7 @@ class AppsGreetings extends Core {
      * @param {string} greetingId
      * @returns {Promise<Chatshier.Response.AppsGreetings>}
      */
-    delete(appId, greetingId) {
+    remove(appId, greetingId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/greetings/' + greetingId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',

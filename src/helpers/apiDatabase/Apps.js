@@ -115,7 +115,7 @@ class Apps extends Core {
     /**
      * @param {string} appId
      */
-    delete(appId) {
+    remove(appId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',

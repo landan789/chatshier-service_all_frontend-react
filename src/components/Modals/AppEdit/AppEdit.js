@@ -85,7 +85,7 @@ class AppEditModal extends ModalCore {
 
         let appId = this.props.appId;
         this.setState({ isProcessing: true });
-        return apiDatabase.apps.delete(appId).then(() => {
+        return apiDatabase.apps.remove(appId).then(() => {
             this.setState({
                 isOpen: false,
                 isProcessing: false

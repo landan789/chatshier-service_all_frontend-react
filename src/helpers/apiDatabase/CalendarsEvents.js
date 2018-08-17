@@ -76,7 +76,7 @@ class CalendarsEvents extends Core {
      * @param {string} eventId
      * @returns {Promise<Chatshier.Response.CalendarsEvents>}
      */
-    delete(calendarId, eventId) {
+    remove(calendarId, eventId) {
         let destUrl = this.apiEndPoint + 'calendars/' + calendarId + '/events/' + eventId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',

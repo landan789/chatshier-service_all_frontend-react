@@ -59,7 +59,7 @@ class AppsAppointments extends Core {
      * @param {string} appointmentId
      * @returns {Promise<Chatshier.Response.AppsAppointments>}
      */
-    delete(appId, appointmentId) {
+    remove(appId, appointmentId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/appointments/' + appointmentId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',

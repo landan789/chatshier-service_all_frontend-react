@@ -81,7 +81,7 @@ class GroupsMembers extends Core {
      * @param {string} groupId
      * @param {string} memberId
      */
-    delete(groupId, memberId) {
+    remove(groupId, memberId) {
         let destUrl = this.apiEndPoint + 'groups/' + groupId + '/members/' + memberId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',

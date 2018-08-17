@@ -1,13 +1,16 @@
 @import '../../styles/_variables';
+@import '../../styles/_mixins';
 
 .schedule-panel {
+    @include scrollable('y');
     position: absolute;
-    left: 0;
+    left: 50%;
     top: $toolbar-height;
-    width: 100%;
     height: calc(100% - #{$toolbar-height});
     z-index: 1029;
     background-color: white;
+    border: 1px solid #ced4da;
+    transform: translateX(-50%);
 
     .receptionist-name,
     .close-btn {

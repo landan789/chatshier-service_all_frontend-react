@@ -163,7 +163,7 @@ class SchedulePanel extends React.Component {
         let receptionists = appReceptionists.receptionists || {};
         let receptionist = receptionists[this.props.receptionistId] || {};
 
-        let className = 'schedule-panel ' + this.state.animate + ' ' + this.props.className;
+        let className = 'container schedule-panel ' + this.state.animate + ' ' + this.props.className;
         return (
             <div className={className.trim()}>
                 {receptionist && receptionist.name &&

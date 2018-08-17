@@ -46,7 +46,7 @@ class ReceptionistModal extends ModalCore {
             photo: receptionist.photo || '',
             email: receptionist.email || '',
             interval: receptionist.interval || HOUR,
-            maxNumber: receptionist.maxNumber || 0,
+            maxNumberPerDay: receptionist.maxNumberPerDay || 0,
             schedules: receptionist.schedules || []
         };
 
@@ -63,7 +63,7 @@ class ReceptionistModal extends ModalCore {
             photo: (this.fileInput && this.fileInput.files.item(0)) || this.state.photo,
             email: this.state.email,
             interval: this.state.interval,
-            maxNumber: this.state.maxNumber,
+            maxNumberPerDay: parseInt(this.state.maxNumberPerDay, 10),
             schedules: this.state.schedules
         };
 
@@ -193,17 +193,18 @@ class ReceptionistModal extends ModalCore {
                                 onChange={(ev) => this.setState({ interval: ev.target.value * HOUR })} />
                         </FormGroup>
 
-                        {/* <FormGroup>
-                            <label className="form-check-label col-form-label font-weight-bold">預約數上限:</label>
+                        <FormGroup>
+                            <label className="w-100 pb-0 form-check-label col-form-label font-weight-bold">每日預約數上限:</label>
+                            <span className="pb-1 text-muted small">0 為不設限</span>
                             <input className="form-control"
                                 type="number"
                                 placeholder={0}
-                                value={this.state.maxNumber || 0}
+                                value={this.state.maxNumberPerDay || 0}
                                 min={0}
                                 max={100000000}
                                 step={1}
-                                onChange={(ev) => this.setState({ maxNumber: ev.target.value })} />
-                        </FormGroup> */}
+                                onChange={(ev) => this.setState({ maxNumberPerDay: ev.target.value })} />
+                        </FormGroup>
 
                         <div className="d-flex align-items-center justify-content-end">
                             {!this.props.isUpdate &&

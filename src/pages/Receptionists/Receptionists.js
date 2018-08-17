@@ -71,9 +71,7 @@ class ReceptionistsPage extends React.Component {
 
     insertReceptionist(receptionist) {
         let postReceptionist = Object.assign({
-            timezoneOffset: new Date().getTimezoneOffset(),
-            maxNumber: 0,
-            interval: HOUR
+            timezoneOffset: new Date().getTimezoneOffset()
         }, receptionist);
 
         if (!postReceptionist.name) {
@@ -254,18 +252,36 @@ class ReceptionistsPage extends React.Component {
                                             <CardFooter className="pb-4 card-footer flex-column d-inherit border-none bg-transparent">
                                                 <div className="d-flex align-items-center mb-2 text-muted">
                                                     <i className="mr-2 fas fa-stopwatch fa-fw fa-1p5x"></i>
-                                                    <span className="small">預約間隔 {(receptionist.interval / HOUR).toFixed(1)} 小時</span>
+                                                    <span className="small">預約間隔
+                                                        <span className="text-primary ml-1">
+                                                            {(receptionist.interval / HOUR).toFixed(1)} 小時
+                                                        </span>
+                                                    </span>
+                                                </div>
+
+                                                <div className="d-flex align-items-center mb-2 text-muted">
+                                                    <i className="mr-2 fas fa-hand-point-up fa-fw fa-1p5x"></i>
+                                                    <span className="small">
+                                                        每日預約上限數
+                                                        <span className="text-primary ml-1">
+                                                            { 'number' === typeof receptionist.maxNumberPerDay && receptionist.maxNumberPerDay ? receptionist.maxNumberPerDay + ' 次' : '不設限'}
+                                                        </span>
+                                                    </span>
                                                 </div>
 
                                                 <div className="d-flex align-items-center mb-2 text-muted">
                                                     <i className="mr-2 fas fa-calendar-check fa-fw fa-1p5x"></i>
-                                                    <span className="small">被預約次數 {receptionist.timesOfAppointment} 次</span>
+                                                    <span className="small">
+                                                        被預約次數
+                                                        <span className="text-primary ml-1">{receptionist.timesOfAppointment} 次</span>
+                                                    </span>
                                                 </div>
 
                                                 <div className="d-flex align-items-center mb-2 text-muted">
                                                     <i className="mr-2 fas fa-handshake fa-fw fa-1p5x"></i>
                                                     <span className="small">
-                                                        行事曆 {receptionist.isCalendarShared ? <span className="text-success">已分享</span> : <span className="text-danger">未分享</span>}
+                                                        行事曆
+                                                        {receptionist.isCalendarShared ? <span className="text-success ml-1">已分享</span> : <span className="text-danger ml-1">未分享</span>}
                                                     </span>
                                                 </div>
 

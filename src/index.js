@@ -33,8 +33,17 @@ import Tickets from './pages/Tickets/Tickets';
 
 // https://jquense.github.io/react-widgets/
 import 'react-widgets/dist/css/react-widgets.css';
+// https://react-sortable-tree.surge.sh/
+import 'react-sortable-tree/style.css';
 // http://idangero.us/swiper/
 import 'swiper/dist/css/swiper.min.css';
+// http://aaronshaf.github.io/react-toggle/
+import 'react-toggle/style.css';
+
+import 'fullcalendar';
+import 'fullcalendar/dist/locale/zh-tw';
+import 'fullcalendar/dist/fullcalendar.min.css';
+
 import './index.css';
 
 const routes = [{

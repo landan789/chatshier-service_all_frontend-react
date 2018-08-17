@@ -11,3 +11,24 @@ export const logos = {
     [WECHAT]: 'https://cdn.worldvectorlogo.com/logos/wechat.svg',
     [CHATSHIER]: chatshierLogo
 };
+
+/**
+ * @param {File | Blob} blob
+ * @returns {Promise<string>}
+ */
+export const blobToBase64 = (blob) => {
+    return new Promise((resolve, reject) => {
+        if (!blob) {
+            return resolve('');
+        }
+
+        let fileReader = new FileReader();
+        fileReader.onerror = reject;
+        fileReader.onloadend = () => {
+            let base64 = fileReader ? fileReader.result || '' : '';
+            fileReader = void 0;
+            return resolve(base64);
+        };
+        fileReader.readAsDataURL(blob);
+    });
+};

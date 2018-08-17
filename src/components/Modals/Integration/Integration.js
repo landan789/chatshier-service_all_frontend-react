@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import Switch from 'react-switch';
 
-import gCalendarHelper from '../../../helpers/googleCalendar';
+import gcalendarHlp from '../../../helpers/googleCalendar';
 
 import ModalCore from '../ModalCore';
 
@@ -13,20 +13,20 @@ class Integration extends ModalCore {
     constructor(props) {
         super(props);
         this.state = {
-            googleSignedIn: gCalendarHelper.isSignedIn
+            googleSignedIn: gcalendarHlp.isSignedIn
         };
         this.turnOnGoogleAPI = this.turnOnGoogleAPI.bind(this);
     }
 
     turnOnGoogleAPI(isChecked) {
         if (!isChecked) {
-            return gCalendarHelper.signOut().then(() => {
-                this.setState({ googleSignedIn: gCalendarHelper.isSignedIn });
+            return gcalendarHlp.signOut().then(() => {
+                this.setState({ googleSignedIn: gcalendarHlp.isSignedIn });
             });
         }
 
-        return gCalendarHelper.signIn().then(() => {
-            this.setState({ googleSignedIn: gCalendarHelper.isSignedIn });
+        return gcalendarHlp.signIn().then(() => {
+            this.setState({ googleSignedIn: gcalendarHlp.isSignedIn });
         }).catch(() => {
             this.setState({ googleSignedIn: false });
         });

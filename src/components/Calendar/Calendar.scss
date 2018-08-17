@@ -1,0 +1,16 @@
+.chsr.calendar {
+    .fc-toolbar.fc-header-toolbar {
+        .fc-left,
+        .fc-right {
+            margin-top: .5rem;
+        }
+
+        .fc-center {
+            margin: .5rem 0;
+        }
+    }
+
+    .fc-event-container {
+        cursor: pointer;
+    }
+}

@@ -1,4 +1,4 @@
-import { UPDATE_GROUPS, DELETE_GROUP } from '../../actions/mainStore/groups';
+import { UPDATE_GROUPS, REMOVE_GROUP } from '../../actions/mainStore/groups';
 
 export const groupsReducer = (state = {}, action) => {
     switch (action.type) {
@@ -12,7 +12,7 @@ export const groupsReducer = (state = {}, action) => {
                 state[groupId] = action.groups[groupId];
             }
             return Object.assign({}, state);
-        case DELETE_GROUP:
+        case REMOVE_GROUP:
             let groupId = action.groupId;
 
             delete state[groupId];

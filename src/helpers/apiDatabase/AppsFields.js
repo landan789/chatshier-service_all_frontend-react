@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateFields, deleteField } from '../../redux/actions/mainStore/appsFields';
+import { updateFields, removeField } from '../../redux/actions/mainStore/appsFields';
 
 class AppsFields extends Core {
     static TYPES = Object.freeze({
@@ -92,14 +92,14 @@ class AppsFields extends Core {
      * @param {string} appId
      * @param {string} keywordreplyId
      */
-    delete(appId, fieldId) {
+    remove(appId, fieldId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/fields/' + fieldId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteField(appId, fieldId));
+            mainStore.dispatch(removeField(appId, fieldId));
             return resJson;
         });
     };

@@ -1,0 +1,69 @@
+@import './_variables';
+
+// #region colors
+.line-color {
+    color: $line-color;
+}
+
+.fb-messsenger-color {
+    color: $facebook-messsenger-color
+}
+// #endregion
+
+
+// #region custom font-awesome style classes
+.fa-1p5x {
+    font-size: 1.5em;
+}
+// #endregion
+
+
+// #region custom bootstrap style classes
+.bg-transparent {
+    background-color: transparent !important;
+}
+
+.border-circle {
+    border-radius: 50% !important;
+}
+
+.border-none {
+    border: none !important;
+}
+
+.btn-border {
+    border: 1px solid #ced4da !important;
+}
+
+.cursor-pointer {
+    cursor: pointer !important;
+}
+
+.d-inherit {
+    display: inherit !important;
+}
+// #endregion
+
+.text-ellipsis {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+}
+
+.image-container {
+    position: relative;
+    background-color: transparent;
+    overflow: hidden;
+
+    .image-fit {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        max-height: initial;
+        margin: auto;
+        border-radius: .25rem;
+    }
+}

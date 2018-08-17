@@ -1,4 +1,4 @@
-import { UPDATE_CHATROOMS, DELETE_CHATROOM, DELETE_ALL_CHATROOMS,
+import { UPDATE_CHATROOMS, REMOVE_CHATROOM, REMOVE_ALL_CHATROOMS,
     UPDATE_CHATROOMS_MESSAGERS, UPDATE_CHATROOMS_MESSAGES } from '../../actions/mainStore/appsChatrooms';
 
 export const appsChatroomsReducer = (state = {}, action) => {
@@ -35,7 +35,7 @@ export const appsChatroomsReducer = (state = {}, action) => {
                 }
             }
             return Object.assign({}, state);
-        case DELETE_CHATROOM:
+        case REMOVE_CHATROOM:
             appId = action.appId;
             chatroomId = action.chatroomId;
 
@@ -45,7 +45,7 @@ export const appsChatroomsReducer = (state = {}, action) => {
                 delete state[appId];
             }
             return Object.assign({}, state);
-        case DELETE_ALL_CHATROOMS:
+        case REMOVE_ALL_CHATROOMS:
             appId = action.appId;
             if (state[appId]) {
                 delete state[appId];
@@ -61,7 +61,7 @@ export const appsChatroomsReducer = (state = {}, action) => {
             let messagers = action.messagers;
             for (let messagerId in messagers) {
                 let messager = messagers[messagerId];
-                state[appId].chatrooms[chatroomId].messagers[messagerId] = messager;
+                state[appId].chatrooms[chatroomId].messagers[messagerId] = messager[appId].chatrooms[chatroomId].messagers[messagerId];
             }
             return Object.assign({}, state);
         case UPDATE_CHATROOMS_MESSAGES:
@@ -73,7 +73,7 @@ export const appsChatroomsReducer = (state = {}, action) => {
             let messages = action.messages;
             for (let messageId in messages) {
                 let message = messages[messageId];
-                state[appId].chatrooms[chatroomId].messages[messageId] = message;
+                state[appId].chatrooms[chatroomId].messages[messageId] = message[appId].chatrooms[chatroomId].messages[messageId];
             }
             return Object.assign({}, state);
         default:

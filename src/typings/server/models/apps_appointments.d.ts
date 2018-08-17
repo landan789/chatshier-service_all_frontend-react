@@ -11,11 +11,15 @@ declare module Chatshier {
         }
 
         interface Appointment extends BaseProperty {
+            receptionist_id: string,
             product_id: string,
             platformUid: string,
-            canlendarEventId: string,
             startedTime: Date | number,
-            endedTime: Date | number
+            endedTime: Date | number,
+            summary: string,
+            description: string,
+            eventId: string,
+            eventChannelId: string
         }
     }
 }

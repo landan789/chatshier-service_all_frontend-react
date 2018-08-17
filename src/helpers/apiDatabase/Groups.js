@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateGroups, deleteGroup } from '../../redux/actions/mainStore/groups';
+import { updateGroups, removeGroup } from '../../redux/actions/mainStore/groups';
 
 class Groups extends Core {
     constructor() {
@@ -72,14 +72,14 @@ class Groups extends Core {
     /**
      * @param {string} groupId
      */
-    delete(groupId) {
+    remove(groupId) {
         let destUrl = this.apiEndPoint + 'groups/' + groupId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteGroup(groupId));
+            mainStore.dispatch(removeGroup(groupId));
             return resJson;
         });
     };

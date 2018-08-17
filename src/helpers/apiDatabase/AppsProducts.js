@@ -2,12 +2,17 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateProducts, deleteProduct } from '../../redux/actions/mainStore/appsProducts';
+import { updateProducts, removeProduct } from '../../redux/actions/mainStore/appsProducts';
 
 class AppsProducts extends Core {
     constructor() {
         super();
         this.apiEndPoint += 'apps-products/';
+
+        this.TYPES = Object.freeze({
+            NORMAL: 'NORMAL',
+            APPOINTMENT: 'APPOINTMENT'
+        });
     }
 
     /**
@@ -77,14 +82,14 @@ class AppsProducts extends Core {
      * @param {string} productId
      * @returns {Promise<Chatshier.Response.AppsProducts>}
      */
-    delete(appId, productId) {
+    remove(appId, productId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/products/' + productId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteProduct(appId, productId));
+            mainStore.dispatch(removeProduct(appId, productId));
             return resJson;
         });
     };

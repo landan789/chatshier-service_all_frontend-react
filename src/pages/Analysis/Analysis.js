@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Aux from 'react-aux';
-import { Fade, Card, CardBody, Row, Container, Dropdown, DropdownToggle,
+import { Fade, Card, CardBody, Row, Dropdown, DropdownToggle,
     DropdownMenu, DropdownItem } from 'reactstrap';
 import { DateTimePicker } from 'react-widgets';
 import { Trans } from 'react-i18next';
 import { withTranslate, currentLanguage } from '../../i18n';
 
 import ROUTES from '../../config/route';
-import authHelper from '../../helpers/authentication';
-import browserHelper from '../../helpers/browser';
+import authHlp from '../../helpers/authentication';
+import browserHlp from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 import { formatDate, formatTime } from '../../utils/unitTime';
 
@@ -81,6 +81,11 @@ class Analysis extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
 
+        browserHlp.setTitle(props.t('Analysis'));
+        if (!authHlp.hasSignedin()) {
+            return props.history.replace(ROUTES.SIGNOUT);
+        }
+
         this.dataTypes = [{
             className: 'view-time',
             type: ANALYSIS_TYPES.TIME,
@@ -107,12 +112,6 @@ class Analysis extends React.Component {
         this.onStartDatetimeChanged = this.onStartDatetimeChanged.bind(this);
         this.onEndDatetimeChanged = this.onEndDatetimeChanged.bind(this);
         this.toggleTypeDropdown = this.toggleTypeDropdown.bind(this);
-
-        browserHelper.setTitle(this.props.t('Analysis'));
-        if (!authHelper.hasSignedin()) {
-            authHelper.signOut();
-            this.props.history.replace(ROUTES.SIGNIN);
-        }
 
         this.state = Object.assign({
             prevProps: null,
@@ -176,73 +175,75 @@ class Analysis extends React.Component {
     }
 
     render() {
+        if (!this.state) {
+            return null;
+        }
+
         return (
             <Aux>
                 <ControlPanel />
                 <PageWrapper toolbarTitle={this.props.t('Analysis')}>
-                    <Fade in className="analysis-wrapper">
-                        <Container className="mt-5 analysis-container">
-                            <Card className="mb-5 chsr analyze-body">
-                                <h3 className="page-title">
-                                    <Trans i18nKey="Message analysis" />
-                                </h3>
+                    <Fade in className="mt-5 pb-4 container analysis-wrapper">
+                        <Card className="mb-5 shadow chsr analyze-body">
+                            <h3 className="page-title">
+                                <Trans i18nKey="Message analysis" />
+                            </h3>
 
-                                <CardBody>
-                                    <Row>
-                                        <AppsSelector className="col-12 col-lg-6 mb-3" onChange={this.onAppChanged} />
-                                        <Dropdown className="col-12 col-lg-6 mb-3 chart-dropdown" isOpen={this.state.typeDropdownOpen} toggle={this.toggleTypeDropdown}>
-                                            <DropdownToggle className="btn btn-info" caret color="info">
-                                                {this.state.selectedDataType.text || this.props.t('Select a data type')}
-                                            </DropdownToggle>
-                                            <DropdownMenu>
-                                                {this.dataTypes.map((dataType, i) => (
-                                                    <DropdownItem key={i} className={dataType.className} onClick={() => this.setState({ selectedDataType: dataType })}>
-                                                        {dataType.text}
-                                                    </DropdownItem>
-                                                ))}
-                                            </DropdownMenu>
-                                        </Dropdown>
+                            <CardBody>
+                                <Row>
+                                    <AppsSelector className="col-12 col-lg-6 mb-3" onChange={this.onAppChanged} />
+                                    <Dropdown className="col-12 col-lg-6 mb-3 chart-dropdown" isOpen={this.state.typeDropdownOpen} toggle={this.toggleTypeDropdown}>
+                                        <DropdownToggle className="btn btn-info" caret color="info">
+                                            {this.state.selectedDataType.text || this.props.t('Select a data type')}
+                                        </DropdownToggle>
+                                        <DropdownMenu>
+                                            {this.dataTypes.map((dataType, i) => (
+                                                <DropdownItem key={i} className={dataType.className} onClick={() => this.setState({ selectedDataType: dataType })}>
+                                                    {dataType.text}
+                                                </DropdownItem>
+                                            ))}
+                                        </DropdownMenu>
+                                    </Dropdown>
 
-                                        <div className="w-100 mt-3 mb-4 px-3 flex-nowrap justify-content-between date-wrapper">
-                                            <DateTimePicker className="px-0 mb-2 col-12 col-lg-6"
-                                                culture={currentLanguage}
-                                                format={(datetime) => formatDate(datetime) + ' ' + formatTime(datetime, false)}
-                                                timeFormat={(time) => formatTime(time, false)}
-                                                value={new Date(this.state.startDatetime)}
-                                                onChange={this.onStartDatetimeChanged}>
-                                            </DateTimePicker>
-                                            <DateTimePicker className="px-0 mb-2 col-12 col-lg-6"
-                                                culture={currentLanguage}
-                                                format={(datetime) => formatDate(datetime) + ' ' + formatTime(datetime, false)}
-                                                timeFormat={(time) => formatTime(time, false)}
-                                                value={new Date(this.state.endDatetime)}
-                                                onChange={this.onEndDatetimeChanged}>
-                                            </DateTimePicker>
-                                        </div>
-                                    </Row>
-
-                                    <div className="chart-container">
-                                        {!!this.state.selectedAppId &&
-                                        this.state.selectedDataType.type !== ANALYSIS_TYPES.NONE &&
-                                        this.state.selectedDataType.type !== ANALYSIS_TYPES.WORDCLOUR &&
-                                        <AnalysisChart className="w-100 h-100 mx-auto chart-body"
-                                            dataType={this.state.selectedDataType.type}
-                                            appId={this.state.selectedAppId}
-                                            appsChatrooms={this.props.appsChatrooms}
-                                            startDatetime={this.state.startDatetime}
-                                            endDatetime={this.state.endDatetime} />}
-
-                                        {!!this.state.selectedAppId &&
-                                        this.state.selectedDataType.type === ANALYSIS_TYPES.WORDCLOUR &&
-                                        <WordCloudChart className="w-100 h-100 mx-auto chart-body"
-                                            appId={this.state.selectedAppId}
-                                            appsChatrooms={this.props.appsChatrooms}
-                                            startDatetime={this.state.startDatetime}
-                                            endDatetime={this.state.endDatetime} />}
+                                    <div className="w-100 mt-3 mb-4 px-3 flex-nowrap justify-content-between date-wrapper">
+                                        <DateTimePicker className="px-0 mb-2 col-12 col-lg-6"
+                                            culture={currentLanguage}
+                                            format={(datetime) => formatDate(datetime) + ' ' + formatTime(datetime, false)}
+                                            timeFormat={(time) => formatTime(time, false)}
+                                            value={new Date(this.state.startDatetime)}
+                                            onChange={this.onStartDatetimeChanged}>
+                                        </DateTimePicker>
+                                        <DateTimePicker className="px-0 mb-2 col-12 col-lg-6"
+                                            culture={currentLanguage}
+                                            format={(datetime) => formatDate(datetime) + ' ' + formatTime(datetime, false)}
+                                            timeFormat={(time) => formatTime(time, false)}
+                                            value={new Date(this.state.endDatetime)}
+                                            onChange={this.onEndDatetimeChanged}>
+                                        </DateTimePicker>
                                     </div>
-                                </CardBody>
-                            </Card>
-                        </Container>
+                                </Row>
+
+                                <div className="chart-container">
+                                    {!!this.state.selectedAppId &&
+                                    this.state.selectedDataType.type !== ANALYSIS_TYPES.NONE &&
+                                    this.state.selectedDataType.type !== ANALYSIS_TYPES.WORDCLOUR &&
+                                    <AnalysisChart className="w-100 h-100 mx-auto chart-body"
+                                        dataType={this.state.selectedDataType.type}
+                                        appId={this.state.selectedAppId}
+                                        appsChatrooms={this.props.appsChatrooms}
+                                        startDatetime={this.state.startDatetime}
+                                        endDatetime={this.state.endDatetime} />}
+
+                                    {!!this.state.selectedAppId &&
+                                    this.state.selectedDataType.type === ANALYSIS_TYPES.WORDCLOUR &&
+                                    <WordCloudChart className="w-100 h-100 mx-auto chart-body"
+                                        appId={this.state.selectedAppId}
+                                        appsChatrooms={this.props.appsChatrooms}
+                                        startDatetime={this.state.startDatetime}
+                                        endDatetime={this.state.endDatetime} />}
+                                </div>
+                            </CardBody>
+                        </Card>
                     </Fade>
                 </PageWrapper>
             </Aux>

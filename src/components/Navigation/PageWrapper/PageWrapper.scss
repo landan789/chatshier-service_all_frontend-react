@@ -1,5 +1,5 @@
 @import '../../../styles/_variables';
-@import '../../../styles/mixins/_mixins';
+@import '../../../styles/_mixins';
 
 .page-wrapper {
     @include scrollable();
@@ -13,6 +13,11 @@
 
     > div:first-of-type {
         padding-top: $toolbar-height;
+    }
+
+    .table-title {
+        text-align: left;
+        background-color: #f4f4f4;
     }
 
     @media (max-width: 768px) {

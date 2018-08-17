@@ -61,7 +61,7 @@ class KeywordreplyTable extends React.Component {
     }
 
     removekeywordreply(appId, keywordreplyId) {
-        return apiDatabase.appsKeywordreplies.delete(appId, keywordreplyId).then(() => {
+        return apiDatabase.appsKeywordreplies.remove(appId, keywordreplyId).then(() => {
             return notify('刪除成功', { type: 'success' });
         }).catch(() => {
             return notify('刪除失敗', { type: 'danger' });

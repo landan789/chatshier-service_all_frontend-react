@@ -5,8 +5,8 @@ import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { Fade } from 'reactstrap';
 
 import ROUTES from '../../config/route';
-import authHelper from '../../helpers/authentication';
-import browserHelper from '../../helpers/browser';
+import authHlp from '../../helpers/authentication';
+import browserHlp from '../../helpers/browser';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
@@ -27,13 +27,12 @@ class Settings extends React.Component {
     constructor(props, ctx) {
         super(props, ctx);
 
-        this.toggle = this.toggle.bind(this);
-
-        browserHelper.setTitle('設定');
-        if (!authHelper.hasSignedin()) {
-            authHelper.signOut();
-            this.props.history.replace(ROUTES.SIGNIN);
+        browserHlp.setTitle('設定');
+        if (!authHlp.hasSignedin()) {
+            return props.history.replace(ROUTES.SIGNOUT);
         }
+
+        this.toggle = this.toggle.bind(this);
     }
 
     toggle(route) {

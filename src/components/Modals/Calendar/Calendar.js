@@ -9,7 +9,7 @@ import { DateTimePicker } from 'react-widgets';
 
 import { formatDate, formatTime } from '../../../utils/unitTime';
 import apiDatabase from '../../../helpers/apiDatabase/index';
-import gCalendarHelper from '../../../helpers/googleCalendar';
+import gcalendarHlp from '../../../helpers/googleCalendar';
 import { CALENDAR_EVENT_TYPES, GoogleEventItem } from '../../../pages/Calendar/Calendar';
 
 import ModalCore from '../ModalCore';
@@ -18,19 +18,19 @@ import { notify } from '../../Notify/Notify';
 class CalendarModal extends ModalCore {
     static propTypes = {
         t: PropTypes.func.isRequired,
-        calendarData: PropTypes.object
+        modalData: PropTypes.object
     }
 
     constructor(props, ctx) {
         super(props, ctx);
 
         /** @type {Chatshier.Model.CalendarEvent} */
-        let event = this.props.calendarData.event || {};
+        let event = this.props.modalData.event || {};
 
         this.state = {
             isOpen: this.props.isOpen,
             isUpdate: this.props.isUpdate,
-            isAsyncWorking: false,
+            isAsyncProcessing: false,
             isAllDay: false,
             title: event.title || '',
             description: event.description || '',
@@ -50,7 +50,7 @@ class CalendarModal extends ModalCore {
         this.allDayChanged = this.allDayChanged.bind(this);
         this.insertEvent = this.insertEvent.bind(this);
         this.updateEvent = this.updateEvent.bind(this);
-        this.deleteEvent = this.deleteEvent.bind(this);
+        this.removeEvent = this.removeEvent.bind(this);
     }
 
     titleChanged(ev) {
@@ -113,17 +113,17 @@ class CalendarModal extends ModalCore {
             return notify(this.props.t('Start datetime must be earlier than end datetime'), { type: 'warning' });
         }
 
-        this.setState({ isAsyncWorking: true });
+        this.setState({ isAsyncProcessing: true });
         return apiDatabase.calendarsEvents.insert(event).then(() => {
             this.setState({
                 isOpen: false,
-                isAsyncWorking: false
+                isAsyncProcessing: false
             });
             return notify(this.props.t('Add successful!'), { type: 'success' });
         }).then(() => {
             return this.closeModal(ev);
         }).catch(() => {
-            this.setState({ isAsyncWorking: false });
+            this.setState({ isAsyncProcessing: false });
             return notify(this.props.t('Failed to add!'), { type: 'danger' });
         });
     }
@@ -133,9 +133,9 @@ class CalendarModal extends ModalCore {
             return notify(this.props.t('Failed to update!'), { type: 'danger' });
         }
 
-        let calendarId = this.props.calendarData.calendarId;
-        let eventId = this.props.calendarData.eventId;
-        let eventType = this.props.calendarData.eventType;
+        let calendarId = this.props.modalData.calendarId;
+        let eventId = this.props.modalData.eventId;
+        let eventType = this.props.modalData.eventType;
 
         /** @type {Chatshier.CalendarEvent} */
         let event = {
@@ -153,7 +153,7 @@ class CalendarModal extends ModalCore {
         }
 
         // 根據事件型態來判斷發送不同 API 進行資料更新動作
-        this.setState({ isAsyncWorking: true });
+        this.setState({ isAsyncProcessing: true });
         return Promise.resolve().then(() => {
             switch (eventType) {
                 case CALENDAR_EVENT_TYPES.CALENDAR:
@@ -172,7 +172,7 @@ class CalendarModal extends ModalCore {
                         }
                     };
 
-                    return gCalendarHelper.updateEvent('primary', eventId, gEvent).then((googleEvent) => {
+                    return gcalendarHlp.updateEvent('primary', eventId, gEvent).then((googleEvent) => {
                         let isAllDay = !!(googleEvent.start.date && googleEvent.end.date);
                         let startDate = isAllDay ? new Date(googleEvent.start.date) : new Date(googleEvent.start.dateTime);
                         isAllDay && startDate.setHours(0, 0, 0, 0);
@@ -196,53 +196,53 @@ class CalendarModal extends ModalCore {
         }).then(() => {
             this.setState({
                 isOpen: false,
-                isAsyncWorking: false
+                isAsyncProcessing: false
             });
             return notify(this.props.t('Update successful!'), { type: 'success' });
         }).then(() => {
             return this.closeModal(ev);
         }).catch(() => {
-            this.setState({ isAsyncWorking: false });
+            this.setState({ isAsyncProcessing: false });
             return notify(this.props.t('Failed to update!'), { type: 'danger' });
         });
     }
 
-    deleteEvent(ev) {
+    removeEvent(ev) {
         if (!window.confirm(this.props.t('Are you sure want to delete it?'))) {
             return Promise.resolve();
         }
 
-        let calendarId = this.props.calendarData.calendarId;
-        let eventId = this.props.calendarData.eventId;
-        let eventType = this.props.calendarData.eventType;
+        let calendarId = this.props.modalData.calendarId;
+        let eventId = this.props.modalData.eventId;
+        let eventType = this.props.modalData.eventType;
 
-        this.setState({ isAsyncWorking: true });
+        this.setState({ isAsyncProcessing: true });
         return Promise.resolve().then(() => {
             // 根據事件型態來判斷發送不同 API 進行資料更新動作
             switch (eventType) {
                 case CALENDAR_EVENT_TYPES.CALENDAR:
-                    return apiDatabase.calendarsEvents.delete(calendarId, eventId);
+                    return apiDatabase.calendarsEvents.remove(calendarId, eventId);
                 case CALENDAR_EVENT_TYPES.GOOGLE:
-                    return gCalendarHelper.deleteEvent(calendarId, eventId);
+                    return gcalendarHlp.removeEvent(calendarId, eventId);
                 default:
                     return Promise.reject(new Error('UNKNOWN_EVENT_TYPE'));
             }
         }).then(() => {
             this.setState({
                 isOpen: false,
-                isAsyncWorking: false
+                isAsyncProcessing: false
             });
             return notify(this.props.t('Remove successful!'), { type: 'success' });
         }).then(() => {
             return this.closeModal(ev);
         }).catch(() => {
-            this.setState({ isAsyncWorking: false });
+            this.setState({ isAsyncProcessing: false });
             return notify(this.props.t('Failed to remove!'), { type: 'danger' });
         });
     }
 
     render() {
-        if (!this.props.calendarData) {
+        if (!this.props.modalData) {
             return null;
         }
 
@@ -316,17 +316,17 @@ class CalendarModal extends ModalCore {
                 <ModalFooter>
                     {!this.props.isUpdate && <Button color="primary"
                         onClick={this.insertEvent}
-                        disabled={this.state.isAsyncWorking}>
+                        disabled={this.state.isAsyncProcessing}>
                         <Trans i18nKey="Add" />
                     </Button>}
                     {this.props.isUpdate && <Button color="primary"
                         onClick={this.updateEvent}
-                        disabled={this.state.isAsyncWorking}>
+                        disabled={this.state.isAsyncProcessing}>
                         <Trans i18nKey="Update" />
                     </Button>}
                     {this.props.isUpdate && <Button color="danger"
-                        onClick={this.deleteEvent}
-                        disabled={this.state.isAsyncWorking}>
+                        onClick={this.removeEvent}
+                        disabled={this.state.isAsyncProcessing}>
                         <Trans i18nKey="Remove" />
                     </Button>}
                     <Button color="secondary" onClick={this.closeModal}>

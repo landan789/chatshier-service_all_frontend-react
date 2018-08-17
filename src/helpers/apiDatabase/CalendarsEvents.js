@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateCalendarsEvents, deleteCalendarEvent } from '../../redux/actions/mainStore/calendarsEvents';
+import { updateCalendarsEvents, removeCalendarEvent } from '../../redux/actions/mainStore/calendarsEvents';
 
 class CalendarsEvents extends Core {
     constructor() {
@@ -76,14 +76,14 @@ class CalendarsEvents extends Core {
      * @param {string} eventId
      * @returns {Promise<Chatshier.Response.CalendarsEvents>}
      */
-    delete(calendarId, eventId) {
+    remove(calendarId, eventId) {
         let destUrl = this.apiEndPoint + 'calendars/' + calendarId + '/events/' + eventId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteCalendarEvent(calendarId, eventId));
+            mainStore.dispatch(removeCalendarEvent(calendarId, eventId));
             return resJson;
         });
     };

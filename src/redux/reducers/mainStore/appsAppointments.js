@@ -1,5 +1,5 @@
-import { UPDATE_APPOINTMENTS, DELETE_APPOINTMENT,
-    DELETE_ALL_APPOINTMENTS } from '../../actions/mainStore/appsAppointments';
+import { UPDATE_APPOINTMENTS, REMOVE_APPOINTMENT,
+    REMOVE_ALL_APPOINTMENTS } from '../../actions/mainStore/appsAppointments';
 
 export const appsAppointmentsReducer = (state = {}, action) => {
     switch (action.type) {
@@ -20,7 +20,7 @@ export const appsAppointmentsReducer = (state = {}, action) => {
                 }
             }
             return Object.assign({}, state);
-        case DELETE_APPOINTMENT:
+        case REMOVE_APPOINTMENT:
             let appId = action.appId;
             let appointmentId = action.appointmentId;
 
@@ -30,7 +30,7 @@ export const appsAppointmentsReducer = (state = {}, action) => {
                 delete state[appId];
             }
             return Object.assign({}, state);
-        case DELETE_ALL_APPOINTMENTS:
+        case REMOVE_ALL_APPOINTMENTS:
             appId = action.appId;
             if (state[appId]) {
                 delete state[appId];

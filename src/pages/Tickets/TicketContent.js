@@ -12,7 +12,7 @@ import TicketEditModal from '../../components/Modals/TicketEdit/TicketEdit';
 import apiDatabase from '../../helpers/apiDatabase/index';
 import { notify } from '../../components/Notify/Notify';
 
-import defaultAvatar from '../../image/defautlt-avatar.png';
+import defaultConsumerImg from '../../image/default-consumer.png';
 import logoSmall from '../../image/logo-small.png';
 
 const RESOLVED = 4;
@@ -53,7 +53,7 @@ class TicketContent extends React.Component {
         this.openEditModal = this.openEditModal.bind(this);
         this.closeEditModal = this.closeEditModal.bind(this);
         this.doneTicket = this.doneTicket.bind(this);
-        this.deleteTicket = this.deleteTicket.bind(this);
+        this.removeTicket = this.removeTicket.bind(this);
     }
 
     openEditModal(appId, ticketId) {
@@ -82,12 +82,12 @@ class TicketContent extends React.Component {
         return apiDatabase.appsTickets.update(appId, ticketId, { status: RESOLVED });
     }
 
-    deleteTicket(appId, ticketId) {
+    removeTicket(appId, ticketId) {
         if (!window.confirm('確定要刪除嗎？')) {
             return;
         }
 
-        return apiDatabase.appsTickets.delete(appId, ticketId).then(() => {
+        return apiDatabase.appsTickets.remove(appId, ticketId).then(() => {
             return notify('刪除成功', { type: 'success' });
         }).catch(() => {
             return notify('刪除失敗', { type: 'danger' });
@@ -170,12 +170,12 @@ class TicketContent extends React.Component {
 
             shouldShow && ticketElems.push(
                 <Col key={ticketId} className="my-2" md="12" lg="4">
-                    <Card className="ticket-card shadow animated fadeIn" body>
+                    <Card className="ticket-card shadow-sm animated fadeIn" body>
                         <CardTitle>{dueDateElem}</CardTitle>
                         <CardSubtitle>
                             <div className="my-2 d-flex align-items-center">
                                 <div className="mr-1 card-label">客戶姓名:</div>
-                                <img className="my-2 mr-2 consumer-avatar small" src={consumer.photo || defaultAvatar} alt="" />
+                                <img className="my-2 mr-2 consumer-avatar small" src={consumer.photo || defaultConsumerImg} alt="" />
                                 <span className="ticket-value">{consumer.name || ''}</span>
                             </div>
                             <div className="my-2 d-flex align-items-center">
@@ -216,7 +216,7 @@ class TicketContent extends React.Component {
                             </Button>
                             <UncontrolledTooltip placement="top" delay={0} target={'ticketEditBtn_' + ticketId}>編輯</UncontrolledTooltip>
 
-                            <Button className="w-100" color="light" id={'ticketDeleteBtn_' + ticketId} onClick={() => this.deleteTicket(appId, ticketId)}>
+                            <Button className="w-100" color="light" id={'ticketDeleteBtn_' + ticketId} onClick={() => this.removeTicket(appId, ticketId)}>
                                 <i className="fas fa-trash-alt text-muted"></i>
                             </Button>
                             <UncontrolledTooltip placement="top" delay={0} target={'ticketDeleteBtn_' + ticketId}>刪除</UncontrolledTooltip>

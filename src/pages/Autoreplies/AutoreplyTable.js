@@ -56,7 +56,7 @@ class AutoreplyTable extends React.Component {
     }
 
     removeAutoreply(appId, autoreplyId) {
-        return apiDatabase.appsAutoreplies.delete(appId, autoreplyId).then(() => {
+        return apiDatabase.appsAutoreplies.remove(appId, autoreplyId).then(() => {
             return notify('刪除成功', { type: 'success' });
         }).catch(() => {
             return notify('刪除失敗', { type: 'danger' });

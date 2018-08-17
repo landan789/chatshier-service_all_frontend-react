@@ -8,9 +8,9 @@ import { Trans } from 'react-i18next';
 import { withTranslate } from '../../i18n';
 
 import ROUTES from '../../config/route';
-import authHelper from '../../helpers/authentication';
-import browserHelper from '../../helpers/browser';
-import socketHelper from '../../helpers/socket';
+import authHlp from '../../helpers/authentication';
+import browserHlp from '../../helpers/browser';
+import socketHlp from '../../helpers/socket';
 import apiDatabase from '../../helpers/apiDatabase/index';
 import controlPanelStore from '../../redux/controlPanelStore';
 
@@ -44,12 +44,17 @@ class Chat extends React.Component {
     constructor(props) {
         super(props);
 
+        browserHlp.setTitle(props.t('Chatroom'));
+        if (!authHlp.hasSignedin()) {
+            return props.history.replace(ROUTES.SIGNOUT);
+        }
+
         this.storeUnsubscribe = null;
         this.state = {
             isOpenChatroom: true,
             isOpenProfile: false,
             isOpenTicket: false,
-            chatroomTitle: this.props.t('Chatroom'),
+            chatroomTitle: props.t('Chatroom'),
             selectedAppId: '',
             selectedChatroomId: '',
             searchKeyword: ''
@@ -59,12 +64,6 @@ class Chat extends React.Component {
         this.toggleChatroom = this.toggleChatroom.bind(this);
         this.toggleProfle = this.toggleProfle.bind(this);
         this.toggleTicket = this.toggleTicket.bind(this);
-
-        browserHelper.setTitle(this.props.t('Chatroom'));
-        if (!authHelper.hasSignedin()) {
-            authHelper.signOut();
-            this.props.history.replace(ROUTES.SIGNIN);
-        }
     }
 
     componentDidMount() {
@@ -79,7 +78,7 @@ class Chat extends React.Component {
             apiDatabase.groups.find(),
             apiDatabase.users.find()
         ]).then(() => {
-            return !socketHelper.isConnected && socketHelper.connect();
+            return !socketHlp.isConnected && socketHlp.connect();
         });
     }
 
@@ -218,7 +217,7 @@ export default withRouter(withTranslate(connect(mapStateToProps)(Chat)));
  * @return {Chatshier.Model.ChatroomMessager}
  */
 export const findMessagerSelf = (messagers) => {
-    let userId = authHelper.userId;
+    let userId = authHlp.userId;
 
     for (let messagerId in messagers) {
         let messager = messagers[messagerId];
@@ -243,7 +242,7 @@ export const findMessagerSelf = (messagers) => {
  * @return {Chatshier.Model.ChatroomMessager}
  */
 export const findChatroomMessager = (messagers, appType) => {
-    let userId = authHelper.userId;
+    let userId = authHlp.userId;
 
     // 從 chatroom 中找尋唯一的 consumer platformUid
     for (let messagerId in messagers) {

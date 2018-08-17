@@ -1,11 +1,12 @@
 .ticket-toolbar {
-    display: flex;
+    display: inherit;
+    flex-direction: flex-wrap;
     justify-content: flex-end;
+    align-items: center;
     margin: 1rem 0;
 
     .ticket-insert {
         height: 2rem;
-        margin: auto 0 auto .25rem;
         background-color: #fff;
         border: 1px solid #ccc;
 

@@ -1,0 +1,51 @@
+@import '../../styles/_mixins';
+
+$_category-product-size: 4.25rem;
+
+.categories-wrapper {
+    min-height: 36rem;
+
+    .category-node {
+        min-width: 18rem;
+
+        &.selected {
+            border: 2px solid #dc3545;
+            border-radius: .25rem;
+        }
+
+        .count-badge {
+            width: 1.5rem;
+            height: 1.5rem;
+            line-height: 1.25rem;
+        }
+
+        .rst__rowTitle {
+            color: #17a2b8;
+        }
+
+        .rst__rowSubtitle {
+            color: #6c757d;
+        }
+    }
+
+    .product-item {
+        max-width: $_category-product-size + 1rem;
+
+        .image-container {
+            width: $_category-product-size;
+            height: $_category-product-size;
+        }
+    }
+
+    .scoll-wrapper {
+        @include scrollable('y');
+    }
+
+    .absolute-stretch {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+}

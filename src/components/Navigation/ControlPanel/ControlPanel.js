@@ -9,8 +9,8 @@ import { withTranslate } from '../../../i18n';
 import { Collapse, ListGroup, ListGroupItem, Badge } from 'reactstrap';
 import Swiper from 'swiper/dist/js/swiper.js';
 
-import authHelper from '../../../helpers/authentication';
-import socketHelper from '../../../helpers/socket';
+import authHlp from '../../../helpers/authentication';
+import socketHlp from '../../../helpers/socket';
 import apiDatabase from '../../../helpers/apiDatabase/index';
 import apiBot from '../../../helpers/apiBot';
 import ROUTES from '../../../config/route';
@@ -29,7 +29,7 @@ import { findChatroomMessager, findMessagerSelf } from '../../../pages/Chat/Chat
 import logoPng from '../../../image/logo-no-transparent.png';
 import logoSmallPng from '../../../image/logo-small.png';
 import groupPng from '../../../image/group.png';
-import defaultAvatar from '../../../image/defautlt-avatar.png';
+import defaultConsumerImg from '../../../image/default-consumer.png';
 import './ControlPanel.css';
 
 const LINE = 'LINE';
@@ -60,30 +60,30 @@ const linkItems = [
         icon: 'fas fa-chart-bar fa-fw',
         text: 'Analysis',
         useReactRouter: true
-    // }, {
-    //     icon: 'fas fa-calendar fa-fw',
-    //     text: 'Appointment system',
-    //     dropdownItems: [{
-    //         link: ROUTES.APPOINTMENTS,
-    //         icon: 'fas fa-calendar-check fa-fw',
-    //         text: '檢視預約項目',
-    //         useReactRouter: true
-    //     }, {
-    //         link: ROUTES.RECEPTIONISTS,
-    //         icon: 'fas fa-user-clock fa-fw',
-    //         text: '服務人員管理',
-    //         useReactRouter: true
-    //     }, {
-    //         link: ROUTES.PRODUCTS,
-    //         icon: 'fas fa-cart-plus fa-fw',
-    //         text: 'Product management',
-    //         useReactRouter: true
-    //     }, {
-    //         link: ROUTES.CATEGORIES,
-    //         icon: 'fas fa-list-alt fa-fw',
-    //         text: '預約目錄',
-    //         useReactRouter: true
-    //     }]
+    }, {
+        icon: 'fas fa-calendar fa-fw',
+        text: 'Appointment system',
+        dropdownItems: [{
+            link: ROUTES.APPOINTMENTS,
+            icon: 'fas fa-calendar-check fa-fw',
+            text: 'View Appointments',
+            useReactRouter: true
+        }, {
+            link: ROUTES.RECEPTIONISTS,
+            icon: 'fas fa-user-clock fa-fw',
+            text: 'Receptionist management',
+            useReactRouter: true
+        }, {
+            link: ROUTES.PRODUCTS,
+            icon: 'fas fa-cart-plus fa-fw',
+            text: 'Product management',
+            useReactRouter: true
+        }, {
+            link: ROUTES.CATEGORIES,
+            icon: 'fas fa-list-alt fa-fw',
+            text: 'Appointment categoies',
+            useReactRouter: true
+        }]
     }, {
         icon: 'fas fa-envelope fa-fw',
         text: 'Messages',
@@ -293,7 +293,7 @@ class ControlPanel extends React.Component {
     selectChatroom(appId, chatroomId) {
         controlPanelStore.dispatch(selectChatroom(appId, chatroomId));
 
-        return socketHelper.readChatroomUnRead(appId, chatroomId).then(() => {
+        return socketHlp.readChatroomUnRead(appId, chatroomId).then(() => {
             let chatroom = this.props.appsChatrooms[appId].chatrooms[chatroomId];
             let messagerSelf = findMessagerSelf(chatroom.messagers);
             messagerSelf.unRead = 0;
@@ -355,7 +355,7 @@ class ControlPanel extends React.Component {
             );
         }
 
-        let userId = authHelper.userId;
+        let userId = authHlp.userId;
         let itemCollapse = this.state.itemCollapse;
 
         let unreadItems = [];
@@ -402,7 +402,7 @@ class ControlPanel extends React.Component {
 
                         itemElem = (
                             <ListGroupItem key={chatroomId} className="text-light nested tablinks" onClick={() => this.selectChatroom(appId, chatroomId)}>
-                                <img className="app-icon consumer-photo" src={consumer.photo || defaultAvatar} alt="" onError={() => apiBot.chatrooms.getProfile(appId, platformUid)} />
+                                <img className="app-icon consumer-photo" src={consumer.photo || defaultConsumerImg} alt="" onError={() => apiBot.chatrooms.getProfile(appId, platformUid)} />
                                 <span className="app-name">{(messagerSelf.namings && messagerSelf.namings[platformUid]) || consumer.name}</span>
                                 <Badge className={'unread-msg ml-auto bg-warning' + (!messagerSelf.unRead ? ' d-none' : '')} pill>{unReadStr}</Badge>
                             </ListGroupItem>

@@ -6,8 +6,8 @@ import Aux from 'react-aux';
 import { Fade, Row, Col, Jumbotron, Button, Input, InputGroup } from 'reactstrap';
 
 import ROUTES from '../../config/route';
-import authHelper from '../../helpers/authentication';
-import browserHelper from '../../helpers/browser';
+import authHlp from '../../helpers/authentication';
+import browserHlp from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import AutoreplyTable from '../Autoreplies/AutoreplyTable.js';
@@ -28,6 +28,11 @@ class Autoreplies extends React.Component {
     constructor(props) {
         super(props);
 
+        browserHlp.setTitle('自動回覆');
+        if (!authHlp.hasSignedin()) {
+            return props.history.replace(ROUTES.SIGNOUT);
+        }
+
         this.state = {
             isInsertModalOpen: false,
             searchKeyword: '',
@@ -38,12 +43,6 @@ class Autoreplies extends React.Component {
         this.openInsertModal = this.openInsertModal.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
         this.appChanged = this.appChanged.bind(this);
-
-        browserHelper.setTitle('自動回覆');
-        if (!authHelper.hasSignedin()) {
-            authHelper.signOut();
-            this.props.history.replace(ROUTES.SIGNIN);
-        }
     }
 
     componentDidMount() {
@@ -71,6 +70,10 @@ class Autoreplies extends React.Component {
     }
 
     render() {
+        if (!this.state) {
+            return null;
+        }
+
         return (
             <Aux>
                 <ControlPanel />

@@ -7,7 +7,6 @@ import { Button, Modal, ModalHeader, ModalBody,
 import { DateTimePicker } from 'react-widgets';
 
 import apiDatabase from '../../../helpers/apiDatabase/index';
-import timeHelper from '../../../helpers/timer';
 
 import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
@@ -32,7 +31,7 @@ class ComposeInsertModal extends ModalCore {
             count: 0,
             fields: null,
             composeTexts: [''],
-            isAsyncWorking: false
+            isAsyncProcessing: false
         };
 
         this.NOW = 'NOW';
@@ -117,7 +116,7 @@ class ComposeInsertModal extends ModalCore {
     insertCompose(ev) {
         if (!this.state.text1) {
             return notify('請輸入要送出的訊息', { type: 'warning' });
-        } else if (Date.now() > timeHelper.toMilliseconds(this.state.time)) {
+        } else if (Date.now() > new Date(this.state.time).getTime()) {
             return notify('不能選擇過去的時間', { type: 'warning' });
         }
 
@@ -179,17 +178,17 @@ class ComposeInsertModal extends ModalCore {
             });
         };
 
-        this.setState({ isAsyncWorking: true });
+        this.setState({ isAsyncProcessing: true });
         return nextCompose(0).then(() => {
             this.setState({
                 isOpen: false,
-                isAsyncWorking: false
+                isAsyncProcessing: false
             });
             return notify('新增成功', { type: 'success' });
         }).then(() => {
             return this.closeModal(ev);
         }).catch(() => {
-            this.setState({ isAsyncWorking: false });
+            this.setState({ isAsyncProcessing: false });
             return notify('新增失敗', { type: 'danger' });
         });
     }
@@ -268,8 +267,8 @@ class ComposeInsertModal extends ModalCore {
                     </FormGroup>
                 </ModalBody>
                 <ModalFooter>
-                    <Button outline color="success" onClick={this.insertCompose} disabled={this.state.isAsyncWorking}>新增</Button>
-                    <Button outline color="info" disabled={this.state.isAsyncWorking}>存為草稿</Button>
+                    <Button outline color="success" onClick={this.insertCompose} disabled={this.state.isAsyncProcessing}>新增</Button>
+                    <Button outline color="info" disabled={this.state.isAsyncProcessing}>存為草稿</Button>
                     <Button outline color="danger" onClick={this.closeModal}>取消</Button>
                 </ModalFooter>
             </Modal>

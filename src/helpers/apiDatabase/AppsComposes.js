@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateComposes, deleteCompose } from '../../redux/actions/mainStore/appsComposes';
+import { updateComposes, removeCompose } from '../../redux/actions/mainStore/appsComposes';
 
 class AppsComposes extends Core {
     constructor() {
@@ -76,14 +76,14 @@ class AppsComposes extends Core {
      * @param {string} appId
      * @param {string} composeId
      */
-    delete(appId, composeId) {
+    remove(appId, composeId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/composes/' + composeId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteCompose(appId, composeId));
+            mainStore.dispatch(removeCompose(appId, composeId));
             return resJson;
         });
     };

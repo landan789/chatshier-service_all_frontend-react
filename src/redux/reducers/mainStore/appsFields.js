@@ -1,5 +1,5 @@
-import { UPDATE_FIELDS, DELETE_FIELD,
-    DELETE_ALL_FIELDS } from '../../actions/mainStore/appsFields';
+import { UPDATE_FIELDS, REMOVE_FIELD,
+    REMOVE_ALL_FIELDS } from '../../actions/mainStore/appsFields';
 
 export const appsFieldsReducer = (state = {}, action) => {
     switch (action.type) {
@@ -20,7 +20,7 @@ export const appsFieldsReducer = (state = {}, action) => {
                 }
             }
             return Object.assign({}, state);
-        case DELETE_FIELD:
+        case REMOVE_FIELD:
             let appId = action.appId;
             let fieldId = action.fieldId;
 
@@ -30,7 +30,7 @@ export const appsFieldsReducer = (state = {}, action) => {
                 delete state[appId];
             }
             return Object.assign({}, state);
-        case DELETE_ALL_FIELDS:
+        case REMOVE_ALL_FIELDS:
             appId = action.appId;
             if (state[appId]) {
                 delete state[appId];

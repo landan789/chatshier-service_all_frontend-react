@@ -1,5 +1,5 @@
-import { UPDATE_CATEGORIES, DELETE_CATEGORY,
-    DELETE_ALL_CATEGORIES } from '../../actions/mainStore/appsCategories';
+import { UPDATE_CATEGORIES, REMOVE_CATEGORY,
+    REMOVE_ALL_CATEGORIES } from '../../actions/mainStore/appsCategories';
 
 export const appsCategoriesReducer = (state = {}, action) => {
     switch (action.type) {
@@ -20,7 +20,7 @@ export const appsCategoriesReducer = (state = {}, action) => {
                 }
             }
             return Object.assign({}, state);
-        case DELETE_CATEGORY:
+        case REMOVE_CATEGORY:
             let appId = action.appId;
             let categoryId = action.categoryId;
 
@@ -30,7 +30,7 @@ export const appsCategoriesReducer = (state = {}, action) => {
                 delete state[appId];
             }
             return Object.assign({}, state);
-        case DELETE_ALL_CATEGORIES:
+        case REMOVE_ALL_CATEGORIES:
             appId = action.appId;
             if (state[appId]) {
                 delete state[appId];

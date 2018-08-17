@@ -4,7 +4,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, I
 import { DateTimePicker } from 'react-widgets';
 
 import apiDatabase from '../../../helpers/apiDatabase/index';
-import timeHelper from '../../../helpers/timer';
+import timeHlp from '../../../helpers/timer';
 
 import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
@@ -19,7 +19,7 @@ class ComposeEditModal extends ModalCore {
 
         this.state = {
             isOpen: this.props.isOpen,
-            isAsyncWorking: false,
+            isAsyncProcessing: false,
             appId: '',
             composeId: '',
             time: '',
@@ -132,7 +132,7 @@ class ComposeEditModal extends ModalCore {
             return notify('請選擇時間', { type: 'warning' });
         } else if (!this.state.text) {
             return notify('請輸入要送出的訊息', { type: 'warning' });
-        } else if (Date.now() > timeHelper.toMilliseconds(this.state.time)) {
+        } else if (Date.now() > new Date(this.state.time).getTime()) {
             return notify('不能選擇過去的時間', { type: 'warning' });
         }
 
@@ -162,17 +162,17 @@ class ComposeEditModal extends ModalCore {
             field_ids: fieldIds
         };
 
-        this.setState({ isAsyncWorking: true });
+        this.setState({ isAsyncProcessing: true });
         return apiDatabase.appsComposes.update(appId, composeId, compose).then(() => {
             this.setState({
                 isOpen: false,
-                isAsyncWorking: false
+                isAsyncProcessing: false
             });
             return notify('修改成功', { type: 'success' });
         }).then(() => {
             return this.closeModal(ev);
         }).catch(() => {
-            this.setState({ isAsyncWorking: false });
+            this.setState({ isAsyncProcessing: false });
             return notify('修改失敗', { type: 'danger' });
         });
     }
@@ -184,17 +184,17 @@ class ComposeEditModal extends ModalCore {
             return (
                 <Row key={index}>
                     <Col>
-                        <Button color="secondary" disabled={this.state.status && timeHelper.isHistory(this.state.time, Date.now())} name={field.id} onClick={this.handleFieldButtonChange}>
+                        <Button color="secondary" disabled={this.state.status && timeHlp.isHistory(this.state.time, Date.now())} name={field.id} onClick={this.handleFieldButtonChange}>
                             {field.value ? `${field.name} : ${field.value}` : field.name}
                         </Button>
                         <FormGroup>
                             <Row>
                                 <Col>
-                                    <Input type="text" name={field.id} defaultValue={this.state.fields[field.id].value} onChange={this.handleFieldInputChange} disabled={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}/>
+                                    <Input type="text" name={field.id} defaultValue={this.state.fields[field.id].value} onChange={this.handleFieldInputChange} disabled={this.state.status && timeHlp.isHistory(this.state.time, Date.now())}/>
                                 </Col>
                                 <Col>
-                                    <Button color="success" name={field.id} onClick={this.handleFieldButtonChange} disabled={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}><i className="fas fa-check" name={field.id}></i></Button>{' '}
-                                    <Button color="danger" name={field.id} onClick={this.handleFieldButtonChange} disabled={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}><i className="fas fa-times" name={field.id}></i></Button>
+                                    <Button color="success" name={field.id} onClick={this.handleFieldButtonChange} disabled={this.state.status && timeHlp.isHistory(this.state.time, Date.now())}><i className="fas fa-check" name={field.id}></i></Button>{' '}
+                                    <Button color="danger" name={field.id} onClick={this.handleFieldButtonChange} disabled={this.state.status && timeHlp.isHistory(this.state.time, Date.now())}><i className="fas fa-times" name={field.id}></i></Button>
                                 </Col>
                             </Row>
                         </FormGroup>
@@ -210,7 +210,7 @@ class ComposeEditModal extends ModalCore {
                 <ModalHeader toggle={this.closeModal}></ModalHeader>
                 <ModalBody>
                     時間：
-                    <DateTimePicker defaultValue={new Date(this.state.time)} onChange={this.handleDatetimeChange} disabled={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}></DateTimePicker>
+                    <DateTimePicker defaultValue={new Date(this.state.time)} onChange={this.handleDatetimeChange} disabled={this.state.status && timeHlp.isHistory(this.state.time, Date.now())}></DateTimePicker>
                     <div className="panel panel-default">
                         <div className="panel-heading">條件</div>
                         <div className="panel-body">
@@ -219,9 +219,9 @@ class ComposeEditModal extends ModalCore {
                     </div>
                     <div>
                         內容：
-                        <Input type="textarea" defaultValue={this.state.text} onChange={this.handleTextChange} disabled={this.state.status && timeHelper.isHistory(this.state.time, Date.now())} />
+                        <Input type="textarea" defaultValue={this.state.text} onChange={this.handleTextChange} disabled={this.state.status && timeHlp.isHistory(this.state.time, Date.now())} />
                     </div>
-                    <FormGroup check hidden={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}>
+                    <FormGroup check hidden={this.state.status && timeHlp.isHistory(this.state.time, Date.now())}>
                         <Label check>
                             <Input type="checkbox" defaultChecked={!this.state.status} onChange={this.handleDraftChange} />{' '}
                             是否儲存為草稿？
@@ -229,7 +229,7 @@ class ComposeEditModal extends ModalCore {
                     </FormGroup>
                 </ModalBody>
                 <ModalFooter>
-                    <Button outline color="success" onClick={this.updateCompose} disabled={this.state.isAsyncWorking} hidden={this.state.status && timeHelper.isHistory(this.state.time, Date.now())}>修改</Button>{' '}
+                    <Button outline color="success" onClick={this.updateCompose} disabled={this.state.isAsyncProcessing} hidden={this.state.status && timeHlp.isHistory(this.state.time, Date.now())}>修改</Button>{' '}
                     <Button outline color="danger" onClick={this.closeModal}>取消</Button>
                 </ModalFooter>
             </Modal>

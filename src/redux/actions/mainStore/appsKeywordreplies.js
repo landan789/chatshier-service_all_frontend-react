@@ -1,6 +1,6 @@
 export const UPDATE_KEYWORDREPLIES = 'UPDATE_KEYWORDREPLIES';
-export const DELETE_KEYWORDREPLY = 'DELETE_KEYWORDREPLY';
-export const DELETE_ALL_KEYWORDREPLIES = 'DELETE_ALL_KEYWORDREPLIES';
+export const REMOVE_KEYWORDREPLY = 'REMOVE_KEYWORDREPLY';
+export const REMOVE_ALL_KEYWORDREPLIES = 'REMOVE_ALL_KEYWORDREPLIES';
 
 /**
  * @param {Chatshier.Model.AppsKeywordreplies} appsKeywordreplies
@@ -13,13 +13,13 @@ export const updateKeywordreplies = (appsKeywordreplies) => {
  * @param {string} appId
  * @param {string} keywordreplyId
  */
-export const deleteKeywordreply = (appId, keywordreplyId) => {
-    return { type: DELETE_ALL_KEYWORDREPLIES, appId, keywordreplyId };
+export const removeKeywordreply = (appId, keywordreplyId) => {
+    return { type: REMOVE_ALL_KEYWORDREPLIES, appId, keywordreplyId };
 };
 
 /**
  * @param {string} appId
  */
-export const deleteAllKeywordreplies = (appId) => {
-    return { type: DELETE_ALL_KEYWORDREPLIES, appId };
+export const removeAllKeywordreplies = (appId) => {
+    return { type: REMOVE_ALL_KEYWORDREPLIES, appId };
 };

@@ -1,0 +1,37 @@
+@import '../../styles/_mixins';
+
+.receptionists-wrapper {
+    .receptionist-item,
+    .add-btn {
+        min-height: 20rem;
+        min-width: 16rem;
+
+        @include media-breakpoint-up(lg) {
+            max-width: calc(50% - 1rem);
+        }
+
+        @include media-breakpoint-up(xl) {
+            max-width: calc(33% - 1rem);
+        }
+    }
+
+    .add-btn {
+        cursor: pointer;
+
+        @include media-breakpoint-up(xl) {
+            min-width: calc(33% - 1rem);
+        }
+
+        &:hover {
+            background-color: #ddd;
+            -webkit-transition: background-color 300ms;
+            transition: background-color 300ms;
+            will-change: background-color;
+        }
+    }
+
+    .image-container {
+        width: 6rem;
+        height: 6rem;
+    }
+}

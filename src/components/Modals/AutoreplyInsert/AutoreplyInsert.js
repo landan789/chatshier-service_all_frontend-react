@@ -24,7 +24,7 @@ class AutoreplyInsertModal extends ModalCore {
             startedTime: '',
             endedTime: '',
             text: '',
-            isAsyncWorking: false
+            isAsyncProcessing: false
         };
 
         this.insertAutoreply = this.insertAutoreply.bind(this);
@@ -72,7 +72,7 @@ class AutoreplyInsertModal extends ModalCore {
         } else if (this.state.endedTime <= this.state.startedTime) {
             return notify('開始時間不能比結束時間晚', { type: 'warning' });
         }
-        this.setState({ isAsyncWorking: true });
+        this.setState({ isAsyncProcessing: true });
 
         let appId = this.state.appId;
         let autoreply = {
@@ -89,13 +89,13 @@ class AutoreplyInsertModal extends ModalCore {
         return apiDatabase.appsAutoreplies.insert(appId, autoreply).then(() => {
             this.setState({
                 isOpen: false,
-                isAsyncWorking: false
+                isAsyncProcessing: false
             });
             return notify('新增成功', { type: 'success' });
         }).then(() => {
             return this.closeModal(event);
         }).catch(() => {
-            this.setState({ isAsyncWorking: false });
+            this.setState({ isAsyncProcessing: false });
             return notify('新增失敗', { type: 'danger' });
         });
     }
@@ -151,7 +151,7 @@ class AutoreplyInsertModal extends ModalCore {
                     </FormGroup>
                 </ModalBody>
                 <ModalFooter>
-                    <Button outline color="success" onClick={this.insertAutoreply} disabled={this.state.isAsyncWorking}>新增</Button>{' '}
+                    <Button outline color="success" onClick={this.insertAutoreply} disabled={this.state.isAsyncProcessing}>新增</Button>{' '}
                     <Button outline color="danger" onClick={this.closeModal}>取消</Button>
                 </ModalFooter>
             </Modal>

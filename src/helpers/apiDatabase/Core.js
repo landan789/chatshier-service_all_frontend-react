@@ -1,4 +1,4 @@
-import authHelper from '../../helpers/authentication';
+import authHlp from '../../helpers/authentication';
 
 import CHATSHIER from '../../config/chatshier';
 
@@ -9,7 +9,7 @@ class Core {
     }
 
     get userId() {
-        return authHelper.userId;
+        return authHlp.userId;
     }
 
     /**
@@ -46,14 +46,15 @@ class Core {
     /**
      * @param {string} url
      * @param {RequestInit} [reqInit]
+     * @param {boolean} [isFormData]
      * @returns {Promise<any>}
      */
-    sendRequest(url, reqInit) {
+    sendRequest(url, reqInit, isFormData) {
         reqInit = reqInit || {};
         reqInit.method = reqInit.method || 'GET';
 
-        if ('POST' === reqInit.method.toUpperCase() ||
-            'PUT' === reqInit.method.toUpperCase()) {
+        let method = reqInit.method.toUpperCase();
+        if (('POST' === method || 'PUT' === method) && !isFormData) {
             reqInit.headers.set('Content-Type', 'application/json');
         }
         reqInit.cache = 'no-cache';

@@ -8,7 +8,7 @@ import { Button, Modal, ModalHeader, ModalBody,
 import { Trans } from 'react-i18next';
 import { withTranslate } from '../../../i18n';
 
-import authHelper from '../../../helpers/authentication';
+import authHlp from '../../../helpers/authentication';
 import apiDatabase from '../../../helpers/apiDatabase/index';
 
 import ModalCore from '../ModalCore';
@@ -61,7 +61,7 @@ class GroupEditModal extends ModalCore {
     findMemberSelf(groupId) {
         let group = this.props.groups[groupId];
         let members = group.members;
-        let userId = authHelper.userId;
+        let userId = authHlp.userId;
 
         for (let memberId in members) {
             let member = members[memberId];

@@ -7,8 +7,8 @@ import { Dropdown, DropdownItem, DropdownMenu,
 import { Trans } from 'react-i18next';
 import { withTranslate } from '../../i18n';
 
-import authHelper from '../../helpers/authentication';
-import socketHelper from '../../helpers/socket';
+import authHlp from '../../helpers/authentication';
+import socketHlp from '../../helpers/socket';
 import apiDatabase from '../../helpers/apiDatabase/index';
 import apiBot from '../../helpers/apiBot/index';
 import regex from '../../utils/regex';
@@ -19,7 +19,7 @@ import controlPanelStore from '../../redux/controlPanelStore';
 import { selectChatroom } from '../../redux/actions/controlPanelStore/selectedChatroom';
 import { findChatroomMessager, findMessagerSelf } from './Chat';
 
-import defaultAvatarPng from '../../image/defautlt-avatar.png';
+import defaultConsumerImg from '../../image/default-consumer.png';
 import './ProfilePanel.css';
 
 const CHATSHIER = 'CHATSHIER';
@@ -96,7 +96,7 @@ class ProfilePanel extends React.Component {
     }
 
     onPhotoLoadError(ev) {
-        ev.target.src = defaultAvatarPng;
+        ev.target.src = defaultConsumerImg;
     }
 
     onChatroomNameChanged(ev) {
@@ -187,7 +187,7 @@ class ProfilePanel extends React.Component {
 
         let socketBody = {
             params: {
-                userid: authHelper.userId,
+                userid: authHlp.userId,
                 appid: this.props.appId,
                 chatroomid: this.props.chatroomId,
                 platformuid: platformUid
@@ -195,7 +195,7 @@ class ProfilePanel extends React.Component {
             body: putField
         };
 
-        return socketHelper.updateMessagerToServer(socketBody).then(() => {
+        return socketHlp.updateMessagerToServer(socketBody).then(() => {
             return notify('用戶資料更新成功', { type: 'success' });
         }).catch(() => {
             return notify('用戶資料更新失敗', { type: 'danger' });
@@ -274,7 +274,7 @@ class ProfilePanel extends React.Component {
                                         let memberUser = this.props.users[memberUserId];
                                         memberUser && elems.push(
                                             <div className="person-chip">
-                                                <img className="person-avatar" src={memberUser.photo || defaultAvatarPng} alt="" />
+                                                <img className="person-avatar" src={memberUser.photo || defaultConsumerImg} alt="" />
                                                 <span>{memberUser.name}</span>
                                             </div>
                                         );
@@ -290,7 +290,7 @@ class ProfilePanel extends React.Component {
                                         let consumer = this.props.consumers[messager.platformUid];
                                         consumer && elems.push(
                                             <div key={messagerId} className="person-chip">
-                                                <img className="person-avatar" src={consumer.photo || defaultAvatarPng} alt="" onError={this.onPhotoLoadError} />
+                                                <img className="person-avatar" src={consumer.photo || defaultConsumerImg} alt="" onError={this.onPhotoLoadError} />
                                                 <span>{consumer.name}</span>
                                             </div>
                                         );
@@ -580,7 +580,7 @@ class ProfilePanel extends React.Component {
         let person;
 
         if (isGroupChatroom) {
-            let userId = authHelper.userId;
+            let userId = authHlp.userId;
             platformUid = userId;
             person = Object.assign({}, this.props.users[userId]);
             person.photo = logos[this.app.type];
@@ -588,7 +588,7 @@ class ProfilePanel extends React.Component {
             let platformMessager = findChatroomMessager(this.chatroom.messagers, this.app.type);
             platformUid = platformMessager.platformUid;
             person = this.props.consumers[platformUid];
-            person && (person.photo = person.photo || defaultAvatarPng);
+            person && (person.photo = person.photo || defaultConsumerImg);
         }
 
         if (!person) {

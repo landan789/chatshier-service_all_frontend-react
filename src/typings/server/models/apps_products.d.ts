@@ -11,13 +11,13 @@ declare module Chatshier {
         }
 
         interface Product extends BaseProperty {
+            type: 'NORMAL' | 'APPOINTMENT',
             name: string,
             description: string,
             price: number,
             quantity: number,
             src: string,
-            canAppoint: boolean,
-            isOnShelves: boolean,
+            isOnShelf: boolean,
             receptionist_ids: string[]
         }
     }

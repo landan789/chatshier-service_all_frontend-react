@@ -1,5 +1,5 @@
 export const UPDATE_GROUPS = 'UPDATE_GROUPS';
-export const DELETE_GROUP = 'DELETE_GROUP';
+export const REMOVE_GROUP = 'REMOVE_GROUP';
 
 /**
  * @param {Chatshier.Model.Groups} groups
@@ -11,6 +11,6 @@ export const updateGroups = (groups) => {
 /**
  * @param {string} groupId
  */
-export const deleteGroup = (groupId) => {
-    return { type: DELETE_GROUP, groupId };
+export const removeGroup = (groupId) => {
+    return { type: REMOVE_GROUP, groupId };
 };

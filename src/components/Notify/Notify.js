@@ -63,13 +63,13 @@ const notify = (text, options) => {
     });
 
     let notifyWapper = document.getElementById('notify_wapper');
-    let isOnDom = !!notifyWapper;
+    /** @type {HTMLElement} */
     let notifyContainer;
 
     let notifyItem = document.createElement('div');
     notifyItem.className = 'notify-item';
 
-    if (!isOnDom) {
+    if (!notifyWapper) {
         notifyWapper = document.createElement('div');
         notifyWapper.id = 'notify_wapper';
         notifyWapper.className = 'notify-wapper';
@@ -81,7 +81,7 @@ const notify = (text, options) => {
         notifyWapper.appendChild(notifyContainer);
         document.body.appendChild(notifyWapper);
     } else {
-        notifyContainer = document.querySelector('.notify-container');
+        notifyContainer = notifyWapper.querySelector('.notify-container');
         notifyContainer.appendChild(notifyItem);
     }
 

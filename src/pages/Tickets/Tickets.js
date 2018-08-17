@@ -8,13 +8,14 @@ import { Fade, Card, ButtonGroup, Button, UncontrolledTooltip } from 'reactstrap
 import { withTranslate } from '../../i18n';
 
 import ROUTES from '../../config/route';
-import authHelper from '../../helpers/authentication';
-import browserHelper from '../../helpers/browser';
+import authHlp from '../../helpers/authentication';
+import browserHlp from '../../helpers/browser';
 import apiDatabase from '../../helpers/apiDatabase/index';
 
 import ControlPanel from '../../components/Navigation/ControlPanel/ControlPanel';
 import PageWrapper from '../../components/Navigation/PageWrapper/PageWrapper';
 import AppsSelector from '../../components/AppsSelector/AppsSelector';
+import SearchBar from '../../components/SearchBar/SearchBar';
 import TicketInsertModal from '../../components/Modals/TicketInsert/TicketInsert';
 import TicketContent from './TicketContent';
 
@@ -101,16 +102,15 @@ class Tickets extends React.Component {
     constructor(props) {
         super(props);
 
+        browserHlp.setTitle(props.t('To-Do items'));
+        if (!authHlp.hasSignedin()) {
+            return props.history.replace(ROUTES.SIGNOUT);
+        }
+
         this.keywordChanged = this.keywordChanged.bind(this);
         this.appChanged = this.appChanged.bind(this);
         this.openInsertModal = this.openInsertModal.bind(this);
         this.closeInsertModal = this.closeInsertModal.bind(this);
-
-        browserHelper.setTitle(this.props.t('To-Do items'));
-        if (!authHelper.hasSignedin()) {
-            authHelper.signOut();
-            this.props.history.replace(ROUTES.SIGNIN);
-        }
 
         this.state = Object.assign({
             prevProps: null,
@@ -150,6 +150,10 @@ class Tickets extends React.Component {
     }
 
     render() {
+        if (!this.state) {
+            return null;
+        }
+
         let appId = this.state.appId;
         let pendingCount = 0;
         let processingCount = 0;
@@ -172,10 +176,10 @@ class Tickets extends React.Component {
             <Aux>
                 <ControlPanel />
                 <PageWrapper toolbarTitle={this.props.t('To-Do items')}>
-                    <Fade in className="align-items-center mt-5 container ticket-wrapper">
-                        <Card className="pb-5 chsr">
+                    <Fade in className="align-items-center mt-5 pb-4 container ticket-wrapper">
+                        <Card className="pb-5 shadow chsr">
                             <div className="mx-4 mb-3 px-3 ticket-toolbar">
-                                <ButtonGroup className="mr-auto">
+                                <ButtonGroup className="mr-auto mb-2">
                                     <Button color="light" id="allTicketsFilter"
                                         className={this.state.statusFilter === STATUS_TYPES.NONE ? 'active' : ''}
                                         onClick={() => this.setState({ statusFilter: STATUS_TYPES.NONE })}>
@@ -217,17 +221,12 @@ class Tickets extends React.Component {
                                     <UncontrolledTooltip placement="top" delay={0} target="closedFilter">已關閉</UncontrolledTooltip>
                                 </ButtonGroup>
 
-                                <div className="d-flex align-items-center w-25 mx-0 search">
-                                    <input className="search-box"
-                                        type="text"
-                                        placeholder={this.props.t('Search')}
-                                        value={this.state.searchKeyword}
-                                        onChange={this.keywordChanged} />
+                                <div className="d-flex">
+                                    <SearchBar onChange={this.keywordChanged} />
+                                    <Button size="sm" className="ml-2 my-auto ticket-insert" color="light" onClick={this.openInsertModal}>
+                                        <i className="fas fa-plus fa-fw"></i>
+                                    </Button>
                                 </div>
-
-                                <Button size="sm" className="ticket-insert" color="light" onClick={this.openInsertModal}>
-                                    <i className="fas fa-plus fa-fw"></i>
-                                </Button>
                             </div>
 
                             <AppsSelector className="mx-4 mb-3 px-3" onChange={this.appChanged} />

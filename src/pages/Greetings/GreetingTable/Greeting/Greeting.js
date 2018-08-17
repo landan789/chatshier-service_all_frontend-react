@@ -25,12 +25,12 @@ class Greeting extends Component {
         };
     }
 
-    deleteGreeting(ev) {
+    removeGreeting(ev) {
         let appId = this.props.appId;
         let greetingId = this.props.greetingId;
 
         this.setState({ isDeleteing: true });
-        return apiDatabase.appsGreetings.delete(appId, greetingId).then(() => {
+        return apiDatabase.appsGreetings.remove(appId, greetingId).then(() => {
             return notify('刪除成功', { type: 'success' });
         }).catch(() => {
             return notify('刪除失敗', { type: 'danger' });
@@ -46,7 +46,7 @@ class Greeting extends Component {
                     <td className="Greeting__button">
                         <Button disabled={this.state.isDeleteing}
                             color="danger"
-                            onClick={this.deleteGreeting.bind(this)}>
+                            onClick={this.removeGreeting.bind(this)}>
                             <span className="fas fa-trash-alt fa-fw"></span>
                         </Button>
                     </td>

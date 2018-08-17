@@ -8,7 +8,7 @@ import { Button, Modal, ModalHeader,
     ModalBody, ModalFooter, FormGroup } from 'reactstrap';
 
 import apiDatabase from '../../../helpers/apiDatabase/index';
-import fbHelper from '../../../helpers/facebook';
+import fbHlp from '../../../helpers/facebook';
 
 import ModalCore from '../ModalCore';
 import { notify } from '../../Notify/Notify';
@@ -120,12 +120,12 @@ class AppInsertModal extends ModalCore {
 
     linkFacebookPages() {
         let groupId = this.state.seletedGroupId;
-        return fbHelper.signInForPages().then((res) => {
+        return fbHlp.signInForPages().then((res) => {
             if (!res || (res && res.status !== 'connected')) {
                 return;
             }
 
-            return fbHelper.getFanPages().then((res) => {
+            return fbHlp.getFanPages().then((res) => {
                 // 取得 fb 用戶的所有可管理的粉絲專頁後
                 // 濾除已經加入的粉絲專頁
                 let fanPages = res.data || [];
@@ -151,7 +151,7 @@ class AppInsertModal extends ModalCore {
 
                 return Promise.all(fanPages.map((fanPage) => {
                     // 抓取粉絲專頁的大頭貼(用於選取時顯示)
-                    return fbHelper.getFanPagesPicture(fanPage.id, fanPage.access_token);
+                    return fbHlp.getFanPagesPicture(fanPage.id, fanPage.access_token);
                 })).then((fanPagePics) => {
                     // 關閉此 modal 將粉絲專頁資料傳給另一個 modal
                     this.setState({
@@ -190,7 +190,7 @@ class AppInsertModal extends ModalCore {
 
             let app = appsList[i];
             return apiDatabase.apps.insert(app).then(() => {
-                return fbHelper.setFanPageSubscribeApp(app.id1, app.token2);
+                return fbHlp.setFanPageSubscribeApp(app.id1, app.token2);
             }).then((res) => {
                 responses.push(res);
                 return nextRequest(i + 1);
@@ -203,7 +203,7 @@ class AppInsertModal extends ModalCore {
             if (!res) {
                 return;
             }
-            return fbHelper.signOut();
+            return fbHlp.signOut();
         }).catch(() => {
             return notify('An error occurred!', { type: 'danger' });
         }).then(() => {

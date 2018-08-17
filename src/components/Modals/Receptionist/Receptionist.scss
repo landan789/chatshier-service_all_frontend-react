@@ -1,0 +1,21 @@
+.receptionist-modal {
+    .photo-container {
+        width: '8rem';
+        height: '8rem';
+        border: none;
+
+        .image-upload {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 1;
+            white-space: pre-line;
+            opacity: .33;
+            font-size: .9rem;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+}

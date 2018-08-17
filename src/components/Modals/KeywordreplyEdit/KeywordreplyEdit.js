@@ -18,7 +18,7 @@ class KeywordreplyEditModal extends ModalCore {
 
         this.state = {
             isOpen: this.props.isOpen,
-            isAsyncWorking: false,
+            isAsyncProcessing: false,
             appId: '',
             keywordreplyId: '',
             keyword: '',
@@ -70,17 +70,17 @@ class KeywordreplyEditModal extends ModalCore {
             updatedTime: Date.now()
         };
 
-        this.setState({ isAsyncWorking: true });
+        this.setState({ isAsyncProcessing: true });
         return apiDatabase.appsKeywordreplies.update(appId, keywordreplyId, keywordreply).then(() => {
             this.setState({
                 isOpen: false,
-                isAsyncWorking: false
+                isAsyncProcessing: false
             });
             return notify('新增成功', { type: 'success' });
         }).then(() => {
             return this.closeModal(ev);
         }).catch(() => {
-            this.setState({ isAsyncWorking: false });
+            this.setState({ isAsyncProcessing: false });
             return notify('新增失敗', { type: 'danger' });
         });
     }
@@ -107,7 +107,7 @@ class KeywordreplyEditModal extends ModalCore {
                     </FormGroup>
                 </ModalBody>
                 <ModalFooter>
-                    <Button outline color="success" onClick={this.updateKeywordreply} disabled={this.state.isAsyncWorking}>修改</Button>{' '}
+                    <Button outline color="success" onClick={this.updateKeywordreply} disabled={this.state.isAsyncProcessing}>修改</Button>{' '}
                     <Button outline color="danger" onClick={this.closeModal}>取消</Button>
                 </ModalFooter>
             </Modal>

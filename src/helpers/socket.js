@@ -2,7 +2,7 @@ import socketClient from 'socket.io-client';
 import SOCKET_EVENTS from '../config/socket-events';
 import CHATSHIER from '../config/chatshier';
 
-import authHelper from './authentication';
+import authHlp from './authentication';
 import mainStore from '../redux/mainStore';
 import { updateChatrooms, updateChatroomsMessagers, updateChatroomsMessages } from '../redux/actions/mainStore/appsChatrooms';
 import { updateConsumers } from '../redux/actions/mainStore/consumers';
@@ -68,14 +68,14 @@ class SocketHelper {
         let socketBody = {
             appId: appId,
             chatroomId: chatroomId,
-            userId: authHelper.userId
+            userId: authHlp.userId
         };
         return this._send(SOCKET_EVENTS.READ_CHATROOM_MESSAGES, socketBody);
     }
 
     userRegistration() {
         return new Promise((resolve) => {
-            this.socket.emit(SOCKET_EVENTS.USER_REGISTRATION, authHelper.userId, resolve);
+            this.socket.emit(SOCKET_EVENTS.USER_REGISTRATION, authHlp.userId, resolve);
         });
     }
 

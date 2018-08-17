@@ -2,12 +2,17 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateCategories, deleteCategory } from '../../redux/actions/mainStore/appsCategories';
+import { updateCategories, removeCategory } from '../../redux/actions/mainStore/appsCategories';
 
 class AppsCategories extends Core {
     constructor() {
         super();
         this.apiEndPoint += 'apps-categories/';
+
+        this.TYPES = Object.freeze({
+            NORMAL: 'NORMAL',
+            APPOINTMENT: 'APPOINTMENT'
+        });
     }
 
     /**
@@ -78,14 +83,14 @@ class AppsCategories extends Core {
      * @param {string} categoryId
      * @returns {Promise<Chatshier.Response.AppsCategories>}
      */
-    delete(appId, categoryId) {
+    remove(appId, categoryId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/categories/' + categoryId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteCategory(appId, categoryId));
+            mainStore.dispatch(removeCategory(appId, categoryId));
             return resJson;
         });
     };

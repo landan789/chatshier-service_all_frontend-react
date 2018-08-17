@@ -6,10 +6,10 @@ import { Trans } from 'react-i18next';
 import { withTranslate } from '../../i18n';
 
 import ROUTES from '../../config/route';
-import browserHelper from '../../helpers/browser';
-import authHelper from '../../helpers/authentication';
+import browserHlp from '../../helpers/browser';
+import authHlp from '../../helpers/authentication';
 import apiSign from '../../helpers/apiSign/index';
-import cookieHelper, { CHSR_COOKIE } from '../../helpers/cookie';
+import cookieHlp, { CHSR_COOKIE } from '../../helpers/cookie';
 import regex from '../../utils/regex';
 
 import SignForm from '../../components/SignForm/SignForm';
@@ -29,6 +29,11 @@ class SignIn extends React.Component {
     constructor(props, context) {
         super(props, context);
 
+        browserHlp.setTitle(this.props.t('Sign in'));
+        if (authHlp.hasSignedin()) {
+            return window.location.replace(ROUTES.CHAT);
+        }
+
         this.state = {
             isInputReady: false,
             isSignIning: false,
@@ -40,11 +45,6 @@ class SignIn extends React.Component {
         this.emailChanged = this.emailChanged.bind(this);
         this.pwChanged = this.pwChanged.bind(this);
         this.checkInputs = this.checkInputs.bind(this);
-
-        browserHelper.setTitle(this.props.t('Sign in'));
-        if (authHelper.hasSignedin()) {
-            window.location.replace(ROUTES.CHAT);
-        }
     }
 
     emailChanged(ev) {
@@ -96,10 +96,10 @@ class SignIn extends React.Component {
             let userId = Object.keys(users).shift();
             let _user = users[userId];
 
-            cookieHelper.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
-            cookieHelper.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
-            authHelper.jwt = jwt;
-            authHelper.activateRefreshToken();
+            cookieHlp.setCookie(CHSR_COOKIE.USER_NAME, _user.name);
+            cookieHlp.setCookie(CHSR_COOKIE.USER_EMAIL, _user.email);
+            authHlp.jwt = jwt;
+            authHlp.activateRefreshToken();
 
             // this.props.history.replace(ROUTES.CHAT);
             window.location.replace(ROUTES.CHAT);

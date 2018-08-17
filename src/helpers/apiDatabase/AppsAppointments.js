@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateAppointments, deleteAppointment } from '../../redux/actions/mainStore/appsAppointments';
+import { updateAppointments, removeAppointment } from '../../redux/actions/mainStore/appsAppointments';
 
 class AppsAppointments extends Core {
     constructor() {
@@ -59,14 +59,14 @@ class AppsAppointments extends Core {
      * @param {string} appointmentId
      * @returns {Promise<Chatshier.Response.AppsAppointments>}
      */
-    delete(appId, appointmentId) {
+    remove(appId, appointmentId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/appointments/' + appointmentId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteAppointment(appId, appointmentId));
+            mainStore.dispatch(removeAppointment(appId, appointmentId));
             return resJson;
         });
     };

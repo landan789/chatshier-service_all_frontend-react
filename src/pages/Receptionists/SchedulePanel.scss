@@ -1,0 +1,32 @@
+@import '../../styles/_variables';
+@import '../../styles/_mixins';
+
+.schedule-panel {
+    @include scrollable('y');
+    position: absolute;
+    left: 50%;
+    top: $toolbar-height;
+    height: calc(100% - #{$toolbar-height});
+    z-index: 1029;
+    background-color: white;
+    border: 1px solid #ced4da;
+    transform: translateX(-50%);
+
+    .receptionist-name,
+    .close-btn {
+        position: absolute;
+        top: 1px;
+        z-index: 1;
+    }
+
+    .receptionist-name {
+        left: 1px;
+        margin-top: .75rem;
+    }
+
+    .close-btn {
+        right: 1px;
+        width: 3rem;
+        height: 3rem;
+    }
+}

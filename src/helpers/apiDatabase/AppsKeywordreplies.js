@@ -2,7 +2,7 @@ import Core from './Core';
 import { reqHeaders } from './index';
 
 import mainStore from '../../redux/mainStore';
-import { updateKeywordreplies, deleteKeywordreply } from '../../redux/actions/mainStore/appsKeywordreplies';
+import { updateKeywordreplies, removeKeywordreply } from '../../redux/actions/mainStore/appsKeywordreplies';
 
 class AppsKeywordreplies extends Core {
     constructor() {
@@ -77,14 +77,14 @@ class AppsKeywordreplies extends Core {
      * @param {string} keywordreplyId
      * @returns {Promise<Chatshier.Response.AppsKeywordreplies>}
      */
-    delete(appId, keywordreplyId) {
+    remove(appId, keywordreplyId) {
         let destUrl = this.apiEndPoint + 'apps/' + appId + '/keywordreplies/' + keywordreplyId + '/users/' + this.userId;
         let reqInit = {
             method: 'DELETE',
             headers: reqHeaders
         };
         return this.sendRequest(destUrl, reqInit).then((resJson) => {
-            mainStore.dispatch(deleteKeywordreply(appId, keywordreplyId));
+            mainStore.dispatch(removeKeywordreply(appId, keywordreplyId));
             return resJson;
         });
     };

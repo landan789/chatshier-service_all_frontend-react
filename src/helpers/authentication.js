@@ -1,10 +1,11 @@
 import jwtDecode from 'jwt-decode';
-import cookieHelper, { CHSR_COOKIE } from './cookie';
+import cookieHlp, { CHSR_COOKIE } from './cookie';
 import { MINUTE } from '../utils/unitTime';
 
 import ROUTES from '../config/route';
 import apiBot from './apiBot/index';
 import apiDatabase from './apiDatabase/index';
+import apiImage from './apiImage/index';
 import apiSign from './apiSign/index';
 
 // token 過期 5 分鐘前更新 token
@@ -42,15 +43,12 @@ class AuthenticationHelper {
      */
     set jwt(value = '') {
         this._jwt = value;
-        if (this._jwt) {
-            this.payload = jwtDecode(this._jwt) || {};
-            window.localStorage.setItem('jwt', this._jwt);
-        } else {
-            this.payload = {};
-            window.localStorage.removeItem('jwt');
-        }
+        this.payload = this._jwt ? jwtDecode(this._jwt) : {};
+
+        window.localStorage.setItem('jwt', this._jwt || '');
         apiBot.setJWT(this._jwt);
         apiDatabase.setJWT(this._jwt);
+        apiImage.setJWT(this._jwt);
         apiSign.setJWT(this._jwt);
     }
 
@@ -75,8 +73,8 @@ class AuthenticationHelper {
         if (!this.hasSignedin()) {
             return Promise.resolve();
         }
-        cookieHelper.deleteCookie(CHSR_COOKIE.USER_NAME);
-        cookieHelper.deleteCookie(CHSR_COOKIE.USER_EMAIL);
+        cookieHlp.deleteCookie(CHSR_COOKIE.USER_NAME);
+        cookieHlp.deleteCookie(CHSR_COOKIE.USER_EMAIL);
         this.jwt = '';
         return apiSign.signOut.do();
     }
@@ -85,13 +83,10 @@ class AuthenticationHelper {
      * @returns {boolean}
      */
     hasSignedin() {
-        let userName = cookieHelper.getCookie(CHSR_COOKIE.USER_NAME);
-        let email = cookieHelper.getCookie(CHSR_COOKIE.USER_EMAIL);
+        let userName = cookieHlp.getCookie(CHSR_COOKIE.USER_NAME);
+        let email = cookieHlp.getCookie(CHSR_COOKIE.USER_EMAIL);
         let jwt = window.localStorage.getItem('jwt');
         return !!(userName && email && jwt);
-        // return !!(cookieHelper.getCookie(CHSR_COOKIE.USER_NAME) &&
-        //     cookieHelper.getCookie(CHSR_COOKIE.USER_EMAIL) &&
-        //     window.localStorage.getItem('jwt'));
     }
 
     /**

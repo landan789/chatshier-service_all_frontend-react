@@ -1,9 +1,4 @@
 class TimeHelper {
-    toMilliseconds(datetime) {
-        let date = new Date(datetime);
-        let timeInMilliseconds = date.getTime();
-        return timeInMilliseconds;
-    }
     toLocalTimeString(ms) {
         let date = new Date(ms);
         let localDate = date.toLocaleDateString();
@@ -11,6 +6,7 @@ class TimeHelper {
         let localTimeString = localDate + localTime;
         return localTimeString;
     }
+
     isHistory(sentTime, currentTime) {
         let result = false;
         let sentTimeInDatetime = new Date(sentTime);

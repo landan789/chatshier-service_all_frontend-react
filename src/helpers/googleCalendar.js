@@ -1,4 +1,5 @@
 import CHATSHIER from '../config/chatshier';
+import { RRule, RRuleSet, rrulestr } from 'rrule/dist/es5/rrule';
 
 const GOOGLE_CLIENT_NOT_SIGNEDIN = 'GOOGLE_CLIENT_NOT_SIGNEDIN';
 const GOOGLE_API_ENDPOINT = 'https://apis.google.com/js/api.js';
@@ -192,7 +193,7 @@ class GoogleCalendarHelper {
      * @param {string} calendarId
      * @param {string} eventId
      */
-    deleteEvent(calendarId, eventId) {
+    removeEvent(calendarId, eventId) {
         return this.googleReady.then(() => {
             if (!this.isSignedIn) {
                 return Promise.reject(new Error(GOOGLE_CLIENT_NOT_SIGNEDIN));
@@ -216,6 +217,35 @@ class GoogleCalendarHelper {
                 return resJson;
             });
         });
+    }
+
+    /**
+     * @param {string[]} recurrence
+     * @param {Date} [dtstart]
+     * @param {number} [maxDates]
+     */
+    getEventDates(recurrence, dtstart = new Date(), maxDates = 250) {
+        let rruleSet = new RRuleSet();
+        let _dtstart = new Date(dtstart);
+        _dtstart.setMinutes(0, 0, 0);
+
+        for (let i in recurrence) {
+            let _rrule = rrulestr(recurrence[i]);
+            let options = Object.assign({}, _rrule.options);
+            if (null === options.freq) {
+                continue;
+            }
+
+            // rrule.js 在 WEEKLY 的規則中處理有 bugs 因此轉為使用 DAILY 規則來達到相同結果
+            options.freq === RRule.WEEKLY && (options.freq = RRule.DAILY);
+            options.wkst = RRule.SU;
+            options.byhour = options.byminute = options.bysecond = null;
+            options.dtstart = _dtstart;
+
+            let rrule = new RRule(options);
+            rruleSet.rrule(rrule);
+        }
+        return rruleSet.all((d, len) => len <= maxDates);
     }
 
     _mapRes(res) {

@@ -1,4 +1,4 @@
-import { UPDATE_CALENDARS_EVENTS, DELETE_CALENDAR_EVENT } from '../../actions/mainStore/calendarsEvents';
+import { UPDATE_CALENDARS_EVENTS, REMOVE_CALENDAR_EVENT } from '../../actions/mainStore/calendarsEvents';
 
 export const calendarsEventsReducer = (state = {}, action) => {
     switch (action.type) {
@@ -19,7 +19,7 @@ export const calendarsEventsReducer = (state = {}, action) => {
                 }
             }
             return Object.assign({}, state);
-        case DELETE_CALENDAR_EVENT:
+        case REMOVE_CALENDAR_EVENT:
             let calendarId = action.calendarId;
             let eventId = action.eventId;
 

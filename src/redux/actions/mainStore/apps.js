@@ -1,5 +1,5 @@
 export const UPDATE_APPS = 'UPDATE_APP';
-export const DELETE_APP = 'DELETE_APP';
+export const REMOVE_APP = 'REMOVE_APP';
 
 /**
  * @param {Chatshier.Model.Apps} apps
@@ -11,6 +11,6 @@ export const updateApps = (apps) => {
 /**
  * @param {string} appId
  */
-export const deleteApp = (appId) => {
-    return { type: DELETE_APP, appId };
+export const removeApp = (appId) => {
+    return { type: REMOVE_APP, appId };
 };

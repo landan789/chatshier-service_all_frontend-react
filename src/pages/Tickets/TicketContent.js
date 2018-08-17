@@ -170,7 +170,7 @@ class TicketContent extends React.Component {
 
             shouldShow && ticketElems.push(
                 <Col key={ticketId} className="my-2" md="12" lg="4">
-                    <Card className="ticket-card shadow animated fadeIn" body>
+                    <Card className="ticket-card shadow-sm animated fadeIn" body>
                         <CardTitle>{dueDateElem}</CardTitle>
                         <CardSubtitle>
                             <div className="my-2 d-flex align-items-center">

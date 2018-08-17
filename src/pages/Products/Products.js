@@ -213,7 +213,7 @@ class Products extends React.Component {
                             <AppsSelector className="px-3 my-3" onChange={this.appChanged} />
 
                             <div className="px-3 pt-0 d-flex flex-wrap products-wrapper">
-                                <Card className="w-100 m-2 add-btn" onClick={() => this.setState({ product: {} })}>
+                                <Card className="w-100 m-2 shadow-sm add-btn" onClick={() => this.setState({ product: {} })}>
                                     <i className="m-auto fas fa-plus fa-2x"></i>
                                 </Card>
 
@@ -224,7 +224,7 @@ class Products extends React.Component {
                                     description = description.length > 30 ? description.substring(0, 30) + '...' : description;
 
                                     return (
-                                        <Card key={productId} className="d-inline-block w-100 m-2 product-item">
+                                        <Card key={productId} className="d-inline-block w-100 m-2 shadow-sm product-item">
                                             <CardBody className="p-2 text-center bg-transparent">
                                                 <div className="mx-auto image-container border-circle">
                                                     <img className="image-fit border-circle" src={product.src || defaultProductImg} alt={product.name} />

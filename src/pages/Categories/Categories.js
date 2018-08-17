@@ -319,7 +319,7 @@ class Categories extends React.Component {
                             <AppsSelector className="px-3 mt-3" onChange={this.appChanged} />
 
                             <div className="d-flex flex-wrap px-3 justify-content-between categories-wrapper">
-                                <Card className="mt-3 px-0 col-12 col-lg-5">
+                                <Card className="mt-3 px-0 col-12 col-lg-5 shadow-sm">
                                     <SortableTree treeData={this.state.treeData}
                                         getNodeKey={(categoryNode) => categoryNode.node.categoryId}
                                         canDrag={false}
@@ -328,7 +328,7 @@ class Categories extends React.Component {
                                         generateNodeProps={this.generateNodeProps} />
                                 </Card>
 
-                                <Card className="mt-3 p-2 col-12 col-lg-6">
+                                <Card className="mt-3 p-2 col-12 col-lg-6 shadow-sm">
                                     <div className="h-100 scoll-wrapper">
                                         {(!this.state.selectedCategoryId || 0 === categoryProductIds.length) &&
                                         <div className="d-flex absolute-stretch">

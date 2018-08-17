@@ -233,14 +233,14 @@ class ReceptionistsPage extends React.Component {
                             <AppsSelector className="px-3 my-3" onChange={this.appChanged} />
 
                             <div className="px-3 pt-0 d-flex flex-wrap receptionists-wrapper">
-                                <Card className="w-100 m-2 add-btn" onClick={() => this.setState({ receptionist: {} })}>
+                                <Card className="w-100 m-2 shadow-sm add-btn" onClick={() => this.setState({ receptionist: {} })}>
                                     <i className="m-auto fas fa-plus fa-2x"></i>
                                 </Card>
                                 {receptionistIds.map((receptionistId) => {
                                     let receptionist = receptionists[receptionistId];
 
                                     return (
-                                        <Card key={receptionistId} className="d-inline-block w-100 m-2 receptionist-item">
+                                        <Card key={receptionistId} className="d-inline-block w-100 m-2 shadow-sm receptionist-item">
                                             <CardBody className="p-2 text-center bg-transparent">
                                                 <div className="mx-auto image-container border-circle">
                                                     <img className="image-fit border-circle" src={receptionist.photo || defaultConsumerImg} alt={receptionist.name} />

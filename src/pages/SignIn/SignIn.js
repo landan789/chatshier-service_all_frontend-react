@@ -17,8 +17,8 @@ import { notify } from '../../components/Notify/Notify';
 
 import './SignIn.css';
 
-const USER_FAILED_TO_FIND = 'user failed to find';
-const PASSWORD_WAS_INCORRECT = 'password was incorrect';
+const USER_FAILED_TO_FIND = '3.1';
+const PASSWORD_WAS_INCORRECT = '3.3';
 
 class SignIn extends React.Component {
     static propTypes = {

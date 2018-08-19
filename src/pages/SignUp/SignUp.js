@@ -18,10 +18,10 @@ import { notify } from '../../components/Notify/Notify';
 
 import './SignUp.css';
 
-const NAME_WAS_EMPTY = 'name was empty';
-const EMAIL_WAS_EMPTY = 'EMAIL was empty';
-const PASSWORD_WAS_EMPTY = 'password was empty';
-const USER_EMAIL_HAD_BEEN_SIGNED_UP = 'user email had been signed up';
+const NAME_WAS_EMPTY = '1.7';
+const EMAIL_WAS_EMPTY = '3.2';
+const PASSWORD_WAS_EMPTY = '1.2';
+const USER_EMAIL_HAD_BEEN_SIGNED_UP = '3.5';
 
 class SignUp extends React.Component {
     static propTypes = {

@@ -14,7 +14,7 @@ import { blobToBase64 } from '../../../utils/common';
 import { notify } from '../../Notify/Notify';
 
 import defaultProductImg from '../../../image/default-product.png';
-import defaultCategoryImg from '../../../image/default-category.png';
+// import defaultCategoryImg from '../../../image/default-category.png';
 
 import './Category.css';
 

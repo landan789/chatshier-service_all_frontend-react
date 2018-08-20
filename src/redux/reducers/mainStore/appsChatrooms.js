@@ -57,24 +57,14 @@ export const appsChatroomsReducer = (state = {}, action) => {
             chatroomId = action.chatroomId;
             state[appId] = state[appId] || { chatrooms: {} };
             state[appId].chatrooms[chatroomId] = state[appId].chatrooms[chatroomId] || { messagers: {} };
-
-            let messagers = action.messagers;
-            for (let messagerId in messagers) {
-                let messager = messagers[messagerId];
-                state[appId].chatrooms[chatroomId].messagers[messagerId] = messager[appId].chatrooms[chatroomId].messagers[messagerId];
-            }
+            Object.assign(state[appId].chatrooms[chatroomId].messagers, action.messagers);
             return Object.assign({}, state);
         case UPDATE_CHATROOMS_MESSAGES:
             appId = action.appId;
             chatroomId = action.chatroomId;
             state[appId] = state[appId] || { chatrooms: {} };
             state[appId].chatrooms[chatroomId] = state[appId].chatrooms[chatroomId] || { messages: {} };
-
-            let messages = action.messages;
-            for (let messageId in messages) {
-                let message = messages[messageId];
-                state[appId].chatrooms[chatroomId].messages[messageId] = message[appId].chatrooms[chatroomId].messages[messageId];
-            }
+            Object.assign(state[appId].chatrooms[chatroomId].messages, action.messages);
             return Object.assign({}, state);
         default:
             return state;

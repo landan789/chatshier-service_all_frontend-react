@@ -109,7 +109,7 @@ class SignIn extends React.Component {
                 signInBtnHtml: this.props.t('Sign in')
             });
 
-            switch (err.msg) {
+            switch (err.code) {
                 case USER_FAILED_TO_FIND:
                     return notify(this.props.t('No user found'), { type: 'danger' });
                 case PASSWORD_WAS_INCORRECT:

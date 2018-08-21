@@ -138,7 +138,7 @@ class SignUp extends React.Component {
                 signupBtnHtml: this.props.t('Sign up')
             });
 
-            switch (err.msg) {
+            switch (err.code) {
                 case NAME_WAS_EMPTY:
                     return notify(this.props.t('Name was empty!'), { type: 'danger' });
                 case EMAIL_WAS_EMPTY:

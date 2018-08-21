@@ -80,13 +80,13 @@ class ScheduleModal extends ModalCore {
     }).toString();
 
     static saRuleStr = new RRule({
-        freq: RRule.DAILY,
+        freq: RRule.WEEKLY,
         byweekday: [RRule.SA],
         wkst: RRule.SU
     }).toString();
 
     static mofrRuleStr = new RRule({
-        freq: RRule.DAILY,
+        freq: RRule.WEEKLY,
         byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
         wkst: RRule.SU
     }).toString();

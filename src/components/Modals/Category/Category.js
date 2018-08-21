@@ -8,9 +8,13 @@ import { Button, Modal, ModalHeader, ModalBody,
     FormGroup, Card } from 'reactstrap';
 
 import ModalCore from '../ModalCore';
+import CHATSHIER_CFG from '../../../config/chatshier';
 import apiDatabase from '../../../helpers/apiDatabase';
+import { blobToBase64 } from '../../../utils/common';
+import { notify } from '../../Notify/Notify';
 
 import defaultProductImg from '../../../image/default-product.png';
+// import defaultCategoryImg from '../../../image/default-category.png';
 
 import './Category.css';
 
@@ -60,6 +64,19 @@ class CategoryModal extends ModalCore {
         return this.props.isUpdate ? this.props.updateHandler(this.props.categoryId, category) : this.props.insertHandler(category);
     }
 
+    onFileChange(ev) {
+        /** @type {HTMLInputElement} */
+        let fileInput = ev.target;
+        let imageFile = fileInput.files.item(0);
+
+        if (imageFile.size > CHATSHIER_CFG.FILE.MEGA_BYTE) {
+            return notify('圖片大小不能超過 1 MB', { type: 'warning' });
+        }
+        return blobToBase64(imageFile).then((base64Url) => {
+            this.setState({ src: base64Url });
+        });
+    }
+
     onAppChange(ev) {
         this.setState({ appId: ev.target.value });
         return this.props.onAppChange(ev.target.value);
@@ -104,6 +121,33 @@ class CategoryModal extends ModalCore {
                                 })}
                             </select>
                         </FormGroup>}
+
+                        {/* <FormGroup className="d-flex flex-wrap">
+                            <label className="w-100 col-form-label font-weight-bold">
+                                類別圖像:
+                            </label>
+                            <Button type="button" color="light" className="position-relative p-0 photo-container"
+                                onClick={() => this.fileInput && this.fileInput.click()}>
+                                {!this.state.src &&
+                                <div className="d-flex w-100 h-100 image-upload">
+                                    <div className="m-auto text-muted">
+                                        <i className="fas fa-image"></i>
+                                        <br />
+                                        <span>上傳類別圖像</span>
+                                        <br />
+                                        <span className="text-danger small">檔案不能超過 1 MB</span>
+                                    </div>
+                                </div>}
+                                <div className="m-auto image-container">
+                                    <img className="image-fit" style={{ opacity: !this.state.src ? '.3' : '1' }}
+                                        src={this.state.src || defaultCategoryImg} alt={this.state.name} />
+                                </div>
+                            </Button>
+                            <input className="d-none" type="file"
+                                accept="image/png,image/jpg,image/jpeg"
+                                ref={(elem) => (this.fileInput = elem)}
+                                onChange={this.onFileChange} />
+                        </FormGroup> */}
 
                         <FormGroup>
                             <label className="col-form-label font-weight-bold">
